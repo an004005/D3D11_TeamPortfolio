@@ -293,6 +293,9 @@
     <ClInclude Include="..\public\EM0800.h" />
     <ClInclude Include="..\public\EM0800_AnimInstance.h" />
     <ClInclude Include="..\public\EM0800_Controller.h" />
+    <ClInclude Include="..\public\EM0900.h" />
+    <ClInclude Include="..\public\EM0900_AnimInstance.h" />
+    <ClInclude Include="..\public\EM0900_Controller.h" />
     <ClInclude Include="..\public\EM1100.h" />
     <ClInclude Include="..\public\EM1100_AnimInstance.h" />
     <ClInclude Include="..\public\EM1100_Controller.h" />
@@ -304,6 +307,7 @@
     <ClInclude Include="..\public\EM8200_Controller.h" />
     <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
+    <ClInclude Include="..\public\EMGift.h" />
     <ClInclude Include="..\public\EMUI.h" />
     <ClInclude Include="..\public\FSM_Recompiler.h" />
     <ClInclude Include="..\public\HS_TeleportableWall.h" />
@@ -315,6 +319,7 @@
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
     <ClInclude Include="..\public\Level_StageDefault.h" />
     <ClInclude Include="..\public\Level_Subway.h" />
+    <ClInclude Include="..\public\Map_KineticBatchPreset.h" />
     <ClInclude Include="..\public\MouseCousorLightUI.h" />
     <ClInclude Include="..\public\MouseCousorUI.h" />
     <ClInclude Include="..\public\PlayerHotFixer.h" />
@@ -345,6 +350,9 @@
     <ClInclude Include="..\public\SA_AxisUI.h" />
     <ClInclude Include="..\public\SA_RotationUI.h" />
     <ClInclude Include="..\public\ShaderUI.h" />
+    <ClInclude Include="..\public\Sheath_Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h" />
     <ClInclude Include="..\public\SpecialObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -502,7 +510,7 @@
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
     <ClInclude Include="..\public\Weapon_Player.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0300.h" />
     <ClInclude Include="..\public\Weapon_wp0500.h" />
@@ -626,6 +634,9 @@
     <ClCompile Include="..\private\EM0800.cpp" />
     <ClCompile Include="..\private\EM0800_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM0800_Controller.cpp" />
+    <ClCompile Include="..\private\EM0900.cpp" />
+    <ClCompile Include="..\private\EM0900_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM0900_Controller.cpp" />
     <ClCompile Include="..\private\EM1100.cpp" />
     <ClCompile Include="..\private\EM1100_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM1100_Controller.cpp" />
@@ -637,6 +648,7 @@
     <ClCompile Include="..\private\EM8200_Controller.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
+    <ClCompile Include="..\private\EMGift.cpp" />
     <ClCompile Include="..\private\EMUI.cpp" />
     <ClCompile Include="..\private\FSM_Recompiler.cpp" />
     <ClCompile Include="..\private\HS_TeleportableWall.cpp" />
@@ -648,6 +660,7 @@
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
     <ClCompile Include="..\private\Level_StageDefault.cpp" />
     <ClCompile Include="..\private\Level_Subway.cpp" />
+    <ClCompile Include="..\private\Map_KineticBatchPreset.cpp" />
     <ClCompile Include="..\private\MouseCousorLightUI.cpp" />
     <ClCompile Include="..\private\MouseCousorUI.cpp" />
     <ClCompile Include="..\private\PlayerHotFixer.cpp" />
@@ -678,6 +691,9 @@
     <ClCompile Include="..\private\SA_AxisUI.cpp" />
     <ClCompile Include="..\private\SA_RotationUI.cpp" />
     <ClCompile Include="..\private\ShaderUI.cpp" />
+    <ClCompile Include="..\private\Sheath_Player.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -835,7 +851,7 @@
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />
     <ClCompile Include="..\private\Weapon_Player.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
     <ClCompile Include="..\private\Weapon_wp0500.cpp" />

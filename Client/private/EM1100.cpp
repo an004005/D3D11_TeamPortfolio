@@ -900,6 +900,7 @@ void CEM1100::Create_Bullet()
 			.Set_DeadBulletEffect({ L"em1100_Elec_Bullet_Dead" })
 			.Set_DeadBulletParticle(L"em1100_Elec_Bullet_Dead_Particle")
 			.Set_Position(vPrePos)
+			.Set_Radius(1.2f)
 		.Build();
 
 

@@ -392,7 +392,7 @@ void CSpecialObject::BrightChecker()
 	}
 	else if (CPlayerInfoManager::GetInstance()->Get_SpecialObject() == this)
 	{
-		_float fCharge = CPlayerInfoManager::GetInstance()->Get_KineticCharge();
+		_float fCharge = CPlayerInfoManager::GetInstance()->Get_SpecialCharge();
 
 		if (m_fBright <= fCharge)
 		{

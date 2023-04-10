@@ -113,7 +113,7 @@ void CEM0110::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("AOE_Start", [this] 
 	{ 
 		m_bAttack = true;
-
+		ClearDamagedTarget();
 		_matrix 	AOEPivotMatirx = CImguiUtils::CreateMatrixFromImGuizmoData(
 			{ -0.4f, -2.2f, -1.f },
 			{ 0.f, 0.f, 0.f, },
@@ -217,6 +217,10 @@ void CEM0110::SetUpFSM()
 			})
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this] { return m_bDestroyArmor; })
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
 
 			.AddTransition("Idle to Attack_turn", "Attack_turn")
 				.Predicator([this] { return m_eInput == CController::R; })
@@ -232,6 +236,78 @@ void CEM0110::SetUpFSM()
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_474_AL_dead_down02");
 			})
+
+///////////////////////////////////////////////////////////////////////////////////////////
+		.AddState("Down")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_475_AL_down_start02");
+			})
+		.AddTransition("Down to Down_Loop", "Down_Loop")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketPassby("FullBody", 0.95f);
+			})
+
+		.AddState("Down_Loop")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_426_AL_down");
+				m_dLoopTick = 0.0;
+			})
+			.Tick([this](_double TimeDelta)
+			{
+					m_dLoopTick += TimeDelta;
+					if (m_eCurAttackType != EAttackType::ATK_END)
+					{
+						m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_429_AL_damage_down_add");
+					}
+			})
+			.AddTransition("Down_Loop to GetUp", "GetUp")
+				.Predicator([this]
+				{
+						return m_dLoopTick >= 5.0;
+				})
+
+		.AddState("GetUp")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_477_AL_getup02");
+			})
+		.AddTransition("Down to Down_Loop", "Idle")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketPassby("FullBody", 0.95f);
+			})
+///////////////////////////////////////////////////////////////////////////////////////////
+
+		.AddState("Hit_Heavy")
+			.OnStart([this]
+			{
+				Play_HeavyHitAnim();
+				HeavyAttackPushStart();
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					HeavyAttackPushStart();
+					Play_HeavyHitAnim();
+				}
+
+				_float fPower;
+				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
+				{
+					_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+					m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
+					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
+				}
+			})
+			.AddTransition("Hit_Heavy to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -263,22 +339,34 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_turn to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//장판
 		.AddState("Attack_c1")
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0110_209_AL_atk_c1");
+				m_dLoopTick = 0.0;
 			})
-			.Tick([this](_double) 
+			.Tick([this](_double TimeDelta) 
 			{
-					//이땐 데미지 어떻게?
+					m_dLoopTick += TimeDelta;
+
+					if (m_bAttack)
+					{
+						if (m_pTarget->IsOnFloor() && m_dLoopTick >= 1.f)
+						{
+							ClearDamagedTarget();
+							AOE_Overlap();
+							m_dLoopTick = 0.0;
+						}
+					}
+				
 			})
 			.AddTransition("Attack_c1 to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//돌진
 		.AddState("Attack_b2_Start")
@@ -305,7 +393,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Start to Attack_b2_Loop", "Attack_b2_Loop")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_b2_Loop")
@@ -327,7 +415,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Loop to Attack_b2_Stop", "Attack_b2_Stop")
 				.Predicator([this]
 				{
-					return m_bDead || !m_bRush;
+					return m_bDead || m_bDestroyArmor || !m_bRush;
 				})
 
 		.AddState("Attack_b2_Stop")
@@ -347,7 +435,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Stop to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -424,20 +512,20 @@ void CEM0110::Imgui_RenderProperty()
 
 	m_pFSM->Imgui_RenderProperty();
 
-	static _bool tt = false;
-	ImGui::Checkbox("Modify Pivot", &tt);
+	//static _bool tt = false;
+	//ImGui::Checkbox("Modify Pivot", &tt);
 
-	if (tt)
-	{
-		static GUIZMO_INFO tInfo;
-		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	//if (tt)
+	//{
+	//	static GUIZMO_INFO tInfo;
+	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-		if (ImGui::Button("TestEffect"))
-		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Spin_Attack_Hit_EF")
-				->Start_NoAttachPivot(this, pivot, false, true);
-		}
-	}
+	//	if (ImGui::Button("TestEffect"))
+	//	{
+	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0110_Spin_Attack_Hit_EF")
+	//			->Start_NoAttachPivot(this, pivot, false, true);
+	//	}
+	//}
 }
 
 _bool CEM0110::IsWeak(CRigidBody* pHitPart)
@@ -510,12 +598,25 @@ void CEM0110::Adjust_MoveAxis(_double TimeDelta)
 }
 
 
-void CEM0110::Play_HeavbyHitAnim()
+void CEM0110::Play_HeavyHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_451_AL_damage_l_F02");
 	else
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_452_AL_damage_l_B02");
+}
+
+void CEM0110::HeavyAttackPushStart()
+{
+	if (m_eCurAttackType == EAttackType::ATK_MIDDLE || m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+	{
+		m_HeavyAttackPushTimeline.PlayFromStart();
+		m_vPushVelocity = CClientUtils::GetDirFromAxis(m_eHitFrom);
+		m_vPushVelocity *= -4.f; // 공격 온 방향의 반대로 이동
+
+		const _float fYaw = m_pTransformCom->GetYaw_Radian();
+		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
+	}
 }
 
 void CEM0110::HitWeakProcess(_double TimeDelta)
@@ -579,7 +680,7 @@ void CEM0110::Rush_Overlap()
 {
 
 	//Length로 Bone의 위치에서부터 바라보는 방향으로 원하는 지점까지의 거리를 지정
-	_float fLength = 7.f;
+	_float fLength = 8.f;
 
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
 
@@ -598,7 +699,7 @@ void CEM0110::Rush_Overlap()
 	SphereOverlapParams param;
 	param.fVisibleTime = 0.1f;
 	param.iTargetType = CTB_STATIC;
-	param.fRadius = 3.f;
+	param.fRadius = 1.f;
 	param.vPos = XMVectorSetW(fFinish, 1.f);
 	param.overlapOut = &overlapOut;
 
@@ -651,7 +752,7 @@ void CEM0110::Kick_SweepSphere()
 	SphereSweepParams tParams;
 	tParams.fVisibleTime = 0.2f;
 	tParams.iTargetType = CTB_PLAYER;
-	tParams.fRadius = 2.f;
+	tParams.fRadius = 1.5f;
 	tParams.fDistance = XMVectorGetX(XMVector4LengthEst(vDir));
 	tParams.vPos = vBonePos;
 	tParams.sweepOut = &sweepOut;
@@ -686,6 +787,29 @@ void CEM0110::Kick_SweepSphere()
 	}
 
 	m_BeforePos = vBonePos;
+}
+
+void CEM0110::AOE_Overlap()
+{
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vBoneVector = BoneMatrix.r[3];
+	_float3 fBone = vBoneVector;
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 0.1f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 15.f;
+	param.vPos = XMVectorSetW(fBone, 1.f);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_END);
+	}
 }
 
 

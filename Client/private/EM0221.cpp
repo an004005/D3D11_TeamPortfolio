@@ -4,6 +4,7 @@
 #include "ImguiUtils.h"
 #include "GameUtils.h"
 #include "VFX_Manager.h"
+#include "Enemy.h"
 
 CEM0221::CEM0221(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CGameObject(pDevice,pContext)
@@ -25,6 +26,7 @@ HRESULT CEM0221::Initialize(void * pArg)
 	m_pNormalEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0220_Boom_Normal");
 	m_pNormalEffect->Start_NoAttach(this, true);
 	Safe_AddRef(m_pNormalEffect);
+
 	return S_OK;
 }
 
@@ -73,7 +75,7 @@ void CEM0221::SetUpMatrix(CModel* pModle, const _fmatrix TransformMatrix)
 	//떨어질때는 tick에서 움직여줘야함
 	if (m_bFall == true) return;
 
-	_matrix	SocketMatrix = XMLoadFloat4x4(&m_AddPivotMatrix) * pModle->GetBoneMatrix(m_szTargetBoneName) * TransformMatrix;
+	_matrix	 SocketMatrix = XMLoadFloat4x4(&m_AddPivotMatrix) * pModle->GetBoneMatrix(m_szTargetBoneName) * TransformMatrix;
 
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
@@ -127,12 +129,30 @@ void CEM0221::Explosion()
 			m_pFallEffect = nullptr;
 		}
 	}
+
+	//데미지 처리
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 0.5f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 2.f;
+	param.vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		dynamic_cast<CEnemy*>(m_pOwner)->HitTargets(overlapOut, 40, EAttackType::ATK_HEAVY);
+	}
+
 }
 
 void CEM0221::Explosion_Ray()
 {
 
-	if (m_dFallMaxTime >= 1.0)
+	if (m_dFallMaxTime >= 0.8)
 	{
 		m_bFall = false;
 		Explosion();
@@ -165,7 +185,7 @@ void CEM0221::Explosion_Ray()
 
 			_float fDist = XMVectorGetX(XMVector4Length(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&vPos)));
 
-			if (fDist <= 0.6f)
+			if (fDist <= 1.f)
 			{
 				Explosion();
 				m_bFall = false;
@@ -204,6 +224,10 @@ CGameObject * CEM0221::Clone(void * pArg)
 void CEM0221::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pRendererCom);
+	Safe_Release(m_pModelCom);
+
 
 	if (m_bCloned)
 	{

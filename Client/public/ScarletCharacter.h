@@ -48,7 +48,8 @@ protected:
 	virtual void DeBuff_End(){}
 	virtual void DeBuff_Fire(){}
 	virtual void DeBuff_Oil(){}
-
+	virtual void DeBuff_Thunder() {}
+	virtual void DeBuff_Water() {}
 protected:
 	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER, _bool bContinuity = false);
 	_bool		Collision_Check_Capsule_Improved(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);

@@ -1,0 +1,18 @@
+{
+    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
+    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+    "ShaderParams" : {
+        "Ints" : [],
+        "Floats" : [],
+        "Float2s" : [],
+        "Float4s" : [],
+        "Float4x4s" : [],
+        "Textures" : [
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/FutureMine/Textures/T_Pipes_BC.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/FutureMine/Textures/T_Pipes_N.png",
+            "../Bin/Resources/Environments/00_Common/99_Marketplace/FutureMine/Textures/T_Pipes_RMA.png"
+        ],
+        "Pass" : 1
+    },
+    "InstancingPass": 1
+}

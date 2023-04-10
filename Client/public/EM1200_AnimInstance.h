@@ -11,6 +11,9 @@ public:
 	virtual void UpdateTargetState(_double TimeDelta) override;
 
 private:
+	void Make2PhaseASM();
+
+private:
 	_bool			m_bMove = false;
 	_bool			m_bRun = false;
 	_bool			m_bChangePhase = false;

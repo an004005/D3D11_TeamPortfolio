@@ -94,9 +94,6 @@
     <Filter Include="97.ShaderFiles\Shadow">
       <UniqueIdentifier>{de99238f-264e-4f79-877c-728ea5e89b86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\20.PlayerTester">
-      <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VFX\Effect\Buffer">
       <UniqueIdentifier>{0bbf6939-4dc5-4c48-b628-d37bd98dc4e5}</UniqueIdentifier>
     </Filter>
@@ -457,9 +454,6 @@
     <Filter Include="02.GameObjects\Enemy\EM0750">
       <UniqueIdentifier>{30894673-a85c-4561-a24d-c88173551c33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Enemy\EMCable">
-      <UniqueIdentifier>{9d04415c-c928-492a-9cd6-32a8c8ed964e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Weapon\wp0500">
       <UniqueIdentifier>{c10400ca-64a5-4606-a04e-1ae7a70a2d80}</UniqueIdentifier>
     </Filter>
@@ -517,8 +511,26 @@
     <Filter Include="02.GameObjects\Map\InvisibleWall\HS_TeleportableWall">
       <UniqueIdentifier>{49f57d4d-0b53-4e20-9538-333679350df2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\20.PlayerTester">
+      <UniqueIdentifier>{c5cff968-b07f-4b9d-86c2-f5fbff38b7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0900">
+      <UniqueIdentifier>{a3ff095e-e4e6-428f-808a-d3a7df149380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM1200\EMCable">
+      <UniqueIdentifier>{9d04415c-c928-492a-9cd6-32a8c8ed964e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Enemy\EM0900\EMGift">
+      <UniqueIdentifier>{a21a81fb-1cf0-4ef9-9a4b-32b745811546}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Weapon\Weapon_Player">
       <UniqueIdentifier>{3c2a0d6f-27a3-4a7c-9c86-7fd190a49285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Map\Map_KineticBatchPreset">
+      <UniqueIdentifier>{d23c5904-79df-4174-9dc0-b8f8a20339ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Weapon\Sheath_Player">
+      <UniqueIdentifier>{80254345-d02e-4bce-8c4b-8f16ccfc0f9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1423,7 +1435,7 @@
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\EMCable.h">
-      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+      <Filter>02.GameObjects\Enemy\EM1200\EMCable</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon_wp0500.h">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
@@ -1505,10 +1517,28 @@
     <ClInclude Include="..\public\HS_TeleportableWall.h">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM0900_AnimInstance.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0900_Controller.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EM0900.h">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EMGift.h">
+      <Filter>02.GameObjects\Enemy\EM0900\EMGift</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Weapon_Player.h">
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BrainField.h" />
+    <ClInclude Include="..\public\Map_KineticBatchPreset.h">
+      <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Sheath_Player.h">
+      <Filter>02.GameObjects\Weapon\Sheath_Player</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Invisible.h" />
   </ItemGroup>
   <ItemGroup>
@@ -2384,7 +2414,7 @@
       <Filter>02.GameObjects\Enemy\EMUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EMCable.cpp">
-      <Filter>02.GameObjects\Enemy\EMCable</Filter>
+      <Filter>02.GameObjects\Enemy\EM1200\EMCable</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon_wp0500.cpp">
       <Filter>02.GameObjects\Weapon\wp0500</Filter>
@@ -2472,10 +2502,28 @@
     <ClCompile Include="..\private\HS_TeleportableWall.cpp">
       <Filter>02.GameObjects\Map\InvisibleWall\HS_TeleportableWall</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\EM0900_Controller.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0900.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM0900_AnimInstance.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EMGift.cpp">
+      <Filter>02.GameObjects\Enemy\EM0900\EMGift</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Weapon_Player.cpp">
       <Filter>02.GameObjects\Weapon\Weapon_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BrainField.cpp" />
+    <ClCompile Include="..\private\Map_KineticBatchPreset.cpp">
+      <Filter>02.GameObjects\Map\Map_KineticBatchPreset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sheath_Player.cpp">
+      <Filter>02.GameObjects\Weapon\Sheath_Player</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
   </ItemGroup>
   <ItemGroup>

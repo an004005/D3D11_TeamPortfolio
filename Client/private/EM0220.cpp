@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EM0220.h"
 #include <FSMComponent.h>
+#include <random>
 #include "JsonStorage.h"
 #include "RigidBody.h"
 #include "EM0220_AnimInstance.h"
@@ -249,7 +250,7 @@ void CEM0220::SetUpFSM()
 			{
 					if (!m_Unbeatable && m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->GetPlayTime() >= 3.f)
 					{
-						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(60.f);
+						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(80.f);
 						m_Unbeatable = true;
 					}
 			})
@@ -288,13 +289,26 @@ void CEM0220::SetUpFSM()
 		.AddState("Counter")
 			.OnStart([this]
 			{
+				ClearDamagedTarget();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_217_AL_Counter");
 				m_dFallCount = 0.0;
+				m_iFallIndex = 0;
+				m_bAttack = true;
+
+				std::random_device rd;
+				std::mt19937 g(rd());
+				std::shuffle(m_pLanterns.begin(), m_pLanterns.end(), g);
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				//폭탄 떨구기
-				CounterAttack(TimeDelta);
+				if(m_bAttack)
+					CounterAttack(TimeDelta);
+			})
+			.OnExit([this]
+			{
+					//CounterAttack에서 다 떨어지면 false해주는데 혹시 안될수있으니 끝날때 해줌
+					m_bAttack = false;
 			})
 			.AddTransition("Counter to Guard_End", "Guard_End")
 				.Predicator([this]
@@ -404,12 +418,19 @@ void CEM0220::HitEffect(DAMAGE_PARAM& tDamageParams)
 	__super::HitEffect(tDamageParams);
 }
 
+void CEM0220::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_Unbeatable == true) return;
+	__super::CheckCrushGage(tDamageParams);
+}
+
 void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 {
-	_int iDamage = tDamageParams.iDamage;
-	
-	if(m_Unbeatable == false)
-		m_iHP -= iDamage;
+
+	if (m_Unbeatable == true)
+		tDamageParams.iDamage = 0;
+	else
+		m_iHP -= tDamageParams.iDamage;
 
 	if (m_iHP < 0)
 	{
@@ -433,11 +454,10 @@ void CEM0220::SetUp_Lantern()
 			boneName = "lantern" + to_string(i);
 
 		CEM0221* pLantern = dynamic_cast<CEM0221*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, TEXT("Monster_em221")));
-		//CEM0221* pLantern = dynamic_cast<CEM0221*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_Lantern"), TEXT("Monster_em221")));
-
 		assert(pLantern != nullptr);
 
 		pLantern->Set_TargetBoneName(boneName);
+		pLantern->Set_Owner(this);
 		m_pLanterns.emplace_back(pLantern);
 	}
 
@@ -465,11 +485,16 @@ void CEM0220::Update_LanternMatrix()
 
 void CEM0220::CounterAttack(_double TimeDelta)
 {
-	if (m_dFallCount >= 0.1)
+	if (m_dFallCount >= 0.06)
 	{
-		m_iFallIndex = (m_iFallIndex + 7) % m_pLanterns.size();
-		m_pLanterns[m_iFallIndex]->Set_Fall();
-		m_dFallCount = 0.0;
+		if (m_iFallIndex >= 13)
+			m_bAttack = false;
+		else
+		{
+			m_pLanterns[m_iFallIndex++]->Set_Fall();
+			m_dFallCount = 0.0;
+		}
+	
 		return;
 	}
 	
@@ -489,20 +514,16 @@ void CEM0220::Create_Bullet()
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vBonePos += XMVector3Normalize(vLook) * 3.f;
 
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vUp = m_pTarget->GetTransform()->Get_State(CTransform::STATE_UP);
-	vTargetPos += XMVector3Normalize(vUp) * 0.5f;
-
 	CBulletBuilder()
 		.CreateBullet()
 			.Set_Owner(this)
-			.Set_InitBulletEffect({ L"em0650_Bullet_Birth", L"em0220_Bullet" })
+			.Set_InitBulletEffect({L"em0220_Green_Bullet"})
 			.Set_ShootSpeed(22.f)
 			.Set_Life(2.f)
 			.Set_DamageParam(eDamageParam)
-			.Set_DeadBulletEffect({ L"em0320_Bullet_Dead_1", L"em0320_Bullet_Dead_2", L"em0320_Bullet_Dead_3" })
+			.Set_DeadBulletParticle(L"em0220_Bullet_Dead_Particle")
 			.Set_Position(vBonePos)
-			.Set_LookAt(vTargetPos)
+			.Set_LookAt(m_pTarget->GetColliderPosition())
 		.Build();
 }
 
@@ -518,7 +539,7 @@ void CEM0220::HitWeakProcess(_double TimeDelta)
 	//2번째가 아머 삭제될때 디졸브
 	if (m_bWeakProcess)
 	{
-		m_pWeak->GetParam().Floats[1] -= TimeDelta;
+		m_pWeak->GetParam().Floats[1] -= static_cast<_float>(TimeDelta);
 
 		if (m_pWeak->GetParam().Floats[1] <= 0.f)
 		{
@@ -528,7 +549,6 @@ void CEM0220::HitWeakProcess(_double TimeDelta)
 	}
 
 }
-
 
 
 

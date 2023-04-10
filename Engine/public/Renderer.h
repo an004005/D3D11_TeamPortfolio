@@ -7,7 +7,7 @@
 
 BEGIN(Engine)
 
-typedef struct tagFogDesc
+typedef struct ENGINE_DLL tagFogDesc
 {
 	_float3 vFogColor;
 	_float fStartDepth;
@@ -57,6 +57,10 @@ public:
 
 	void LoadFogJson(const string& strJsonPath);
 	FOG_DESC& GetFogDesc() { return m_tFogDesc; }
+
+public:
+	void SetFog(_bool bFog) { m_bFog = bFog; }
+	_bool GetFog() { return m_bFog; }
 
 private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
