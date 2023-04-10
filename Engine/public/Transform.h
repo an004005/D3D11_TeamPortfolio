@@ -99,9 +99,8 @@ public:
 	void LookAt_NonY(_fvector vTargetPos);
 	void LookAt_Smooth(_fvector vTargetPos, _double TimeDelta);
 	_float Get_RemainYawToLookAt(_fvector vTargetPos);
-	_bool LookAt_Lerp(_fvector vTargetPos, _double fTimeDelta);
 
-	void LookAt_Lerp_NonY(_fvector vTargetPos, _double fTimeDelta);
+	_bool LookAt_Lerp_NonY(_fvector vTargetPos, _float fRatio, _float fMaxRatio = 0.95f, _bool bRight = true);
 
 	/* 추적한다 .*/
 	void Chase(_fvector vTargetPos, _double TimeDelta, _float fLimit = 0.1f);
@@ -131,8 +130,7 @@ private:
 	_bool m_bPitchLock = false;
 	_float m_fMaxPitchRad = 0.f;
 
-	_float4					m_vSourLook = { 0.f, 0.f, 0.f, 1.f };
-	_float					m_fLerp = 0.f;
+	_float4					m_vSourLook = { 0.f, 0.f, 0.f, -1.f };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

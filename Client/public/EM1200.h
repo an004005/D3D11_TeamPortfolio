@@ -42,6 +42,8 @@ public:
 	EBaseTurn GetBaseTurn() const { return m_eTurn; }
 	_float3 GetMoveAxis() const { return m_vMoveAxis; }
 	_bool IsPlayingSocket() const;
+	class CEM1200_AnimInstance* GetASM() { return m_pASM; }
+	CModel* Get_Model() { return m_pModelCom; }
 
 public:
 	void Play_LightHitAnim();

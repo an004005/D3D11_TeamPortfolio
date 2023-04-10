@@ -526,7 +526,15 @@ void CAnimationInstance::StopAnimationSocket(const string& strSocName)
 
 CAnimation* CAnimationInstance::GetSocketAnimation(const string& strSocName)
 {
-	return m_mapAnimSocket.find(strSocName)->second.front();
+	const auto iter = m_mapAnimSocket.find(strSocName);
+
+	if (iter == m_mapAnimSocket.end())
+		return nullptr;
+
+	if (iter->second.empty())
+		return nullptr;
+
+	return iter->second.front();
 }
 
 _bool CAnimationInstance::CheckFinishedAnimSocket()

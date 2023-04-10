@@ -703,6 +703,10 @@ void CEM1200::SetUpFSM()
 				{
 					m_dLoopTime += TimeDelta;
 				})
+				.OnExit([this]
+					{
+						m_pASM->ClearSocketAnim("FullBody", 0.f);
+				})
 				.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 					.Predicator([this]
 					{
