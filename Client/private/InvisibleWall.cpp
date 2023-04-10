@@ -11,6 +11,8 @@
 #include "PhysXStaticModel.h"
 #include "Level_Maptool.h"
 #include "RigidBody.h"
+#include "VIBuffer_Invisible.h"
+#include "PhysXStaticModel.h"
 
 CInvisibleWall::CInvisibleWall(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -26,9 +28,11 @@ HRESULT CInvisibleWall::Initialize_Prototype()
 {
 	FAILED_CHECK(CGameObject::Initialize_Prototype());
 
-	/*FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC,
-		L"Prototype_VIBuffer_Invisible",
-		CVIBuffer_Invisible::Create(m_pDevice, m_pContext, m_TrailPointList, m_fHeight)));*/
+	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_STATIC, L"Prototype_Component_Shader_VtxInvisible"))
+	{
+		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"),
+			CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInvisibleWall.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements)));
+	}
 
 	return S_OK;
 }
@@ -40,6 +44,11 @@ HRESULT CInvisibleWall::Initialize(void* pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"), TEXT("Shader"), (CComponent**)&m_pShaderCom));  // ★
 
+	Json jsonParams = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/InvisibleWallShaderParams.json");
+	CShader::LoadShaderParam(m_tParams, jsonParams);
+	if (m_tParams.Floats.empty())
+		m_tParams.Floats.push_back(0.f);
+
 #ifdef _DEBUG
 	const _matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	for (auto& Point : m_Points)
@@ -50,21 +59,35 @@ HRESULT CInvisibleWall::Initialize(void* pArg)
 		json["RigidBody"]["Density"] = 10;
 		json["RigidBody"]["ColliderType"] = CT_TRIGGER_FOR_MONSTER;
 		json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
+		json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
 		auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
 
 		const _float4 vPos = XMVector3TransformCoord(Point.first, WorldMatrix);
-		pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 		pRigidBody->BeginTick();
+		pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
 
 		Point.second = pRigidBody;
 	}
 #endif
 
-	/*if (pArg)
+	CreateWall();
+
+	m_Start.SetCurve("Simple_Increase");
+	m_Start.SetFinishFunction([this]
 	{
-		Json& json = *static_cast<Json*>(pArg);
-		LoadFromJson(json);
-	}*/
+		if (m_pPxMesh)
+		{
+			m_pPxMesh->Activate(true);
+			m_pPxMesh->SetPxWorldMatrix(m_pTransformCom->Get_WorldMatrix_f4x4());
+		}
+	});
+
+	m_End.SetCurve("Simple_Decrease");
+	m_End.SetFinishFunction([this]
+	{
+		if (m_pPxMesh)
+			m_pPxMesh->Activate(false);
+	});
 
 	return S_OK;
 }
@@ -72,18 +95,50 @@ HRESULT CInvisibleWall::Initialize(void* pArg)
 void CInvisibleWall::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
+
+#ifdef _DEBUG
+	if (m_bOnTool)
+	{
+		_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		for (auto& point : m_Points)
+		{
+			_float4 vPos = XMVector3TransformCoord(point.first, WorldMatrix);
+			vPos.w = 1.f;
+			_matrix RigidBodyWorldMatrix = _float4x4::Identity;
+			RigidBodyWorldMatrix.r[3] = vPos;
+			point.second->Update_Tick(RigidBodyWorldMatrix);
+		}
+	}
+	if (m_bOnTool && m_fCreateCoolTime < 0.f)
+	{
+		CreateWall();
+		m_bOnTool = false;
+		m_fCreateCoolTime = m_fMaxCreateCoolTime;
+	}
+	else if (m_fCreateCoolTime >= 0.f)
+		m_fCreateCoolTime -= (_float)TimeDelta;
+#endif
+
+	m_Start.Tick(TimeDelta * 0.5, m_tParams.Floats[0]);
+	m_End.Tick(TimeDelta * 0.5, m_tParams.Floats[0]);
+	m_pShaderCom->Tick(TimeDelta);
 }
 
 void CInvisibleWall::Late_Tick(_double TimeDelta)
 {
 	CGameObject::Late_Tick(TimeDelta);
 	if (m_bVisible && m_pBuffer != nullptr)
-		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_ALPHABLEND, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_MESH_ALPHABLEND, this);
 }
 
 HRESULT CInvisibleWall::Render()
 {
-	FAILED_CHECK(SetUp_ShaderResources());
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	FAILED_CHECK(m_pShaderCom->Set_RawValue("g_vCamPosition", &CGameInstance::GetInstance()->Get_CamPosition(), sizeof(_float4)));
+
+	m_pShaderCom->Begin_Params(m_tParams);
 	m_pBuffer->Render();
 	return S_OK;
 }
@@ -91,99 +146,245 @@ HRESULT CInvisibleWall::Render()
 void CInvisibleWall::SaveToJson(Json& json)
 {
 	CGameObject::SaveToJson(json);
-	json["TrailList"] = m_TrailPointList;
-	json["Width"] = m_fHeight;
-	json["Pass"] = m_iPass;
 
 	json["Points"] = Json::array();
 	for (auto& Point : m_Points)
 	{
 		json["Points"].push_back(Point.first);
 	}
+	json["SegmentSize"] = m_fSegmentSize;
+	json["Visible"] = m_bVisible;
 }
 
 void CInvisibleWall::LoadFromJson(const Json& json)
 {
 	CGameObject::LoadFromJson(json);
-	m_TrailPointList = json["TrailList"];
-	m_fHeight = json["Width"];
-	m_iPass = json["Pass"];
 
 	for (auto& Point : json["Points"])
 	{
-		_float3 vPos = Point;
-		m_Points.push_back({ vPos, nullptr });
+		_float4 vPos = Point;
+		m_Points.push_back({vPos, nullptr});
 	}
+	m_fSegmentSize = json["SegmentSize"];
+	m_bVisible = json["Visible"];
 }
 
 void CInvisibleWall::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
 
-	if (ImGui::Button("Add Point to front of camera"))
+	static _bool bAddPointUsingPicking = false;
+	ImGui::Checkbox("Add Point Using Picking", &bAddPointUsingPicking);
+	if (bAddPointUsingPicking && CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
-		_matrix CamWorld = CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
-		CamWorld = XMMatrixInverse(nullptr, CamWorld);
-		_vector vPos = CamWorld.r[3] + XMVector3Normalize(CamWorld.r[2]) * 3.5f;
+		_float4 vPos;
+		CGameUtils::GetPosFromRayCast(vPos);
+		vPos.y -= 1.f;
 		AddPoint_ForTool(vPos);
+		bAddPointUsingPicking = false;
 	}
 
-	if (ImGui::Button("Add Point To Next"))
+	ImGui::Text("Point Cnt : %d", (int)m_Points.size());
+	ImGui::InputInt("Point Idx", &m_iPointIdx);
+	if (ImGui::CollapsingHeader("Show Point Guizmo") && m_iPointIdx >= 0 && m_iPointIdx < (int)m_Points.size())
 	{
-		_vector vPos;
-		if (m_Points.size() < 2)
-		{
-			_matrix CamWorld = CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
-			CamWorld = XMMatrixInverse(nullptr, CamWorld);
-			vPos = CamWorld.r[3] + XMVector3Normalize(CamWorld.r[2]) * 3.5f;
-		}
-		else
-		{
-			_vector vBack = m_Points[m_Points.size() - 1].first;
-			_vector vPreBack = m_Points[m_Points.size() - 2].first;
+		m_bOnTool = true;
 
-			vPos = vBack + XMVector3Normalize(vBack - vPreBack);
-			XMVectorSetW(vPos, 1.f);
-		}
-		AddPoint_ForTool(vPos);		
+		_float4 vPoint = m_Points[m_iPointIdx].first;
+
+		_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+		vPoint = XMVector3TransformCoord(vPoint, WorldMatrix);
+		_float4x4 PointWorldMatrix;
+		PointWorldMatrix.m[3][0] = vPoint.x;
+		PointWorldMatrix.m[3][1] = vPoint.y;
+		PointWorldMatrix.m[3][2] = vPoint.z;
+
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&PointWorldMatrix, tInfo, true, true);
+
+		_vector vNewPos = _float4(PointWorldMatrix.m[3][0], PointWorldMatrix.m[3][1], PointWorldMatrix.m[3][2], 1.f);
+		
+		m_Points[m_iPointIdx].first = XMVector3TransformCoord(vNewPos, XMMatrixInverse(nullptr, WorldMatrix));
 	}
-
-	static _bool bSelectPoint = false;
-	ImGui::Checkbox("Pick Once", &bSelectPoint);
-	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB) && bSelectPoint)
-	{
-		if (RayPicking())
-			bSelectPoint = false;
-	}
-
-	if (!m_TrailPointList.empty())
-	{
-		ImGui::InputFloat3("PickingPtPos", &m_TrailPointList.back().x); // 현재 피킹한 곳의 Position(_float3)
-		_int iSize;
-		iSize = m_TrailPointList.size();
-		ImGui::InputInt("PointListSize", &iSize);
-	}
-
 	if (ImGui::Button("Delete Point"))
 		DeletePoint(m_iPointIdx);
 
-	ImGui::InputFloat("InvWall Height", &m_fHeight);
+	static _bool bSelectPoint = false;
+	ImGui::Checkbox("Pick Point Once", &bSelectPoint);
+	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB) && bSelectPoint)
+	{
+		if (PickPoint())
+			bSelectPoint = false;
+	}
 
-	if (ImGui::Button("Create BufferInv"))		
-		CreateInvWall();		
+	ImGui::InputFloat("SegmentSize", &m_fSegmentSize);
+
+	if (ImGui::Button("Create Wall"))
+		CreateWall();
+
+	ImGui::InputFloat("ReCreate CoolTime", &m_fMaxCreateCoolTime);
+
+	if (ImGui::Button("Active"))
+		Activate(true);
+	if (ImGui::Button("DeActive"))
+		Activate(false);
 }
 
-HRESULT CInvisibleWall::SetUp_ShaderResources()
+void CInvisibleWall::CreateWall()
 {
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ViewMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	FAILED_CHECK(m_pShaderCom->Set_Matrix("g_ProjMatrix", &CGameInstance::GetInstance()->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	if (m_Points.size() < 3)
+		return;
 
-    return S_OK;
+	CreateInstanceData();
 }
 
-_bool CInvisibleWall::RayPicking()
-{		
+void CInvisibleWall::CreateInstanceData()
+{
+	m_Points.push_back({m_Points.front().first, nullptr});
+	vector<VTXNORTEX> VtxData;
+	vector<FACEINDICES32> IndexData;
+
+	_bool bClockWise = false;
+	_vector vDir1 = XMVector3Normalize(m_Points[1].first - m_Points[0].first);
+	_vector vDir2 = XMVector3Normalize(m_Points[2].first - m_Points[1].first);
+	_vector vCross = XMVector3Cross(vDir1, vDir2);
+	if (XMVectorGetY(vCross) > 0)
+		bClockWise = true;
+
+	vector<_float4> SplinePoints;
+	SplinePoints.reserve(m_Points.size() * 3);
+
+	for (size_t i = 0; i < m_Points.size() - 1; ++i)
+	{
+		const _float fLength = XMVectorGetX(XMVector3LengthEst(m_Points[i].first - m_Points[i + 1].first));
+		const _uint iSegmentCnt = fLength / m_fSegmentSize + 1;
+	
+		if (i > 0 && i < m_Points.size() - 2) // 켓멀롬
+		{
+			for (_uint j = 0; j < iSegmentCnt; ++j)
+			{
+				_float fRatio = (_float)j / (_float)iSegmentCnt;
+				_vector vPos = XMVectorCatmullRom(
+					m_Points[i - 1].first, 
+					m_Points[i].first, 
+					m_Points[i + 1].first, 
+					m_Points[i + 2].first, 
+					fRatio);
+				XMVectorSetW(vPos, 1.f);
+				SplinePoints.push_back(vPos);
+			}
+		}
+		else// 선형 보간
+		{
+			for (_uint j = 0; j < iSegmentCnt; ++j)
+			{
+				_float fRatio = (_float)j / (_float)iSegmentCnt;
+				
+				_vector vPos = XMVectorLerp(
+					m_Points[i].first,
+					m_Points[i + 1].first,
+					fRatio);
+				XMVectorSetW(vPos, 1.f);
+				SplinePoints.push_back(vPos);
+	
+				// 마지막 점
+				if (i == m_Points.size() - 2 && j == iSegmentCnt - 1)
+				{
+					SplinePoints.push_back(m_Points[i + 1].first);
+				}
+			}
+		}
+	}
+
+	VtxData.reserve(SplinePoints.size() * 2);
+	IndexData.reserve(SplinePoints.size() * 2 - 2);
+	_float fU = 0.f;
+
+	VTXNORTEX vtxNor;
+	FACEINDICES32 Index;
+	ZeroMemory(&vtxNor, sizeof(VTXNORTEX));
+	ZeroMemory(&Index, sizeof(FACEINDICES32));
+
+	for (size_t i = 0; i < SplinePoints.size(); ++i)
+	{
+		vtxNor.vPosition = _float3(SplinePoints[i].x, SplinePoints[i].y + 10.f, SplinePoints[i].z);
+		vtxNor.vTexUV = _float2(fU, 0.f);
+		VtxData.push_back(vtxNor);
+
+		vtxNor.vPosition.y -= 10.f;
+		vtxNor.vTexUV.y = 1.f;
+		VtxData.push_back(vtxNor);
+
+
+		// 시계방향일 때
+		if (bClockWise)
+		{
+			if (i < SplinePoints.size() - 1)
+			{
+				Index._0 = i * 2;
+				Index._1 = Index._0 + 2;
+				Index._2 = Index._0 + 3;
+				IndexData.push_back(Index);
+
+				Index._1 = Index._0 + 3;
+				Index._2 = Index._0 + 1;
+				IndexData.push_back(Index);
+
+				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+				fU += fLength;
+			}
+		}
+		else
+		{
+			if (i < SplinePoints.size() - 1)
+			{
+				Index._0 = i * 2;
+				Index._1 = Index._0 + 1;
+				Index._2 = Index._0 + 3;
+				IndexData.push_back(Index);
+
+				Index._1 = Index._0 + 3;
+				Index._2 = Index._0 + 2;
+				IndexData.push_back(Index);
+
+				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+				fU += fLength;
+			}
+		}
+	}
+
+
+	{
+		Safe_Release(m_pBuffer);
+		CONTEXT_LOCK;
+		m_pBuffer = CVIBuffer_Invisible::Create(m_pDevice, m_pContext, VtxData, IndexData);
+	}
+
+	m_Points.pop_back();
+
+	Safe_Release(m_pPxMesh);
+	m_pPxMesh = CPhysXStaticMesh::Create(m_pDevice, m_pContext, VtxData, IndexData, m_pTransformCom->Get_WorldMatrix_f4x4());
+}
+
+void CInvisibleWall::Activate(_bool bActive)
+{
+	if (bActive)
+	{
+		m_Start.PlayFromStart();
+	}
+	else
+	{
+		m_End.PlayFromStart();
+	}
+}
+
+_bool CInvisibleWall::IsActive()
+{
+	return m_pPxMesh != nullptr && m_pPxMesh->IsActive();
+}
+
+_bool CInvisibleWall::PickPoint()
+{
 	_float4 vOrigin;
 	_float4 vDir;
 	CGameUtils::GetPickingRay(vOrigin, vDir);
@@ -196,33 +397,54 @@ _bool CInvisibleWall::RayPicking()
 	params.vOrigin = vOrigin;
 	params.vDir = vDir;
 	params.fDistance = 1000.f;
-	params.iTargetType = CTB_STATIC;
+	params.iTargetType = CTB_TRIGGER_FOR_MONSTER;
 	params.bSingle = true;
 
 	if (CGameInstance::GetInstance()->RayCast(params))
-	{		
+	{
 		for (int i = 0; i < t.getNbAnyHits(); ++i)
 		{
-			auto p = t.getAnyHit(i);			
-			if (auto pStaticModel = dynamic_cast<CPhysXStaticModel*>(CPhysXUtils::GetComponent(p.actor)))
+			auto p = t.getAnyHit(i);
+			if (auto pRigidBody = dynamic_cast<CRigidBody*>(CPhysXUtils::GetComponent(p.actor)))
 			{
-				_float3 PickingPos = { 0.f, 0.f, 0.f };
-				memcpy(&PickingPos, &p.position, sizeof(_float3));
-
-				AddPoint_ForTool(PickingPos);
-
-				if (m_bPick)
-				{					
-					m_TrailPointList.push_back(m_Points.back().first);
-					m_iPointIdx = m_TrailPointList.size();
-					m_bPick = false;
-					return true;					
+				for (size_t i = 0; i < m_Points.size(); ++i)
+				{
+					if (m_Points[i].second == pRigidBody)
+					{
+						m_iPointIdx = i;
+						return true;
+					}
 				}
-			}				
+			}
 		}
-	}	
+	}
 
 	return false;
+}
+
+void CInvisibleWall::AddPoint_ForTool(_float4 vPos)
+{
+	Json json;
+	json["RigidBody"]["bKinematic"] = true;
+	json["RigidBody"]["bTrigger"] = false;
+	json["RigidBody"]["Density"] = 10;
+	json["RigidBody"]["ColliderType"] = CT_TRIGGER_FOR_MONSTER;
+	json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
+	json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
+	auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
+	pRigidBody->BeginTick();
+	pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
+
+	_matrix WorldInv = m_pTransformCom->Get_WorldMatrix_Inverse();
+	vPos = XMVector3TransformCoord(vPos, WorldInv);
+
+	if (m_Points.empty() == false && m_Points.back().first == vPos)
+	{
+		Safe_Release(pRigidBody);
+		return;
+	}
+
+	m_Points.push_back({vPos, pRigidBody});
 }
 
 void CInvisibleWall::DeletePoint(_uint idx)
@@ -232,43 +454,6 @@ void CInvisibleWall::DeletePoint(_uint idx)
 
 	Safe_Release(m_Points[idx].second);
 	m_Points.erase(m_Points.begin() + idx);
-}
-
-void CInvisibleWall::AddPoint_ForTool(_float3 vPos)
-{
-	if (m_Points.empty())
-		vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-	Json json;
-	json["RigidBody"]["bKinematic"] = true;
-	json["RigidBody"]["bTrigger"] = false;
-	json["RigidBody"]["Density"] = 10;
-	json["RigidBody"]["ColliderType"] = CT_TRIGGER_FOR_MONSTER;
- 	json["RigidBody"]["OriginTransform"] = _float4x4::CreateScale(m_fIndicatorSize);
-	json["RigidBody"]["ShapeType"] = CRigidBody::TYPE_SPHERE;
-	auto pRigidBody = dynamic_cast<CRigidBody*>(CGameInstance::GetInstance()->Clone_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", &json));
-	pRigidBody->SetPxWorldMatrix(_float4x4::CreateTranslation(vPos.x, vPos.y, vPos.z));
-	pRigidBody->BeginTick();
-
-	/*_matrix WorldInv = m_pTransformCom->Get_WorldMatrix_Inverse();
-	vPos = XMVector3TransformCoord(vPos, WorldInv);*/
-
-	if (m_Points.empty() == false && m_Points.back().first == vPos)
-	{
-		Safe_Release(pRigidBody);
-		return;
-	}
-
-	m_Points.push_back({ vPos, pRigidBody });
-	m_bPick = true;
-}
-
-void CInvisibleWall::CreateInvWall()
-{
-	Safe_Release(m_pBuffer);
-	m_pBuffer = CVIBuffer_Invisible::Create(m_pDevice, m_pContext, m_TrailPointList, m_fHeight);
-	
-	//m_TrailPointList.clear();
 }
 
 CInvisibleWall* CInvisibleWall::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -304,27 +489,8 @@ void CInvisibleWall::Free()
 	for (auto Point : m_Points)
 		Safe_Release(Point.second);
 	m_Points.clear();
+
+	Safe_Release(m_pPxMesh);
+	for (auto pTex : m_tParams.Textures)
+		Safe_Release(pTex.first);
 }
-
-
-
-/*
-		_float3 vPos1, vPos2;
-
-		_uint iCnt = 0;
-
-		_uint iPointCnt = 0;
-		iPointCnt = m_TrailPointList.size();
-		for (auto& iter : m_TrailPointList)
-		{
-			if (iCnt == (m_TrailPointList.size() - 2))
-			{
-				vPos1 = iter;
-			}
-			else if (iCnt == (m_TrailPointList.size() - 1))
-			{
-				vPos2 = iter;
-			}
-
-			iCnt++;
-		}*/
