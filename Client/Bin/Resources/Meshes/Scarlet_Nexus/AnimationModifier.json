@@ -3256,6 +3256,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_ch0100_325_AL_throw_LR_end": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_ch0100_325_AL_throw_LR_loop": {
         "Duration": 160.0,
         "TickPerSecond": 50.0,

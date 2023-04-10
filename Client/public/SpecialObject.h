@@ -90,6 +90,8 @@ public:
 		m_bBrightChange = true;
 	}
 	void	Set_Dissolve(_bool bDissolve) { m_bDissolve = bDissolve; }
+	void	Set_Used() { m_bUseCheck = true; }
+	_bool	Get_AddAble() { return m_bAddAble; }
 
 protected:
 	void	BrightChecker();
@@ -99,6 +101,8 @@ protected:
 	_bool	m_bRimFix = false;	// 림라이트 값 고정
 	_bool	m_bBrightChange = false;
 	_bool	m_bDissolve = false;
+	_bool	m_bUseCheck = false;
+	_bool	m_bAddAble = false;
 
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }

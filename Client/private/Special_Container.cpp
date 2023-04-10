@@ -55,6 +55,7 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			if (m_bCollision) return;
 
 			m_bCollision = true;
+			m_bAddAble = true;
 
 			m_iModelIndex += 1;
 

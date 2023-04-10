@@ -72,7 +72,7 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 
 		m_fDeadTime -= (_float)TimeDelta;
 
-		if (1.f >= m_fDeadTime)
+		if (3.f >= m_fDeadTime)
 		{
 			Set_Dissolve(true);
 		}
@@ -272,6 +272,8 @@ void CSpecial_TelephonePole::TelephonePole_Collision_On()
 
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_TelephonePole_BreakMeshes")->
 			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+		m_bAddAble = true;
 	}
 }
 

@@ -48,6 +48,8 @@ HRESULT CSpecial_IronBars_SingleBars::Initialize(void * pArg)
 			{
 				if (m_bHit) return;
 
+				m_bAddAble = true;
+
 				m_bHit = true;
 				m_fChangeKineticTimer = 0.f;
 

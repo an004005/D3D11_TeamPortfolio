@@ -104,6 +104,14 @@ void CSpecial_DropObject_Bundle::BeginTick()
 
 void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bUseCheck)
+	{
+		for (auto& iter : m_pObject_Single)
+		{
+			static_cast<CSpecial_DropObject_Single*>(iter)->Set_Used();
+		}
+	}
+
 	if (m_bDeadCheck)
 	{
 		for (auto& iter : m_pObject_Single)

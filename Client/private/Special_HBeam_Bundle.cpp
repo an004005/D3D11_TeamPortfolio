@@ -60,6 +60,8 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
+			m_bAddAble = true;
+
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 			tParam.eAttackSAS = ESASType::SAS_END;
@@ -101,6 +103,12 @@ void CSpecial_HBeam_Bundle::BeginTick()
 
 void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bUseCheck)
+	{
+		for (auto& iter : m_pHBeam_Single)
+			static_cast<CSpecialObject*>(iter)->Set_Used();
+	}
+
 	if (m_bDeadCheck)
 	{
 		m_fDeadTime -= (_float)TimeDelta;
@@ -374,6 +382,11 @@ void CSpecial_HBeam_Bundle::HBeam_Explosion()
 
 void CSpecial_HBeam_Bundle::HBeam_SetDeadTimer()
 {
+	for (auto& iter : m_pHBeam_Single)
+	{
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(false);
+	}
+
 	m_bDeadCheck = true;
 	m_fDeadTime = 3.f;
 }

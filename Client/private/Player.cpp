@@ -747,6 +747,18 @@ HRESULT CPlayer::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+	vRight.Normalize();
+	_float4 vLeftPos = vPos + (vRight * -1.f);
+	_float4 vRightPos = vPos + vRight;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vLeftPos);
+	m_pModel->Render(m_pTransformCom);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vRightPos);
+	m_pModel->Render(m_pTransformCom);
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+
 	return S_OK;
 }
 
@@ -2815,10 +2827,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Predicator([&]()->_bool {return m_pASM->isSocketAlmostFinish("Hit_AnimSocket"); })
 				.Priority(0)
 
-				.AddTransition("KNUCKBACK to BREAKFALL", "BREAKFALL")
-				.Predicator([&]()->_bool {return m_bBreakFall; })
-				.Priority(0)
-
 		.AddState("AIRBORNE")
 			.OnStart([&]() 
 			{
@@ -2840,10 +2848,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 
 				.AddTransition("AIRBORNE to FALLDOWN", "FALLDOWN")
 				.Predicator([&]()->_bool {return m_bAir && m_pASM->isSocketAlmostFinish("Hit_AnimSocket");; })
-				.Priority(0)
-
-				.AddTransition("KNUCKBACK to BREAKFALL", "BREAKFALL")
-				.Predicator([&]()->_bool {return m_bBreakFall; })
 				.Priority(0)
 
 		.AddState("FALL")
@@ -2883,7 +2887,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Priority(0)
 
 				.AddTransition("FALLDOWN to BREAKFALL", "BREAKFALL")
-				.Predicator([&]()->_bool {return m_bBreakFall; })
+				.Predicator([&]()->_bool {return !m_pASM->isSocketPassby("Hit_AnimSocket", 0.f) && m_bBreakFall; })
 				.Priority(0)
 
 		//.AddState("BREAKFALL_FRONT")
@@ -6300,6 +6304,8 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 
+			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Used();
+
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_Set_Animation("AS_mg02_372_train_start_L");
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Activate_Animation(true);
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
@@ -6453,6 +6459,8 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Start_L);
 			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
+
+			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Used();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -6502,11 +6510,18 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fSpecialCharge = 0.f;
 			static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->TelephonePole_Collision_Off();
 		})
 			.AddTransition("TELEPHONEPOLE_LEFT_THROW to TELEPHONEPOLE_LEFT_WAIT", "TELEPHONEPOLE_LEFT_WAIT")
+			.Predicator([&]()->_bool 
+			{ 
+				_bool bAddAble = static_cast<CSpecial_TelephonePole*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
+				return bAddAble && (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
+			})
+			.Priority(0)
+
+			.AddTransition("TELEPHONEPOLE_LEFT_THROW to TELEPHONEPOLE_LEFT_END", "TELEPHONEPOLE_LEFT_END")
 			.Predicator([&]()->_bool 
 			{ 
 				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
@@ -6517,6 +6532,8 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		.AddState("TELEPHONEPOLE_LEFT_WAIT")
 		.OnStart([&]() 
 		{
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
+
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_Swing_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 
@@ -6550,7 +6567,7 @@ HRESULT CPlayer::SetUp_TelephonePoleStateMachine()
 		.AddState("TELEPHONEPOLE_LEFT_END")
 		.OnStart([&]() 
 		{
-			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TelephonePole_End_L);
 
 			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
@@ -6832,6 +6849,9 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_333_AL_rotation_end"));
 	m_HBeam_Finish_L.push_back(pAnimation);
 
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_ch0100_325_AL_throw_LR_end"));
+	m_HBeam_Fail_L.push_back(pAnimation);
+
 	m_pHBeamStateMachine_Left =
 		CFSMComponentBuilder()
 		.InitState("HBEAM_LEFT_NOUSE")
@@ -6918,6 +6938,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Throw_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Used();
 
 		})
 		.Tick([&](double fTimeDelta)
@@ -6945,19 +6966,55 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
 			m_fSpecialCharge = 0.f;
 		})
 			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_WAIT", "HBEAM_LEFT_WAIT")
 			.Predicator([&]()->_bool 
 			{ 
-				return (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed());
+				_bool bAddAble = static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
+				return bAddAble && (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed()) && (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.1f));
+			})
+			.Priority(0)
+
+			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_FAIL", "HBEAM_LEFT_FAIL")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.2f));
+			})
+			.Priority(0)
+
+		.AddState("HBEAM_LEFT_FAIL")
+		.OnStart([&]() 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
+			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Fail_L);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetTrigger(true);
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_SetDeadTimer();
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
+		})
+		.Tick([&](double fTimeDelta)
+		{
+		})
+		.OnExit([&]()
+		{
+			m_fSpecialCharge = 0.f;
+		})
+			.AddTransition("HBEAM_LEFT_FAIL to HBEAM_LEFT_NOUSE", "HBEAM_LEFT_NOUSE")
+			.Predicator([&]()->_bool 
+			{ 
+				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
 			})
 			.Priority(0)
 
 		.AddState("HBEAM_LEFT_WAIT")
 		.OnStart([&]() 
 		{
+			CGameInstance::GetInstance()->SetTimeRatioCurve("KineticSpecialWaiting");
+
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Rotation_L);
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 
@@ -6991,10 +7048,10 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.AddState("HBEAM_LEFT_END")
 		.OnStart([&]() 
 		{
-			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_End_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_SetTrigger(true);
-			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Finish();
+			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_SetDeadTimer();
 
 			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
 			{
@@ -7162,6 +7219,8 @@ HRESULT CPlayer::SetUp_DropObjectStateMachine()
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_DropObject_Drop);
 
+			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Used();
+
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->SpecialRimLightFix(true);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Set_Trigger(false);
 			static_cast<CSpecial_DropObject_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->DropObject_Floating();
@@ -7286,8 +7345,10 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 		.AddState("TANKLORRY_CANCEL")
 		.OnStart([&]() 
 		{
-			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Cancel);
+			static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				TankLorry_Release_Particle();
 		})
 		.OnExit([&]()
 		{
@@ -7300,6 +7361,10 @@ HRESULT CPlayer::SetUp_TankLorryStateMachine()
 		.AddState("TANKLORRY_FINISH")
 		.OnStart([&]() 
 		{
+			static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
+				->Set_Used();
+
+
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_TankLorry_Finish);
 			static_cast<CSpecial_TankLorry*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())
@@ -7502,6 +7567,9 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 
 			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				SpecialRimLightFix(true);
+
+			static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				Set_Used();
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7560,6 +7628,11 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 							IronBars_Shooting_All(vTargetPos);
 					}
+					else
+					{
+						static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+							IronBars_Shooting_All(XMVectorSet(0.f, 0.f, 0.f, 0.f));
+					}
 				}
 				// ? ì•„ê°?
 			}
@@ -7577,10 +7650,17 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			.AddTransition("IRONBARS_START to IRONBARS_CHARGE_EX", "IRONBARS_CHARGE_EX")
 			.Predicator([&]()->_bool 
 			{ 
-				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"); 
+				_bool m_bAddAble = static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
+				return m_bAddAble && m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
 			})
 			.Priority(0)
 
+			.AddTransition("IRONBARS_START to IRONBARS_END", "IRONBARS_END")
+			.Predicator([&]()->_bool 
+			{ 
+				return m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket");
+			})
+			.Priority(0)
 
 		.AddState("IRONBARS_CHARGE_EX")
 		.OnStart([&]() 
@@ -7992,6 +8072,9 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Start);
 
 			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
+				Set_Used();
+
+			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				SpecialRimLightFix(true);
 		})
 		.Tick([&](double fTimeDelta)
@@ -8023,18 +8106,12 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_fSpecialCharge = 0.f;
 		})
-			.AddTransition("CONTAINER_START to CONTAINER_END", "CONTAINER_END")
-			.Predicator([&]()->_bool
-				{
-					return (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
-				})
-			.Priority(0)
 
 			.AddTransition("CONTAINER_START to CONTAINER_WAIT", "CONTAINER_WAIT")
 			.Predicator([&]()->_bool 
 			{ 
-				//return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
-				return static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Container_isCollision();
+				_bool bAddAble = static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
+				return bAddAble && (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket"));
 			})
 			.Priority(1)
 

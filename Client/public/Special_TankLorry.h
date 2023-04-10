@@ -41,6 +41,7 @@ public:
 	void TankLorry_Release_OilParticle();
 	void TankLorry_Explosion_Effect();
 	void TankLorry_Explosion_Particle();
+	void TankLorry_Release_Particle();
 
 	virtual _float4 GetPxPostion() override;
 
