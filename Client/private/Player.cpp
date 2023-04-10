@@ -63,6 +63,7 @@
 #include "BrainField.h"
 
 #include "Weapon_Player.h"
+#include "Sheath_Player.h"
 #include "GameManager.h"
 
 #include "EM0210.h"
@@ -244,6 +245,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_NoticeTick.Initialize(1.0, false);
 	m_DetectTimer.Initialize(1.0, false);
 
+	m_strWeaponAttachBone = "RightWeapon";
+
 	return S_OK;
 }
 
@@ -359,7 +362,8 @@ void CPlayer::Tick(_double TimeDelta)
 
 	// 드라이브모드 연출, 최우선적
 	m_pDriveModeProductionStateMachine->Tick(TimeDelta);
-	m_pBrainFieldProductStateMachine->Tick(TimeDelta);
+	if (!m_bDriveMode_Activate)
+		m_pBrainFieldProductStateMachine->Tick(TimeDelta);
 
 	if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_TELEPORT)) 
 		m_pTeleportStateMachine->Tick(TimeDelta);
@@ -578,6 +582,8 @@ void CPlayer::Tick(_double TimeDelta)
 	for (auto& iter : m_vecWeapon)
 	{
 		iter->Tick(TimeDelta);
+
+		if(iter == m_vecWeapon.front())
 		{
 			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
 
@@ -700,8 +706,15 @@ void CPlayer::AfterPhysX()
 
 	for (auto& iter : m_vecWeapon)
 	{
-		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
-		static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
+		if (iter == m_vecWeapon.front())
+		{
+			static_cast<CWeapon_Player*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix(), m_strWeaponAttachBone);
+			static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
+		}
+		else
+		{
+			static_cast<CSheath_Player*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
+		}
 	}
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	// m_pRange->Update_Tick(m_pTransformCom);
@@ -9566,6 +9579,9 @@ HRESULT CPlayer::Setup_Parts()
 	pGameObject = pGameInstance->Clone_GameObject_Get(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("PlayerWeapon"), &Desc);
 	m_vecWeapon.push_back(pGameObject);
 
+	pGameObject = pGameInstance->Clone_GameObject_Get(LEVEL_STATIC, TEXT("Layer_Player"), TEXT("PlayerSheath"), &Desc);
+	m_vecWeapon.push_back(pGameObject);
+
 	return S_OK;
 }
 
@@ -9577,6 +9593,7 @@ void CPlayer::Check_Parts()
 	if (iWeaponType != iCurWeaponType)
 	{
 		static_cast<CWeapon_Player*>(m_vecWeapon.front())->Change_Weapon(static_cast<WEAPONTYPE>(iWeaponType));
+		static_cast<CSheath_Player*>(m_vecWeapon.back())->Change_Sheath(static_cast<WEAPONTYPE>(iWeaponType));
 	}
 }
 

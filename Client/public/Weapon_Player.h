@@ -7,7 +7,7 @@ END
 
 BEGIN(Client)
 
-enum WEAPONTYPE { WP_0106, WP_0190, WP_END, };
+enum WEAPONTYPE { WP_0106, WP_0126, WP_0190, WP_END, };
 
 class CWeapon_Player :
     public CScarletWeapon
@@ -27,6 +27,7 @@ public:
 	virtual HRESULT Render();
 
 public:
+	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform, const string& strBoneName);
 	void	Change_Weapon(WEAPONTYPE eType);
 	_uint	Get_WeaponType() { return static_cast<_uint>(m_eType); }
 

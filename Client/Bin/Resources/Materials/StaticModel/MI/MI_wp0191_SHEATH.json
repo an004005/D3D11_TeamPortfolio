@@ -1,0 +1,28 @@
+{
+    "Active": true,
+    "AlphaBlend": false,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [
+            0
+        ],
+        "Pass": 1,
+        "Textures": [
+            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_191/Texture/T_wp0190_Sword_COL.dds\u0000",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_191/Texture/T_wp0190_Sword_NML.png\u0000",
+            "",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_191/Texture/T_wp0190_Sword_CTL.dds\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel"
+}

@@ -77,6 +77,10 @@ void CWeapon_Player::Tick(_double TimeDelta)
 			strMtrlName = L"MI_wp0106_SWORD";
 			break;
 
+		case WP_0126:
+			strMtrlName = L"MI_wp0126_SWORD";
+			break;
+
 		case WP_0190:
 			strMtrlName = L"MI_wp0190_SWORD";
 			break;
@@ -134,9 +138,21 @@ HRESULT CWeapon_Player::Render()
 	return S_OK;
 }
 
+void CWeapon_Player::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform, const string& strBoneName)
+{
+	_matrix	SocketMatrix = pModel->GetBoneMatrix(strBoneName) * Transform;
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
+}
+
 void CWeapon_Player::Change_Weapon(WEAPONTYPE eType)
 {
 	if (m_eType == eType) return;
+	Assert(eType < WP_END);
 
 	m_eType = eType;
 	CPlayerInfoManager::GetInstance()->Set_PlayerWeapon(static_cast<_uint>(m_eType));
@@ -151,6 +167,7 @@ HRESULT CWeapon_Player::SetUp_Components()
 
 	CModel* pModel = nullptr;
 
+	// wp0106
 	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/wp0106.static_model");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, 
 		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/wp0106.static_model", 
@@ -158,6 +175,15 @@ HRESULT CWeapon_Player::SetUp_Components()
 		(CComponent**)&pModel));
 	m_pModelComs.push_back(pModel);
 
+	// wp0126
+	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model");
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model",
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model",
+		(CComponent**)&pModel));
+	m_pModelComs.push_back(pModel);
+
+	// wp0190
 	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
 		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", 
