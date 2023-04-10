@@ -6,6 +6,8 @@
 #include "Monster.h"
 #include "Enemy.h"
 #include "CamSpot.h"
+#include "JsonStorage.h"
+#include "Canvas_Alarm.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -432,7 +434,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tPlayerStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - (m_tPlayerStat.iMaxExp - m_tPlayerStat.iExp);
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tPlayerStat.iLevel;
 		m_tPlayerStat.iMaxExp += 100;
@@ -443,6 +445,10 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
 
 		m_tPlayerStat.iExp = iOverExp;
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+		pUI_Alarm->Set_LevelUp(m_tPlayerStat.iLevel);
 	}
 
 	if (false == m_bSASMember[HANABI]) return;
@@ -452,7 +458,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tHanabiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - (m_tHanabiStat.iMaxExp - m_tHanabiStat.iExp);
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tHanabiStat.iLevel;
 		m_tHanabiStat.iMaxExp += 100;
@@ -469,7 +475,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tTsugumiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - (m_tTsugumiStat.iMaxExp - m_tTsugumiStat.iExp);
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tTsugumiStat.iLevel;
 		m_tTsugumiStat.iMaxExp += 100;

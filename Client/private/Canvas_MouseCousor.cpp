@@ -11,6 +11,7 @@
 #include "Canvas_MainTalk.h"
 #include "Canvas_Alarm.h"
 #include "Canvas_BossHpMove.h"
+#include "PlayerInfoManager.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -114,6 +115,15 @@ void CCanvas_MouseCousor::Imgui_RenderProperty()
 	//ImGui::SliderFloat("MaxHp", &fMaxHp, 0.0f, 1.0f);
 	//m_pCanvas_BossHpMove->Set_BossHp(fHp / fMaxHp);
 
+	static _int iExp = 0;
+	ImGui::DragInt("Exp", &iExp);
+
+	ImGui::Text("EXP %u", CPlayerInfoManager::GetInstance()->Get_PlayerStat().iExp);
+	ImGui::Text("MAXEXP %u", CPlayerInfoManager::GetInstance()->Get_PlayerStat().iMaxExp);
+	if (ImGui::Button("Level UP"))
+	{
+		CPlayerInfoManager::GetInstance()->Set_Exp(_uint(iExp));
+	}
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

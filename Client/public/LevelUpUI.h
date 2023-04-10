@@ -26,6 +26,10 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
+	_bool	Get_LevelUpBack() {
+		return m_bLevelUpBack;
+	}
+
 	void	Set_LevelUp(const _uint iLevel) {
 		m_iLevel = iLevel - 1;
 		m_bVisible = true;
