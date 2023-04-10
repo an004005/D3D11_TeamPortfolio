@@ -44,6 +44,7 @@ private:
 	_bool	m_bRun = false;
 	_bool	m_bChangePhase = false;
 
+	_bool	m_bturn = false;
 	_uint m_iNear1PhaseOrder = 0;
 
 	_double m_dStampCoolTime[COOL_END] = { 0.0, 30.0 };
