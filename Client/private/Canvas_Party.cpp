@@ -141,7 +141,7 @@ HRESULT CCanvas_Party::Render()
 #pragma region 하나비
 	// 하나비
 	HANABI_STAT tHanabiStat = CPlayerInfoManager::GetInstance()->Get_HanabiStat();
-	if (true == tHanabiStat.bMember)
+	if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI))
 	{
 		vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("%d"), tHanabiStat.iBondLevel);
@@ -161,7 +161,7 @@ HRESULT CCanvas_Party::Render()
 #pragma region 츠구미
 	// 츠구미
 	TSUGUMI_STAT tTsugumiStat = CPlayerInfoManager::GetInstance()->Get_TsugumiStat();
-	if (true == tTsugumiStat.bMember)
+	if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI))
 	{
 		vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("%d"), tHanabiStat.iBondLevel);
@@ -252,15 +252,15 @@ void CCanvas_Party::Imgui_RenderProperty()
 
 	if (ImGui::Button("Hanabi"))
 	{
-		CPlayerInfoManager::GetInstance()->Set_HanabiMember();
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Tsugumi"))
 	{
-		CPlayerInfoManager::GetInstance()->Set_TsugumiMember();
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("GEMMA"))
+	if (ImGui::Button("KYOTO"))
 	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
@@ -354,14 +354,14 @@ void CCanvas_Party::ChildRender_Tick()
 			if (iter->first == L"Party_02_Member_HpBar" ||
 				iter->first == L"Party_02_Member_HpBar_B")
 			{
-				if (false == CPlayerInfoManager::GetInstance()->Get_HanabiStat().bMember) continue;
+				if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI)) continue;
 				else dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_02_Member_Info"))->Set_Float2sX(1.0f);
 			}
 
 			if (iter->first == L"Party_03_Member_HpBar" ||
 				iter->first == L"Party_03_Member_HpBar_B")
 			{
-				if (false == CPlayerInfoManager::GetInstance()->Get_TsugumiStat().bMember) continue;
+				if (false== CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)) continue;
 				else dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_03_Member_Info"))->Set_Float2sX(1.0f);
 			}
 
@@ -394,7 +394,7 @@ void CCanvas_Party::CurrentPick_Tick()
 		Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_01_Leader_B")->Get_Position());
 	}
 
-	if (true == CPlayerInfoManager::GetInstance()->Get_HanabiStat().bMember)
+	if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI))
 	{
 		if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->Get_OnButton())
 		{
@@ -414,7 +414,7 @@ void CCanvas_Party::CurrentPick_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_02_Member_B"))->Set_OnAlpha();	// 멤버로 추가되지 않았으면 불이 들어올 수 없게 한다.
 	}
 
-	if (true == CPlayerInfoManager::GetInstance()->Get_TsugumiStat().bMember)
+	if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI))
 	{
 		if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Get_OnButton())
 		{

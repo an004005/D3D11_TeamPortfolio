@@ -74,10 +74,24 @@ HRESULT CCanvas_Sale::Render()
 
 	// 메뉴
 	_float2 vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuAll"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"모두", vPosition + _float2(77.0f, 8.0f), 0.f, vFontSize, vColor);
+
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuBattle"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuBattle"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(52.0f, 8.0f), 0.f, vFontSize, vColor);
+
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->GetScreenSpaceLeftTop();
+	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->Get_OnAlpha())
+		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+	else
+		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"무기", vPosition + _float2(77.0f, 8.0f), 0.f, vFontSize, vColor);
 	
 

@@ -2,6 +2,7 @@
 #include "..\public\EM1200_Controller.h"
 #include <FSMComponent.h>
 #include "EM1200.h"
+#include "EM1200_AnimInstance.h"
 
 CEM1200_Controller::CEM1200_Controller(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CAIController(pDevice, pContext)
@@ -57,14 +58,17 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 	}
 
 	m_bRun = false;
-	m_eTurn = EBaseTurn::TURN_END;
 
 	m_dStampCoolTime[CURTIME] += TimeDelta;
 	m_dShoutCoolTime[CURTIME] += TimeDelta;
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		DefineState(TimeDelta);
+		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+		AddCommand("Wait", 0.5f, &CAIController::Wait);
+		AddCommand("Rush", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 1.f, &CAIController::Wait);
+		//DefineState(TimeDelta);
 	}
 }
 
@@ -114,6 +118,7 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 		else
 		{
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Wait", 1.f, &CAIController::Wait);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
 			AddCommand("Wait", 1.f, &CAIController::Wait);
 		}
@@ -143,6 +148,7 @@ void CEM1200_Controller::Tick_Mid(_double TimeDelta)
 	else
 	{
 		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+		//AddCommand("Wait", 1.f, &CAIController::Wait);
 		AddCommand("Rush", 0.f, &CAIController::Input, R);
 		AddCommand("Wait", 1.f, &CAIController::Wait);
 	}	
@@ -179,8 +185,33 @@ void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
  
 void CEM1200_Controller::Turn( _float fSpeedRatio)
 {
-	m_eTurn = m_pCastedOwner->IsTargetRight() ? EBaseTurn::TURN_RIGHT : EBaseTurn::TURN_LEFT;
-	TurnToTargetStop(fSpeedRatio);
+	if (m_pTarget == nullptr || m_pCastedOwner == nullptr)
+		return;
+
+	if (m_bturn == false)
+	{
+		m_eTurn = m_pCastedOwner->IsTargetRight() ? EBaseTurn::TURN_RIGHT : EBaseTurn::TURN_LEFT;
+		m_bturn = true;
+	}
+
+	const _vector vLookAt = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+
+	CAnimation* pAnimation = m_pCastedOwner->Get_Model()->GetPlayAnimation();
+
+	if (nullptr == pAnimation) return;
+
+	_float fRatio = pAnimation->GetPlayRatio();
+
+	if (pAnimation == m_pCastedOwner->Get_Model()->Find_Animation("AS_em1200_157_AL_turn_R_loop2") ||
+		pAnimation == m_pCastedOwner->Get_Model()->Find_Animation("AS_em1200_155_AL_turn_L_loop2"))
+	{
+		if (m_pCastedOwner->GetTransform()->LookAt_Lerp_NonY(vLookAt, fRatio))
+		{
+			m_Commands.front().SetFinish();
+			m_eTurn = EBaseTurn::TURN_END;
+			m_bturn = false;
+		}
+	}
 }
 
 void CEM1200_Controller::DefineState(_double TimeDelta)

@@ -79,8 +79,8 @@ void CCanvas_PurchaseKinds::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	m_vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
-	CurrentList();
 	Key_Input();
+	CurrentList();
 }
 
 void CCanvas_PurchaseKinds::Late_Tick(_double TimeDelta)
@@ -88,7 +88,6 @@ void CCanvas_PurchaseKinds::Late_Tick(_double TimeDelta)
 	if (m_bVisible == false) return;
 
 	CCanvas::Late_Tick(TimeDelta);
-
 }
 
 HRESULT CCanvas_PurchaseKinds::Render()
@@ -217,7 +216,16 @@ void CCanvas_PurchaseKinds::Clone_ShopListCanvas(const size_t iIndex)
 
 void CCanvas_PurchaseKinds::CurrentList()
 {
-	if (m_bLastCheck == true || m_bShortage == true) return;
+	if (m_bLastCheck == true || m_bShortage == true)
+	{
+		if (4 < m_vecShopCanvass.size())
+		{
+			m_vecShopCanvass[3].second->Set_OnButton();
+			m_vecShopCanvass[4].second->Set_OnButton();
+		}
+
+		return;
+	}
 
 	for (size_t i = 0; i < m_vecShopCanvass.size(); i++)
 	{
@@ -251,6 +259,7 @@ void CCanvas_PurchaseKinds::Key_Input()
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_CurrentCountButton"))->Get_Input())
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Shop_CurrentCountButton"))->Set_Input();
+
 		m_iItemCount = m_vecShopCanvass[m_iCanvasIndex].second->Get_NmberPurchases();
 		if (0 == m_iItemCount) return;
 

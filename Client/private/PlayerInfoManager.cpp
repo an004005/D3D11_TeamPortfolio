@@ -6,6 +6,8 @@
 #include "Monster.h"
 #include "Enemy.h"
 #include "CamSpot.h"
+#include "JsonStorage.h"
+#include "Canvas_Alarm.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -34,7 +36,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
-	m_tPlayerStat.fMaxBrainFieldMaintain = 60.f;
+	m_tPlayerStat.fMaxBrainFieldMaintain = 60.0f;
 
 	m_tPlayerStat.iExp = 50;
 	m_tPlayerStat.iMaxExp = 100;
@@ -52,7 +54,6 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma region	∏‚πˆ ±‚∫ª Ω∫≈» √ ±‚»≠
 
-	m_tHanabiStat.bMember = false;
 	m_tHanabiStat.iHP = 1700;
 	m_tHanabiStat.iMaxHP = 1700;
 	m_tHanabiStat.iExp = 50;
@@ -63,7 +64,6 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tHanabiStat.iAttack = 50;
 	m_tHanabiStat.iDefense = 20;
 
-	m_tTsugumiStat.bMember = false;
 	m_tTsugumiStat.iHP = 1300;
 	m_tTsugumiStat.iMaxHP = 1300;
 	m_tTsugumiStat.iExp = 0;
@@ -275,10 +275,12 @@ void CPlayerInfoManager::Change_BrainFieldMaintain(CHANGETYPE eType, _float Chan
 	}
 	else if (CHANGE_DECREASE == eType)
 	{
-		if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
-			ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
+		m_tPlayerStat.fBrainFieldMaintain = ChangeBrain;
 
-		m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
+		//if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
+		//	ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
+
+		//m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
 	}
 
 	if (m_tPlayerStat.fBrainFieldMaintain > m_tPlayerStat.fMaxBrainFieldMaintain)	
@@ -423,6 +425,73 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 
 	m_pSpecialObject = pSpecialObject;
 	return S_OK;
+}
+
+void CPlayerInfoManager::Set_Exp(const _uint iExp)
+{
+	_uint iAllExp = m_tPlayerStat.iExp + iExp;
+	if (m_tPlayerStat.iMaxExp > iAllExp)
+		m_tPlayerStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+
+		++m_tPlayerStat.iLevel;
+		m_tPlayerStat.iMaxExp += 100;
+		m_tPlayerStat.iExp = 0;
+		m_tPlayerStat.m_iMaxHP += 50;
+		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
+		m_tPlayerStat.iAttack += m_tPlayerStat.iLevel;
+		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
+
+		m_tPlayerStat.iExp = iOverExp;
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_Alarm", &json));
+		pUI_Alarm->Set_LevelUp(m_tPlayerStat.iLevel);
+	}
+
+	if (false == m_bSASMember[HANABI]) return;
+
+	iAllExp = m_tHanabiStat.iExp + iExp;
+	if (m_tHanabiStat.iMaxExp > iAllExp)
+		m_tHanabiStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+
+		++m_tHanabiStat.iLevel;
+		m_tHanabiStat.iMaxExp += 100;
+		m_tHanabiStat.iExp = 0;
+		m_tHanabiStat.iMaxHP += 50;
+		m_tHanabiStat.iHP = m_tHanabiStat.iMaxHP;
+		m_tHanabiStat.iAttack += m_tHanabiStat.iLevel;
+
+		m_tHanabiStat.iExp = iOverExp;
+	}
+
+	iAllExp = m_tTsugumiStat.iExp + iExp;
+	if (m_tTsugumiStat.iMaxExp > iAllExp)
+		m_tTsugumiStat.iExp += iExp;
+	else
+	{
+		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+
+		++m_tTsugumiStat.iLevel;
+		m_tTsugumiStat.iMaxExp += 100;
+		m_tTsugumiStat.iExp = 0;
+		m_tTsugumiStat.iMaxHP += 50;
+		m_tTsugumiStat.iHP = m_tTsugumiStat.iMaxHP;
+		m_tTsugumiStat.iAttack += m_tTsugumiStat.iLevel;
+
+		m_tTsugumiStat.iExp = iOverExp;
+	}
+}
+
+void CPlayerInfoManager::Set_StartBrainField()
+{
+	m_tPlayerStat.bStartBrainField = true;
+	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.fMaxDriveEnergy;
 }
 
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)

@@ -345,6 +345,23 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 			}
 			else
 			{
+				if (nullptr != m_pCurState->m_ReserveAnimation)
+				{
+					if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
+					{
+						m_pCurState->m_ReserveAnimation->SetPlayRatio(m_pCurState->m_Animation->GetPlayRatio());
+						m_pCurState->m_SpairAnimation = m_pCurState->m_ReserveAnimation;
+						m_pCurState->m_ReserveAnimation = nullptr;
+					}
+					else if (m_pCurState->m_Animation == m_pCurState->m_ReserveAnimation)
+					{
+						//m_pCurState->m_Animation->SetPlayRatio(m_pCurState->m_Animation->GetPlayRatio())
+						m_pCurState->m_SpairAnimation = nullptr;
+						m_pCurState->m_ReserveAnimation = nullptr;
+					}
+				}
+
+
 				if (nullptr != m_pCurState->m_SpairAnimation)
 				{
 					if (m_pCurState->m_SpairAnimation->IsFinished())
@@ -444,6 +461,8 @@ void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation *
 	{
 		pState->second->m_ReserveAnimation = pSpairAnim;
 	}
+
+	m_fCurTransitionTime = 0.f;
 }
 
 void CAnimationStateMachine::ResetSpairAnim()
@@ -507,7 +526,15 @@ void CAnimationInstance::StopAnimationSocket(const string& strSocName)
 
 CAnimation* CAnimationInstance::GetSocketAnimation(const string& strSocName)
 {
-	return m_mapAnimSocket.find(strSocName)->second.front();
+	const auto iter = m_mapAnimSocket.find(strSocName);
+
+	if (iter == m_mapAnimSocket.end())
+		return nullptr;
+
+	if (iter->second.empty())
+		return nullptr;
+
+	return iter->second.front();
 }
 
 _bool CAnimationInstance::CheckFinishedAnimSocket()
@@ -525,6 +552,7 @@ _bool CAnimationInstance::CheckFinishedAnimSocket()
 				PairSoc.second.pop_front();
 				
 				// 소켓 이름에 Saperate가 들어갈 경우 전부 비게 되면 false를 반환하여 IDLE상태로 가는 것을 막는다.
+				//Netual_Saperate_Animation
 				if (PairSoc.second.empty() && PairSoc.first.find("Saperate") != (string::npos))
 					return false;
 

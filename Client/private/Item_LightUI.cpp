@@ -35,22 +35,13 @@ void CItem_LightUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	if (m_bUse == false) return;
-
-	m_dAlpha_TimeAcc += TimeDelta;
-	if (3.0 < m_dAlpha_TimeAcc)
-	{
-		m_fAlpha = 0.25f;
-		m_tParams.Float4s[0].w = m_fAlpha;
-		m_bUse = false;
-		return;
-	}
+	if (m_bUse == false) 	return;
 
 	if (true == m_fAlphaDown)
 	{
 		m_fAlpha -= _float(TimeDelta) * 3.0f;
 
-		if (0.25f > m_fAlpha)
+		if (0.4f > m_fAlpha)
 			m_fAlphaDown = false;
 	}
 	else

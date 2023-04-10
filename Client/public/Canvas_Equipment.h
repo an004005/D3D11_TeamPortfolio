@@ -2,6 +2,7 @@
 
 #include "Canvas.h"
 #include "Client_Defines.h"
+#include "Item_Manager.h"
 
 BEGIN(Client)
 
@@ -21,12 +22,15 @@ public:
 
 private:
 	void	Weaponkind_Tick(const _double & TimeDelta);
-	void	WeaponkindPick_Tick();
 	void	RihgtInfoMove_Tick(const _double& TimeDelta);
+	void	WeaponkindPick_Tick();
+
+	void	ChangeWeapon(const wstring wsChangeWeaponName);
+	void	ArrowTick();
 
 private:
 	// 왼쪽 무기 정보 저장
-	array<_bool, 3> m_arrItmeWindowPick = { false, false, false };
+	array<_bool, 3> m_arrItmeWindowPick = { false, false, false };		// 목적지 까지 도달 했는지..
 	array<_float, 3> m_arrOriginalPos = { 0.0f, 0.0f, 0.0f };
 	array<_float, 3> m_arrAddWeaponPos = { 0.0f, 0.0f, 0.0f };
 
@@ -37,9 +41,11 @@ private:
 	// 오른쪽에 무기 정보를 띄우기 위해 필요한 변수
 	_float	m_fOriginalPos = { 0.0f };
 	_float	m_fAddWeaponPos = { 0.0f };
-	size_t m_iPickIndex = { 0 };
+	_uint m_iPickIndex = { 0 };
 	_bool m_bWeaponPick = { false }; // 왼쪽에서 무기를 선택하면 true, 무기를 닫으면 false
 
+	// Tick() 을 돌면서 계속 아이템의 정보를 가져온다.
+	vector<pair<wstring, CItem_Manager::ITEMINFO>> m_vecItmeInfo;
 
 public:
 	static CCanvas_Equipment* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

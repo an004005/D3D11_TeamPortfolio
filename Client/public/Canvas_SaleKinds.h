@@ -44,7 +44,6 @@ private:
 	_uint	m_iItemCount = { 0 };
 
 	_bool	m_bLastCheck = { false };
-
 	_bool	m_bCanvasReset = { false };
 
 public:
