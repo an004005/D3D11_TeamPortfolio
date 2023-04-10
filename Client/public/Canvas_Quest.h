@@ -8,7 +8,7 @@ BEGIN(Client)
 typedef struct tagQuestInfo
 {
 	wstring wsQuest0 = L"";
-	wstring wsQuest1 = L"";
+	//wstring wsQuest1 = L"";
 
 	//  L"Chake" 글씨에 따라서 길이를 조절하고 싶은 경우 추가하기
 	// Quest 가 2개 이상 생길 경우 첫 Y Pos 를 지정할 수 있도록 하면 된다.
