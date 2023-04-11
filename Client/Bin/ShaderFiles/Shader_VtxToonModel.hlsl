@@ -158,36 +158,6 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	return Out;
 }
 
-PS_OUT_FORWARD PS_ToonDefault_Forward_6(PS_IN In)
-{
-	PS_OUT_FORWARD Out = (PS_OUT_FORWARD)0;
-
-	float4 vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
-
-	float4 vNormal = NormalPacking(In);
-	vNormal.xyz = vNormal.xyz * 2.f - 1.f;
-
-	float4 vAMB = 0.f;
-	if (g_tex_on_2)
-		vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
-	else
-		vAMB = vDiffuse * g_float_3;
-	float4 vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
-
-	float3 vLightDir = float3(1.f, -1.f, 1.f);
-	float4 vLightColor = float4(1.f, 1.f, 1.f, 1.f);
-
-	float fNdotL = dot(normalize(vNormal.xyz), normalize(vLightDir.xyz));
-	float fDiff = saturate(max(fNdotL, 0.0));
-	fDiff = max(vCTL.r * 2.f , min(vCTL.g, fDiff));
-	fDiff *= vCTL.b;
-	float4 vShade = vLightColor * saturate(fDiff);
-
-	Out.vColor = saturate(vDiffuse * vShade + vAMB * 0.5f);
-	Out.vColor.a = 1.f;
-
-	return Out;
-}
 
 technique11 DefaultTechnique
 {

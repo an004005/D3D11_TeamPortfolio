@@ -87,7 +87,19 @@ void CSpecial_Train::Tick(_double TimeDelta)
 	}
 
 	if (m_bActivate)
-		m_pModelComs.front()->Play_Animation(TimeDelta);
+	{
+		if (m_fLerpTime < m_fDuration)
+		{
+			m_pModelComs.front()->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::BLEND, m_fLerpTime / m_fDuration);
+			m_fLerpTime += (_float)TimeDelta;
+		}
+		else
+		{
+			m_pModelComs.front()->GetPlayAnimation()->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+		}
+
+		m_pModelComs.front()->Compute_CombindTransformationMatrix();
+	}
 
 	// 스파크 이펙트 생성
 	if ((m_pModelComs.front()->GetPlayAnimation()->GetName() == "AS_mg02_372_train_start_L") &&
@@ -204,6 +216,7 @@ void CSpecial_Train::Imgui_RenderProperty()
 
 void CSpecial_Train::Train_Set_Animation(const string & szAnimName)
 {
+	m_fLerpTime = 0.f;
 	m_pModelComs.front()->SetPlayAnimation(szAnimName);
 }
 
@@ -217,7 +230,8 @@ void CSpecial_Train::Train_Collision_On()
 	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
 	tParam.iDamage = 9999;
 
-	Collision_Check_Capsule(m_pCollider, tParam, true);
+	if(Collision_Check_Capsule(m_pCollider, tParam, true))
+		CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 }
 
 void CSpecial_Train::Train_Collision_Off()
@@ -239,23 +253,34 @@ void CSpecial_Train::Train_SparkEffect_Set()
 	// 위치가 본에 잘 안 붙음 -> 확인 필
 
 	m_pSpark[0] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[0]->Start_Attach(this, "M_BehindWheel_01", true);
+	m_pSpark[0]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -10.f), "M_BehindWheel_02", true, true);
 
 	m_pSpark[1] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[1]->Start_Attach(this, "M_BehindWheel_02", true);
+	m_pSpark[1]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -10.f), "M_BehindWheel_02", true, true);
+
+	m_pSpark[2] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[2]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -12.f), "M_BehindWheel_02", true, true);
+
+	m_pSpark[3] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[3]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -12.f), "M_BehindWheel_02", true, true);
+
+	m_pSpark[4] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[4]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -14.f), "M_BehindWheel_02", true, true);
+
+	m_pSpark[5] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
+	m_pSpark[5]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -14.f), "M_BehindWheel_02", true, true);
+
 }
 
 void CSpecial_Train::Train_SparkEffect_Release()
 {
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpark[0]))
+	for (_uint i = 0; i < 6; ++i)
 	{
-		m_pSpark[0]->Delete_Particles();
-		m_pSpark[0] = nullptr;
-	}
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpark[1]))
-	{
-		m_pSpark[1]->Delete_Particles();
-		m_pSpark[1] = nullptr;
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpark[i]))
+		{
+			m_pSpark[i]->Delete_Particles();
+			m_pSpark[i] = nullptr;
+		}
 	}
 }
 

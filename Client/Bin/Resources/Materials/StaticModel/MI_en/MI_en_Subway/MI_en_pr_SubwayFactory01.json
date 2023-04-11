@@ -10,7 +10,7 @@
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_NML.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_RMA.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.dds"
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.png"
 		],
 		"Pass": 1,
 		"Float2s": []

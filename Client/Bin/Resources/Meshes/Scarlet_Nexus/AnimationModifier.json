@@ -1268,6 +1268,10 @@
             {
                 "EventName": "Fire_Attack_3_twist_Particle",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "Middle_CamShake_0.2",
+                "EventTime": 35.0
             }
         ]
     },
@@ -2504,6 +2508,10 @@
             {
                 "EventName": "Elec_Attack_Air_Hold_Landing_Particle",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Middle_CamShake_0.2",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3245,6 +3253,12 @@
     "AS_ch0100_325_AL_throw_LL_start": {
         "Duration": 40.0,
         "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_ch0100_325_AL_throw_LR_end": {
+        "Duration": 50.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

@@ -319,6 +319,58 @@ void CParticleGroup::Start_ForBulletParticle(CEffectSystem* pEF, _bool trueisUpd
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
+	m_bRemoveScale = false;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
+
+void CParticleGroup::Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_BoneName = BoneName;
+	m_bUpdate = trueisUpdate;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = false;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)

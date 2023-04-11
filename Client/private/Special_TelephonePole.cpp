@@ -10,6 +10,7 @@
 #include "ImguiUtils.h"
 #include "Enemy.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_TelephonePole::CSpecial_TelephonePole(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -43,7 +44,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		// Capsule Collision Check¸¦ À§ÇÔ
 		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
-			pTarget->Set_CollisionDuplicate(false);
+			pTarget->Set_CollisionDuplicate(false, ECOPYCOLTYPE::COPYCOL_MAIN);
 		}
 	});
 
@@ -71,7 +72,7 @@ void CSpecial_TelephonePole::Tick(_double TimeDelta)
 
 		m_fDeadTime -= (_float)TimeDelta;
 
-		if (1.f >= m_fDeadTime)
+		if (3.f >= m_fDeadTime)
 		{
 			Set_Dissolve(true);
 		}
@@ -178,6 +179,7 @@ void CSpecial_TelephonePole::TelephonePole_PullOut(_float4 vPlayerPos, _float fF
 
 		m_pBrakeSmoke = CVFX_Manager::GetInstance()->GetParticle(PS_SAS, L"Special_G_TelephonePole_Dark_Smoke");
 		m_pBrakeSmoke->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 2.f, 0.f, 0.f), { 0.f, -1.f, 0.f, 0.f }, false);
+		CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.1f);
 	}
 	else
 	{
@@ -270,6 +272,8 @@ void CSpecial_TelephonePole::TelephonePole_Collision_On()
 
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_TelephonePole_BreakMeshes")->
 			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+		m_bAddAble = true;
 	}
 }
 
