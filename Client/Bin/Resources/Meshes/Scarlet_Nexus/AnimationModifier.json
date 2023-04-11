@@ -7515,7 +7515,7 @@
     },
     "AS_em8200_272_AL_atk_throw1_wait": {
         "Duration": 200.0,
-        "TickPerSecond": 40.0,
+        "TickPerSecond": 100.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -7526,7 +7526,7 @@
         "vecEvent": [
             {
                 "EventName": "Capture_Start",
-                "EventTime": 65.0
+                "EventTime": 55.0
             }
         ]
     },

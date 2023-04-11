@@ -32,16 +32,22 @@ public:
 	virtual void		Imgui_RenderProperty() override;
 	virtual void		SetUpUI() override;
 
+	
+
 public:
 	_bool				IsMove() const { return m_vMoveAxis != _float3::Zero; }
 	_float3				GetMoveAxis() const { return m_vMoveAxis; }
 	_float				GetTurnRemain() const { return m_fTurnRemain; }
 	_bool				IsPlayingSocket() const;
 	_bool				IsRun() const { return m_bRun; }
+	_bool				Check_SecondPhase() { return m_bSecondPhase; }
+
+	void				Set_KineticObject(CGameObject* pObject);
+	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
+	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
 
 protected:
 	void				Detected_Attack();
-
 	void				AddState_Idle(CFSMComponentBuilder& Builder);
 	void				AddState_Teleport(CFSMComponentBuilder& Builder);
 	void				AddState_Attack_Kick(CFSMComponentBuilder& Builder);
@@ -69,6 +75,9 @@ protected:
 public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
+protected:
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
+
 private:
 	void Play_MidHitAnim();
 	void Play_HeavyHitAnim();
@@ -85,6 +94,12 @@ private:
 	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
+
+private:
+	CModel* m_pKineticModel = nullptr;
+	CGameObject* m_pKineticObject = nullptr;
+
+	_matrix m_KineticObjectOrigionPos = XMMatrixIdentity();
 
 private:
 	_float3 m_vMoveAxis;
@@ -123,6 +138,8 @@ private:
 
 	CDoOnce m_SetTPOnce;
 
+	CDoOnce m_SecondPhase;
+
 	_bool	m_bMeleeCollStart = false; 
 	_bool	m_bRangeCollStart = false;
 
@@ -133,6 +150,9 @@ private:
 
 	// For Rush
 	_bool	m_bRushStart = false;
+
+	// For 2Phase
+	_bool	m_bSecondPhase = false;
 private:
 	CEffectGroup* m_pDashEF = nullptr;
 
@@ -147,6 +167,11 @@ private:
 	CSimpleTimeline			m_TPStart;
 	CSimpleTimeline			m_TPEnd;
 
+	CSimpleTimeline			m_CounterStart;
+	CSimpleTimeline			m_CounterEnd;
+
+	CSimpleTimeline			m_CaptureStart;
+	CSimpleTimeline			m_CaptureEnd;
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

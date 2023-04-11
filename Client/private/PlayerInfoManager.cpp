@@ -378,6 +378,22 @@ void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasT
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
 }
 
+void CPlayerInfoManager::Set_SasEnergy(ESASType eSasType, _float iSetEnergy)
+{
+	m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = iSetEnergy;
+}
+
+void CPlayerInfoManager::Release_SasEnergy_All()
+{
+	for (_uint i = 0; i < SAS_CNT; ++i)
+	{
+		if (Get_isSasUsing(ESASType(i)))
+		{
+			m_tPlayerStat.Sasese[i].Energy = 0.1f;
+		}
+	}
+}
+
 void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
 {
 	m_PlayerWorldMatrix = worldmatrix;

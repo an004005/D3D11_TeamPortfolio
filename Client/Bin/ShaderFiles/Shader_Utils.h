@@ -35,7 +35,9 @@ static const float EPSILON = 1e-6f;
 #define COL_PURPLE float3(0.945098f, 0.4f, 1.f)
 // #define COL_OIL float3(0.470588f, 0.23529f, 0.f)
 #define COL_OIL float3(0.1725, 0.1058f, 0.00392f)
-#define COL_FIRE float3(0.9f, 0.3f, 0.f)
+// #define COL_FIRE float3(0.9f, 0.3f, 0.f)
+#define COL_FIRE float3(0.139, 0.035, 0.033)
+
 #define COL_ELEC float3(0.9686f, 1.f, 0.07451f)
 #define COL_WATER float3(0.8039f, 1.f, 1.f)
 #define COL_BURNOUT float3(1.f, 0.4f, 0.f) // ¸ó½ºÅÍ »ç¸Á µðÁ¹ºê »ö

@@ -154,11 +154,26 @@ PS_OUT_NORM PS_KAREN_MASK_ALL(PS_IN_NORM In)
 
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+
+	if(g_int_0 > 0)
+	{
+		if (Out.vColor.r > 0.3f)
+		{
+			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+		}
+		else
+			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 1.5f, flags);
+	}
+	else
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 1.5f, flags);
+
+	
 
 	float Mask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
 
 	float fDissolve = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+
+	
 
 	if (Mask == 1.f)
 			discard;

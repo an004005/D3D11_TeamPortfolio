@@ -165,6 +165,10 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+	void			Set_SasEnergy(ESASType eSasType, _float iSetEnergy);
+
+	void			Release_SasEnergy_All();
+
 
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
