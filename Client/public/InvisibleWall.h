@@ -2,12 +2,15 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "VIBuffer_Invisible.h"
+#include "Shader.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
-class CShader;
 class CRenderer;
 class CVIBuffer_Invisible;
 class CRigidBody;
+class CTexture;
+class CPhysXStaticMesh;
 END
 
 BEGIN(Client)
@@ -28,40 +31,40 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 	virtual void	Imgui_RenderProperty() override;
-	HRESULT			SetUp_ShaderResources();
-
-private:
-	_bool	RayPicking();
-	void	DeletePoint(_uint idx);
-	void	AddPoint_ForTool(_float3 vPos);
 
 public:
-	void CreateInvWall();
+	void CreateWall();
+	void CreateInstanceData();
+	void Activate(_bool bActive);
+	_bool IsActive();
+
+private:
+	void DeletePoint(_uint idx);
+	_bool PickPoint();
+	void AddPoint_ForTool(_float4 vPos);
 
 private:
 	CShader*							m_pShaderCom = nullptr;
 	CRenderer*							m_pRendererCom = nullptr;
 	CVIBuffer_Invisible*				m_pBuffer = nullptr;
+	ShaderParams						m_tParams;
+
+	CPhysXStaticMesh* m_pPxMesh = nullptr;
+
+	CSimpleTimeline m_Start;
+	CSimpleTimeline m_End;
 			
 private:
-	_bool								m_bActive = false;
-	_bool								m_bPick = false;		// Picking
-	vector<class CMapObject*>			m_pMapObjects;			// Picking
-	CGameObject*						m_pGameObject = nullptr;
+	vector<pair<_float4, CRigidBody*>> m_Points;
+	_int m_iPointIdx = 0;
 
-	_float								m_fHeight = 0.f;			// 트레일 벽 높이
-	list<_float3>						m_TrailPointList;
-	list< CVIBuffer_Invisible*>			m_VIBuffInvList;
+	_float m_fIndicatorSize = 0.2f;
 
-	vector<pair<_float3, CRigidBody*>>	m_Points;
-	_int								m_iPointIdx = 0;
-	_float								m_fIndicatorSize = 0.2f;
+	_bool m_bOnTool = false;
+	_float m_fCreateCoolTime = 0.5f;
+	_float m_fMaxCreateCoolTime = 0.5f;
 
-	_bool								m_bOnTool = false;
-	_float								m_fCreateCoolTime = 0.5f;
-	_float								m_fMaxCreateCoolTime = 0.5f;
-
-	_uint								m_iPass = 0;			// Shader
+	_float m_fSegmentSize = 0.5f;
 
 public:
 	static CInvisibleWall*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -37,7 +37,7 @@ void CEMCable::BeginTick()
 void CEMCable::Tick(_double TimeDelta)
 {
 	//몬스터가 죽을때 예외처리
-	if (dynamic_cast<CEnemy*>(m_pOwner)->IsDead())
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner) == false)
 	{
 		m_bDelete = true;
 		return;

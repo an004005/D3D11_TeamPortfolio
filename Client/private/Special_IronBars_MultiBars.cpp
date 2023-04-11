@@ -10,6 +10,7 @@
 #include "ImguiUtils.h"
 #include "Enemy.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_IronBars_MultiBars::CSpecial_IronBars_MultiBars(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -64,6 +65,8 @@ HRESULT CSpecial_IronBars_MultiBars::Initialize(void * pArg)
 
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Iron_Bar_Hit_Particle")
 					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), { 0.f, 1.f, 0.f, 0.f });
+
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
 			}
 		});
 

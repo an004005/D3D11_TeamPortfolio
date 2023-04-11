@@ -46,6 +46,7 @@ public:
 	_bool IsPlayingSocket() const;
 	void Dodge_VelocityCalc();
 	void AfterLocal180Turn();
+	void Adjust_MoveAxis(_double TimeDelta);
 
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
@@ -59,6 +60,8 @@ private:
 	void Rush_SweepSphere();
 	void TailSwing_SweepSphere();
 	void Stamp_Overlap();
+	void WaterStart_Overlap();
+	void WaterLoop_Overlap();
 
 private:
 	class CEM1100_Controller*		m_pController = nullptr;
@@ -68,6 +71,7 @@ private:
 	class CEffectGroup* m_pRushEffect = nullptr;
 private:
 	_float3						 m_vMoveAxis;
+	EBaseAxis				m_eMoveAxis = EBaseAxis::AXIS_END;
 	_bool						m_bHitAir = false;
 
 	_bool						m_bRun = false;
@@ -77,7 +81,7 @@ private:
 	//Attack
 	_bool						m_bRush = false;
 	_bool						m_bTailSwing = false;
-	_float4						vTailPos;
+	_double					m_dLoopTime = 0.0;
 	//Dodge
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;

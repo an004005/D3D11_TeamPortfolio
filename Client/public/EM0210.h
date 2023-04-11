@@ -43,11 +43,17 @@ private:
 	void Play_MidHitAnim();
 	_bool	CanMove4BC(_float fMinDist);
 
+//private:
+//	void Play_HitAdditiveAnim(_double TimeDelta);
+
 private:
 	//충돌 관련 함수 정의
 	void Swing_SweepSphere();
 	void Somersault_SweepSphere();
 	void	HeavyAttackPushStart();
+
+private:
+	_bool PriorityCondition();
 
 private:
 	class CEM0210_Controller*		m_pController = nullptr;
@@ -68,6 +74,9 @@ private:
 	// Run
 	_bool m_bRun = false;
 
+	_bool	m_bDownFirstHit = false;
+	_bool	m_bDown = false;
+
 	//dodge
 	_float4 m_vDodgeDir;
 	_float3 m_vDodgeVelocity;
@@ -81,9 +90,8 @@ private:
 
 	//투명 풀리고 나서 처음 맞았을 때.
 	_bool		m_IsFirstHit = false;
-	_bool m_bDown = false;
-	_bool	m_eSASType = false;
-	_double		m_dRenderChangeDelay = 0.0;
+	_bool		m_eSASType = false;
+	_double	m_dRenderChangeDelay = 0.0;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 

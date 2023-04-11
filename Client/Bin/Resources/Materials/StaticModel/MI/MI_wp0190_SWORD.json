@@ -1,24 +1,26 @@
-    {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonModel",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_COL.dds",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_NML.png",
-            "",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/Texture/T_wp0190_Sword_CTL.dds"
-        ],
-        "Pass" : 1
-    }
+{
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [
+			0
+		],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0190_Sword_COL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0190_Sword_NML.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0190_Sword_CTL.dds"
+		],
+		"Pass": 1,
+		"Float2s": []
+	}
 }

@@ -354,7 +354,7 @@
     <ClInclude Include="..\public\SA_RotationUI.h" />
     <ClInclude Include="..\public\ShaderUI.h" />
     <ClInclude Include="..\public\Sheath_Player.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h" />
     <ClInclude Include="..\public\SpecialObject.h">
@@ -508,6 +508,7 @@
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
@@ -697,7 +698,7 @@
     <ClCompile Include="..\private\SA_RotationUI.cpp" />
     <ClCompile Include="..\private\ShaderUI.cpp" />
     <ClCompile Include="..\private\Sheath_Player.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
@@ -851,6 +852,7 @@
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />

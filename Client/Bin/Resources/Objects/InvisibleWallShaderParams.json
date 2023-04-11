@@ -1,0 +1,14 @@
+{
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [0.0],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_scl_noi_052.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\flowmask01.png\u0000"
+        ]
+    }
+}

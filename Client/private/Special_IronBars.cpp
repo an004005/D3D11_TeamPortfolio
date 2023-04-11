@@ -175,9 +175,23 @@ void CSpecial_IronBars::Tick(_double TimeDelta)
 			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Attach_BoneMatrix(static_cast<CSpecial_IronBars_Bars*>(m_pBars)->Get_Model(), m_pBars->GetTransform(), m_vecSingleBarBoneName[i]);
 		
 		m_pSingleBar[i]->Tick(TimeDelta);
+
+		if (static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Get_AddAble())
+			m_bAddAble = true;
 	}
 
 	m_pMultiBars->Tick(TimeDelta);
+
+	if (m_bUseCheck)
+	{
+		static_cast<CSpecial_IronBars_Door*>(m_pDoor)->Set_Used();
+		static_cast<CSpecial_IronBars_Bars*>(m_pBars)->Set_Used();
+		for (_uint i = 0; i < 8; ++i)
+		{
+			static_cast<CSpecial_IronBars_SingleBars*>(m_pSingleBar[i])->Set_Used();
+		}
+		static_cast<CSpecial_IronBars_MultiBars*>(m_pMultiBars)->Set_Used();
+	}
 }
 
 void CSpecial_IronBars::Late_Tick(_double TimeDelta)

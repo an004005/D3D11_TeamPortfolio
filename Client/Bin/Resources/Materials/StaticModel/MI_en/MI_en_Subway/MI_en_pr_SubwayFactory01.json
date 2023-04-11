@@ -1,19 +1,19 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayFactory01/T_pr_SubwayFactory01_ALB.png",
-            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayFactory01/T_pr_SubwayFactory01_NML.png",
-            "../Bin/Resources/Environments/Location/LC08/props/pr_SubwayFactory01/T_pr_SubwayFactory01_RMA.png",
-            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 3
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayFactory01_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.png"
+		],
+		"Pass": 1,
+		"Float2s": []
+	},
+	"InstancingPass": 3
 }

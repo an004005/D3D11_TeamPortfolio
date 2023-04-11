@@ -56,6 +56,12 @@ void CSpecial_TankLorry::BeginTick()
 
 void CSpecial_TankLorry::Tick(_double TimeDelta)
 {
+	if (m_bUseCheck)
+	{
+		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->Set_Used();
+		static_cast<CSpecial_TankLorry_Trailer*>(m_pTankLorry_Trailer)->Set_Used();
+	}
+
 	if (m_bDeadCheck)
 	{
 		static_cast<CSpecial_TankLorry_Head*>(m_pTankLorry_Head)->SetOutline(false);
@@ -261,6 +267,15 @@ void CSpecial_TankLorry::TankLorry_Explosion_Particle()
 {
 	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Truck_Explode_Particle")->
 		Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+}
+
+void CSpecial_TankLorry::TankLorry_Release_Particle()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pChargeParticle))
+	{
+		m_pChargeParticle->Delete_Particles();
+		m_pChargeParticle = nullptr;
+	}
 }
 
 _float4 CSpecial_TankLorry::GetPxPostion()

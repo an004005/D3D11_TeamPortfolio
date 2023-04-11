@@ -1557,6 +1557,7 @@
     <ClInclude Include="..\public\Level_ConstructionSite2F.h">
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2550,6 +2551,7 @@
     <ClCompile Include="..\private\Level_ConstructionSite2F.cpp">
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -59,7 +59,7 @@ HRESULT CEM1100_AnimInstance::Initialize(CModel * pModel, CGameObject * pGameObj
 			.SetAnimation(*m_pModel->Find_Animation("AS_em1100_108_AL_run_loop"))
 			.AddTransition("Run_Loop to Idle", "Idle")
 				.Predicator([this] { return !m_bRun; })
-				.Duration(0.1f)
+				.Duration(0.2f)
 
 		.Build();
 

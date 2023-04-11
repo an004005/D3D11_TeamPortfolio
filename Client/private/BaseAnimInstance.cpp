@@ -4219,7 +4219,6 @@ void CBaseAnimInstance::SpairAnimationManager()
 		if (m_pASM_Base->GetCurState() == iter.second && (m_bOnBattle))
 		{
 			iter.second->m_ReserveAnimation = iter.second->m_Animation;
-			//iter.second->m_ReserveAnimation->Reset(); -> 필요없나봅니다
 		}
 		else
 		{

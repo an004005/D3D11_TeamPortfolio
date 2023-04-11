@@ -1,26 +1,32 @@
 {
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0],
-        "Ints": [
-            0, 0
-        ],
-        "Pass": 1,
-        "Textures": [
-            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Body_COL.png\u0000",
-            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Body_NML.png\u0000",
-            "",
-            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8200_Body_CTL.png\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+	"ShaderParams": {
+		"Floats": [
+			0.0,
+			0.0,
+			0.0,
+			0.0
+		],
+		"Float2s": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [
+			0,
+			0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em8200_Body_COL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em8200_Body_NML.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em8200_Body_CTL.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
 }

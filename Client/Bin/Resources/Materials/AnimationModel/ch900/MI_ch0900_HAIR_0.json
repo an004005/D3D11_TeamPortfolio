@@ -1,0 +1,31 @@
+{
+	"ShaderParams": {
+		"Floats": [
+			0.0,
+			0.0,
+			0.0,
+			0.0
+		],
+		"Float2s": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [
+			0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_COL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_AMB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_CTL.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+}

@@ -44,6 +44,9 @@ public:
 	void		Start_OnlyPosUsePivot(_float4 vPositon, _float4x4 PivotMat);
 	void		Start_ForBulletParticle(class CEffectSystem* pEF, _bool trueisUpdate);
 
+	void		Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate = false);
+	void		Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false);
+
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;

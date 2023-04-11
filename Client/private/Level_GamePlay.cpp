@@ -160,6 +160,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
+	FAILED_CHECK(CFactoryMethod::MakeTriggerPrototypes(m_pDevice, m_pContext));
 
 
 

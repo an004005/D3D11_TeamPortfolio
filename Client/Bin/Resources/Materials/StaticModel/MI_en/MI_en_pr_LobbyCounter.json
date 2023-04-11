@@ -1,19 +1,19 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC14/props/T_pr_LobbyCounter_ALB.png",
-            "../Bin/Resources/Environments/Location/LC14/props/T_pr_LobbyCounter_NML.png",
-            "../Bin/Resources/Environments/Location/LC14/props/T_pr_LobbyCounter_RMA.png",
-            "../Bin/Resources/Environments/Location/LC14/props/T_pr_LobbyCounter_EMI.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 3
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_LobbyCounter_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_LobbyCounter_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_LobbyCounter_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_LobbyCounter_EMI.dds"
+		],
+		"Pass": 1,
+		"Float2s": []
+	},
+	"InstancingPass": 3
 }
