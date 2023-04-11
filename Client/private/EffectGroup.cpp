@@ -151,44 +151,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_ENEMIESTEST)
+		else if ((LEVEL_NOW == LEVEL_LOGO))
 		{
-			if (m_iSelectFinishFunc == 0)
+			m_Timeline.SetFinishFunction([this]
 			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-			}
-			else if (m_iSelectFinishFunc == 1)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-
-			}
-			else if (m_iSelectFinishFunc == 2)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-			}
-			else if (m_iSelectFinishFunc == 3)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-			}
-			else if (m_iSelectFinishFunc == 4)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-			}
+				SetDelete();
+			});
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
-			|| LEVEL_NOW == LEVEL_TUTORIAL
-			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
-			|| LEVEL_NOW == LEVEL_SUBWAY
-			|| LEVEL_NOW == LEVEL_NAOMIROOM
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F
-			|| LEVEL_NOW == LEVEL_FINAL_STAGE)
+		else
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -196,10 +166,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				 m_Timeline.SetFinishFunction([this]
-				 {
-				 	SetDelete();
-				 });
+				m_Timeline.SetFinishFunction([this]
+					{
+						SetDelete();
+					});
 				//m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
@@ -214,24 +184,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			else if (m_iSelectFinishFunc == 4)
 			{
 				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
+					{
+						SetDelete();
+					});
 			}
-		}
-		else if ((LEVEL_NOW == LEVEL_LOGO))
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
-		}
-		else
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
 		}
 		
 

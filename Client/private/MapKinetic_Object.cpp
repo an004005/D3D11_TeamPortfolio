@@ -84,7 +84,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
 				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
-				CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Small");
+				CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 				ReleaseParticle();
 			}
@@ -140,7 +140,7 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 			}
 
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
-			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Middle");
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 			ReleaseParticle();
 		}

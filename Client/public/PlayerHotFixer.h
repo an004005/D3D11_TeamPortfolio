@@ -24,11 +24,14 @@ private:
 
 private:
 	void	Player_Something_Update();
+	void	Additive_Test();
 
 private:
 	_bool	m_bShakeSmall = false;
 	_bool	m_bShakeMiddle = false;
 	_bool	m_bShakeHeavy = false;
+
+	_bool	m_bAdditiveOn = false;
 
 private:
 	CPlayer* m_pPlayer = nullptr;

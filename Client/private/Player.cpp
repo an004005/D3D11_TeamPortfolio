@@ -3053,7 +3053,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("KNUCKBACK")
 			.OnStart([&]() 
 			{ 
-				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f);
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f);
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Knuckback);
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
@@ -3072,7 +3072,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("AIRBORNE")
 			.OnStart([&]() 
 			{
-				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f);
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f);
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); 
 				Jump();
@@ -3147,7 +3147,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		//		.Priority(0)
 
 		.AddState("HIT_LIGHT")
-			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.1f); })
+			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.1f); })
 			.AddTransition("HIT_LIGHT to FRONT", "HIT_LIGHT_FRONT")
 			.Predicator([&]()->_bool 
 			{
@@ -3213,7 +3213,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM")
-			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.2f); })
+			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f); })
 			.AddTransition("HIT_MIDIUM to FRONT", "HIT_MIDIUM_FRONT")
 			.Predicator([&]()->_bool 
 			{
@@ -5742,12 +5742,12 @@ void CPlayer::EnemyReportCheck()
 	{
 		if (eAtkType == EAttackType::ATK_LIGHT)
 		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.02f, 0.1f);
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.1f);
 		}
 		else if (eAtkType == EAttackType::ATK_MIDDLE)
 		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.03f, 0.3f);
-			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Small");
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Middle");
 		}
 
 		m_bActionAble = false;

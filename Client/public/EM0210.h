@@ -43,6 +43,9 @@ private:
 	void Play_MidHitAnim();
 	_bool	CanMove4BC(_float fMinDist);
 
+//private:
+//	void Play_HitAdditiveAnim(_double TimeDelta);
+
 private:
 	//충돌 관련 함수 정의
 	void Swing_SweepSphere();

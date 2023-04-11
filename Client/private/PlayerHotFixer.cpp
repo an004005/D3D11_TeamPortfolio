@@ -29,6 +29,8 @@ HRESULT CPlayerHotFixer::Initialize(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
 
+	m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
+
 	return S_OK;
 }
 
@@ -111,6 +113,17 @@ void CPlayerHotFixer::Tick()
 		else if (m_bShakeHeavy)
 		{
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
+		}
+
+		ImGui::Checkbox("Additive", &m_bAdditiveOn);
+		if (m_bAdditiveOn)
+		{
+			Additive_Test();
+		}
+		else
+		{
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_490_AL_damage_add")
+				->Reset();
 		}
 
 		if (ImGui::Button("DMG_Light"))
@@ -612,6 +625,11 @@ void CPlayerHotFixer::Player_Something_Update()
 		m_pPlayer->m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
 		m_pPlayer->m_pCautionNeon.first->Start_AttachPivot(m_pPlayer, NoticeNeonPivot, "String2", true, true);
 	}
+}
+
+void CPlayerHotFixer::Additive_Test()
+{
+	m_pPlayer->m_pModel->Play_Animation_Additive(g_fTimeDelta * 3.f, 0.1f);
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)
