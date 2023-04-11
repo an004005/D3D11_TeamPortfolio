@@ -2409,15 +2409,6 @@ void CEffectGroup::AddEmptyCurve_ForFifth(string strCurveName)
 	}
 }
 
-CEffectSystem* CEffectGroup::Get_FirstEF()
-{
-	if (nullptr == m_pFirst_EffectSystem)
-		return nullptr;
-	else
-		return m_pFirst_EffectSystem;
-}
-
-
 CEffectGroup* CEffectGroup::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CEffectGroup*		pInstance = new CEffectGroup(pDevice, pContext);
