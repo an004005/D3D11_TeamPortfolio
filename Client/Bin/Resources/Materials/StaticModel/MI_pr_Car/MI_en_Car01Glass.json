@@ -1,1 +1,24 @@
-{"Active":false,"AlphaBlend":false,"InstancingPass":5,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[0],"Pass":4,"Textures":["","",""]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}
+{
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"Active": false,
+	"ShaderParams": {
+		"Float4s": [],
+		"Floats": [
+			0.0
+		],
+		"Float2s": [],
+		"Float4x4s": [],
+		"Textures": [
+			"",
+			"",
+			""
+		],
+		"Pass": 4,
+		"Ints": [
+			0
+		]
+	},
+	"AlphaBlend": false,
+	"InstancingPass": 5
+}

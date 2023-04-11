@@ -1,16 +1,16 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Ceramic/Brazilian_Tiles/T_SBSMI_Brazilian_Tiles_03_ALB.dds",
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Ceramic/Brazilian_Tiles/T_SBSMI_Brazilian_Tiles_03_NML.png",
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Ceramic/Brazilian_Tiles/T_SBSMI_Brazilian_Tiles_03_RMA.dds"
-        ],
-        "Pass" : 1
-    }
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_03_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_03_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_03_RMA.dds"
+		],
+		"Pass": 1,
+		"Float2s": []
+	}
 }

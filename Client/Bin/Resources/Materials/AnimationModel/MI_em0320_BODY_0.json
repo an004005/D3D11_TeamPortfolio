@@ -1,21 +1,20 @@
 {
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [
-        ],
-        "Float4x4s": [],
-        "Floats": [
-            0.0
-        ],
-        "Ints": [
-            0
-        ],
-        "Pass": 1,
-        "Textures": [
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_ALB.png\u0000",
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_NML.png\u0000",
-            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0320_body_RMA.png\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
+	"ShaderParams": {
+		"Floats": [
+			0.0
+		],
+		"Float2s": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Float4s": [],
+		"Ints": [
+			0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0320_body_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0320_body_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0320_body_RMA.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
 }

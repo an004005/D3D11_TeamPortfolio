@@ -1,1 +1,28 @@
-{"Active":true,"AlphaBlend":true,"ShaderParams":{"Float2s":[],"Float4s":[[0.0,0.0,0.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":1,"Textures":["../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_COL.png\u0000","../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_NML.png\u0000","","../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_CTL.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxToonModel"}
+{
+	"AlphaBlend": true,
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel",
+	"Active": true,
+	"ShaderParams": {
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Floats": [],
+		"Float2s": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_COL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_NML.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_CTL.dds"
+		],
+		"Pass": 1,
+		"Ints": [
+			0
+		]
+	}
+}

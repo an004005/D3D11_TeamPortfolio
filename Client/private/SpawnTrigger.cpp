@@ -105,31 +105,31 @@ void CSpawnTrigger::Tick(_double TimeDelta)
 
 	if (m_bStart)
 	{
-		if (m_iSpawnOrder >= m_WaitingEnemies.size())
-		{
-			if (m_WallDeActiveOnce.IsNotDo())
-			{
-				m_pWall->Activate(false);
-			}
-			if (m_pWall->IsActive() == false)
-			{
-				SetDelete();
-			}
-
-			return;
-		}
-
 		if (auto pEnemyLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER))
 		{
 			if (pEnemyLayer->GetGameObjects().empty())
 			{
-				for (auto pEnemy : m_WaitingEnemies[m_iSpawnOrder])
+				if (m_iSpawnOrder >= m_WaitingEnemies.size())
 				{
-					pEnemy->BeginTick();
-					CGameInstance::GetInstance()->Add_InLayer(PLAYERTEST_LAYER_MONSTER, pEnemy);
+					if (m_WallDeActiveOnce.IsNotDo())
+					{
+						m_pWall->Activate(false);
+					}
+					if (m_pWall->IsActive() == false)
+					{
+						SetDelete();
+					}
 				}
-				m_WaitingEnemies[m_iSpawnOrder].clear();
-				++m_iSpawnOrder;
+				else
+				{
+					for (auto pEnemy : m_WaitingEnemies[m_iSpawnOrder])
+					{
+						pEnemy->BeginTick();
+						CGameInstance::GetInstance()->Add_InLayer(PLAYERTEST_LAYER_MONSTER, pEnemy);
+					}
+					m_WaitingEnemies[m_iSpawnOrder].clear();
+					++m_iSpawnOrder;
+				}
 			}
 		}
 	}
