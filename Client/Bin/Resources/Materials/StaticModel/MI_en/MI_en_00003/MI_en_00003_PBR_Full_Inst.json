@@ -9,8 +9,7 @@
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Telegraph_tower.dds",
 			"",
-			"",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Dummy_Red.dds"
+			""
 		],
 		"Pass": 1,
 		"Float2s": []

@@ -9,8 +9,7 @@
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SteelWall05_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SteelWall05_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SteelWall05_RMA.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Dummy_Red.dds"
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SteelWall05_RMA.dds"
 		],
 		"Pass": 1,
 		"Float2s": []
