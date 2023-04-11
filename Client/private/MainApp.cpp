@@ -423,12 +423,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	////////////////////////////
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxInvisible"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInvisibleWall.hlsl"), VTXPOS_DECLARATION::Elements, VTXPOS_DECLARATION::iNumElements))))
-		return E_FAIL;
-
-	////////////////////////////
-
 	/* For.Prototype_Component_VIBuffer_CircleRect */	
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Component_VIBuffer_CircleRect", CVIBuffer_CircleRect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

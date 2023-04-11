@@ -1,18 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxAnimModel",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [     
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0750_body_ALB.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/T_em0750_body_NML.png",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0750_body_RMA.dds",
-           "../Bin/Resources/Model/AnimModel/Monster/SkummyPandou/Texture/dds/T_em0700_wing_MTC.dds"
-
-        ],
-        "Pass" : 1
-    }
+	"ShaderParams": {
+		"Floats": [
+			0.0
+		],
+		"Pass": 1,
+		"Float2s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0750_body_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0750_body_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0750_body_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0700_wing_MTC.dds"
+		],
+		"Float4x4s": [],
+		"Float4s": [],
+		"Ints": [
+			0
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
 }

@@ -88,7 +88,7 @@ public:
 
 	void Play_Animation(_double TimeDelta);
 	void Play_Animation_Test(_double TimeDelta);
-	void Play_Animation_Additive(_double TimeDelta);
+	void Play_Animation_Additive(_double TimeDelta, _float fAddRatio);
 	void Play_Animation_Sync(_double fRatio);
 	// HRESULT RenderCustomShader(_uint iPass, class CShader* pShader);
 	HRESULT Render(class CTransform* pTransform);
@@ -118,6 +118,9 @@ public:
 	// 스태틱 메쉬처럼 Render_NoUpdateBone 함수로만 랜더 하기(업데이트하면 터짐)
 	CModel* CloneModelPose();
 
+public:
+	void Set_AdditiveAnim(const string& strAdditive) { m_szAdditiveAnimName = strAdditive; }
+
 private:
 	void SaveModifiedData(Json& json);
 
@@ -133,6 +136,9 @@ public:		// 이벤트 실행
 	_vector GetOptionalMoveVector(_fmatrix WorldMatrix, const string& srtAnimName);
 	void Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion);
 	void Delete_OptionalRootMotion();
+
+public:
+	void	Clear_mapEventFunc();
 
 private:	// 이벤트
 	unordered_map<string, std::function<void(void)>>	m_EventFunc;
@@ -175,7 +181,7 @@ protected:
 	_float								m_fBefRatio = 0.f;
 
 	string								m_szAdditiveAnimName = "";
-	_float								m_fAdditiveRatio = 0.f;
+	_float								m_fAdditiveRatio = 0.5f;
 
 	_vector								m_vLocalRotation = XMQuaternionIdentity();
 	_vector								m_vBefLocalRotation = XMQuaternionIdentity();

@@ -1,0 +1,32 @@
+{
+	"ShaderParams": {
+		"Floats": [
+			0.0,
+			0.0,
+			0.0,
+			0.5
+		],
+		"Float2s": [],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [
+			0,
+			0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_COL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_NML.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_CTL.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+}

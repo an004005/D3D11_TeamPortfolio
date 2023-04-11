@@ -41,6 +41,12 @@ public:
 	void		Start_AttachSword(CGameObject* pWeapon, _bool trueisUpdate = false);
 	void		Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosition, _float4 vDirection, _bool trueisUpdate = false);
 	void		Start_NoOwnerOnlyPos(_float4 vPositon);
+	void		Start_OnlyPosUsePivot(_float4 vPositon, _float4x4 PivotMat);
+	void		Start_ForBulletParticle(class CEffectSystem* pEF, _bool trueisUpdate);
+
+	void		Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate = false);
+	void		Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false);
+
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;
@@ -53,6 +59,7 @@ private:
 	string m_BoneName = "";
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
 
+	_bool m_bForBulletUpdate = false;
 private:
 	CGameObject* m_pAttachWeapon = nullptr;
 

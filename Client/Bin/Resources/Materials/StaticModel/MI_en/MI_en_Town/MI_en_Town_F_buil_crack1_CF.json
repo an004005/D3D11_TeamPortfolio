@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1ALB.dds",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Basement/pr_BasementTown/pr_S_town_future/F_building/T_pr_Town_crack_tile_1RMA.dds"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 1
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1RMA.dds"
+		],
+		"Pass": 1,
+		"Float2s": []
+	},
+	"InstancingPass": 1
 }

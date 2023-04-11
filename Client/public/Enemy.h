@@ -109,7 +109,7 @@ protected:
 
 	//로컬움직임 적용. 다른 애니메이션을 넣어주기 전에 ClearSocketAnim 꼭 해줘야함!!
 	void SocketLocalMove(class CEnemy_AnimInstance* pASM);
-
+	void SocketLocalMove_Range(class CEnemy_AnimInstance* pASM, _float fRange);
 	//RigidBoyd 관리
 	void	Add_RigidBody(const string& KeyName, void* pArg = nullptr);
 	CRigidBody* GetRigidBody(const string& KeyName);
@@ -179,13 +179,11 @@ protected:
 	string m_strDeathSoundTag;
 	string m_strImpactVoiceTag;
 
-
-
 	_bool m_bSpawnEffect = true;
 	_float4x4 m_SpawnEffectPivot;
 	_float m_fSpawnDistortionDistancePivot = 0.f;
 
-	private:
+private:
 		_int KBSound = 0;
 public:
 	virtual void Free() override;

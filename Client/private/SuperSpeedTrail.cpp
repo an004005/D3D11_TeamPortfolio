@@ -70,9 +70,9 @@ void CSuperSpeedTrail::Tick(_double TimeDelta)
 	Assert(pOwner != nullptr);
 
 	_vector vOwnerPos = pOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	// _float fDistance = XMVectorGetX(XMVector3LengthEst(vOwnerPos - XMLoadFloat4(&m_vPrePos)));
-	// if (fDistance < m_fMinMoveDistance)
-	// 	return;
+	_float fDistance = XMVectorGetX(XMVector3LengthEst(vOwnerPos - XMLoadFloat4(&m_vPrePos)));
+	if (fDistance < m_fMinMoveDistance)
+		return;
 
 	m_vPrePos = vOwnerPos;
 

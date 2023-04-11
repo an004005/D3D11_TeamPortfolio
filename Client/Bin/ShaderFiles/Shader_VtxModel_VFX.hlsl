@@ -138,6 +138,53 @@ PS_OUT_NORM PS_EM8200_ICE_NEEDLE(PS_IN_NORM In)
 	return Out;
 }
 
+PS_OUT_NORM PS_KAREN_MASK_ALL(PS_IN_NORM In)
+{
+	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
+	float flags = SHADER_DEFAULT;
+
+	float3 vNormal = In.vNormal.xyz;
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+	float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+	vNormal = normalize(mul(vNormal, WorldMatrix));
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+
+	if(g_int_0 > 0)
+	{
+		if (Out.vColor.r > 0.3f)
+		{
+			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+		}
+		else
+			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 1.5f, flags);
+	}
+	else
+		Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 1.5f, flags);
+
+	
+
+	float Mask = g_tex_3.Sample(LinearSampler, In.vTexUV).r;
+
+	float fDissolve = g_tex_4.Sample(LinearSampler, In.vTexUV).r;
+
+	
+
+	if (Mask == 1.f)
+			discard;
+
+	if (g_float_1 >= fDissolve)
+		discard;
+
+
+	return Out;
+}
+
 PS_OUT_NORM PS_EM220_NORM(PS_IN_NORM In)
 {
 	PS_OUT_NORM			Out = (PS_OUT_NORM)0;
@@ -683,7 +730,7 @@ PS_OUT PS_EM8200_ELEC_CON(PS_IN In)
 	float4 FinalColor = saturate(BlendColor);
 
 	Out.vColor = CalcHDRColor(BlendColor, g_float_0);
-	Out.vColor.a = Mask.r * g_float_1;
+	Out.vColor.a = saturate(Mask.r * g_float_1);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
@@ -1982,5 +2029,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BOSSSTAGE_WATERFALL();
+	}
+
+	//45
+	pass em8200_Mask_All
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_NORM();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_KAREN_MASK_ALL();
 	}
 }

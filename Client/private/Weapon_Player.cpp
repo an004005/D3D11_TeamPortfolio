@@ -42,7 +42,7 @@ HRESULT CWeapon_Player::Initialize(void* pArg)
 	{
 		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
-			pTarget->Set_CollisionDuplicate(false);
+			pTarget->Set_CollisionDuplicate(false, m_eColtype);
 		}
 	});
 
@@ -61,6 +61,8 @@ void CWeapon_Player::BeginTick()
 
 void CWeapon_Player::Tick(_double TimeDelta)
 {
+	Assert(m_eColtype != ECOPYCOLTYPE::COPYCOL_END);	// 복제충돌타입 반드시 정의
+
 	m_fAdaptLength = -0.7f;
 
 	__super::Tick(TimeDelta);
@@ -75,6 +77,10 @@ void CWeapon_Player::Tick(_double TimeDelta)
 	{
 		case WP_0106:
 			strMtrlName = L"MI_wp0106_SWORD";
+			break;
+
+		case WP_0126:
+			strMtrlName = L"MI_wp0126_SWORD";
 			break;
 
 		case WP_0190:
@@ -131,12 +137,32 @@ HRESULT CWeapon_Player::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+	if (CPlayerInfoManager::GetInstance()->Get_Copy())
+	{
+		_float4 vRight = CPlayerInfoManager::GetInstance()->Get_PlayerWorldMatrix().r[0];
+		vRight.Normalize();
+
+		//_float4 vLeft = CPla
+	}
+
 	return S_OK;
+}
+
+void CWeapon_Player::Setup_BoneMatrix(CModel* pModel, _fmatrix Transform, const string& strBoneName)
+{
+	_matrix	SocketMatrix = pModel->GetBoneMatrix(strBoneName) * Transform;
+
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	m_pTransformCom->Set_WorldMatrix(SocketMatrix);
 }
 
 void CWeapon_Player::Change_Weapon(WEAPONTYPE eType)
 {
 	if (m_eType == eType) return;
+	Assert(eType < WP_END);
 
 	m_eType = eType;
 	CPlayerInfoManager::GetInstance()->Set_PlayerWeapon(static_cast<_uint>(m_eType));
@@ -151,6 +177,7 @@ HRESULT CWeapon_Player::SetUp_Components()
 
 	CModel* pModel = nullptr;
 
+	// wp0106
 	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/wp0106.static_model");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, 
 		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/wp0106.static_model", 
@@ -158,6 +185,15 @@ HRESULT CWeapon_Player::SetUp_Components()
 		(CComponent**)&pModel));
 	m_pModelComs.push_back(pModel);
 
+	// wp0126
+	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model");
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model",
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/wp0126.static_model",
+		(CComponent**)&pModel));
+	m_pModelComs.push_back(pModel);
+
+	// wp0190
 	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
 		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", 

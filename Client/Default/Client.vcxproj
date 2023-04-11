@@ -253,6 +253,7 @@
     <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
+    <ClInclude Include="..\public\Consumption_Item.h" />
     <ClInclude Include="..\public\Controller.h" />
     <ClInclude Include="..\public\Canvas_Tutorial.h" />
     <ClInclude Include="..\public\DistanceUI.h" />
@@ -315,6 +316,7 @@
     <ClInclude Include="..\public\Imgui_Cheat.h" />
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
+    <ClInclude Include="..\public\Level_ConstructionSite2F.h" />
     <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
@@ -352,7 +354,7 @@
     <ClInclude Include="..\public\SA_RotationUI.h" />
     <ClInclude Include="..\public\ShaderUI.h" />
     <ClInclude Include="..\public\Sheath_Player.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h" />
     <ClInclude Include="..\public\SpecialObject.h">
@@ -507,6 +509,7 @@
     <ClInclude Include="..\public\VFX_Manager.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRect.h" />
     <ClInclude Include="..\public\VIBuffer_CircleRectLookOut.h" />
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\VIBuffer_Line_Instancing.h" />
     <ClInclude Include="..\public\VIBuffer_Trail_Instancing.h" />
     <ClInclude Include="..\public\OilBullet.h" />
@@ -596,6 +599,7 @@
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
     <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
+    <ClCompile Include="..\private\Consumption_Item.cpp" />
     <ClCompile Include="..\private\Controller.cpp" />
     <ClCompile Include="..\private\DistanceUI.cpp" />
     <ClCompile Include="..\private\Drive_GaugeUI.cpp" />
@@ -657,6 +661,7 @@
     <ClCompile Include="..\private\Imgui_Cheat.cpp" />
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
+    <ClCompile Include="..\private\Level_ConstructionSite2F.cpp" />
     <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
@@ -694,7 +699,7 @@
     <ClCompile Include="..\private\SA_RotationUI.cpp" />
     <ClCompile Include="..\private\ShaderUI.cpp" />
     <ClCompile Include="..\private\Sheath_Player.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp" />
     <ClCompile Include="..\private\SpecialObject.cpp">
@@ -849,6 +854,7 @@
     <ClCompile Include="..\private\VFX_Manager.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRect.cpp" />
     <ClCompile Include="..\private\VIBuffer_CircleRectLookOut.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line_Instancing.cpp" />
     <ClCompile Include="..\private\VIBuffer_Trail_Instancing.cpp" />
     <ClCompile Include="..\private\OilBullet.cpp" />

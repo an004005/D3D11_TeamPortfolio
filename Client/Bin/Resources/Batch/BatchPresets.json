@@ -376,6 +376,11 @@
             "ProtoTag": "TeleportableWall"
         },
         {
+            "Layer": "Layer_ITEM",
+            "JsonPath": "",
+            "ProtoTag": "ConsumptionItem"
+        },
+        {
             "Layer": "Layer_NPC",
             "JsonPath": "",
             "ProtoTag": "Shop_NPC"

@@ -78,7 +78,7 @@ void CMap_KineticBatchPreset::OverlapCheck(KINETIC_BATCH& tBatch)
 
 	SphereOverlapParams tParams;
 	tParams.overlapOut = &overlapOut;
-	tParams.fRadius = 2.f;
+	tParams.fRadius = 1.5f;
 	tParams.vPos = { tBatch.matWorldMtx.Translation() };
 	tParams.fVisibleTime = 1.f;
 	tParams.iTargetType = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ;

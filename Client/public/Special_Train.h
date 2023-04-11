@@ -52,7 +52,11 @@ private:
 	CDoOnce	m_Effect;
 
 private:
-	CParticleGroup* m_pSpark[2] = { nullptr, };
+	_float	m_fLerpTime = 0.2f;
+	_float	m_fDuration = 0.2f;
+
+private:
+	CParticleGroup* m_pSpark[6] = { nullptr, };
 
 public:
 	static CSpecial_Train* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

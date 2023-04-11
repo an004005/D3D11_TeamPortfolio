@@ -30,8 +30,8 @@ HRESULT CEM0220::Initialize(void * pArg)
 	Json em0220_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0220/em0220Base.json");
 	pArg = &em0220_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "wood_fx_death";
+	m_strImpactVoiceTag = "mon_5_impact_voice";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -80,6 +80,12 @@ void CEM0220::SetUpComponents(void * pArg)
 void CEM0220::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("wood_attack_spits");
+	m_SoundStore.CloneSound("wood_move_down");
+	m_SoundStore.CloneSound("wood_move_up");
+
+
 }
 
 void CEM0220::SetUpAnimationEvent()
@@ -92,6 +98,7 @@ void CEM0220::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Shot", [this]
 	{
 		Create_Bullet();
+		m_SoundStore.PlaySound("wood_attack_spits", m_pTransformCom);
 	});
 }
 
@@ -244,7 +251,7 @@ void CEM0220::SetUpFSM()
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_111_AL_to_guard");
 				m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(10.f);
 				m_Unbeatable = false;
-				
+				m_SoundStore.PlaySound("wood_move_down", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -325,6 +332,7 @@ void CEM0220::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_113_AL_to_wait03");
+				m_SoundStore.PlaySound("wood_move_up", m_pTransformCom);
 			})
 			.OnExit([this]
 			{

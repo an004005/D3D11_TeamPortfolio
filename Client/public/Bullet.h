@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ParticleGroup.h"
 #include "EffectGroup.h"
+#include "SoundStore.h"
+#include "TimerHelper.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -32,6 +34,8 @@ public:
 public:
 	void Create_InitEffects(vector<wstring>& InitEffects, _float4x4 pivot = XMMatrixIdentity());
 	void Create_InitParticle(wstring& InitParticle);
+	void Create_InitRotParticle(wstring& InitParticle, _bool trueisUpdate);
+
 	void Create_DeadEffects();
 	void Create_DeadParticle();
 
@@ -59,6 +63,10 @@ public:
 	void Set_Radius(_float fRad) {
 		m_fRadius = fRad;
 	}
+
+	void Set_Sound(_bool bSound) {
+		m_bUseSound = bSound;
+	}
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -72,6 +80,10 @@ protected:
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	class CScarletCharacter* m_pTarget = nullptr;
+	CSoundStore			m_SoundStore;
+	CCoolTimeHelper		m_ElectricLoopSound = CCoolTimeHelper(5.f, false);
+
+	_bool				m_bUseSound = false;
 //	DAMAGE_PARAM			m_Damage_Params;
 	//_float					m_fShootSpeed = 0.f;
 
@@ -92,6 +104,9 @@ protected:
 	_float m_fLife = 0.f;
 	DAMAGE_PARAM m_eDamageParam;
 	_float	m_fRadius = 0.3f;
+
+
+	_bool	m_bRotParticles = false;
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

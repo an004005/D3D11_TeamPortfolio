@@ -151,43 +151,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_ENEMIESTEST)
+		else if ((LEVEL_NOW == LEVEL_LOGO))
 		{
-			if (m_iSelectFinishFunc == 0)
+			m_Timeline.SetFinishFunction([this]
 			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-			}
-			else if (m_iSelectFinishFunc == 1)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-
-			}
-			else if (m_iSelectFinishFunc == 2)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-			}
-			else if (m_iSelectFinishFunc == 3)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-			}
-			else if (m_iSelectFinishFunc == 4)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-			}
+				SetDelete();
+			});
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
-			|| LEVEL_NOW == LEVEL_TUTORIAL
-			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
-			|| LEVEL_NOW == LEVEL_SUBWAY
-			|| LEVEL_NOW == LEVEL_NAOMIROOM
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
+		else
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -195,10 +166,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				 m_Timeline.SetFinishFunction([this]
-				 {
-				 	SetDelete();
-				 });
+				m_Timeline.SetFinishFunction([this]
+					{
+						SetDelete();
+					});
 				//m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
@@ -213,24 +184,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			else if (m_iSelectFinishFunc == 4)
 			{
 				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
+					{
+						SetDelete();
+					});
 			}
-		}
-		else if ((LEVEL_NOW == LEVEL_LOGO))
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
-		}
-		else
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
 		}
 		
 
@@ -245,6 +202,15 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 	return S_OK;
 }
+
+CEffectSystem* CEffectGroup::Get_FirstEF()
+{
+	if (nullptr == m_pFirst_EffectSystem)
+		return nullptr;
+	else
+		return m_pFirst_EffectSystem;
+}
+
 
 void CEffectGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
 	_bool trueisRemoveScale)
@@ -541,6 +507,58 @@ void CEffectGroup::Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosi
 
 }
 
+void CEffectGroup::Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bRemoveScale = false;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+		
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = false;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
 void CEffectGroup::Call_Event()
 {
 	m_Timeline.SetEventFunction([this](const string& eventName)
@@ -557,7 +575,7 @@ void CEffectGroup::Call_Event()
 			else if (eventName.find("Neon") != string::npos)
 			{
 				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
-				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem,MatParticle, true, true);
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem, MatParticle, true, true);
 			}
 			else
 			{
@@ -1884,6 +1902,33 @@ void CEffectGroup::Set_Transform(_fmatrix matSocket)
 void CEffectGroup::Start_EffectWork()
 {
 	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_OnlyPos_Pivot(_float4 vPos, _float4x4 Pivot, _bool trueisUpdate)
+{
+	m_vPosition = vPos;
+
+	_matrix PosMat = XMMatrixScaling(vPos.x, vPos.y, vPos.z);
+	_matrix SocketMatrix = XMMatrixMultiply(PosMat, Pivot);
+
+	m_bUpdate = trueisUpdate;
+
+	if (m_bUpdate == false)
+	{
+		if (nullptr != m_pFirst_EffectSystem)
+			m_pFirst_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pSecond_EffectSystem)
+			m_pSecond_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pThird_EffectSystem)
+			m_pThird_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFourth_EffectSystem)
+			m_pFourth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFifth_EffectSystem)
+			m_pFifth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+
 }
 
 void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)

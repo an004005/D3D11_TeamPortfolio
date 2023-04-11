@@ -13,8 +13,6 @@ HRESULT CEnemy_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameObject
 
 void CEnemy_AnimInstance::Tick(_double TimeDelta)
 {
-	m_fLerpDuration = 0.1f;
-
 	UpdateTargetState(TimeDelta);
 
 	_bool bChange = CheckFinishedAnimSocket();
@@ -182,7 +180,7 @@ void CEnemy_AnimInstance::AttachAnimSocketOne(const string& strSocName, const st
 		itr->second.front()->Reset();
 	}
 
-	assert(m_pModel->Find_Animation(strAnimName) != nullptr && "attachsocketone");
+	//assert(m_pModel->Find_Animation(strAnimName) != nullptr && "attachsocketone");
 	m_mapAnimSocket[strSocName] = { m_pModel->Find_Animation(strAnimName) };
 }
 

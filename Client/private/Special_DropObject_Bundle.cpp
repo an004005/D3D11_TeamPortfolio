@@ -83,6 +83,9 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
 				->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f), { 1.f, 1.f ,1.f, 0.f });
+
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
 		}
 	});
 
@@ -101,6 +104,14 @@ void CSpecial_DropObject_Bundle::BeginTick()
 
 void CSpecial_DropObject_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bUseCheck)
+	{
+		for (auto& iter : m_pObject_Single)
+		{
+			static_cast<CSpecial_DropObject_Single*>(iter)->Set_Used();
+		}
+	}
+
 	if (m_bDeadCheck)
 	{
 		for (auto& iter : m_pObject_Single)

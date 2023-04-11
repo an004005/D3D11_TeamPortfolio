@@ -99,7 +99,29 @@ void CSpecialObject::Tick(_double TimeDelta)
 		m_fParticleCoolTime = 0.f;
 	}
 
-	OutlineMaker();
+	if (false == m_bUseCheck)
+	{
+		OutlineMaker();
+	}
+	else
+	{
+		m_bOutline = false;
+
+		for (auto& Model : m_pModelComs)
+		{
+			for (auto& iter : Model->GetMaterials())
+			{
+				if (0 == iter->GetParam().Ints.size())
+				{
+					iter->GetParam().Ints.push_back(0);
+				}
+				else
+				{
+					iter->GetParam().Ints[0] = 0;
+				}
+			}
+		}
+	}
 	BrightChecker();
 	DissolveChecker();
 
@@ -321,7 +343,7 @@ _bool CSpecialObject::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE
 
 					// 플레이어일 경우 타격 이펙트 생성하도록
 					pTarget->TakeDamage(tParam);
-					pTarget->Set_CollisionDuplicate(true);
+					pTarget->Set_CollisionDuplicate(true, ECOPYCOLTYPE::COPYCOL_MAIN);
 
 					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
 
@@ -423,7 +445,7 @@ void CSpecialObject::BrightChecker()
 void CSpecialObject::DissolveChecker()
 {
 	if (m_bDissolve)
-		m_fDissolve += m_fTimeDelta;
+		m_fDissolve = min(m_fDissolve + m_fTimeDelta, 1.f);
 }
 
 HRESULT CSpecialObject::SetUp_Components(void* pArg)

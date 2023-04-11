@@ -978,7 +978,7 @@ void CModel::Play_Animation_Test(_double TimeDelta)
 	Compute_CombindTransformationMatrix();
 }
 
-void CModel::Play_Animation_Additive(_double TimeDelta)
+void CModel::Play_Animation_Additive(_double TimeDelta, _float fAddRatio)
 {
 	if (m_eType == TYPE_NONANIM)
 	{
@@ -986,25 +986,25 @@ void CModel::Play_Animation_Additive(_double TimeDelta)
 		return;
 	}
 
-	if (auto pAnim = Find_Animation(m_CurAnimName))
-	{
-		pAnim->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
+	//if (auto pAnim = Find_Animation(m_CurAnimName))
+	//{
+	//	pAnim->Update_Bones(TimeDelta, EAnimUpdateType::NORMAL);
 
 		if ("" != m_szAdditiveAnimName)
 		{
 			if (auto pAnim = Find_Animation(m_szAdditiveAnimName))
 			{
-				pAnim->Update_Bones(TimeDelta, EAnimUpdateType::ADDITIVE, m_fAdditiveRatio);
+				pAnim->Update_Bones(TimeDelta, EAnimUpdateType::ADDITIVE, fAddRatio);
 			}
 		}
 
-		KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
+		/*KEYFRAME tempKeyFrame = *pAnim->GetCurKeyFrame();
 		if (tempKeyFrame.Time != m_CurKeyFrame.Time)
 		{
 			m_BefKeyFrame = m_CurKeyFrame;
 			m_CurKeyFrame = tempKeyFrame;
-		}
-	}
+		}*/
+	//}
 
 	Compute_CombindTransformationMatrix();
 }
@@ -1661,6 +1661,11 @@ void CModel::Add_OptionalRootMotion(OPTIONAL_ROOTMOTION RootMotion)
 void CModel::Delete_OptionalRootMotion()
 {
 	m_mapOptionalRootMotion.erase(m_CurAnimName);
+}
+
+void CModel::Clear_mapEventFunc()
+{
+	m_EventFunc.clear();
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const char * pModelFilePath, _float4x4 PivotMatrix)

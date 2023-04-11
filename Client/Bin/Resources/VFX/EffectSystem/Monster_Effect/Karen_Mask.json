@@ -1,0 +1,52 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "../Bin/Resources/Meshes/VFX/VFX_Mesh_Karen_Mask_All.static_model",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            7.5,
+            0.0
+        ],
+        "Ints": [
+            0
+        ],
+        "Pass": 45,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_em8205_Mask_COL.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_em8205_Mask_NML.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_em8205_Mask_CTL.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\Karen_Mask_Mask.png\u0000",
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_scl_noi_016.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxModel_VFX",
+    "bBillBoard": false,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": true,
+    "bUseDepth": false
+}

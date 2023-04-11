@@ -39,6 +39,9 @@ public:
 	void HeavyAttackPushStart();
 
 private:
+	_bool PriorityCondition();
+
+private:
 	//충돌 관련 함수 정의
 	void Rush_StaticCheckSweep();
 	void Rush_SweepSphere();
@@ -58,6 +61,8 @@ private:
 
 	//Rush
 	_float						m_fRushTime = 1.f;
+
+	_bool						m_bDown = false;
 
 	CController::EHandleInput	m_eInput;
 

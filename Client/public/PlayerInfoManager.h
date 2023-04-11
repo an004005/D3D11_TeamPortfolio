@@ -42,6 +42,10 @@ typedef struct tagPlayerStatus
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
+
+
+	_bool bAttackEnable = false;
+
 	
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
@@ -58,6 +62,10 @@ typedef struct tagPlayerStatus
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
 	_bool bStartBrainField = false;
+
+	_bool bCopy = false;
+
+	_bool bAir = false;
 
 	_float m_fBaseAttackDamage;
 
@@ -160,6 +168,8 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+	void			Set_SasEnergy(ESASType eSasType, _float iSetEnergy);
+	void			Release_SasEnergy_All();
 
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
@@ -178,9 +188,21 @@ public:	// Set
 	void			Set_DriveMode(_bool bDrive) { m_tPlayerStat.bDriveMode = bDrive; }
 	void			Set_BrainField(_bool bBrain) { m_tPlayerStat.bBrainField = bBrain; }
 
+	void			Set_Copy(_bool bCopy) { m_tPlayerStat.bCopy = bCopy; }
+	_bool			Get_Copy() { return m_tPlayerStat.bCopy; }
+
+	void			Set_Air(_bool bAir) { m_tPlayerStat.bAir = bAir; }
+	_bool			Get_Air() { return m_tPlayerStat.bAir; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
+	void			Set_PlayerAttackEnable(_bool bEnable) { m_tPlayerStat.bAttackEnable = bEnable; }
+	_bool			Get_PlayerAttackEnable() { return m_tPlayerStat.bAttackEnable; }
+
+	// HRESULT			Set_KineticObject(CGameObject* pKineticObject);
+	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 
@@ -193,8 +215,9 @@ public:	// Set
 	}
 
 public:
-	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
+	void			Camera_Random_Shake_Maintain(_float fForce, _float fMaintain);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
@@ -224,6 +247,10 @@ private:
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();
+
+private:	// 카메라 셰이크 관련
+	_float	m_fRandomShakeMaintain = 0.f;
+	_float	m_fRandomShakeForce = 0.f;
 
 public:
 	virtual void Free() override;

@@ -22,8 +22,8 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-//#define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em1200"
+#define ADD_PLAYER
+//#define ADD_PREVIEW "Prototype_Model_em1100"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -159,7 +159,8 @@ HRESULT CLevel_EnemiesTest::Ready_Prototypes()
 	FAILED_CHECK(CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakeMonsterExPrototypes(m_pDevice, m_pContext));
-	
+	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
+
 	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	return S_OK;
@@ -249,9 +250,10 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Player(const _tchar * pLayerTag)
 HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-																// Map_ConstructionSite3F
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
-	
+
+	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
+
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	return S_OK;

@@ -27,9 +27,10 @@ CBulletBuilder& CBulletBuilder::Set_InitBulletEffect(const vector<wstring>& Effe
 	return *this;
 }
 
-CBulletBuilder& CBulletBuilder::Set_InitBulletParticle(const wstring& ParticleName)
+CBulletBuilder& CBulletBuilder::Set_InitBulletParticle(const wstring& ParticleName, _bool IsRotParticles)
 {
 	m_InitParticle = ParticleName;
+	m_bRotParticles = IsRotParticles;
 	return *this;
 }
 
@@ -93,12 +94,22 @@ CBulletBuilder& CBulletBuilder::Set_Radius(_float fRad)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_Sound(_bool bSound)
+{
+	m_bUseSound = bSound;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
 	assert(pBullet != nullptr && "BulletBuilder CreatFail");
 	pBullet->Create_InitEffects(m_InitBulletEffects, m_BulletEffPivot);
-	pBullet->Create_InitParticle(m_InitParticle);
+
+	if (m_bRotParticles == true)
+		pBullet->Create_InitRotParticle(m_InitParticle, m_bRotParticles);
+	else
+		pBullet->Create_InitParticle(m_InitParticle);
 
 	pBullet->Set_DeadEffects(m_DeadBulletEffects);
 	pBullet->Set_DeadParticle(m_DeadParticle);
@@ -110,6 +121,7 @@ void CBulletBuilder::Build()
 	pBullet->Set_LifeTime(m_fLife);
 	pBullet->Set_DamageParam(m_eDamageParam);
 	pBullet->Set_Radius(m_fRadius);
+	pBullet->Set_Sound(m_bUseSound);
 
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));

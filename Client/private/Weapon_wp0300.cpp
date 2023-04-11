@@ -38,7 +38,7 @@ HRESULT CWeapon_wp0300::Initialize(void* pArg)
 			//if (auto pTarget = dynamic_cast<CMonster*>(pGameObject))
 			if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 			{
-				pTarget->Set_CollisionDuplicate(false);
+				pTarget->Set_CollisionDuplicate(false, ECOPYCOLTYPE::COPYCOL_MAIN);
 				//IM_LOG("Test");
 			}
 		});

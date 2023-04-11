@@ -276,7 +276,6 @@ call Copy.bat $(Configuration)</Command>
     <ClInclude Include="..\public\VIBuffer_Cell.h" />
     <ClInclude Include="..\public\VIBuffer_Cube.h" />
     <ClInclude Include="..\public\VIBuffer_Instancing.h" />
-    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\VIBuffer_Line.h" />
     <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h" />
     <ClInclude Include="..\public\VIBuffer_ModelInstancing.h" />
@@ -376,7 +375,6 @@ call Copy.bat $(Configuration)</Command>
     <ClCompile Include="..\private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instancing.cpp" />
-    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\VIBuffer_Line.cpp" />
     <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp" />
     <ClCompile Include="..\private\VIBuffer_ModelInstancing.cpp" />

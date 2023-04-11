@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/pr_Hospital_Pack/pr_Gurney_Dirty_Dif.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/pr_Hospital_Pack/TX_Gurney_Dirty_Nor.png",
-            ""
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 1
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/pr_Gurney_Dirty_Dif.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_Gurney_Dirty_Nor.dds",
+			""
+		],
+		"Pass": 1,
+		"Float2s": []
+	},
+	"InstancingPass": 1
 }

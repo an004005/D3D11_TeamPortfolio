@@ -535,6 +535,12 @@
     <Filter Include="02.GameObjects\UI\Short\PlayerUI">
       <UniqueIdentifier>{e182d929-9c78-491b-97a8-e1c448c9a45e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Item">
+      <UniqueIdentifier>{50a42ae4-ed80-493a-a2d7-a4f768c08598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Consumption_Item">
+      <UniqueIdentifier>{2258b2b9-7b16-4f26-8c7a-6f9a626391ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1545,6 +1551,13 @@
     <ClInclude Include="..\public\HPlossUI.h">
       <Filter>02.GameObjects\UI\Short\PlayerUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Consumption_Item.h">
+      <Filter>02.GameObjects\Item\Consumption_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_ConstructionSite2F.h">
+      <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Invisible.h" />
     <ClInclude Include="..\public\StoryTrigger.h">
       <Filter>Trigger</Filter>
     </ClInclude>
@@ -2535,6 +2548,13 @@
     <ClCompile Include="..\private\HPlossUI.cpp">
       <Filter>02.GameObjects\UI\Short\PlayerUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Consumption_Item.cpp">
+      <Filter>02.GameObjects\Item\Consumption_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_ConstructionSite2F.cpp">
+      <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\StoryTrigger.cpp">
       <Filter>Trigger</Filter>
     </ClCompile>
