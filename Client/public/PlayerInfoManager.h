@@ -39,7 +39,6 @@ typedef struct tagPlayerStatus
 	_uint iMaxExp = { 0 };
 	_uint iLevel = { 0 };
 	_uint iSprbrPower = { 0 };
-	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };

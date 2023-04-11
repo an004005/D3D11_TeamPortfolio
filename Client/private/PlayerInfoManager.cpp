@@ -30,7 +30,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
-	m_tPlayerStat.m_fBaseAttackDamage = 10000.f;
+	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
 	m_tPlayerStat.fDriveEnergy = 0.f;
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;
@@ -42,7 +42,6 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
 	m_tPlayerStat.iSprbrPower = 110;
-	m_tPlayerStat.iAttack = 30;
 	m_tPlayerStat.iDefense = 15;
 	m_tPlayerStat.iBP = 50;
 	m_tPlayerStat.iCoin = 5000;
@@ -441,7 +440,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tPlayerStat.iExp = 0;
 		m_tPlayerStat.m_iMaxHP += 50;
 		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
-		m_tPlayerStat.iAttack += m_tPlayerStat.iLevel;
+		m_tPlayerStat.m_fBaseAttackDamage += static_cast<_float>(m_tPlayerStat.iLevel);
 		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
 
 		m_tPlayerStat.iExp = iOverExp;

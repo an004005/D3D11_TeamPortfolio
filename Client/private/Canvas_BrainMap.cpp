@@ -126,16 +126,18 @@ HRESULT CCanvas_BrainMap::Render()
 	}
 
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"BrainExplanation_Face"))->GetScreenSpaceLeftTop();
-	wsprintf(szText, TEXT("%d"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP);
+	PLAYER_STAT tStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
+	wsprintf(szText, TEXT("%d"), tStat.m_iHP);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 10.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"체력", vPosition + _float2(120.0f, 10.0f), 0.f, vFontSmaillSize, vColor);
-	wsprintf(szText, TEXT("%d"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iSprbrPower);
+	wsprintf(szText, TEXT("%d"), tStat.iSprbrPower);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 31.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"초뇌능력", vPosition + _float2(120.0f, 31.0f), 0.f, vFontSmaillSize, vColor);
-	wsprintf(szText, TEXT("%d"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iAttack);
+	_int iAttack = static_cast<_int>(tStat.m_fBaseAttackDamage);
+	wsprintf(szText, TEXT("%d"), iAttack);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"공격력", vPosition + _float2(120.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
-	wsprintf(szText, TEXT("%d"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iDefense);
+	wsprintf(szText, TEXT("%d"), tStat.iDefense);
 	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 75.0f), 0.f, vFontSmaillSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(120.0f, 75.0f), 0.f, vFontSmaillSize, vColor);
 

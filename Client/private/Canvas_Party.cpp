@@ -550,7 +550,7 @@ void CCanvas_Party::PickInfo()
 		m_tPickIngo.iHP = tStat.m_iHP;
 		m_tPickIngo.iMaxHP = tStat.m_iMaxHP;
 		m_tPickIngo.iSprbrPower = tStat.iSprbrPower;
-		m_tPickIngo.iAttack = tStat.iAttack;
+		m_tPickIngo.iAttack = static_cast<_int>(tStat.m_fBaseAttackDamage);
 		m_tPickIngo.iDefense = tStat.iDefense;
 
 		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(0.0f);
