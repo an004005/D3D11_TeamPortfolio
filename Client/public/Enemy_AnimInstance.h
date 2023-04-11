@@ -29,7 +29,10 @@ public:
 	const string&	GetCurSocketAnimName();
 	void InputAnimSocketMany(const string& strSocName, const list<string>& AnimNameList);
 	void AttachAnimSocketMany(const string& strSocName, const list<string>& AnimNameList);
-	
+
+
+	void	SetLerpDuration(_float fLerpTime) { m_fLerpDuration = fLerpTime; }
+
 protected:
 	CAnimationStateMachine* m_pASM_Base = nullptr;
 

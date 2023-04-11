@@ -17,7 +17,7 @@ public:
 	CBulletBuilder& Set_Owner(CGameObject* pOwner);
 	CBulletBuilder& Set_Target(class CScarletCharacter* pOwner);
 	CBulletBuilder& Set_InitBulletEffect(const vector<wstring>& EffectName);
-	CBulletBuilder& Set_InitBulletParticle(const wstring& ParticleName);
+	CBulletBuilder& Set_InitBulletParticle(const wstring& ParticleName, _bool IsRotParticles = false);
 
 	CBulletBuilder& Set_ShootSpeed(_float fSpeedsec);
 	CBulletBuilder& Set_Life(_float fLife);
@@ -54,6 +54,8 @@ private:
 	_float			m_fAngle = 0.f;
 	_float			m_fRadius = 0.5f;
 	_float4x4		m_BulletEffPivot;
+
+	_bool			m_bRotParticles = false;
 
 public:
 	virtual void Free() override;

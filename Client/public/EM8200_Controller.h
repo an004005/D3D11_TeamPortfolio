@@ -1,6 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "AIController.h"
+#include "TimerHelper.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -27,6 +28,17 @@ public:
 	void Tick_Outside(_double TimeDelta);
 
 	void Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
+	void Teleport_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio = 1.f);
+
+	void LookAtNow();
+
+private:
+	void Detected_Attack();
+	void Tick_TP_Cooltime(_double TimeDelta);
+	void Tick_CoolTimeHelper(_double TimeDelta);
+
+private:
+	void Initialize_CoolTimeHelper();
 
 private:
 	CFSMComponent* m_pFSM = nullptr;
@@ -42,9 +54,33 @@ private:
 
 	_bool m_bRun = false;
 
+
+private:
+	// CoolTime Manage
+
+	// Ice Needle Atk
+	CCoolTimeHelper m_IceNeedle_CoolTimeHelper;
+
+	CCoolTimeHelper m_KickAtk_CoolTimeHelper;
+	
+	CCoolTimeHelper m_RushAtk_CoolTimeHelper;
+	
+	CCoolTimeHelper m_ChaseElec_CoolTimeHelper;
+
+	CCoolTimeHelper m_AirElec_CoolTimeHelper;
+
+private:
+	_float			m_fTP_CurCoolTime = 0.f;
+	_float			m_fTP_CoolTime = 0.f;
+	_float2			m_fTP_RandCoolTime = { 0.f ,0.5f };
+	_bool			m_bCanUseTeleport = false;
 public:
 	virtual void Free() override;
 	virtual CComponent* Clone(void* pArg) override;
 	static CEM8200_Controller* Create();
 };
+
+
+
+
 END

@@ -186,8 +186,9 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			|| LEVEL_NOW == LEVEL_TUTORIAL
 			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
 			|| LEVEL_NOW == LEVEL_SUBWAY
-			|| LEVEL_NOW == LEVEL_NAOMIROOM
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F
+			|| LEVEL_NOW == LEVEL_NAOMIROOM			
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F			
+			|| LEVEL_NOW == LEVEL_FINAL_STAGE			
 			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
 		{
 			if (m_iSelectFinishFunc == 0)
@@ -246,6 +247,15 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 
 	return S_OK;
 }
+
+CEffectSystem* CEffectGroup::Get_FirstEF()
+{
+	if (nullptr == m_pFirst_EffectSystem)
+		return nullptr;
+	else
+		return m_pFirst_EffectSystem;
+}
+
 
 void CEffectGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
 	_bool trueisRemoveScale)
@@ -558,7 +568,7 @@ void CEffectGroup::Call_Event()
 			else if (eventName.find("Neon") != string::npos)
 			{
 				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
-				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem,MatParticle, true, true);
+				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem, MatParticle, true, true);
 			}
 			else
 			{
@@ -1885,6 +1895,33 @@ void CEffectGroup::Set_Transform(_fmatrix matSocket)
 void CEffectGroup::Start_EffectWork()
 {
 	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_OnlyPos_Pivot(_float4 vPos, _float4x4 Pivot, _bool trueisUpdate)
+{
+	m_vPosition = vPos;
+
+	_matrix PosMat = XMMatrixScaling(vPos.x, vPos.y, vPos.z);
+	_matrix SocketMatrix = XMMatrixMultiply(PosMat, Pivot);
+
+	m_bUpdate = trueisUpdate;
+
+	if (m_bUpdate == false)
+	{
+		if (nullptr != m_pFirst_EffectSystem)
+			m_pFirst_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pSecond_EffectSystem)
+			m_pSecond_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pThird_EffectSystem)
+			m_pThird_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFourth_EffectSystem)
+			m_pFourth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+		if (nullptr != m_pFifth_EffectSystem)
+			m_pFifth_EffectSystem->GetTransform()->Set_WorldMatrix(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+
 }
 
 void CEffectGroup::Start_AttachOnlyPos(_float4 vPos, _bool trueisUpdate)

@@ -4,6 +4,7 @@
 #include <GameUtils.h>
 
 #include "Enemy.h"
+#include "InvisibleWall.h"
 #include "Player.h"
 #include "JsonLib.h"
 #include "Layer.h"
@@ -89,6 +90,11 @@ HRESULT CSpawnTrigger::Initialize(void* pArg)
 		CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER);
 	}
 
+	if (m_pWall == nullptr)
+	{
+		m_pWall = dynamic_cast<CInvisibleWall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, LAYER_TRIGGER, L"Prototype_InvisibleWall"));
+	}
+
 
 	return S_OK;
 }
@@ -101,7 +107,15 @@ void CSpawnTrigger::Tick(_double TimeDelta)
 	{
 		if (m_iSpawnOrder >= m_WaitingEnemies.size())
 		{
-			SetDelete();
+			if (m_WallDeActiveOnce.IsNotDo())
+			{
+				m_pWall->Activate(false);
+			}
+			if (m_pWall->IsActive() == false)
+			{
+				SetDelete();
+			}
+
 			return;
 		}
 
@@ -125,12 +139,19 @@ void CSpawnTrigger::SaveToJson(Json& json)
 {
 	CTriggerEx::SaveToJson(json);
 	json["SpawnEnemies"] = m_SpawnEnemies;
+	m_pWall->SaveToJson(json["InvisibleWall"]);
 }
 
 void CSpawnTrigger::LoadFromJson(const Json& json)
 {
 	CTriggerEx::LoadFromJson(json);
 	m_SpawnEnemies = json["SpawnEnemies"];
+
+	if (json.contains("InvisibleWall"))
+	{
+		Json wallJson = json["InvisibleWall"];
+		m_pWall = dynamic_cast<CInvisibleWall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, LAYER_TRIGGER, L"Prototype_InvisibleWall", &wallJson));
+	}
 }
 
 void CSpawnTrigger::Imgui_RenderProperty()
@@ -228,11 +249,25 @@ void CSpawnTrigger::Imgui_RenderProperty()
 		m_SpawnEnemies.push_back(tDataList);
 		TmpEnemies.clear();
 	}
+
+
+	static _bool bWallEditor = false;
+	ImGui::Checkbox("Open WallEditor", &bWallEditor);
+	ImGui::Begin("WallEditor", &bWallEditor);
+	m_pWall->Imgui_RenderProperty();
+	m_pWall->Imgui_RenderComponentProperties();
+	ImGui::End();
 }
 
 void CSpawnTrigger::TriggerInEvent(CGameObject* pObject)
 {
+	if (m_bStart)
+		return;
 	m_bStart = true;
+	if (m_pWall)
+	{
+		m_pWall->Activate(true);
+	}
 }
 
 _bool CSpawnTrigger::CheckTriggeredObject(CGameObject* pObject)
@@ -250,6 +285,10 @@ void CSpawnTrigger::Free()
 	}
 	m_WaitingEnemies.clear();
 	m_SpawnEnemies.clear();
+
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pWall))
+		m_pWall->SetDelete();
+	m_pWall = nullptr;
 }
 
 CSpawnTrigger* CSpawnTrigger::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
