@@ -29,6 +29,8 @@ HRESULT CEM0110::Initialize(void * pArg)
 	Json em0110_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em0110Base.json");
 	pArg = &em0110_json;
 
+	m_strDeathSoundTag = "horse_fx_death";
+
 	// 배치툴에서 조절할 수 있게 하기
 	{
 		m_iMaxHP = 1100;
@@ -79,6 +81,18 @@ void CEM0110::SetUpComponents(void * pArg)
 void CEM0110::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("horse_attack_fieldoil");
+	m_SoundStore.CloneSound("horse_attack_rush");
+	m_SoundStore.CloneSound("horse_attack_spin");
+	m_SoundStore.CloneSound("horse_runs_bip");
+	m_SoundStore.CloneSound("horse_walks_bip");
+
+	m_pModelCom->Add_EventCaller("horse_attack_fieldoil", [this] {m_SoundStore.PlaySound("horse_attack_fieldoil", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("horse_attack_rush", [this] {m_SoundStore.PlaySound("horse_attack_rush", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("horse_attack_spin", [this] {m_SoundStore.PlaySound("horse_attack_spin", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("horse_runs_bip", [this] {m_SoundStore.PlaySound("horse_runs_bip", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("horse_walks_bip", [this] {m_SoundStore.PlaySound("horse_walks_bip", m_pTransformCom); });
 }
 
 void CEM0110::SetUpAnimationEvent()

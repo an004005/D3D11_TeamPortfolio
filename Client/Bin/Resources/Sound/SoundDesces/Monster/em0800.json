@@ -1,0 +1,62 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "croco_attack_splash",
+            "SoundFiles" : ["Monsters/em0800/croco_attack_splash.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_attack_bite",
+            "SoundFiles" : ["Monsters/em0800/mon_4_attack_bite.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_attack_laser",
+            "SoundFiles" : ["Monsters/em0800/mon_4_attack_laser.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_groggy",
+            "SoundFiles" : ["Monsters/em0800/mon_4_groggy.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_4_impact_fly",
+            "SoundFiles" : ["Monsters/em0800/mon_4_impact_fly_1.wav",
+            "Monsters/em0800/mon_4_impact_fly_2.wav"],
+            "2DSound" : false,
+            "Volume" : 0.7,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 10.0
+        },        
+        {
+            "Name" : "mon_4_move",
+            "SoundFiles" : ["Monsters/em0800/mon_4_move_1.wav",
+            "Monsters/em0800/mon_4_move_2.wav", 
+            "Monsters/em0800/mon_4_move_3.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        }
+    ]
+}

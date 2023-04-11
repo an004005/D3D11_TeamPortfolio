@@ -89,6 +89,15 @@ void CEM0800::SetUpComponents(void * pArg)
 void CEM0800::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("croco_attack_splash");
+	m_SoundStore.CloneSound("mon_4_attack_bite");
+	m_SoundStore.CloneSound("mon_4_attack_laser");
+	m_SoundStore.CloneSound("mon_4_groggy");
+	m_SoundStore.CloneSound("mon_4_impact_fly");
+	m_SoundStore.CloneSound("mon_4_move");
+
+	m_pModelCom->Add_EventCaller("mon_4_move", [this] {m_SoundStore.PlaySound("mon_4_move", m_pTransformCom); });
 }
 
 void CEM0800::SetUpAnimationEvent()
@@ -217,6 +226,8 @@ void CEM0800::SetUpFSM()
 			{
 				Play_MidHitAnim();
 				HeavyAttackPushStart();
+				m_SoundStore.PlaySound("mon_4_groggy", m_pTransformCom);
+
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -352,6 +363,8 @@ void CEM0800::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0810_201_AL_atk_a1_bite");
+				m_SoundStore.PlaySound("mon_4_attack_bite", m_pTransformCom);
+
 			})
 			.Tick([this](_double)
 			{
@@ -373,6 +386,7 @@ void CEM0800::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_208_AL_atk_a4_laser_start");
+				m_SoundStore.PlaySound("mon_4_attack_laser", m_pTransformCom);
 			})
 			.Tick([this](_double)
 			{
@@ -427,6 +441,8 @@ void CEM0800::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em0800_212_AL_atk_a6_circumference2");
+					m_SoundStore.PlaySound("croco_attack_splash", m_pTransformCom);
+
 					ClearDamagedTarget();
 				})
 				.Tick([this](_double TimeDetla)
@@ -503,6 +519,10 @@ void CEM0800::Tick(_double TimeDelta)
 		XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3Normalize(m_vMoveAxis));
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
+
+	m_Sound_Fly.Tick(TimeDelta);
+	if(m_Sound_Fly.Use())
+		m_SoundStore.PlaySound("mon_4_impact_fly", m_pTransformCom);
 
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();

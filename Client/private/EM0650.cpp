@@ -25,8 +25,7 @@ HRESULT CEM0650::Initialize(void * pArg)
 	Json em0650_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/Test.json");
 	pArg = &em0650_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "mon_2_fx_death";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -67,6 +66,12 @@ void CEM0650::SetUpComponents(void * pArg)
 void CEM0650::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("mon_2_attack_ready");
+	m_SoundStore.CloneSound("mon_2_attack_shoot");
+	m_SoundStore.CloneSound("mon_2_move");
+
+	m_pModelCom->Add_EventCaller("mon_2_move", [this] {m_SoundStore.PlaySound("mon_2_move", m_pTransformCom); });
 }
 
 void CEM0650::SetUpAnimationEvent()
@@ -88,19 +93,7 @@ void CEM0650::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Shoot", [this]
 	{
 			Create_Bullet();
-
-		//auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
-
-		//if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
-		//{
-		//	pBullet->Set_Owner(this);
-	
-		//	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
-		//	_vector vPrePos = BoneMtx.r[3];
-
-		//	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-		//	pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
-		//}
+			m_SoundStore.PlaySound("mon_2_attack_shoot", m_pTransformCom);
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
 	{
@@ -159,8 +152,15 @@ void CEM0650::SetUpFSM()
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
+			.OnStart([this]
+			{
+				m_fGravity = 20.f;
+			})
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this] { return !m_bDown && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER
+					&& m_eCurAttackType != EAttackType::ATK_TO_AIR; })
 
 			.AddTransition("Idle to Hit_ToAir", "Hit_ToAir")
 				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_TO_AIR; })
@@ -197,7 +197,7 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
+					return PriorityCondition()
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
 					|| (m_eCurAttackType != EAttackType::ATK_LIGHT
 						&& m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
@@ -234,10 +234,10 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-						return m_bDead
-							|| m_pASM->isSocketPassby("FullBody", 0.95f)
-							|| m_eCurAttackType == EAttackType::ATK_TO_AIR
-							|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
+					return PriorityCondition()
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
 				})
 	
 		.AddState("Hit_ToAir")
@@ -246,6 +246,7 @@ void CEM0650::SetUpFSM()
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_432_AL_blow_start_F");
 				m_fGravity = 20.f;
 				m_fYSpeed = 10.f;
+				m_bDown = true;
 
 				m_vMoveAxis = _float3::Zero;
 			})
@@ -266,22 +267,78 @@ void CEM0650::SetUpFSM()
 			{
 				m_bHitAir = false;
 			})
-			.AddTransition("Hit_ToAir to OnFloorGetup", "OnFloorGetup")
+			.AddTransition("Hit_ToAir to Landing", "Landing")
 				.Predicator([this]
 				{ 
 					return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
 				})
-		.AddState("OnFloorGetup")
+
+		.AddState("Landing")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketMany("FullBody", { "AS_em0600_433_AL_blow_landing_F", "AS_em0600_427_AL_getup" });
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_433_AL_blow_landing_F");
 				m_fGravity = 20.f;
 			})
-			.AddTransition("OnFloorGetup to Idle", "Idle")
+
+			.AddTransition("Landing to Getup", "Getup")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketEmpty("FullBody");
+					return m_pASM->isSocketPassby("FullBody", 0.98f);
 				})
+			.AddTransition("Landing to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR;
+				})
+			.AddTransition("Landing to Shock", "Shock")
+				.Predicator([this]
+				{
+					return (m_pASM->isSocketPassby("FullBody", 0.95f) && m_eDeBuff == EDeBuffType::DEBUFF_THUNDER);
+				})
+
+		.AddState("Down")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_425_AL_down_start");
+				m_bDown = true;
+			})
+			.AddTransition("Down to Shock", "Shock")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.99f);
+				})
+
+		.AddState("Shock")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_480_AL_down_shock");
+				m_pModelCom->Find_Animation("AS_em0600_480_AL_down_shock")->SetLooping(true);
+			})
+			.AddTransition("Shock to Getup", "Getup")
+				.Predicator([this]
+				{
+					return m_eDeBuff != EDeBuffType::DEBUFF_THUNDER;
+				})
+			.AddTransition("Shock to Hit_ToAir", "Hit_ToAir")
+				.Predicator([this]
+				{
+					return m_eCurAttackType == EAttackType::ATK_TO_AIR;
+				})
+
+		.AddState("Getup")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_427_AL_getup");
+			})
+			.OnExit([this]
+			{
+				m_bDown = false;
+			})
+			.AddTransition("Getup to Idle", "Idle")
+				.Predicator([this]
+				{
+					return PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketEmpty("FullBody");					})
+
 		.AddState("Death")
 			.OnStart([this]
 			{
@@ -294,6 +351,7 @@ void CEM0650::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_204_AL_atk_a3_shot");
+				m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom);
 			})
 			.AddTransition("Attack to Idle", "Idle")
 				.Predicator([this]
@@ -476,6 +534,11 @@ void CEM0650::Make_Decal(_double TimeDelta)
 		m_dDecalTime = 0.0;
 	}
 
+}
+
+_bool CEM0650::PriorityCondition()
+{
+	return  m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
 }
 
 void CEM0650::HeavyAttackPushStart()

@@ -15,7 +15,7 @@
 CEM0900::CEM0900(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eEnemyName = EEnemyName::EM1100;
+	m_eEnemyName = EEnemyName::EM0900;
 }
 
 CEM0900::CEM0900(const CEM0900 & rhs)
@@ -213,7 +213,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Death")
@@ -341,7 +341,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("4Attack to Idle", "Idle")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Spin")
@@ -360,7 +360,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Spin to Idle", "Idle")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Throw_OmenStart")
@@ -375,7 +375,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_OmenStart to Throw_OmenLoop", "Throw_OmenLoop")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Throw_OmenLoop")
@@ -392,12 +392,12 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_OmenLoop to Feint", "Feint")
 				.Predicator([this]
 				{
-					return  WholeCondition() || (m_dLoopTick>= 0.5 && m_pController->GetGapDistance() < 7.f);
+					return  PriorityCondition() || (m_dLoopTick>= 0.5 && m_pController->GetGapDistance() < 7.f);
 				})
 			.AddTransition("Throw_OmenLoop to Throw_Start", "Throw_Start")
 				.Predicator([this]
 				{
-					return WholeCondition() || (m_dLoopTick >= 0.5 && m_pController->GetGapDistance() >= 7.f);
+					return PriorityCondition() || (m_dLoopTick >= 0.5 && m_pController->GetGapDistance() >= 7.f);
 				})
 
 		.AddState("Feint")
@@ -415,7 +415,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Feint to Idle", "Idle")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Throw_Start")
@@ -430,7 +430,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_Start to Throw_Loop", "Throw_Loop")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Throw_Loop")
@@ -445,7 +445,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_Loop to Throw_End", "Throw_End")
 				.Predicator([this]
 				{
-					return WholeCondition() || abs(m_pController->GetTurnRemain()) < 0.1f;
+					return PriorityCondition() || IsTargetFront(15.f);
 				})
 
 		//이벤트에서 플레이어쪽으로 던짐
@@ -457,7 +457,7 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Throw_End to Idle", "Idle")
 				.Predicator([this]
 				{
-					return WholeCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -778,7 +778,7 @@ _bool CEM0900::CanMove4BC(_float fMinDist)
 	return true;
 }
 
-_bool CEM0900::WholeCondition()
+_bool CEM0900::PriorityCondition()
 {
 	return m_bDead || m_bDestroyArmor;
 }

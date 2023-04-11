@@ -1,0 +1,42 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "voidfly_attack_dash",
+            "SoundFiles" : ["Monsters/em0700/voidfly_attack_dash.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "voidfly_attack_oil",
+            "SoundFiles" : ["Monsters/em0700/voidfly_attack_oil.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "voidfly_fx_death",
+            "SoundFiles" : ["Monsters/em0700/voidfly_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "voidfly_move",
+            "SoundFiles" : ["Monsters/em0700/voidfly_move_1.wav",
+            "Monsters/em0700/voidfly_move_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        }
+    ]
+}

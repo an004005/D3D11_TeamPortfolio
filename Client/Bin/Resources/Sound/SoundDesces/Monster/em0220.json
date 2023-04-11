@@ -1,0 +1,63 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "wood_attack_lampbomb",
+            "SoundFiles": [
+                "Monsters/em0220/wood_attack_lampbomb_1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+        "MaxDistance": 20.0
+        },
+        {
+            "Name": "wood_attack_spits",
+            "SoundFiles": [
+                "Monsters/em0220/wood_attack_spits.1.wav",
+                "Monsters/em0220/wood_attack_spits.2.wav",
+                "Monsters/em0220/wood_attack_spits.3.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "wood_fx_death",
+            "SoundFiles": [
+                "Monsters/em0220/wood_fx_death.wav"      
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "wood_move_down",
+            "SoundFiles": [
+                "Monsters/em0220/wood_move_down.wav"      
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "wood_move_up",
+            "SoundFiles": [
+                "Monsters/em0220/wood_move_up.wav"   
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        }
+      
+    ]
+}
