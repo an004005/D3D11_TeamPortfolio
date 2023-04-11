@@ -89,10 +89,16 @@ HRESULT CEM8200_Controller::Initialize(void* pArg)
 void CEM8200_Controller::Initialize_CoolTimeHelper()
 {
 	m_IceNeedle_CoolTimeHelper.Initialize(30.f, true);
-	m_KickAtk_CoolTimeHelper.Initialize(15.f, true);
-	m_RushAtk_CoolTimeHelper.Initialize(35.f, true);
-	m_ChaseElec_CoolTimeHelper.Initialize(20.f, true);
-	m_AirElec_CoolTimeHelper.Initialize(30.f, true);
+	m_KickAtk_CoolTimeHelper.Initialize(15.f, false);
+	m_RushAtk_CoolTimeHelper.Initialize(35.f, false);
+	m_ChaseElec_CoolTimeHelper.Initialize(20.f, false);
+	m_AirElec_CoolTimeHelper.Initialize(30.f, false);
+
+	m_CaptureKinetic_CoolTimeHelper.Initialize(10.f, false);
+	m_Seethrough_CoolTimeHelper.Initialize(30.f, false);
+	m_Counter_CoolTimeHelper.Initialize(30.f, false);
+
+	m_DetectedCoolTimeHelper.Initialize(3.f, true);
 }
 
 void CEM8200_Controller::BeginTick()
@@ -115,73 +121,109 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 		// m_pFSM->Tick(TimeDelta);
+
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
 		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
 		// AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);
 		// AddCommand("Kick_A1", 0.f, &CAIController::Input, E);
-		AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
+		// AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
 
+		// AddCommand("CaptureKinetic", 0.f, &CAIController::Input, B);
 
+		// AddCommand("Seethrough", 0.f, &CEM8200_Controller::Input, L);
+		AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
 	}
 
-	Detected_Attack();
+	if(m_Commands.empty() || m_Commands.front().GetName() == "Walk")
+		Detected_Attack();
+
+	if(m_pCastedOwner->Check_SecondPhase() == true)
+		Check_PlayerUseSas();
 }
 
 void CEM8200_Controller::Detected_Attack()
 {
-	if (m_pCastedOwner->IsPlayingSocket() == false)
+	if (m_DetectedCoolTimeHelper.CanUse())
 	{
-		physx::PxOverlapHit hitBuffer[5];
-		physx::PxOverlapBuffer overlapOut(hitBuffer, 5);
-
-		SphereOverlapParams param;
-		param.fVisibleTime = 0.3f;
-		param.iTargetType = CTB_PLAYER | CTB_PSYCHICK_OBJ;
-		param.fRadius = 5.f;
-		param.vPos = m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-		param.overlapOut = &overlapOut;
-
-		if (CGameInstance::GetInstance()->OverlapSphere(param))
+		if (m_pCastedOwner->IsPlayingSocket() == false)
 		{
-			for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+			physx::PxOverlapHit hitBuffer[5];
+			physx::PxOverlapBuffer overlapOut(hitBuffer, 5);
+
+			SphereOverlapParams param;
+			param.fVisibleTime = 0.3f;
+			param.iTargetType = CTB_PLAYER | CTB_PSYCHICK_OBJ;
+			param.fRadius = 5.f;
+			param.vPos = m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+			param.overlapOut = &overlapOut;
+
+			if (CGameInstance::GetInstance()->OverlapSphere(param) )
 			{
-				auto pObj = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
-				if (auto pTarget = dynamic_cast<CScarletCharacter*>(pObj))
+				for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
 				{
-					if(pObj == m_pCastedOwner)
-						continue;
-
-					if(CPlayerInfoManager::GetInstance()->Get_PlayerAttackEnable() == true)
+					auto pObj = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor);
+					if (auto pTarget = dynamic_cast<CScarletCharacter*>(pObj))
 					{
-						if (rand() % 4 == 0)
-							return;
+						if (pObj == m_pCastedOwner)
+							continue;
 
-						ClearCommands();
+						if (CPlayerInfoManager::GetInstance()->Get_PlayerAttackEnable() == true)
+						{
+							_uint iRand = CMathUtils::RandomUInt(3);
 
-						const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_4);
+							if (iRand == 0 && m_DetectedCoolTimeHelper.Use())
+							{
+								ClearCommands();
 
-						AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+								const _uint iNum = CMathUtils::RandomInt(NUM_2, NUM_4);
+
+								AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+							}
+							else
+								return;
+						}
 					}
-				}
-				else if (auto pKinetic = dynamic_cast<CMapKinetic_Object*>(pObj))
-				{
-					if (pKinetic->GetThrow() == true && pKinetic->IsUseBoss() == false)
+					else if (auto pKinetic = dynamic_cast<CMapKinetic_Object*>(pObj))
 					{
-						if (rand() % 4 == 0)
-							return;
+						if (pKinetic->GetThrow() == true && pKinetic->IsUseBoss() == false)
+						{
+							_uint iRand = CMathUtils::RandomUInt(3);
 
-						ClearCommands();
+							if (iRand == 0 && m_DetectedCoolTimeHelper.Use())
+							{
+								ClearCommands();
+								_uint iNum = CMathUtils::RandomInt(NUM_2, NUM_3);
+								AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+							}
 
-						const _uint iNum = CMathUtils::RandomInt(NUM_1, NUM_4);
-
-						AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
+							else if (iRand == 1 && m_KineticSet.IsNotDo() && m_DetectedCoolTimeHelper.Use())
+							{
+								// Capture
+								ClearCommands();
+								m_pCastedOwner->Set_KineticObject(pObj);
+								AddCommand("CaptureKinetic", 0.f, &CAIController::Input, B);
+							}
+							else
+								return;
+						}
 					}
 				}
 			}
 		}
+		else
+			return;
 	}
 	else
 		return;
+}
+
+void CEM8200_Controller::Check_PlayerUseSas()
+{
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty() == false && m_Seethrough_CoolTimeHelper.CanUse())
+	{
+		if(m_Seethrough_CoolTimeHelper.Use())
+			AddCommand("Seethrough", 0.f, &CEM8200_Controller::Input, L);
+	}
 }
 
 void CEM8200_Controller::Tick_CoolTimeHelper(_double TimeDelta)
@@ -191,6 +233,12 @@ void CEM8200_Controller::Tick_CoolTimeHelper(_double TimeDelta)
 	m_RushAtk_CoolTimeHelper.Tick(TimeDelta);
 	m_ChaseElec_CoolTimeHelper.Tick(TimeDelta);
 	m_AirElec_CoolTimeHelper.Tick(TimeDelta);
+
+	m_CaptureKinetic_CoolTimeHelper.Tick(TimeDelta);
+	m_Seethrough_CoolTimeHelper.Tick(TimeDelta);
+	m_Counter_CoolTimeHelper.Tick(TimeDelta);
+
+	m_DetectedCoolTimeHelper.Tick(TimeDelta);
 }
 
 void CEM8200_Controller::Tick_TP_Cooltime(_double TimeDelta)
@@ -224,7 +272,7 @@ void CEM8200_Controller::Tick_Near(_double TimeDelta)
 	switch (m_iNearOrder)
 	{
 	case 0:
-		 AddCommand("Walk", 1.f, &CAIController::Wait);
+		 AddCommand("Idle", 1.f, &CAIController::Wait);
 		break;
 	case 1:
 		if(m_bCanUseTeleport == true)
@@ -246,14 +294,20 @@ void CEM8200_Controller::Tick_Near(_double TimeDelta)
 		}
 		break;
 	case 4:
-		if(m_ChaseElec_CoolTimeHelper.Use())
+		if(m_ChaseElec_CoolTimeHelper.Use() && m_pCastedOwner->Check_SecondPhase() == true)
 		{
 			AddCommand("Chase_Elec_Start", 0.f, &CAIController::Input, R);
 		}
 		break;
+	case 5:
+		if (m_Counter_CoolTimeHelper.Use() && m_pCastedOwner->Check_SecondPhase() == true)
+		{
+			AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
+		}
+		break;
 	}
 
-	m_iNearOrder = (m_iNearOrder + 1) % 5;
+	m_iNearOrder = (m_iNearOrder + 1) % 6;
 }
 
 void CEM8200_Controller::Tick_Mid(_double TimeDelta)
@@ -279,16 +333,14 @@ void CEM8200_Controller::Tick_Mid(_double TimeDelta)
 			AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
 		}
 		break;
-
-	// case 2:
-	// 	// AddCommand("Turn", 2.f, &CAIController::Move_TurnToTarget, EMoveAxis::NORTH, 1.f);
-	// 	// AddCommand("Jump", 0.f, &CAIController::Input, MOUSE_RB);
-	// 	break;
-	// case 3:
-	// 	// AddCommand("Threat", 0.f, &CAIController::Input, C);
-	// 	break;
+	case 3:
+		if (m_Counter_CoolTimeHelper.Use() && m_pCastedOwner->Check_SecondPhase() == true)
+		{
+			AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
+		}
+		break;
 	}
-	m_iMidOrder = (m_iMidOrder + 1) % 3;
+	m_iMidOrder = (m_iMidOrder + 1) % 4;
 }
 
 void CEM8200_Controller::Tick_Far(_double TimeDelta)
@@ -300,6 +352,7 @@ void CEM8200_Controller::Tick_Far(_double TimeDelta)
 	case 0:
 		AddCommand("Teleport_F", 0.f, &CEM8200_Controller::Input, NUM_1);
 		break;
+
 	case 1:
 		if(m_IceNeedle_CoolTimeHelper.Use())
 		{

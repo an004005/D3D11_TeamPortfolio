@@ -16,12 +16,12 @@
 #include "MapInstance_Object.h"
 #include "PlayerInfoManager.h"
 
-CMapKinetic_Object::CMapKinetic_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMapKinetic_Object::CMapKinetic_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapObject(pDevice, pContext)
 {
 }
 
-CMapKinetic_Object::CMapKinetic_Object(const CMapKinetic_Object & rhs)
+CMapKinetic_Object::CMapKinetic_Object(const CMapKinetic_Object& rhs)
 	: CMapObject(rhs)
 {
 }
@@ -29,11 +29,11 @@ CMapKinetic_Object::CMapKinetic_Object(const CMapKinetic_Object & rhs)
 HRESULT CMapKinetic_Object::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
-	
+
 	return S_OK;
 }
 
-HRESULT CMapKinetic_Object::Initialize(void * pArg)
+HRESULT CMapKinetic_Object::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
@@ -68,83 +68,113 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 
 	// 다이나믹 리지드 바디가 몬스터와 충돌했는지?
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
-	{
-		if (m_bSwing)
 		{
-			if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
+			if (m_bSwing)
 			{
-				DAMAGE_PARAM tParam;
-				tParam.eAttackType = EAttackType::ATK_HEAVY;
-				tParam.iDamage = 200;
-				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
+				{
+					DAMAGE_PARAM tParam;
+					tParam.eAttackType = EAttackType::ATK_HEAVY;
+					tParam.iDamage = 200;
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
-				pMonster->TakeDamage(tParam);
+					pMonster->TakeDamage(tParam);
+
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+						->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
+
+					ReleaseParticle();
+				}
+
+				return;
+			}
+
+			if (!m_bThrow)
+				return;
+
+			if (m_bHit)
+				return;
+
+			if (auto pStatic = dynamic_cast<CMapInstance_Object*>(pGameObject))
+			{
+				m_bHit = true;
+				m_fDeadTimer = 0.f;
 
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
-				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
-				CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
-
 				ReleaseParticle();
 			}
 
-			return;
-		}
-
-		if (!m_bThrow)
-			return;
-
-		if (m_bHit)
-			return;
-
-		if (auto pStatic = dynamic_cast<CMapInstance_Object*>(pGameObject))
-		{
-			m_bHit = true;
-			m_fDeadTimer = 0.f;
-
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
-				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
-
-			ReleaseParticle();
-		}
-
-		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
-		{
-			DAMAGE_PARAM tParam;
-			tParam.eAttackType = EAttackType::ATK_HEAVY;
-			tParam.iDamage = 200;
-			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-
-			pMonster->TakeDamage(tParam);
-			m_bHit = true;
-			m_fDeadTimer = 0.f;
-
-			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
-			//	->Start_AttachOnlyPos(tParam.vHitFrom);
-
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
-				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
-
-			// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
-			if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
+			if (m_bCounter == false)
 			{
-				for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
+				if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 				{
-					if (L"Player" == iter->GetPrototypeTag())
+					DAMAGE_PARAM tParam;
+					tParam.eAttackType = EAttackType::ATK_HEAVY;
+					tParam.iDamage = 200;
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
+					pMonster->TakeDamage(tParam);
+					m_bHit = true;
+					m_fDeadTimer = 0.f;
+
+					//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+					//	->Start_AttachOnlyPos(tParam.vHitFrom);
+
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+						->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+					// 충돌이 발생하면 플레이어의 키네틱 콤보 상태를 1로 올려준다.
+					if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player") != nullptr)
 					{
-						static_cast<CPlayer*>(iter)->Set_KineticCombo_Kinetic();
-						break;
+						for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Player")->GetGameObjects())
+						{
+							if (L"Player" == iter->GetPrototypeTag())
+							{
+								static_cast<CPlayer*>(iter)->Set_KineticCombo_Kinetic();
+								break;
+							}
+						}
 					}
+
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
+
+					ReleaseParticle();
 				}
 			}
+			else if (m_bCounter == true)
+			{
+				if (auto pPlayer = dynamic_cast<CPlayer*>(pGameObject))
+				{
+					DAMAGE_PARAM tParam;
+					tParam.eAttackType = EAttackType::ATK_HEAVY;
+					tParam.iDamage = 200;
+					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					tParam.eAttackSAS = ESASType::SAS_END;
+					tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
-			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
+					pPlayer->TakeDamage(tParam);
+					m_bHit = true;
+					m_fDeadTimer = 0.f;
 
-			ReleaseParticle();
-		}
-	});
+					//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, TEXT("Default_Kinetic_Dead_Effect_00"))
+					//	->Start_AttachOnlyPos(tParam.vHitFrom);
+
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
+						->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
+
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
+
+					ReleaseParticle();
+				}
+			}
+		});
 
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(18.f) });
 
@@ -178,6 +208,8 @@ HRESULT CMapKinetic_Object::Initialize(void * pArg)
 	return S_OK;
 }
 
+
+
 void CMapKinetic_Object::BeginTick()
 {
 	__super::BeginTick();
@@ -190,7 +222,7 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	m_fTimeDelta = (_float)TimeDelta;
 
 	__super::Tick(TimeDelta);
-	if(m_eCurModelTag != Tag_End)
+	if (m_eCurModelTag != Tag_End)
 		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
 
 	OutlineMaker();
@@ -246,7 +278,7 @@ HRESULT CMapKinetic_Object::Render()
 {
 	FAILED_CHECK(__super::Render());
 
-	if(m_eCurModelTag != Tag_End)
+	if (m_eCurModelTag != Tag_End)
 	{
 		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 		FAILED_CHECK(m_pModelComs[m_eCurModelTag]->Render(WorldMatrix));
@@ -257,7 +289,7 @@ HRESULT CMapKinetic_Object::Render()
 
 HRESULT CMapKinetic_Object::Render_ShadowDepth()
 {
-	if(m_eCurModelTag != Tag_End)
+	if (m_eCurModelTag != Tag_End)
 	{
 		const _matrix WorldMatrix = m_LocalMatrix * m_pTransformCom->Get_WorldMatrix();
 		m_pModelComs[m_eCurModelTag]->Render_ShadowDepth(WorldMatrix);
@@ -266,20 +298,20 @@ HRESULT CMapKinetic_Object::Render_ShadowDepth()
 	return S_OK;
 }
 
-void CMapKinetic_Object::LoadFromJson(const Json & json)
+void CMapKinetic_Object::LoadFromJson(const Json& json)
 {
 	__super::LoadFromJson(json);
 
 	for (auto tag : json["ModelTags"])
 		m_pModelTags.push_back(s2ws(tag));
-	
+
 	if (json.contains("KineticType"))
 		m_eType = json["KineticType"];
 	if (json.contains("LocalMatrix"))
 		m_LocalMatrix = json["LocalMatrix"];
 }
 
-void CMapKinetic_Object::SaveToJson(Json & json)
+void CMapKinetic_Object::SaveToJson(Json& json)
 {
 	__super::SaveToJson(json);
 
@@ -294,7 +326,7 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 {
 	__super::Imgui_RenderProperty();
 
-	static array<const char*, KT_END> arrTypeName {
+	static array<const char*, KT_END> arrTypeName{
 		"Normal"
 	};
 	if (ImGui::BeginCombo("KineticType", arrTypeName[m_eType]))
@@ -339,7 +371,7 @@ void CMapKinetic_Object::Imgui_RenderProperty()
 	}
 }
 
-const wstring & CMapKinetic_Object::Get_ModelTag()
+const wstring& CMapKinetic_Object::Get_ModelTag()
 {
 	if ((size_t)m_eCurModelTag >= m_pModelTags.size())
 		return L"";
@@ -349,7 +381,7 @@ const wstring & CMapKinetic_Object::Get_ModelTag()
 
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
- 	m_pCollider->Set_Kinetic(false);
+	m_pCollider->Set_Kinetic(false);
 	m_pCollider->Set_Trigger(false);
 	//m_pCollider->UpdateChange();
 
@@ -390,9 +422,44 @@ void CMapKinetic_Object::Reset_Transform()
 
 _float4 CMapKinetic_Object::GetPxPostion()
 {
-	auto pxPos =  m_pCollider->Get_PxTransform().p;
+	auto pxPos = m_pCollider->Get_PxTransform().p;
 
 	return _float4{ pxPos.x, pxPos.y, pxPos.z, 1.f };
+}
+
+void CMapKinetic_Object::Set_Counter()
+{
+	// 보스가 키네틱 객체를 탐색하고 캡쳐에 성공하는 코드
+	m_bCounter = true;
+	m_bThrow = false;
+	m_bBossUse = true;
+	m_bHit = false;
+	Set_Trigger(true);
+
+	m_fDeadTimer = -1000.f;
+}
+
+void CMapKinetic_Object::Boss_Throw(_float4 vTargetPos)
+{
+	m_bThrow = true;
+
+	Set_Trigger(false);
+
+	_float4 ThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, TEXT("Throw_Kinetic_Distortion"), LAYER_PLAYEREFFECT)->Start_AttachOnlyPos(ThisPos);
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Player_Kinetic_Shoot_Smoke"), LAYER_PLAYEREFFECT)->Start_AttachPosition(this, ThisPos, _float4(0.f, 1.f, 0.f, 0.f));
+
+	_float4 vDir = vTargetPos - ThisPos;
+	vDir.w = 0.f;
+	vDir = XMVector3Normalize(vDir);
+
+	_float3 vForce = { vDir.x, vDir.y, vDir.z };
+	vForce *= 2000 * g_fTimeDelta;
+	Add_Physical(vForce);
+
+	// m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
+
+	m_fDeadTimer = 0;
 }
 
 void CMapKinetic_Object::OutlineMaker()
@@ -476,7 +543,7 @@ void CMapKinetic_Object::SetParticle()
 		m_pCollider->GetPxWorldMatrix().Forward().Length(), 0.f);
 
 	m_pParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Trail"));
-	m_pParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f ,0.f), true);
+	m_pParticle->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f), true);
 }
 
 void CMapKinetic_Object::ReleaseParticle()
@@ -519,9 +586,9 @@ void CMapKinetic_Object::Set_PreMatrix(_matrix preMatrix)
 	m_PreMatrix = preMatrix;
 }
 
-CMapKinetic_Object * CMapKinetic_Object::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMapKinetic_Object* CMapKinetic_Object::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMapKinetic_Object*		pInstance = new CMapKinetic_Object(pDevice, pContext);
+	CMapKinetic_Object* pInstance = new CMapKinetic_Object(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -532,9 +599,9 @@ CMapKinetic_Object * CMapKinetic_Object::Create(ID3D11Device * pDevice, ID3D11De
 	return pInstance;
 }
 
-CGameObject * CMapKinetic_Object::Clone(void * pArg)
+CGameObject* CMapKinetic_Object::Clone(void* pArg)
 {
-	CMapKinetic_Object*		pInstance = new CMapKinetic_Object(*this);
+	CMapKinetic_Object* pInstance = new CMapKinetic_Object(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -551,8 +618,8 @@ void CMapKinetic_Object::Free()
 
 	ReleaseParticle();
 
-	for(auto Model : m_pModelComs)
+	for (auto Model : m_pModelComs)
 		Safe_Release(Model);
-	
+
 	Safe_Release(m_pCollider);
 }

@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "EMCable.h"
 #include "MapKinetic_Object.h"
+#include "PlayerInfoManager.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -34,10 +35,10 @@ HRESULT CEM8200::Initialize(void* pArg)
 	pArg = &em0200_json;
 
 	{
-		m_iMaxHP = 10000;
-		m_iHP = 10000; // ★
-		m_iCrushGauge = 10000;
-		m_iMaxCrushGauge = 10000;
+		m_iMaxHP = 100000;
+		m_iHP = 100000; // ★
+		m_iCrushGauge = 50000;
+		m_iMaxCrushGauge = 50000;
 		m_bHasCrushGauge = false;
 
 		m_iAtkDamage = 50;
@@ -62,6 +63,7 @@ void CEM8200::SetUpComponents(void* pArg)
 {
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"Model", (CComponent**)&m_pModelCom));
+	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"KineticModel", (CComponent**)&m_pKineticModel));
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM8200_Controller::Create();
@@ -77,10 +79,85 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	m_TPStart.SetCurve("Simple_Increase_0.2x");
 	m_TPEnd.SetCurve("Simple_Decrease_0.2x");
+
+	m_CounterStart.SetCurve("Simple_Increase_0.2x");
+	m_CounterEnd.SetCurve("Simple_Decrease_0.2x");
+
+	m_CaptureStart.SetCurve("Simple_Increase_0.2x");
+	m_CaptureEnd.SetCurve("Simple_Decrease_0.2x");
 }
 
 void CEM8200::Detected_Attack()
 {
+}
+
+void CEM8200::Set_KineticObject(CGameObject* pObject)
+{
+	if(CGameInstance::GetInstance()->Check_ObjectAlive(pObject))
+	{
+		m_pKineticObject = pObject;
+
+		m_KineticObjectOrigionPos = m_pKineticObject->GetTransform()->Get_WorldMatrix();
+	}
+}
+
+void CEM8200::Kinetic_Combo_AttachLerpObject()
+{
+	if (nullptr !=	m_pTarget &&
+		CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject) &&
+		!m_pASM->isSocketEmpty("FullBody"))
+	{
+		m_pKineticModel->GetPlayAnimation()->Update_Bones_SyncRatio(0.f);
+		m_pKineticModel->Compute_CombindTransformationMatrix();
+
+		_matrix	SocketMatrix = m_pKineticModel->GetBoneMatrix("Hips") * m_pTransformCom->Get_WorldMatrix();
+
+		_float fScale_Right = XMVectorGetX(XMVector3Length(m_KineticObjectOrigionPos.r[0]));
+		_float fScale_Up = XMVectorGetX(XMVector3Length(m_KineticObjectOrigionPos.r[1]));
+		_float fScale_Look = XMVectorGetX(XMVector3Length(m_KineticObjectOrigionPos.r[2]));
+
+		
+
+		_float fRatio = m_pModelCom->Find_Animation("AS_em8200_272_AL_atk_throw1_wait")->GetPlayRatio() * 2.f;
+
+		if (1.f < fRatio)
+		{
+			fRatio = 1.f;
+		}
+
+		_vector vLerpLook = XMVectorLerp(m_KineticObjectOrigionPos.r[2], SocketMatrix.r[2], fRatio);
+		_vector vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+		_vector vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
+
+		_vector vLerpPos = XMVectorLerp(m_KineticObjectOrigionPos.r[3], SocketMatrix.r[3], fRatio);
+
+		vLerpRight = XMVector3Normalize(vLerpRight) * fScale_Right;
+		vLerpUp = XMVector3Normalize(vLerpUp) * fScale_Up;
+		vLerpLook = XMVector3Normalize(vLerpLook) * fScale_Look;
+
+		_matrix LerpMatrix = { vLerpRight, vLerpUp, vLerpLook, vLerpPos };
+
+		m_pKineticObject->GetTransform()->Set_WorldMatrix(LerpMatrix);
+	}
+}
+
+void CEM8200::Kinetic_Combo_KineticAnimation()
+{
+	if (nullptr != m_pTarget &&
+		CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject) &&
+		!m_pASM->isSocketEmpty("FullBody"))
+	{
+		m_pKineticModel->GetPlayAnimation()->Update_Bones_SyncRatio(m_pASM->GetSocketAnimation("FullBody")->GetPlayTime());
+		m_pKineticModel->Compute_CombindTransformationMatrix();
+
+		_matrix	SocketMatrix = m_pKineticModel->GetBoneMatrix("Hips") * m_pTransformCom->Get_WorldMatrix();
+
+		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+		SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+		m_pKineticObject->GetTransform()->Set_WorldMatrix(SocketMatrix);
+	}
 }
 
 void CEM8200::SetUpSound()
@@ -118,8 +195,28 @@ void CEM8200::Create_Bullet()
 		.Set_DeadBulletParticle(L"em8200_Elec_Bullet_Dead")
 		.Set_Position(vPrePos)
 		.Build();
+}
 
+void CEM8200::TakeDamage(DAMAGE_PARAM tDamageParams)
+{
+	if (m_pModelCom->GetMaterials().front()->GetParam().Floats[2] > 0.1f)
+		return;
 
+	CEnemy::TakeDamage(tDamageParams);
+}
+
+void CEM8200::CheckHP(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_pModelCom->GetMaterials().front()->GetParam().Floats[1] >= 0.5f)
+		tDamageParams.iDamage = 0;
+	else
+		m_iHP -= tDamageParams.iDamage;
+
+	if (m_iHP < 0)
+	{
+		SetDead();
+		m_iHP = 0;
+	}
 }
 
 void CEM8200::SetUpAnimationEvent()
@@ -262,6 +359,33 @@ void CEM8200::SetUpAnimationEvent()
 
 			m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		});
+
+
+	m_pModelCom->Add_EventCaller("Capture_Start", [this]
+		{
+			_float4 TargetPos = static_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
+
+			static_cast<CMapKinetic_Object*>(m_pKineticObject)->Boss_Throw(TargetPos);
+
+			m_pKineticObject = nullptr;
+
+			m_CaptureEnd.PlayFromStart();
+		});
+
+	m_pModelCom->Add_EventCaller("Counter_Start", [this]
+		{
+			// 카운터 발찍을 때
+			m_bMeleeCollStart = true;
+			Melee_Overlap("Reference", 50, 10.f, EAttackType::ATK_TO_AIR);
+		    m_bMeleeCollStart = false;
+		});
+
+	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
+		{
+			// 번쩍 이펙트
+			// 플레이어 사스 풀기 (게이지 0만들기)
+			CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
+		});
 }
 
 void CEM8200::SetUpFSM()
@@ -279,6 +403,9 @@ void CEM8200::SetUpFSM()
 	AddState_Attack_AirElec(Builder);
 	AddState_Attack_Rush(Builder);
 	AddState_Seethrough(Builder);
+	AddState_Counter(Builder);
+	AddState_CaptureKinetic(Builder);
+	AddState_Damaged(Builder);
 
 	m_pFSM = Builder.Build();
 }
@@ -286,6 +413,8 @@ void CEM8200::SetUpFSM()
 void CEM8200::BeginTick()
 {
 	CEnemy::BeginTick();
+
+	m_pKineticModel->SetPlayAnimation("AS_em8200_208_AL_atk_pcon_b3_end_obj");
 }
 
 void CEM8200::Tick(_double TimeDelta)
@@ -338,19 +467,71 @@ void CEM8200::Tick(_double TimeDelta)
 			for (auto pMtrl : m_pModelCom->GetMaterials())
 			{
 				pMtrl->GetParam().Floats[2] = fTPEndOut;
+
 			}
 			m_pKarenMaskEf->GetParams().Floats[1] = fTPEndOut;
 		}
 	}
 
+	{
+		_float fCounterStartOut;
+		if (m_CounterStart.Tick(TimeDelta, fCounterStartOut))
+		{
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[1] = fCounterStartOut;
+				pMtrl->GetParam().Ints[0] = (_int)fCounterStartOut;
+
+			}
+			m_pKarenMaskEf->GetParams().Ints[0] = 1;
+		}
+	}
+
+	{
+		_float fCounterEndOut;
+		if (m_CounterEnd.Tick(TimeDelta, fCounterEndOut))
+		{
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[1] = fCounterEndOut;
+				pMtrl->GetParam().Ints[0] = (_int)fCounterEndOut;
+
+			}
+			m_pKarenMaskEf->GetParams().Ints[0] = 0;
+		}
+	}
+
+	{
+		_float fCaptureStartOut;
+		if (m_CaptureStart.Tick(TimeDelta, fCaptureStartOut))
+		{
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[0] = fCaptureStartOut;
+			}
+		}
+	}
+
+	{
+		_float fCaptureEndOut;
+		if (m_CaptureEnd.Tick(TimeDelta, fCaptureEndOut))
+		{
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[0] = fCaptureEndOut;
+			}
+		}
+	}
+
 	string StateName = m_pFSM->GetCurStateName();
 
+	if(GetHpRatio() < 0.7 && m_SecondPhase.IsNotDo())
+	{
+		m_bSecondPhase = true;
+		m_iHP = m_iMaxHP;
+	}
 
-	// if (StateName.find("TP") == string::npos || StateName.find("Teleport") == string::npos)
-	// 	m_pKarenMaskEf->SetVisible(false);
-	// else
-	// 	m_pKarenMaskEf->SetVisible(true);
-
+	m_bSecondPhase = true;
 
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
@@ -440,7 +621,7 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddState("Idle")
 		.OnStart([this]
 			{
-				m_TPEnd.PlayFromStart();
+				// m_TPEnd.PlayFromStart();
 
 				m_fGravity = 20.f;
 			})
@@ -448,6 +629,11 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 		{
 			if(m_pTarget != nullptr)
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[2] = 0;
+			}
 		})
 	.AddTransition("Idle to Death", "Death")
 			.Predicator([this] {return m_bDead; })
@@ -514,12 +700,23 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				return m_eInput == CController::Q;
 			})
 
-	.AddTransition("Idle to Zero_Sas", "Zero_Sas")
+	.AddTransition("Idle to See_Through_Start", "See_Through_Start")
+		.Predicator([this]
+			{
+				return m_eInput == CController::L;
+			})
+
+	.AddTransition("Idle to Counter_Start", "Counter_Start")
 		.Predicator([this]
 			{
 				return m_eInput == CController::C;
 			})
 
+	.AddTransition("Idle to Capture_Wait", "Capture_Wait")
+		.Predicator([this]
+			{
+				return m_eInput == CController::B;
+			})
 
 	.AddTransition("Idle to KneeKick_A1_Before_TP", "KneeKick_A1_Before_TP")
 	.Predicator([this]
@@ -573,15 +770,15 @@ void CEM8200::AddState_Teleport(CFSMComponentBuilder& Builder)
 
 				SocketLocalMove_Range(m_pASM, m_fTP_Range);
 
-				if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
-				{
-					m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-				}
+				// if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
+				// {
+				// }
 			})
 
 	.OnExit([this]
 	{
 			m_SetTPOnce.Reset();
+			m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 	})
 	
 	.AddTransition("Teleport_F_Stop to Idle", "Idle")
@@ -1453,7 +1650,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 void CEM8200::AddState_Seethrough(CFSMComponentBuilder& Builder)
 {
 	Builder
-	.AddState("Zero_Sas")
+	.AddState("See_Through_Start")
 		.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_251_AL_atk_seethrough");
@@ -1461,12 +1658,148 @@ void CEM8200::AddState_Seethrough(CFSMComponentBuilder& Builder)
 			// 이벤트 걸기 
 			})
 
-	.AddTransition("Zero_Sas to Idle", "Idle")
+	.AddTransition("See_Through_Start to Idle", "Idle")
 		.Predicator([this]
 			{
 				return m_pASM->isSocketEmpty("FullBody");
 			});
 }
+
+void CEM8200::AddState_Counter(CFSMComponentBuilder& Builder)
+{
+	Builder
+		.AddState("Counter_Start")
+		.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_261_AL_atk_counter_start");
+			})
+
+		.Tick([this](_double TimeDelta)
+			{
+					if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.4f, 0.2f) && m_SetTPOnce.IsNotDo())
+					{
+						m_CounterStart.PlayFromStart();
+					}
+			})
+		.OnExit([this]
+			{
+				m_SetTPOnce.Reset();
+			})
+		.AddTransition("Counter_Start to Counter_Loop", "Counter_Loop")
+				.Predicator([this]
+					{
+						return m_pASM->isSocketEmpty("FullBody");
+					})
+
+		.AddState("Counter_Loop")
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_262_AL_atk_counter_loop");
+
+					// 이벤트 걸기 
+				})
+
+		.AddTransition("Counter_Loop to Counter_End", "Counter_End")
+				.Predicator([this]
+					{
+						return m_pASM->isSocketEmpty("FullBody");
+					})
+
+		.AddState("Counter_End") // 실질 공격 애니메이션
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_263_AL_atk_counter_end");
+					ClearDamagedTarget();
+					
+				})
+			.Tick([this](_double TimeDelta)
+				{
+					if(CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.8f, 0.2f) && m_SetTPOnce.IsNotDo() )
+						{
+							m_CounterEnd.PlayFromStart();
+						}
+				})
+
+			.OnExit([this]
+				{
+					m_SetTPOnce.Reset();
+				})
+
+		.AddTransition("Counter_End to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+
+	;
+}
+
+void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
+{
+	Builder
+		.AddState("Capture_Wait")
+		.OnStart([this]
+			{
+				m_pASM->SetLerpDuration(0.3f);
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_272_AL_atk_throw1_wait");
+
+				if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject))
+				{
+					static_cast<CMapKinetic_Object*>(m_pKineticObject)->Set_Counter();
+				}
+
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Kinetic_BaseCircle")->Start_Attach(this, "Reference", true);
+
+				m_CaptureStart.PlayFromStart();
+			})
+
+		.Tick([this](_double TimeDelta)
+		{
+				Kinetic_Combo_AttachLerpObject();
+
+				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+		})
+
+		.AddTransition("Capture_Wait to Capture_Start", "Capture_Start")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketPassby("FullBody", 0.5f) && CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject);
+				})
+
+		.AddTransition("Capture_Wait to Idle", "Idle")
+				.Predicator([this]
+					{
+						return m_pASM->isSocketPassby("FullBody", 0.5f) && CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject) == false;
+					})
+
+		.AddState("Capture_Start")
+			.OnStart([this]
+				{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_281_AL_atk_psycounter");
+				})
+		.Tick([this](_double TimeDelta)
+			{
+				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+
+				Kinetic_Combo_KineticAnimation();
+			})
+
+		.OnExit([this]
+			{
+				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
+				m_pController->Set_ResetKineticDoOnce();
+			})
+
+		.AddTransition("Capture_Wait_End to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+
+	;
+
+}
+
 
 void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 {
@@ -1479,25 +1812,13 @@ void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 			})
 		.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_MIDDLE)
-				{
-					Play_MidHitAnim();
-				}
-
-				// _float fPower;
-				// if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
-				// {
-				// 	_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
-				// 	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
-				// }
 			})
+
 	.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
 		.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketEmpty("FullBody");
+				return m_pASM->isSocketEmpty("FullBody");
 			})
-
-
 
 	.AddState("Hit_Heavy")
 		.OnStart([this]
@@ -1506,23 +1827,12 @@ void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 			})
 		.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
-				{
-					Play_HeavyHitAnim();
-				}
-
-				// _float fPower;
-				// if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
-				// {
-				// 	_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
-				// 	m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
-				// }
 			})
 
-	.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
+	.AddTransition("Hit_Heavy to Idle", "Idle")
 		.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketEmpty("FullBody");
+				return m_pASM->isSocketEmpty("FullBody");
 			})
 				;
 }
@@ -1595,6 +1905,7 @@ void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad,
 	
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
+
 		HitTargets(overlapOut, iDamage * 0.6f, eAtkType);
 	}
 }
@@ -1649,6 +1960,7 @@ void CEM8200::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pKineticModel);
 
 	if (m_pDashEF != nullptr)
 	{
