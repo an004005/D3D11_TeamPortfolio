@@ -31,7 +31,6 @@ HRESULT CEM1200_Controller::Initialize(void * pArg)
 	//far : cable
 	//out : run
 
-	m_bChangePhase = true;
 	return S_OK;
 }
 
@@ -64,11 +63,7 @@ void CEM1200_Controller::AI_Tick(_double TimeDelta)
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
-		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-		AddCommand("Wait", 0.5f, &CAIController::Wait);
-		AddCommand("Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
-		//DefineState(TimeDelta);
+		DefineState(TimeDelta);
 	}
 }
 
@@ -147,10 +142,14 @@ void CEM1200_Controller::Tick_Mid(_double TimeDelta)
 	}
 	else
 	{
-		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-		//AddCommand("Wait", 1.f, &CAIController::Wait);
-		AddCommand("Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
+		if (m_pCastedOwner->IsTargetFront())
+		{
+			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+			//AddCommand("Wait", 1.f, &CAIController::Wait);
+			AddCommand("Rush", 0.f, &CAIController::Input, R);
+			AddCommand("Wait", 1.f, &CAIController::Wait);
+		}
+	
 	}	
 
 }
@@ -164,16 +163,7 @@ void CEM1200_Controller::Tick_Far(_double TimeDelta)
 void CEM1200_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
-
-	if (m_bChangePhase == false)
-	{
-		AddCommand("Wait", 2.f, &CAIController::Wait);
-	}
-	else
-	{
-		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-		AddCommand("Run", 3.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 2.f);
-	}
+	AddCommand("Wait", 2.f, &CAIController::Wait);
 }
 
 void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)
@@ -222,7 +212,7 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 	{
 		if (m_fTtoM_Distance <= 7.f)
 			Tick_Near_1Phase(TimeDelta);
-		else if(m_fTtoM_Distance <= 15.f)
+		else if(m_fTtoM_Distance <= 20.f)
 			Tick_Mid(TimeDelta);
 		else
 			Tick_Outside(TimeDelta);
@@ -234,7 +224,7 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 			Tick_Near_2Phase(TimeDelta);
 		else if (m_fTtoM_Distance <= 12.f)
 			Tick_Mid(TimeDelta);
-		else if (m_fTtoM_Distance <= 16.f)
+		else if (m_fTtoM_Distance <= 25.f)
 			Tick_Far(TimeDelta);
 		else
 			Tick_Outside(TimeDelta);
