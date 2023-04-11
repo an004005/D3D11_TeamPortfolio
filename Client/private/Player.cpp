@@ -7226,9 +7226,9 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		})
 			.AddTransition("HBEAM_LEFT_THROW to HBEAM_LEFT_WAIT", "HBEAM_LEFT_WAIT")
 			.Predicator([&]()->_bool 
-			{ 
+			{
 				_bool bAddAble = static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
-				return bAddAble && (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed()) && (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.1f));
+				return bAddAble && (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed()) && (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.f));
 			})
 			.Priority(0)
 
