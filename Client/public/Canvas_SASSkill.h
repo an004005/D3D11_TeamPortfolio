@@ -17,16 +17,6 @@ public:
 	virtual void	Tick(_double TimeDelta) override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
-
-public:
-	_bool Get_ChangeX() {
-		return m_bChangeX;
-	}
-	void Set_ChangeX(_bool bChange) {
-		m_bChangeX = bChange;
-	}
 
 public:
 	void	InputAlt();
@@ -34,12 +24,17 @@ public:
 
 private:
 	void	InputX_Tick(const _double & dTimeDelta);
+	void InputData();
+	void FullCircle();
 	
 private:
 	_bool			m_bChangeX = { false };				// 8개의 스킬 중 4개씩 바꿔서 확인할 수 있다. flase->Left, true->Right
 
 	_bool			m_bChangeXButton = { false };		// 타이머 사용하기 위해서
-	_double			m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
+	_double		m_dChangeX_TimcAcc = { 0.0 };		// X로 변경하면서, 잠깐 X 키에 불이 들어오는 용도
+
+	_bool			m_bMember0 = { false };
+	_bool			m_bMember1 = { false };
 
 	//_bool			m_bCtrl = { false };
 	//_bool			m_bAlt = { false };

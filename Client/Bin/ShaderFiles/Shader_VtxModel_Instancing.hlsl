@@ -210,6 +210,60 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 
 // g_tex_0 : diffuse
 // g_tex_1 : normal
+// g_float_0 : RMA.r
+// g_float_1 : RMA.g
+// g_float_2 : RMA.b
+
+
+PS_OUT PS_SANKOKU_A3(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+
+	if (Out.vDiffuse.a < 0.01f)
+		discard;
+
+	float3 vNormal;
+
+	if (g_tex_on_1 && g_tex_on_3)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+		vector		vDetailNormalDesc = g_tex_3.Sample(LinearSampler, In.vTexUV);
+		float3 vDetialNormal = vDetailNormalDesc.xyz * 2.f - 1.f;
+
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+		vDetialNormal = normalize(mul(vDetialNormal, WorldMatrix));
+
+		vNormal += vDetialNormal * g_float_0;
+	}
+	else if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	
+	Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	return Out;
+}
+
+
+// g_tex_0 : diffuse
+// g_tex_1 : normal
 // g_tex_2 : RMA
 // g_tex_3 : emissive
 
@@ -475,4 +529,17 @@ technique11 DefaultTechnique
 		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_HOLOGRAM_MONITOR_9();
 	}
 
+	// 10 
+	pass SANKOKU_A3
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_SANKOKU_A3();
+	}
 }

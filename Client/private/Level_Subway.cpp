@@ -19,8 +19,8 @@ HRESULT CLevel_Subway::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;*/
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetics_Test.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches.json");

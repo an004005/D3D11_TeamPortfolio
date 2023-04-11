@@ -13,6 +13,13 @@ NoticeNeon_thunder
 NoticeNeon_water
 ../Bin/Resources/Meshes/VFX/NoticeNeon_water.static_model
 
+
+
+VFX_Mesh_Karen_Mask_All
+../Bin/Resources/Meshes/VFX/VFX_Mesh_Karen_Mask_All.static_model
+VFX_Mesh_Karen_Mask_Break
+../Bin/Resources/Meshes/VFX/VFX_Mesh_Karen_Mask_Break.static_model
+
 VFX_Mesh_WaterFall_Left
 ../Bin/Resources/Meshes/VFX/VFX_Mesh_WaterFall_Left.static_model
 

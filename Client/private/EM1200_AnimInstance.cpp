@@ -84,11 +84,11 @@ void CEM1200_AnimInstance::Make2PhaseASM()
 
 		.AddTransition("Idle to Turn_R", "Turn_R")
 			.Predicator([this] { return m_eTurn == EBaseTurn::TURN_RIGHT; })
-			.Duration(0.1f)
+			.Duration(0.2f)
 
 		.AddTransition("Idle to Turn_L", "Turn_L")
 			.Predicator([this] { return m_eTurn == EBaseTurn::TURN_LEFT; })
-			.Duration(0.1f)
+			.Duration(0.2f)
 
 		.AddState("Run")
 		.SetAnimation(*m_pModel->Find_Animation("AS_em1200_184_AL_run02_loop"))
@@ -100,13 +100,13 @@ void CEM1200_AnimInstance::Make2PhaseASM()
 		.SetAnimation(*m_pModel->Find_Animation("AS_em1200_157_AL_turn_R_loop2"))
 			.AddTransition("Turn_R1 to Idle", "Idle")
 			.Predicator([this] { return m_eTurn != EBaseTurn::TURN_RIGHT; })
-			.Duration(0.f)
+			.Duration(0.2f)
 
 		.AddState("Turn_L")
 		.SetAnimation(*m_pModel->Find_Animation("AS_em1200_155_AL_turn_L_loop2"))
 			.AddTransition("Turn_L1 to Idle", "Idle")
 			.Predicator([this] { return m_eTurn != EBaseTurn::TURN_LEFT; })
-			.Duration(0.f)
+			.Duration(0.2f)
 
 		.Build();
 

@@ -43,6 +43,10 @@ typedef struct tagPlayerStatus
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
+
+
+	_bool bAttackEnable = false;
+
 	
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
@@ -53,10 +57,12 @@ typedef struct tagPlayerStatus
 	_uint iWeaponType = { 0 };			// 0번 wp0106, 1번 wp0190
 
 	_float fKineticCharge = { 0.f };	// 염력체 차지 백분율 (0~1)
+	_float fSpecialCharge = { 0.f };
 
 	_bool bBattle = false;
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
+	_bool bStartBrainField = false;
 
 	_float m_fBaseAttackDamage;
 
@@ -68,8 +74,6 @@ typedef struct tagPlayerStatus
 
 typedef struct tagHanabiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -84,8 +88,6 @@ typedef struct tagHanabiStatus
 
 typedef struct tagTsugumiStatus
 {
-	_bool bMember = { false };
-
 	_uint iHP = { 0 };
 	_uint iMaxHP = { 0 };
 	_uint iExp = { 0 };
@@ -108,7 +110,7 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
-enum SASMEET { KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
+enum SASMEET { HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -139,7 +141,9 @@ public:	// Get
 	TSUGUMI_STAT&	Get_TsugumiStat() { 
 		return m_tTsugumiStat;
 	}
-	_bool					Get_SASMember(const SASMEET eSAS) { return m_bSASMember[eSAS]; }
+	_bool					Get_SASMember(const SASMEET eSAS) { 
+		return m_bSASMember[eSAS];
+	}
 
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
@@ -170,6 +174,9 @@ public:	// Set
 	void			Set_KineticCharge(_float fCharge) { m_tPlayerStat.fKineticCharge = fCharge; }
 	_float			Get_KineticCharge() { return m_tPlayerStat.fKineticCharge; }
 
+	void			Set_SpecialCharge(_float fCharge) { m_tPlayerStat.fSpecialCharge = fCharge; }
+	_float			Get_SpecialCharge() { return m_tPlayerStat.fSpecialCharge; }
+
 	void			Set_PlayerWeapon(_uint iWeaponType);
 	_uint			Get_PlayerWeapon() { return m_tPlayerStat.iWeaponType; }
 
@@ -179,13 +186,22 @@ public:	// Set
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
+	void			Set_PlayerAttackEnable(_bool bEnable) { m_tPlayerStat.bAttackEnable = bEnable; }
+	_bool			Get_PlayerAttackEnable() { return m_tPlayerStat.bAttackEnable; }
+
+	// HRESULT			Set_KineticObject(CGameObject* pKineticObject);
+	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
+	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+
+	void			Set_Exp(const _uint iExp);
+	void			Set_StartBrainField();
 	
 	// SAS
-	void			Set_HanabiMember() { m_tHanabiStat.bMember = true; }
-	void			Set_TsugumiMember() { m_tTsugumiStat.bMember = true; }
-	void			Set_SASMember(const SASMEET eSAS) { m_bSASMember[eSAS] = true; }
+	void			Set_SASMember(const SASMEET eSAS) { 
+		m_bSASMember[eSAS] = true; 
+	}
 
 public:
 	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
@@ -215,7 +231,7 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

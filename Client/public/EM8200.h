@@ -3,6 +3,10 @@
 #include "Enemy.h"
 #include "Controller.h"
 
+BEGIN(Engine)
+class CFSMComponentBuilder;
+END
+
 BEGIN(Client)
 class CEM8200 :   public CEnemy
 {
@@ -36,6 +40,21 @@ public:
 	_bool				IsRun() const { return m_bRun; }
 
 protected:
+	void				Detected_Attack();
+
+	void				AddState_Idle(CFSMComponentBuilder& Builder);
+	void				AddState_Teleport(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_Kick(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_AirElec(CFSMComponentBuilder& Builder);
+	void				AddState_Attack_Rush(CFSMComponentBuilder& Builder);
+	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
+
+	void				AddState_Damaged(CFSMComponentBuilder& Builder);
+
+
+	void				Create_Bullet();
 	// void	Strew_Overlap(); // FlowerShower АјАн
 	// void	Spin_SweepCapsule();
 	// void	Kick_SweepSphere();
@@ -44,13 +63,19 @@ protected:
 
 
 private:
-	void Play_LightHitAnim();
 	void Play_MidHitAnim();
+	void Play_HeavyHitAnim();
+
+private:
+	//For Collision
+	void Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType);
+	void Range_Overlap(_float4 vPos, _uint iDamage, _float fRad, EAttackType eAtkType);
 
 private:
 	class CEM8200_Controller* m_pController = nullptr;
 	class CEM8200_AnimInstance* m_pASM = nullptr;
 
+	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
 
@@ -78,10 +103,51 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
+
+private:
+	_float4x4 pivot1 = XMMatrixIdentity();
+	_float	  m_fAnimProgress = 1.f;
+	_float	  m_fLerpTime = 0.f;
+	_float	  m_fDefault_LerpTime = 0.1f;
+
+	//For Teleport
+	_float4 m_vTeleportPos;
+	_float	m_fTP_Range = 0.f;
+
+	CDoOnce m_SetTPOnce;
+
+	_bool	m_bMeleeCollStart = false; 
+	_bool	m_bRangeCollStart = false;
+
+	_float4	m_vRangeOverlapPos = { 0.f,0.f,0.f,1.f };
+	_float	m_fElecRangeValue = 0.f;
+
+	_float4x4 Pivotmat;
+
+	// For Rush
+	_bool	m_bRushStart = false;
+private:
+	CEffectGroup* m_pDashEF = nullptr;
+
+	vector<wstring>	m_vecRandomTeleportEffect{
+		L"Sas_Teleport_Effect_A",
+		L"Sas_Teleport_Effect_B",
+		L"Sas_Teleport_Effect_C",
+		L"Sas_Teleport_Effect_D"
+	};
+
+private:
+	CSimpleTimeline			m_TPStart;
+	CSimpleTimeline			m_TPEnd;
+
+
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;
 	virtual void			Free() override;
 };
+
+
+
 
 END

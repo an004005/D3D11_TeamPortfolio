@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Drive_GaugeUI.h"
 #include "GameInstance.h"
+#include "PlayerInfoManager.h"
 
 // Drive 게이지와 Drive Back 가 동시에 계산되고 있습니다. (즉 이 클래스로 생성된 객체가 2개 입니다.)
 //m_tParams.Floats[0] = Gauge
@@ -42,32 +43,6 @@ void CDrive_GaugeUI::Tick(_double TimeDelta)
 	DrivaGaugePlus_Tick(TimeDelta);
 	DrivaGaugeUse_Tick(TimeDelta);
 	DirveRightDot_Tick(TimeDelta);
-}
-
-HRESULT CDrive_GaugeUI::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CDrive_GaugeUI::Imgui_RenderProperty()
-{
-	CUI::Imgui_RenderProperty();
-
-}
-
-void CDrive_GaugeUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
-
-}
-
-void CDrive_GaugeUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
 }
 
 void CDrive_GaugeUI::DrivaGaugePlus_Tick(const _double & dTimeDelta)
@@ -118,6 +93,7 @@ void CDrive_GaugeUI::DrivaGaugeUse_Tick(const _double & dTimeDelta)
 
 	m_dCurrentDriveTime += dTimeDelta;
 	m_tParams.Floats[0] = m_fCurrentDriveGauge = 1.0f - (_float(m_dCurrentDriveTime) / m_fDriveFullTime);
+	CPlayerInfoManager::GetInstance()->Set_DriveEnergy(m_tParams.Floats[0]);
 
 	if (0.0f > m_fCurrentDriveGauge)
 	{

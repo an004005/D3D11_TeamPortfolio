@@ -1,1 +1,1265 @@
-{"ChildrenUI":[{"ChildTag":"PlauerInfo_GaugeArrow\u0000","ObjectTag":"PlauerInfo_GaugeArrow","Pivot":6,"PositionX":0.0,"PositionY":112.0,"Priority":0,"Prototype_GameObject":"Default_UI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisArrow.png\u0000"]},"SizeX":13.0,"SizeY":11.0,"Transform":{"WorldMatrix":[11.050000190734863,0.0,0.0,0.0,0.0,9.350000381469727,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-338.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_EndHp\u0000","ObjectTag":"PlayerInfo_EndHp","Pivot":6,"PositionX":72.5,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpBothEndsUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6745098233222961,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[1.000000238418579,0.0,0.30000001192092896],"Ints":[0,0,2],"Pass":22,"Textures":["","","..\\Bin\\Resources\\UI\\Front_UI\\EndHp.png\u0000","","","..\\Bin\\Resources\\UI\\Front_UI\\EndHpBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":20.0,"SizeY":40.0,"Transform":{"WorldMatrix":[17.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,72.5,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_EndHpBack\u0000","ObjectTag":"PlayerInfo_EndHpBack","Pivot":6,"PositionX":72.5,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBothEndsUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.12941177189350128,0.10980392247438431,0.30000001192092896]],"Float4x4s":[],"Floats":[1.0023844242095947,0.0],"Ints":[0,0,2],"Pass":23,"Textures":["","","..\\Bin\\Resources\\UI\\Front_UI\\EndHpBack.png\u0000"]},"SizeX":20.0,"SizeY":40.0,"Transform":{"WorldMatrix":[17.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,72.5,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp0\u0000","ObjectTag":"PlayerInfo_Hp0","Pivot":6,"PositionX":-123.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.993645966053009,0.07999999821186066,0.30000001192092896],"Ints":[10,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-123.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp1\u0000","ObjectTag":"PlayerInfo_Hp1","Pivot":6,"PositionX":-89.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.9989596009254456,0.07999999821186066,0.30000001192092896],"Ints":[10,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-89.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp2\u0000","ObjectTag":"PlayerInfo_Hp2","Pivot":6,"PositionX":-55.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.9951350688934326,0.07999999821186066,0.30000001192092896],"Ints":[5,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-55.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp3\u0000","ObjectTag":"PlayerInfo_Hp3","Pivot":6,"PositionX":-21.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.9952775239944458,0.07999999821186066,0.30000001192092896],"Ints":[10,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-21.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp4\u0000","ObjectTag":"PlayerInfo_Hp4","Pivot":6,"PositionX":13.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.9976779818534851,0.07999999821186066,0.30000001192092896],"Ints":[10,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,13.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Hp5\u0000","ObjectTag":"PlayerInfo_Hp5","Pivot":6,"PositionX":47.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6705882549285889,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[0.9907630681991577,0.07999999821186066,0.30000001192092896],"Ints":[10,1,2],"Pass":22,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,47.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack0\u0000","ObjectTag":"PlayerInfo_HpBack0","Pivot":6,"PositionX":-122.0,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.9934821128845215,0.07999999821186066],"Ints":[10,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-122.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack1\u0000","ObjectTag":"PlayerInfo_HpBack1","Pivot":6,"PositionX":-88.0,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.9987955093383789,0.07999999821186066],"Ints":[10,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-88.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack2\u0000","ObjectTag":"PlayerInfo_HpBack2","Pivot":6,"PositionX":-54.0,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.994970977306366,0.07999999821186066],"Ints":[5,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-54.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack3\u0000","ObjectTag":"PlayerInfo_HpBack3","Pivot":6,"PositionX":-20.0,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.9951134324073792,0.07999999821186066],"Ints":[10,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-20.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack4\u0000","ObjectTag":"PlayerInfo_HpBack4","Pivot":6,"PositionX":14.0,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.9975138902664185,0.07999999821186066],"Ints":[10,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,14.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_HpBack5\u0000","ObjectTag":"PlayerInfo_HpBack5","Pivot":6,"PositionX":47.81700134277344,"PositionY":52.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_HpBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.1290079951286316,0.11133086681365967,0.5]],"Float4x4s":[],"Floats":[0.9905989766120911,0.07999999821186066],"Ints":[10,1,2],"Pass":23,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"]},"SizeX":40.0,"SizeY":40.0,"Transform":{"WorldMatrix":[34.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,47.81700134277344,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_Psychokinesis\u0000","ObjectTag":"PlayerInfo_Psychokinesis","Pivot":6,"PositionX":0.0,"PositionY":94.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_PsychokinesisUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.9639999866485596,0.4099999964237213,1.0,1.0],[0.32199999690055847,0.0,1.0,1.0]],"Float4x4s":[],"Floats":[0.0,0.07999999821186066,0.10000000149011612],"Ints":[2],"Pass":24,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGaugeGlow.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge1.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge2.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge3.png\u0000"]},"SizeX":421.0,"SizeY":29.0,"Transform":{"WorldMatrix":[357.8500061035156,0.0,0.0,0.0,0.0,24.650001525878906,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-356.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_PsychokinesisBack\u0000","ObjectTag":"PlayerInfo_PsychokinesisBack","Pivot":6,"PositionX":0.0,"PositionY":94.0,"Priority":1,"Prototype_GameObject":"PlayerInfo_PsychokinesisBackUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.41200000047683716,0.0,0.024000000208616257,1.0],[0.15199999511241913,0.004000000189989805,0.0,1.0]],"Float4x4s":[],"Floats":[0.0,0.07999999821186066,0.0],"Ints":[2],"Pass":24,"Textures":["..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGaugeGlow.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge1.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge2.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge3.png\u0000"]},"SizeX":421.0,"SizeY":29.0,"Transform":{"WorldMatrix":[357.8500061035156,0.0,0.0,0.0,0.0,24.650001525878906,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-356.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_StartHp\u0000","ObjectTag":"PlayerInfo_StarttHp","Pivot":6,"PositionX":-149.0,"PositionY":52.0,"Priority":2,"Prototype_GameObject":"PlayerInfo_HpBothEndsUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[0.6745098233222961,0.12156862765550613,0.12156862765550613,1.0]],"Float4x4s":[],"Floats":[1.0,0.0,0.30000001192092896],"Ints":[0,0,2],"Pass":22,"Textures":["","","..\\Bin\\Resources\\UI\\Front_UI\\StartHp.png\u0000","","","..\\Bin\\Resources\\UI\\Front_UI\\StartHpBack.png\u0000","..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"]},"SizeX":21.0,"SizeY":40.0,"Transform":{"WorldMatrix":[17.850000381469727,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-149.0,-398.1737060546875,0.0,1.0]}},{"ChildTag":"PlayerInfo_StartHpBack\u0000","ObjectTag":"PlayerInfo_StartHpBack","Pivot":6,"PositionX":-147.0,"PositionY":52.0,"Priority":0,"Prototype_GameObject":"PlayerInfo_HpBothEndsUI\u0000","ScaleX":0.8500000238418579,"ScaleY":0.8500000238418579,"ShaderParams":{"Float2s":[],"Float4s":[[1.0,0.12941177189350128,0.10980392247438431,0.30000001192092896]],"Float4x4s":[],"Floats":[1.0,0.0],"Ints":[0,0,2],"Pass":23,"Textures":["","","..\\Bin\\Resources\\UI\\Front_UI\\StartHpBack.png\u0000"]},"SizeX":20.0,"SizeY":40.0,"Transform":{"WorldMatrix":[17.0,0.0,0.0,0.0,0.0,34.0,0.0,0.0,0.0,0.0,1.0,0.0,-147.0,-398.1737060546875,0.0,1.0]}}],"ObjectTag":"Canvas_PlayerInfoMove","Pivot":0,"PositionX":0.0,"PositionY":-0.1737089455127716,"Priority":0,"Prototype_GameObject":"Canvas_PlayerInfoMove\u0000","ScaleX":0.0,"ScaleY":0.0,"ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":0,"Textures":[]},"SizeX":1600.0,"SizeY":900.0,"Transform":{"WorldMatrix":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "ChildrenUI": [
+        {
+            "ChildTag": "HillBar\u0000",
+            "ObjectTag": "HillBar",
+            "Pivot": 6,
+            "PositionX": -38.0,
+            "PositionY": 66.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Shader_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0
+                ],
+                "Ints": [],
+                "Pass": 32,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HillBar.png\u0000"
+                ]
+            },
+            "SizeX": 235.0,
+            "SizeY": 8.0,
+            "Transform": {
+                "WorldMatrix": [
+                    235.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    8.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -38.0,
+                    -384.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlauerInfo_GaugeArrow\u0000",
+            "ObjectTag": "PlauerInfo_GaugeArrow",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 112.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 0,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisArrow.png\u0000"
+                ]
+            },
+            "SizeX": 13.0,
+            "SizeY": 11.0,
+            "Transform": {
+                "WorldMatrix": [
+                    11.050000190734863,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    9.350000381469727,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -338.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_EndHp\u0000",
+            "ObjectTag": "PlayerInfo_EndHp",
+            "Pivot": 6,
+            "PositionX": 72.5,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpBothEndsUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6745098233222961,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    -5.0,
+                    0.0,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    0,
+                    0,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\EndHp.png\u0000",
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\EndHpBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 20.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    17.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    72.5,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_EndHpBack\u0000",
+            "ObjectTag": "PlayerInfo_EndHpBack",
+            "Pivot": 6,
+            "PositionX": 72.5,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBothEndsUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.12941177189350128,
+                        0.10980392247438431,
+                        0.30000001192092896
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    -5.022876262664795,
+                    0.0
+                ],
+                "Ints": [
+                    0,
+                    0,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\EndHpBack.png\u0000"
+                ]
+            },
+            "SizeX": 20.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    17.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    72.5,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp0\u0000",
+            "ObjectTag": "PlayerInfo_Hp0",
+            "Pivot": 6,
+            "PositionX": -123.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9972371459007263,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    5,
+                    1,
+                    0
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -123.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp1\u0000",
+            "ObjectTag": "PlayerInfo_Hp1",
+            "Pivot": 6,
+            "PositionX": -89.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9990631341934204,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -89.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp2\u0000",
+            "ObjectTag": "PlayerInfo_Hp2",
+            "Pivot": 6,
+            "PositionX": -55.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9923143982887268,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -55.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp3\u0000",
+            "ObjectTag": "PlayerInfo_Hp3",
+            "Pivot": 6,
+            "PositionX": -21.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.997606098651886,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    1
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -21.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp4\u0000",
+            "ObjectTag": "PlayerInfo_Hp4",
+            "Pivot": 6,
+            "PositionX": 13.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.33333340287208557,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    13.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Hp5\u0000",
+            "ObjectTag": "PlayerInfo_Hp5",
+            "Pivot": 6,
+            "PositionX": 47.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6705882549285889,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    -0.6666668057441711,
+                    0.07999999821186066,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeuge10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefault.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    47.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack0\u0000",
+            "ObjectTag": "PlayerInfo_HpBack0",
+            "Pivot": 6,
+            "PositionX": -122.0,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9894638657569885,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    5,
+                    1,
+                    0
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -122.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack1\u0000",
+            "ObjectTag": "PlayerInfo_HpBack1",
+            "Pivot": 6,
+            "PositionX": -88.0,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9901585578918457,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -88.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack2\u0000",
+            "ObjectTag": "PlayerInfo_HpBack2",
+            "Pivot": 6,
+            "PositionX": -54.0,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9904316663742065,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -54.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack3\u0000",
+            "ObjectTag": "PlayerInfo_HpBack3",
+            "Pivot": 6,
+            "PositionX": -20.0,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.9918995499610901,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    1
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -20.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack4\u0000",
+            "ObjectTag": "PlayerInfo_HpBack4",
+            "Pivot": 6,
+            "PositionX": 14.0,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.3409619927406311,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    14.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_HpBack5\u0000",
+            "ObjectTag": "PlayerInfo_HpBack5",
+            "Pivot": 6,
+            "PositionX": 47.81700134277344,
+            "PositionY": 52.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_HpBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.1290079951286316,
+                        0.11133086681365967,
+                        0.5
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    -0.6590381860733032,
+                    0.07999999821186066
+                ],
+                "Ints": [
+                    10,
+                    1,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack5.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpGaeugeBack10.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\HpDefaultBack.png\u0000"
+                ]
+            },
+            "SizeX": 40.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    47.81700134277344,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_Psychokinesis\u0000",
+            "ObjectTag": "PlayerInfo_Psychokinesis",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 94.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_PsychokinesisUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.9639999866485596,
+                        0.4099999964237213,
+                        1.0,
+                        1.0
+                    ],
+                    [
+                        0.32199999690055847,
+                        0.0,
+                        1.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.5,
+                    0.07999999821186066,
+                    0.10000000149011612
+                ],
+                "Ints": [
+                    2
+                ],
+                "Pass": 24,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGaugeGlow.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge1.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge2.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge3.png\u0000"
+                ]
+            },
+            "SizeX": 421.0,
+            "SizeY": 29.0,
+            "Transform": {
+                "WorldMatrix": [
+                    357.8500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    24.650001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -356.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_PsychokinesisBack\u0000",
+            "ObjectTag": "PlayerInfo_PsychokinesisBack",
+            "Pivot": 6,
+            "PositionX": 0.0,
+            "PositionY": 94.0,
+            "Priority": 1,
+            "Prototype_GameObject": "PlayerInfo_PsychokinesisBackUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.41200000047683716,
+                        0.0,
+                        0.024000000208616257,
+                        1.0
+                    ],
+                    [
+                        0.15199999511241913,
+                        0.004000000189989805,
+                        0.0,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    0.5,
+                    0.07999999821186066,
+                    0.0
+                ],
+                "Ints": [
+                    2
+                ],
+                "Pass": 24,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGaugeGlow.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge1.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge2.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\PlayerInfo_PsychokinesisGauge3.png\u0000"
+                ]
+            },
+            "SizeX": 421.0,
+            "SizeY": 29.0,
+            "Transform": {
+                "WorldMatrix": [
+                    357.8500061035156,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    24.650001525878906,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    -356.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_StartHp\u0000",
+            "ObjectTag": "PlayerInfo_StarttHp",
+            "Pivot": 6,
+            "PositionX": -149.0,
+            "PositionY": 52.0,
+            "Priority": 2,
+            "Prototype_GameObject": "PlayerInfo_HpBothEndsUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.6745098233222961,
+                        0.12156862765550613,
+                        0.12156862765550613,
+                        1.0
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.0,
+                    0.30000001192092896
+                ],
+                "Ints": [
+                    0,
+                    0,
+                    2
+                ],
+                "Pass": 22,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\StartHp.png\u0000",
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\StartHpBack.png\u0000",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 21.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    17.850000381469727,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -149.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "PlayerInfo_StartHpBack\u0000",
+            "ObjectTag": "PlayerInfo_StartHpBack",
+            "Pivot": 6,
+            "PositionX": -147.0,
+            "PositionY": 52.0,
+            "Priority": 0,
+            "Prototype_GameObject": "PlayerInfo_HpBothEndsUI\u0000",
+            "ScaleX": 0.8500000238418579,
+            "ScaleY": 0.8500000238418579,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        0.12941177189350128,
+                        0.10980392247438431,
+                        0.30000001192092896
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [
+                    1.0,
+                    0.0
+                ],
+                "Ints": [
+                    0,
+                    0,
+                    2
+                ],
+                "Pass": 23,
+                "Textures": [
+                    "",
+                    "",
+                    "..\\Bin\\Resources\\UI\\Front_UI\\StartHpBack.png\u0000"
+                ]
+            },
+            "SizeX": 20.0,
+            "SizeY": 40.0,
+            "Transform": {
+                "WorldMatrix": [
+                    17.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    34.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -147.0,
+                    -398.1737060546875,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
+    ],
+    "ObjectTag": "Canvas_PlayerInfoMove",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": -0.1737089455127716,
+    "Priority": 0,
+    "Prototype_GameObject": "Canvas_PlayerInfoMove\u0000",
+    "ScaleX": 0.0,
+    "ScaleY": 0.0,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": []
+    },
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
+    "Transform": {
+        "WorldMatrix": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

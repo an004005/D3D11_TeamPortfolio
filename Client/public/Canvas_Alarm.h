@@ -43,6 +43,7 @@ public:
 private:
 	void	Appeart_Tick();
 	void	MapName_Tick(const _double & dTimeDelta);
+	void	LevelUpDead_Tick();
 
 private:
 	_bool	m_bCheck_Appeart = { false };
@@ -50,6 +51,8 @@ private:
 	_bool	m_bMapName = { false };
 	_double	m_bMapName_TimeAcc = { 0.0 };
 	_float	m_fMapNameIndex = { 0.0f };
+
+	_bool	m_bLevelUpDead = { false };
 
 public:
 	static CCanvas_Alarm* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -196,6 +196,13 @@ HRESULT CCanvas_Main::Add_MainCanvas()
 
 void CCanvas_Main::KeyInput()
 {
+	// Not Use in Final Stage
+
+	if (LEVEL_NOW == LEVEL_FINAL_STAGE)
+		return;
+
+	// ~Not Use in Final Stage
+
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
 		m_bAlpha = true;
@@ -205,7 +212,7 @@ void CCanvas_Main::KeyInput()
 	if (false == m_bAlpha)
 		return;
 
-	m_pShaderUI->Set_Size(_float2(g_iWinSizeX, g_iWinSizeY));
+	m_pShaderUI->Set_Size({_float(g_iWinSizeX), _float(g_iWinSizeY)});
 	_float fAlpha = m_pShaderUI->Get_Float4s_W();
 	if (m_bReverse == false && fAlpha >= 0.5f)
 	{

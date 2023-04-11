@@ -221,3 +221,163 @@ CComponent* CPhysXStaticModel::Clone(void* pArg)
 	}
 	return pInstance;
 }
+
+
+
+CPhysXStaticMesh::CPhysXStaticMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CComponent(pDevice, pContext)
+{
+}
+
+CPhysXStaticMesh::CPhysXStaticMesh(const CPhysXStaticMesh& rhs)
+	: CComponent(rhs)
+	, m_PxMesh(rhs.m_PxMesh)
+{
+}
+
+HRESULT CPhysXStaticMesh::Initialize_Prototype(const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix)
+{
+	vector<XMFLOAT3> vtxes;
+	vtxes.reserve(VtxData.size());
+	for (auto& vtx : VtxData)
+		vtxes.push_back(vtx.vPosition);
+
+
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count           = (_uint)VtxData.size();
+	meshDesc.points.stride          = sizeof(_float3);
+	meshDesc.points.data            = vtxes.data();
+
+	meshDesc.triangles.count        = (_uint)IdxData.size();
+	meshDesc.triangles.stride       = sizeof(FACEINDICES32);
+	meshDesc.triangles.data         = IdxData.data();
+
+	auto pCooking = CPhysX_Manager::GetInstance()->GetCooking();
+	auto pPhysics = CPhysX_Manager::GetInstance()->GetPhysics();
+	auto pMtrl = CPhysX_Manager::GetInstance()->FindMaterial("Default");
+
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxTriangleMeshCookingResult::Enum result;
+	bool status = pCooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if(!status)
+	{
+		IM_ERROR("Cooking Failed");
+		Assert(0);
+	}
+
+	switch (result)
+	{
+	case PxTriangleMeshCookingResult::eSUCCESS:
+		break;
+	case PxTriangleMeshCookingResult::eLARGE_TRIANGLE:
+		IM_WARN("Cooking is Large");
+		break;
+	case PxTriangleMeshCookingResult::eFAILURE: 
+		IM_ERROR("Cooking Failed");
+		Assert(0);
+		break;
+	default: ;
+	}
+
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	m_PxMesh.pPxMesh = pPhysics->createTriangleMesh(readBuffer);
+	m_PxMesh.tMeshGeom = PxTriangleMeshGeometry(m_PxMesh.pPxMesh);
+	m_PxMesh.pShape = pPhysics->createShape(m_PxMesh.tMeshGeom, *pMtrl);
+
+	m_PxMesh.pShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+	m_PxMesh.pShape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	m_PxMesh.pShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, false);
+	m_PxMesh.pShape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+
+	m_PxMesh.pShape->setSimulationFilterData(physx::PxFilterData{ static_cast<physx::PxU32>(ECOLLIDER_TYPE::CT_STATIC), 0, 0, 0 });
+	m_PxMesh.pShape->setQueryFilterData(physx::PxFilterData{static_cast<physx::PxU32>(GetCollTypeBit(ECOLLIDER_TYPE::CT_STATIC)), 0, 0, 0});
+
+
+	auto pxMat = CPhysXUtils::ToFloat4x4(WorldMatrix);
+	m_pActor = pPhysics->createRigidStatic(physx::PxTransform{ pxMat });
+	m_pActor->userData = this;
+	m_pActor->attachShape(*m_PxMesh.pShape);
+
+	return S_OK;
+}
+
+HRESULT CPhysXStaticMesh::Initialize(void* pArg)
+{
+	FAILED_CHECK(CComponent::Initialize(pArg));
+
+	return S_OK;
+}
+
+void CPhysXStaticMesh::Imgui_RenderProperty()
+{
+	CComponent::Imgui_RenderProperty();
+}
+
+void CPhysXStaticMesh::SetPxWorldMatrix(const _float4x4& WorldMatrix)
+{
+	if (IsActive())
+		m_pActor->setGlobalPose(physx::PxTransform{ CPhysXUtils::ToFloat4x4(WorldMatrix) });
+}
+
+void CPhysXStaticMesh::Activate(_bool bActive)
+{
+	if (bActive)
+	{
+		if (m_pActor->getScene() == nullptr)
+			CPhysX_Manager::GetInstance()->AddActor(*m_pActor);
+	}
+	else
+	{
+		if (m_pActor->getScene())
+			CPhysX_Manager::GetInstance()->RemoveActor(*m_pActor);
+	}
+}
+
+_bool CPhysXStaticMesh::IsActive()
+{
+	return m_pActor->getScene() != nullptr;
+}
+
+void CPhysXStaticMesh::Free()
+{
+	CComponent::Free();
+
+	if (m_isCloned)
+	{
+		if (m_pActor)
+		{
+			if (m_pActor->getScene())
+			{
+				CPhysX_Manager::GetInstance()->RemoveActor(*m_pActor);
+				m_pActor->detachShape(*m_PxMesh.pShape);
+			}
+			m_pActor->release();
+			m_pActor = nullptr;
+		}
+	}
+	else
+	{
+		m_PxMesh.pPxMesh->release();
+		m_PxMesh.pPxMesh = nullptr;
+		m_PxMesh.pShape->release();
+		m_PxMesh.pShape = nullptr;
+	}
+}
+
+CPhysXStaticMesh* CPhysXStaticMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
+	const vector<VTXNORTEX>& VtxData, const vector<FACEINDICES32>& IdxData, _float4x4 WorldMatrix)
+{
+	CPhysXStaticMesh*		pInstance = new CPhysXStaticMesh(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(VtxData, IdxData, WorldMatrix)))
+	{
+		MSG_BOX("Failed to Created : CPhysXStaticMesh");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CComponent* CPhysXStaticMesh::Clone(void* pArg)
+{
+	return nullptr;
+}

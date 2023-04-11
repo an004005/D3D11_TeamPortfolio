@@ -466,61 +466,44 @@ void CTransform::LookAt_Smooth(_fvector vTargetPos, _double TimeDelta)
 		Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), -TimeDelta);
 }
 
-_bool CTransform::LookAt_Lerp(_fvector vSourLook, _fvector vTargetPos, _float fLerp)
+_bool CTransform::LookAt_Lerp_NonY(_fvector vTargetPos, _float fRatio, _float fMaxRatio, _bool bRight)
 {
-	// 보간이 끝날 때 까지 vSourLook은 변하면 안된다!
-	// fLerp는 0 ~ 1사이의 값
-	// fLerp가 1을 넘으면 계속해서 true를 반환하게 함, true를 받으면 SourLook을 없애도 됨
-
-	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))	
+	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))
 		return false;
 
-	if (1.f <= fLerp)
+	if (m_vSourLook.w == -1.f)
 	{
-		LookAt(vTargetPos); 
+		m_vSourLook = Get_State(CTransform::STATE_LOOK);
+	}
+
+	if (fMaxRatio <= fRatio)
+	{
+		m_vSourLook = { 0.f, 0.f, 0.f, -1.f };
+		LookAt_NonY(vTargetPos);
 		return true;
 	}
 
-	_vector vDestLook = vTargetPos - Get_State(CTransform::STATE_TRANSLATION);
-	
-	_float fDiagonal = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vSourLook), XMVector3Normalize(vDestLook)));
-	_float fAngle = acosf(fDiagonal) * fLerp;
+	_float3 vScale = Get_Scaled();
 
-	_vector vAxis = XMVector3Cross(vSourLook, vDestLook);
-		
-	_vector vLerpVector = XMVector3TransformNormal(vSourLook, XMMatrixRotationAxis(vAxis, fAngle));
+	m_vSourLook.Normalize();
+	m_vSourLook.w = 0.f;
 
-	_vector vResultTargetPos = Get_State(CTransform::STATE_TRANSLATION) + vLerpVector;
+	_float4 vDestLook = vTargetPos - Get_State(CTransform::STATE_TRANSLATION);
+	vDestLook.Normalize();
 
-	if (XMVector3Equal(vResultTargetPos, Get_State(CTransform::STATE_TRANSLATION)))
-		return false;
+	_float4 vLerpLook = XMVectorLerp(m_vSourLook, vDestLook, fRatio);
+	_float4 vLerpRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLerpLook);
+	_float4 vLerpUp = XMVector3Cross(vLerpLook, vLerpRight);
 
-	LookAt(vResultTargetPos);
+	vLerpLook.Normalize();
+	vLerpRight.Normalize();
+	vLerpUp.Normalize();
+
+	Set_State(CTransform::STATE_RIGHT, vLerpRight * vScale.x);
+	Set_State(CTransform::STATE_UP, vLerpUp * vScale.y);
+	Set_State(CTransform::STATE_LOOK, vLerpLook * vScale.z);
 
 	return false;
-}
-
-void CTransform::LookAt_Lerp_Test(_fvector vTargetPos, _float fLerp)
-{
-	if (XMVector3Equal(vTargetPos, Get_State(CTransform::STATE_TRANSLATION)))
-		return;
-
-	if (1.f <= fLerp)
-	{
-		LookAt(vTargetPos);
-		return;
-	}
-
-	_vector vDestLook = vTargetPos - Get_State(CTransform::STATE_TRANSLATION);
-	_vector vSourLook = XMVector3Normalize(Get_State(CTransform::STATE_LOOK)) * XMVector3Length(vDestLook);
-
-	_vector vSourPos = Get_State(CTransform::STATE_TRANSLATION) + vSourLook;
-	_vector vDestPos = Get_State(CTransform::STATE_TRANSLATION) + vDestLook;
-	_vector vLerpLine = vDestPos - vSourPos;
-
-	_vector vPoint = vSourPos + (vLerpLine * fLerp);
-
-	LookAt(vPoint);
 }
 
 // _float CTransform::LookAt_SmoothYaw(_fvector vTargetPos, _double TimeDelta)

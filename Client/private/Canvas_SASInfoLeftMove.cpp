@@ -4,11 +4,13 @@
 #include "FSMComponent.h"
 #include "UI_Manager.h"
 #include "MathUtils.h"
+#include "PlayerInfoManager.h"
 
 #include "Canvas_SASInfoLeft.h"
 #include "SASInfoLeftHpUI.h"
 #include "SASInfoLeftHpBackUI.h"
 #include "SASInfoLeftHpBothEndsUI.h"
+#include "ShaderUI.h"
 
 CCanvas_SASInfoLeftMove::CCanvas_SASInfoLeftMove(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -37,21 +39,34 @@ HRESULT CCanvas_SASInfoLeftMove::Initialize(void* pArg)
 	m_vMaxDestination = { -3.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
+	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+		iter->second->SetVisible(false);
+
 	return S_OK;
 }
 
 void CCanvas_SASInfoLeftMove::Tick(_double TimeDelta)
 {
-	CCanvas::Tick(TimeDelta);
+	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
+	if (false == m_bMember)
+	{
+		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)) 
+			return;
+		
+		m_bMember = true;
 
-	if (0.0f == m_vSASLeftHp.x)
-		return;
+		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+			iter->second->SetVisible(true);
+	}
+
+	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);
 	CCanvas::UIHit(TimeDelta);
 
-	ChildHp_Tick();
-	RendomTexture(TimeDelta);
+	SASRightHp_Tick();
+	RendomTexture_Tick(TimeDelta);
+	HillBar_Tick(TimeDelta);
 }
 
 void CCanvas_SASInfoLeftMove::Imgui_RenderProperty()
@@ -66,45 +81,46 @@ void CCanvas_SASInfoLeftMove::Imgui_RenderProperty()
 
 	if (ImGui::Button("Save Hp"))
 	{
-		Set_SASLeftHp(fHp, fMaxHp);
+		CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iHP = fHp;
+		CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iMaxHP = fMaxHp;
 	}
 }
 
-void CCanvas_SASInfoLeftMove::SaveToJson(Json& json)
+void CCanvas_SASInfoLeftMove::Set_HillBar()
 {
-	CCanvas::SaveToJson(json);
+	m_bHill = true;
+	m_bHpHill = true;
+
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack0"))->Set_Speed(true);
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack1"))->Set_Speed(true);
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack2"))->Set_Speed(true);
 }
 
-void CCanvas_SASInfoLeftMove::LoadFromJson(const Json & json)
+void CCanvas_SASInfoLeftMove::SASRightHp_Tick()
 {
-	CCanvas::LoadFromJson(json);
-}
+	if (true == m_bHpHill) return;
 
-void CCanvas_SASInfoLeftMove::Set_SASLeftHp(const _float & fHp, const _float & fMaxHp)
-{
-	m_fHp = fHp / fMaxHp;
-	m_vSASLeftHp = { fHp ,fMaxHp };
+	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iHP);
+	_float fMaxHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iMaxHP);
+	m_fHPRatio = fHp / fMaxHp;
 
 	dynamic_cast<CCanvas_SASInfoLeft*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))->Set_Render();
+
+	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp0"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp1"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp2"))->Set_PlayerHp(m_fHPRatio);
+
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack0"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack1"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack2"))->Set_PlayerHp(m_fHPRatio);
+
+	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_EndHp"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_EndHpBack"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_StartHp"))->Set_PlayerHp(m_fHPRatio);
+	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_StartHpBack"))->Set_PlayerHp(m_fHPRatio);
 }
 
-void CCanvas_SASInfoLeftMove::ChildHp_Tick()
-{
-	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp2"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack0"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack1"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack2"))->Set_PlayerHp(m_fHp);
-
-	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_EndHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_EndHpBack"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_StartHp"))->Set_PlayerHp(m_fHp);
-	dynamic_cast<CSASInfoLeftHpBothEndsUI*>(Find_ChildUI(L"SASInfoLeft_StartHpBack"))->Set_PlayerHp(m_fHp);
-}
-
-void CCanvas_SASInfoLeftMove::RendomTexture(const _double & dTimeDelta)
+void CCanvas_SASInfoLeftMove::RendomTexture_Tick(const _double& dTimeDelta)
 {
 	m_dRendomTexture_TimeAcc += dTimeDelta;
 	if (3.0 < m_dRendomTexture_TimeAcc)
@@ -113,19 +129,19 @@ void CCanvas_SASInfoLeftMove::RendomTexture(const _double & dTimeDelta)
 	if (0.0 != m_dRendomTexture_TimeAcc)
 		return;
 
-	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHp 기준)
+	// 체력에 따라서 랜덤으로 이미지를 출력하는 개수가 달라진다. (m_fHPRatio 기준)
 	// 0.05~0.95 : 2 / 0.05~0.65 : 1
 
 	_int iCount;
 	_int iRendomCount;			// 움직이는 Hp 를 그리는 개수 
 	_float fObjectMaxNumber;	// 3개중 움직이는 Hp를 그리는 객체
-	if (0.95f < m_fHp)
+	if (0.95f < m_fHPRatio)
 	{
 		iCount = 2;
 		fObjectMaxNumber = 3.0f;
 		iRendomCount = _int(CMathUtils::RandomFloat(0.0f, 3.0f));
 	}
-	else if (0.65f < m_fHp)
+	else if (0.65f < m_fHPRatio)
 	{
 		iCount = 1;
 		fObjectMaxNumber = 2.0f;
@@ -170,6 +186,48 @@ void CCanvas_SASInfoLeftMove::RendomTexture(const _double & dTimeDelta)
 
 			wsprintf(szChildTag, TEXT("SASInfoLeft_HpBack%d"), i);
 			dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(szChildTag))->RendomHpImage(iRandomTexture);
+		}
+	}
+}
+
+void CCanvas_SASInfoLeftMove::HillBar_Tick(const _double& TimeDelta)
+{
+	if (false == m_bHill)	return;
+
+	Find_ChildUI(L"HillBar")->SetVisible(true);
+
+	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iHP);
+	_float fMaxHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iMaxHP);
+	_float fCurrentHill = dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Get_Floats0();
+
+	if (0.2f < fCurrentHill)
+	{
+		dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack0"))->Set_Speed(false);
+		dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack1"))->Set_Speed(false);
+		dynamic_cast<CSASInfoLeftHpBackUI*>(Find_ChildUI(L"SASInfoLeft_HpBack2"))->Set_Speed(false);
+	}
+
+	if (fCurrentHill < (fHp / fMaxHp))
+	{
+		fCurrentHill += _float(TimeDelta) * 0.3f;
+		dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Set_Floats0(fCurrentHill);
+	}
+	else
+	{
+		m_bHpHill = false;
+
+		m_dMaxHillChake_TimeAcc += TimeDelta;
+		if (1.0 < m_dMaxHillChake_TimeAcc)
+		{
+			if (true == dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp0"))->Get_MaxHp() &&
+				true == dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp1"))->Get_MaxHp() &&
+				true == dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp2"))->Get_MaxHp())
+			{
+				m_dMaxHillChake_TimeAcc = 0.0;
+				m_bHill = false;
+				Find_ChildUI(L"HillBar")->SetVisible(false);
+				dynamic_cast<CShaderUI*>(Find_ChildUI(L"HillBar"))->Set_Floats0(0.0f);
+			}
 		}
 	}
 }

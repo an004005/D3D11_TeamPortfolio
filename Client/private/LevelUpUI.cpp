@@ -72,6 +72,7 @@ void CLevelUpUI::Imgui_RenderProperty()
 	m_pLevelUpFSM->Imgui_RenderProperty();	// FSM Imgui 로 확인하기
 	m_Timeline.Imgui_RenderEditor();
 
+
 }
 
 void CLevelUpUI::LevelUp_Initialize()
