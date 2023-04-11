@@ -903,7 +903,10 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 		{
-			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(tDamageParams.pCauser))
+				m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			else if (tDamageParams.vHitFrom.w != 0.f)
+				m_pTransformCom->LookAt_NonY(tDamageParams.vHitFrom);
 		}
 	}
 }
@@ -1251,6 +1254,11 @@ void CPlayer::SasMgr()
 		InputSas = ESASType::SAS_ELETRIC;
 		m_bSASSkillInput[5] = true;
 	}
+	else if (CGameInstance::GetInstance()->KeyDown(DIK_7))
+	{
+		InputSas = ESASType::SAS_COPY;
+		m_bSASSkillInput[6] = true;
+	}
 
 	if (InputSas != ESASType::SAS_END)
 	{
@@ -1319,6 +1327,11 @@ void CPlayer::SasMgr()
 				{
 					m_pSasPortrait->Start_SAS(InputSas);
 					m_pSAS_Cable->EquipCable(ESASType::SAS_SUPERSPEED);
+				}
+				else if (ESASType::SAS_COPY == InputSas)
+				{
+					m_pSasPortrait->Start_SAS(InputSas);
+					m_pSAS_Cable->EquipCable(ESASType::SAS_COPY);
 				}
 
 				CPlayerInfoManager::GetInstance()->Set_SasType(InputSas);
@@ -1390,6 +1403,12 @@ void CPlayer::SasMgr()
 					m_pSwordParticle_Fire->SetDelete();
 					m_pSwordParticle_Fire = nullptr;
 				}
+			}
+
+			if (ESASType::SAS_COPY == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
+			{
+				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_HARDBODY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				CPlayerInfoManager::GetInstance()->Set_Copy(true);
 			}
 		}
 	}
@@ -1595,6 +1614,25 @@ void CPlayer::SasStateCheck()
 		}
 	}
 
+	if (false == CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_COPY))
+	{
+		if (m_bBeforeSAS_Using[(_uint)ESASType::SAS_COPY])
+		{
+			SasGearReleaseEffect();
+			_matrix MatEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Dead_Sas_Effect_Curve"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatEffect, "Sheath", true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
+		}
+
+		m_bSASSkillInput[6] = false;
+
+		if (CPlayerInfoManager::GetInstance()->Get_Copy())
+		{
+			CPlayerInfoManager::GetInstance()->Set_Copy(false);
+		}
+	}
 
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 	{
@@ -1807,7 +1845,11 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		CFSMComponentBuilder().InitState("BRAINFIELD")
 
 		.AddState("BRAINFIELD")
-		.OnStart([&]() { m_bZoomIsFinish = false; })
+		.OnStart([&]() 
+		{ 
+			m_bZoomIsFinish = false;
+			m_pASM->ClearAnimSocket("Common_AnimSocket");
+		})
 		.Tick([&](double fTimeDelta) 
 		{
 				if (m_bBrainField)

@@ -47,7 +47,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iBP = 50;
 	m_tPlayerStat.iCoin = 5000;
 
-	m_tPlayerStat.bCopy = true;
+	m_tPlayerStat.bCopy = false;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
@@ -341,6 +341,7 @@ void CPlayerInfoManager::Set_SasType(ESASType eType)
 		case ESASType::SAS_PENETRATE:
 		case ESASType::SAS_SUPERSPEED:
 		case ESASType::SAS_TELEPORT:
+		case ESASType::SAS_COPY:
 		{
 			m_PlayerSasTypeList.push_back(eType);
 			break;
@@ -389,6 +390,22 @@ void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasT
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy;
 	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy < 0.f)
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
+}
+
+void CPlayerInfoManager::Set_SasEnergy(ESASType eSasType, _float iSetEnergy)
+{
+	m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = iSetEnergy;
+}
+
+void CPlayerInfoManager::Release_SasEnergy_All()
+{
+	for (_uint i = 0; i < SAS_CNT; ++i)
+	{
+		if (Get_isSasUsing(ESASType(i)))
+		{
+			m_tPlayerStat.Sasese[i].Energy = 0.1f;
+		}
+	}
 }
 
 void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)

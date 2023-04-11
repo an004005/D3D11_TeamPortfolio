@@ -47,7 +47,7 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 		{
 			m_bCollision = true;
 
-			m_iModelIndex += 1;
+			//m_iModelIndex += 1;
 		}
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
@@ -271,7 +271,7 @@ void CSpecial_Container::Container_Press_Maintain(_float4 vTargetPos, _double Ti
 			auto pHit = rayOut.getAnyHit(i);
 
 			_float4 vTargetHeight = _float4(pHit.position.x, pHit.position.y, pHit.position.z, 1.f);
-			vTargetHeight += _float4(0.f, 1.f, 0.f, 0.f);
+			//vTargetHeight += _float4(0.f, .f, 0.f, 0.f);
 
 			_float4 vLerpPos = XMVectorLerp(vSourPos, vTargetHeight, min(m_fLerpTime += TimeDelta, 1.f));
 

@@ -61,18 +61,36 @@ void CPlayerHotFixer::Tick()
 
 		if (ImGui::Button("wp0106"))
 		{
-			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0106);
-			static_cast<CSheath_Player*>(m_pPlayer->m_vecWeapon.back())->Change_Sheath(WP_0106);
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0106);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0106);
+			}
 		}
 		if (ImGui::Button("wp0126"))
 		{
-			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0126);
-			static_cast<CSheath_Player*>(m_pPlayer->m_vecWeapon.back())->Change_Sheath(WP_0126);
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0126);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0126);
+			}
 		}
 		if (ImGui::Button("wp0190"))
 		{
-			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0190);
-			static_cast<CSheath_Player*>(m_pPlayer->m_vecWeapon.back())->Change_Sheath(WP_0190);
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0190);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0190);
+			}
 		}
 
 		if (ImGui::Button("Attach to RightWeapon"))
@@ -115,17 +133,6 @@ void CPlayerHotFixer::Tick()
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
 		}
 
-		ImGui::Checkbox("Additive", &m_bAdditiveOn);
-		if (m_bAdditiveOn)
-		{
-			Additive_Test();
-		}
-		else
-		{
-			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_490_AL_damage_add")
-				->Reset();
-		}
-
 		if (ImGui::Button("DMG_Light"))
 		{
 			m_pPlayer->m_bHit = true;
@@ -149,6 +156,36 @@ void CPlayerHotFixer::Tick()
 			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
 			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+
+		if (ImGui::Button("Add_Default"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add_Down_F"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_491_AL_damage_down_F_add");
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add_Down_B"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_492_AL_damage_down_B_add");
+		}
+
+		ImGui::Checkbox("Additive", &m_bAdditiveOn);
+		if (m_bAdditiveOn)
+		{
+			Additive_Test();
+		}
+		else
+		{
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_490_AL_damage_add")
+				->Reset();
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_491_AL_damage_down_F_add")
+				->Reset();
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_492_AL_damage_down_B_add")
+				->Reset();
 		}
 
 		if (ImGui::Button("Fire"))

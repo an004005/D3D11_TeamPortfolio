@@ -167,6 +167,8 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+	void			Set_SasEnergy(ESASType eSasType, _float iSetEnergy);
+	void			Release_SasEnergy_All();
 
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
@@ -237,7 +239,7 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();
