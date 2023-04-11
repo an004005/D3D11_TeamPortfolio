@@ -30,7 +30,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
-	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
+	m_tPlayerStat.m_fBaseAttackDamage = 10000.f;
 
 	m_tPlayerStat.fDriveEnergy = 0.f;
 	m_tPlayerStat.fMaxDriveEnergy = 100.f;

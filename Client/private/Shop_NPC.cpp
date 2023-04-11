@@ -59,7 +59,7 @@ void CShop_NPC::BeginTick()
 
 	CEffectGroup* pShopUI = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
 	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	pShopUI->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.5f, vPos.z, 1.0));
+	pShopUI->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.2f, vPos.z, 1.0));
 }
 
 void CShop_NPC::Tick(_double TimeDelta)

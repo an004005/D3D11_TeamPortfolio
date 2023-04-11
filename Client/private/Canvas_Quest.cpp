@@ -6,6 +6,7 @@
 
 #include "DefaultUI.h"
 #include "ShaderUI.h"
+#include "GameManager_Tutorial.h"
 
 CCanvas_Quest::CCanvas_Quest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -32,8 +33,6 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Quest", this);
 	
-	Quest_Initialize();
-
 	m_fBackGround_StartPos = Find_ChildUI(L"BackGround")->Get_Position();
 	Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
 
@@ -51,12 +50,12 @@ void CCanvas_Quest::Tick(_double TimeDelta)
 		m_bVisible = true;
 	}
 
+	Success_Tick();
 	if (!m_bVisible) return;
 
 	CCanvas::Tick(TimeDelta);
 
 	Move_Tick(TimeDelta);
-
 }
 
 HRESULT CCanvas_Quest::Render()
@@ -69,8 +68,7 @@ HRESULT CCanvas_Quest::Render()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	_float2 vPosition = Find_ChildUI(L"ChakeBase")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", m_vecQuestInfo[m_iQuestIndex].wsQuest0.c_str(), vPosition + _float2(50.0f, 7.0f), 0.f, vFontSize, vColor);
-	//pGameInstance->Render_Font(L"Pretendard32", m_vecQuestInfo[m_iQuestIndex].wsQuest1.c_str(), vPosition + _float2(20.0f, -20.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_wsQuest.c_str(), vPosition + _float2(50.0f, 7.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -90,28 +88,44 @@ void CCanvas_Quest::Imgui_RenderProperty()
 	//}
 }
 
-void CCanvas_Quest::LoadFromJson(const Json& json)
+void CCanvas_Quest::Add_Quest(const _int iIndex)
 {
-	__super::LoadFromJson(json);
+	m_iQuestIndex = iIndex;
 
-	m_iQuestIndex = json["QuestIndex"];
-}
-
-void CCanvas_Quest::Quest_Initialize()
-{
 	QUESTINFO tQuestInfo;
 
-	tQuestInfo.wsQuest0 = L"도로에 나타난 모든 괴이를 처치하세요.";
-	m_vecQuestInfo.push_back(tQuestInfo);
+	switch (iIndex)
+	{
+	case 0 :
+	{
+		m_wsQuest = L"도로에 나타난 모든 괴이를 처치하세요.";
+	}
+	break;
 
-	tQuestInfo.wsQuest0 = L"동료와 함께 공사장에 나타난 괴이를 처치하세요.";
-	m_vecQuestInfo.push_back(tQuestInfo);
+	case 1:
+	{
+		m_wsQuest = L"동료와 함께 공사장에 나타난 괴이를 처치하세요.";
+	}
+	break;
 
-	tQuestInfo.wsQuest0 = L"하나비를 위한 히마와리를 찾아 전달하기.";
-	m_vecQuestInfo.push_back(tQuestInfo);
+	case 2:
+	{
+		m_wsQuest = L"하나비를 위한 히마와리를 찾아 전달하기.";
+	}
+	break;
 
-	tQuestInfo.wsQuest0 = L"병원에서 나오미의 약을 찾아 중대장에게 가기.";
-	m_vecQuestInfo.push_back(tQuestInfo);
+	case 3:
+	{
+		m_wsQuest = L"병원에서 나오미의 약을 찾아 중대장에게 가기.";
+	}
+	break;
+
+	default:
+	{
+		m_wsQuest = L"쥬신 게임 아카데미 졸업하기.";
+	}
+	break;
+	}
 }
 
 void CCanvas_Quest::Move_Tick(const _double& TimeDelta)
@@ -178,6 +192,18 @@ void CCanvas_Quest::Success(const _double& TimeDelta)
 	if (1.0f < fRatio)	// UITODO : 나중에 글씨에 따라서 길이를 조절하고 싶은 경우 1.0f 를 변수로 받아서 수정하면 된다.
 		fRatio = 1.0f;
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Set_Floats0(fRatio);
+}
+
+void CCanvas_Quest::Success_Tick()
+{
+	if (0 == m_iQuestIndex)
+	{
+		if (10 == dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Get_MonstaerDeadCount())
+		{
+			Set_SuccessQuest();
+			dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Set_MonsterDeadCount();
+		}
+	}
 }
 
 CCanvas_Quest* CCanvas_Quest::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

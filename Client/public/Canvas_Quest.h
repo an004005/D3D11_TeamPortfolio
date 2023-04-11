@@ -28,13 +28,9 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	//void	Set_Quest(const size_t iIndex) {
-	//	m_iQuestIndex = iIndex;
-	//}
-
+	void	Add_Quest(const _int iIndex);
 	void	Set_SuccessQuest() {
 		m_bVisible = true;
 		m_fQuestMove = true;
@@ -42,14 +38,14 @@ public:
 	}
 
 private:
-	void		Quest_Initialize();
 
-	void		Move_Tick(const _double & TimeDelta);
+	void		Move_Tick(const _double& TimeDelta);
 	void		Success(const _double& TimeDelta);
+	void		Success_Tick();
 
 private:
-	vector<QUESTINFO>	m_vecQuestInfo;
-	size_t	m_iQuestIndex = { 0 };
+	wstring m_wsQuest = L"";
+	_int	m_iQuestIndex = { 0 };
 
 	_float2		m_fBackGround_StartPos = { 0.0f, 0.0f };
 

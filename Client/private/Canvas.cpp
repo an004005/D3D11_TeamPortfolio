@@ -339,7 +339,7 @@ void CCanvas::UIHit(const _double & TimeDelta)
 	if (m_pPlayer == nullptr)
 		return;
 
-	if (true == m_pPlayer->Get_Hit() || CGameInstance::GetInstance()->KeyDown(DIK_0))
+	if (true == m_pPlayer->Get_Hit())
 	{	
 		m_Timeline0.PlayFromStart();
 		//_int iRndomNum = static_cast<_int>(CGameUtils::GetRandFloat(0.0f, 2.0f));

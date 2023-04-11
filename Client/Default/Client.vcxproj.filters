@@ -1545,6 +1545,9 @@
     <ClInclude Include="..\public\HPlossUI.h">
       <Filter>02.GameObjects\UI\Short\PlayerUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\StoryTrigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2531,6 +2534,9 @@
     </ClCompile>
     <ClCompile Include="..\private\HPlossUI.cpp">
       <Filter>02.GameObjects\UI\Short\PlayerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StoryTrigger.cpp">
+      <Filter>Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

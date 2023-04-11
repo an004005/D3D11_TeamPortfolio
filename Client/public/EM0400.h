@@ -79,7 +79,7 @@ private:
 	_float4 m_vPushVelocity;
 
 	//_float4x4 pivot;
-	_float fRatio = 0.2;
+	_float fRatio = 0.2f;
 public:
 	static CEM0400* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
