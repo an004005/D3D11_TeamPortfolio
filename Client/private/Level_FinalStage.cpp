@@ -14,6 +14,7 @@
 #include "Imgui_AnimModifier.h"
 #include "PhysX_Manager.h"
 #include "Map_KineticBatchPreset.h"
+#include "GameManager.h"
 #include "InvisibleWall.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -105,6 +106,8 @@ HRESULT CLevel_FinalStage::Ready_Lights()
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	NULL_CHECK(pGameInstance->Add_Light("DirectionalLight", m_pDevice, m_pContext, LightDesc));
+
+	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

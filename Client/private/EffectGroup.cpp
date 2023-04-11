@@ -151,45 +151,14 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 				});
 			}
 		}
-		else if (LEVEL_NOW == LEVEL_ENEMIESTEST)
+		else if ((LEVEL_NOW == LEVEL_LOGO))
 		{
-			if (m_iSelectFinishFunc == 0)
+			m_Timeline.SetFinishFunction([this]
 			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::PlayFromStart);
-			}
-			else if (m_iSelectFinishFunc == 1)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-				// m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
-
-			}
-			else if (m_iSelectFinishFunc == 2)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Stop);
-			}
-			else if (m_iSelectFinishFunc == 3)
-			{
-				m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reverse);
-			}
-			else if (m_iSelectFinishFunc == 4)
-			{
-				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
-			}
+				SetDelete();
+			});
 		}
-		else if (LEVEL_NOW == LEVEL_PLAYERTEST 
-			|| LEVEL_NOW == LEVEL_TUTORIAL
-			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
-			|| LEVEL_NOW == LEVEL_SUBWAY
-			|| LEVEL_NOW == LEVEL_NAOMIROOM			
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F			
-			|| LEVEL_NOW == LEVEL_FINAL_STAGE			
-			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
+		else
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
@@ -197,10 +166,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			}
 			else if (m_iSelectFinishFunc == 1)
 			{
-				 m_Timeline.SetFinishFunction([this]
-				 {
-				 	SetDelete();
-				 });
+				m_Timeline.SetFinishFunction([this]
+					{
+						SetDelete();
+					});
 				//m_Timeline.SetFinishFunction(&m_Timeline, &CTimeline::Reset);
 
 			}
@@ -215,24 +184,10 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			else if (m_iSelectFinishFunc == 4)
 			{
 				m_Timeline.SetFinishFunction([this]
-				{
-					SetDelete();
-				});
+					{
+						SetDelete();
+					});
 			}
-		}
-		else if ((LEVEL_NOW == LEVEL_LOGO))
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
-		}
-		else
-		{
-			m_Timeline.SetFinishFunction([this]
-			{
-				SetDelete();
-			});
 		}
 		
 
@@ -550,6 +505,58 @@ void CEffectGroup::Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosi
 
 	m_Timeline.PlayFromStart();
 
+}
+
+void CEffectGroup::Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bRemoveScale = false;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+		
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = false;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
 }
 
 void CEffectGroup::Call_Event()

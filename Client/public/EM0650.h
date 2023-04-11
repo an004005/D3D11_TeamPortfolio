@@ -41,6 +41,8 @@ private:
 
 	void Create_Bullet();
 	void Make_Decal(_double TimeDelta);
+	_bool PriorityCondition();
+
 private:
 	//충돌 관련 함수 정의
 	void	HeavyAttackPushStart();
@@ -60,6 +62,8 @@ private:
 
 	//데칼
 	_double		m_dDecalTime = 0.0;
+
+	_bool	m_bDown = false;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 

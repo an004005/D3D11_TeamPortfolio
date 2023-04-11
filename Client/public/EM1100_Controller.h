@@ -42,9 +42,6 @@ private:
 	_uint m_iNearOrder = 0;
 	_uint m_iFarOrder = 0;
 
-	_double m_dRushCoolTime[COOL_END] = { 0.0, 40.0 };
-
-
 public:
 	static CEM1100_Controller* Create();
 	virtual CComponent* Clone(void* pArg) override;

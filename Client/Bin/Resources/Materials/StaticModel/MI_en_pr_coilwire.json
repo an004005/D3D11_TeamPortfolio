@@ -1,25 +1,25 @@
 {
-    "Active": true,
-    "AlphaBlend": false,
-    "InstancingPass": 1,
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [],
-        "Float4x4s": [],
-        "Floats": [
-            0.0
-        ],
-        "Ints": [
-            0
-        ],
-        "Pass": 4,
-        "Textures": [
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/IndustryPropsPack/03_Texture/coilwire_D.png\u0000",
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/IndustryPropsPack/03_Texture/coilwire_N.png\u0000",
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/IndustryPropsPack/03_Texture/T_coilwire_RMA.png\u0000",
-            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"Active": true,
+	"ShaderParams": {
+		"Float4s": [],
+		"Floats": [
+			0.0
+		],
+		"Float2s": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/coilwire_D.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/coilwire_N.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_coilwire_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail_N.dds"
+		],
+		"Pass": 4,
+		"Ints": [
+			0
+		]
+	},
+	"AlphaBlend": false,
+	"InstancingPass": 1
 }

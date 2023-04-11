@@ -663,7 +663,8 @@ void CEnemy::Update_DeadDissolve(_double TimeDelta)
 
 void CEnemy::DeBuff_End()
 {
-	m_pEMUI->Update_NoticeNeon();
+	if (m_pEMUI != nullptr)
+		m_pEMUI->Update_NoticeNeon();
 
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
@@ -675,7 +676,9 @@ void CEnemy::DeBuff_End()
 void CEnemy::DeBuff_Fire()
 {
 	m_fDeBuffTime = 8.f;
-	m_pEMUI->Update_NoticeNeon();
+	
+	if(m_pEMUI != nullptr)
+		m_pEMUI->Update_NoticeNeon();
 
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
@@ -686,7 +689,9 @@ void CEnemy::DeBuff_Fire()
 void CEnemy::DeBuff_Oil()
 {
 	m_fDeBuffTime = 10.f;
-	m_pEMUI->Update_NoticeNeon();
+
+	if (m_pEMUI != nullptr)
+		m_pEMUI->Update_NoticeNeon();
 
 	for (auto pMtrl : m_pModelCom->GetMaterials())
 	{
@@ -696,14 +701,17 @@ void CEnemy::DeBuff_Oil()
 
 void CEnemy::DeBuff_Thunder()
 {
-	m_fDeBuffTime = 10.f;
-	m_pEMUI->Update_NoticeNeon();
+	m_fDeBuffTime = 6.f;
+	if (m_pEMUI != nullptr)
+		m_pEMUI->Update_NoticeNeon();
 }
 
 void CEnemy::DeBuff_Water()
 {
 	m_fDeBuffTime = 10.f;
-	m_pEMUI->Update_NoticeNeon();
+
+	if (m_pEMUI != nullptr)
+		m_pEMUI->Update_NoticeNeon();
 }
 
 void CEnemy::Update_DeBuff(_double TimeDelta)

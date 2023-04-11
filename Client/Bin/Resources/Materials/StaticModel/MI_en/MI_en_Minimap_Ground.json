@@ -1,14 +1,14 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Texture/VFX/DefaultDiffuse.png"
-        ],
-        "Pass" : 2
-    }
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderParams": {
+		"Floats": [],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/DefaultDiffuse.dds"
+		],
+		"Pass": 2,
+		"Float2s": []
+	}
 }

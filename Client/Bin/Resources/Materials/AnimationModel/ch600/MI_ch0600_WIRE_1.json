@@ -1,21 +1,26 @@
 {
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s": [],
-        "Floats": [1.0, 0.0, 0.0, 0.0],
-        "Ints": [],
-        "Pass": 2,
-        "Textures": [
-            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_ch0000_Wire_COL.dds\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+	"ShaderParams": {
+		"Floats": [
+			1.0,
+			0.0,
+			0.0,
+			0.0
+		],
+		"Float2s": [],
+		"Pass": 2,
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0000_Wire_COL.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
 }

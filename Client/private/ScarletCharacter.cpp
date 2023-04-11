@@ -260,7 +260,7 @@ void CScarletCharacter::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMA
 	m_BeforePos = vPos;
 }
 
-_bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck, ECOLLIDER_TYPE_BIT ColType)
+_bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck, ECOLLIDER_TYPE_BIT ColType, ECOPYCOLTYPE eCopyType)
 {
 	if (!bCollisionCheck)
 	{
@@ -314,7 +314,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 				{
 					if ((*Dupliciation) == pTarget)
 					{
-						if (false == (*Dupliciation)->Get_CollisionDuplicate())
+						if (false == (*Dupliciation)->Get_CollisionDuplicate(eCopyType))
 						{
 							Dupliciation = m_DamagedObjectList.erase(Dupliciation);
 						}
@@ -349,7 +349,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 
 					// 플레이어일 경우 타격 이펙트 생성하도록
 					pTarget->TakeDamage(tParam);
-					pTarget->Set_CollisionDuplicate(true);
+					pTarget->Set_CollisionDuplicate(true, eCopyType);
 
 					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
 

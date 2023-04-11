@@ -43,8 +43,9 @@ private:
 	void Play_MidHitAnim();
 	void Swing_SweepSphere();
 	void	HeavyAttackPushStart();
+
 private:
-	//충돌 관련 함수 정의
+	_bool PriorityCondition();
 
 private:
 	class CEM0400_Controller*		m_pController = nullptr;
@@ -67,6 +68,8 @@ private:
 
 	// Run
 	_bool m_bRun = false;
+
+	_bool	m_bDown = false;
 
 	//dodge
 	_float4 m_vDodgeDir;

@@ -19,6 +19,7 @@
 #include "MapKinetic_Object.h"
 #include "BrainField.h"
 #include "Weapon_Player.h"
+#include "Sheath_Player.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -27,6 +28,8 @@ CPlayerHotFixer::CPlayerHotFixer()
 HRESULT CPlayerHotFixer::Initialize(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
+
+	m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
 
 	return S_OK;
 }
@@ -58,11 +61,76 @@ void CPlayerHotFixer::Tick()
 
 		if (ImGui::Button("wp0106"))
 		{
-			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0106);
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0106);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0106);
+			}
+		}
+		if (ImGui::Button("wp0126"))
+		{
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0126);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0126);
+			}
 		}
 		if (ImGui::Button("wp0190"))
 		{
-			static_cast<CWeapon_Player*>(m_pPlayer->m_vecWeapon.front())->Change_Weapon(WP_0190);
+			for (auto& iter : m_pPlayer->m_vecWeapon)
+			{
+				static_cast<CWeapon_Player*>(iter)->Change_Weapon(WP_0190);
+			}
+			for (auto& iter : m_pPlayer->m_vecSheath)
+			{
+				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0190);
+			}
+		}
+
+		if (ImGui::Button("Attach to RightWeapon"))
+		{
+			m_pPlayer->m_strWeaponAttachBone = "RightWeapon";
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Attach to Sheath"))
+		{
+			m_pPlayer->m_strWeaponAttachBone = "Sheath";
+		}
+		if (ImGui::Button("Attach to Sheath"))
+		{
+			m_pPlayer->m_strWeaponAttachBone = "Sheath";
+		}
+
+		ImGui::Checkbox("ShakeSmall", &m_bShakeSmall);
+		ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
+		ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
+
+		if (ImGui::Button("Copy_On"))
+		{
+			CPlayerInfoManager::GetInstance()->Set_Copy(true);
+		}
+		if (ImGui::Button("Copy_Off"))
+		{
+			CPlayerInfoManager::GetInstance()->Set_Copy(false);
+		}
+
+		if (m_bShakeSmall)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.01f);
+		}
+		else if (m_bShakeMiddle)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.02f);
+		}
+		else if (m_bShakeHeavy)
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
 		}
 
 		if (ImGui::Button("DMG_Light"))
@@ -88,6 +156,36 @@ void CPlayerHotFixer::Tick()
 			m_pPlayer->m_DamageDesc.m_iDamageType = EAttackType::ATK_HEAVY;
 			m_pPlayer->m_DamageDesc.m_vHitDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 			m_pPlayer->m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pPlayer->m_pTransformCom, XMVectorSet(0.f, 0.f, 1.f, 0.f));
+		}
+
+		if (ImGui::Button("Add_Default"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add_Down_F"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_491_AL_damage_down_F_add");
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add_Down_B"))
+		{
+			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_492_AL_damage_down_B_add");
+		}
+
+		ImGui::Checkbox("Additive", &m_bAdditiveOn);
+		if (m_bAdditiveOn)
+		{
+			Additive_Test();
+		}
+		else
+		{
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_490_AL_damage_add")
+				->Reset();
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_491_AL_damage_down_F_add")
+				->Reset();
+			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_492_AL_damage_down_B_add")
+				->Reset();
 		}
 
 		if (ImGui::Button("Fire"))
@@ -564,6 +662,11 @@ void CPlayerHotFixer::Player_Something_Update()
 		m_pPlayer->m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
 		m_pPlayer->m_pCautionNeon.first->Start_AttachPivot(m_pPlayer, NoticeNeonPivot, "String2", true, true);
 	}
+}
+
+void CPlayerHotFixer::Additive_Test()
+{
+	m_pPlayer->m_pModel->Play_Animation_Additive(g_fTimeDelta * 3.f, 0.1f);
 }
 
 CPlayerHotFixer* CPlayerHotFixer::Create(CPlayer* pPlayer)

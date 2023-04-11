@@ -64,6 +64,10 @@ typedef struct tagPlayerStatus
 	_bool bBrainField = false;
 	_bool bStartBrainField = false;
 
+	_bool bCopy = false;
+
+	_bool bAir = false;
+
 	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
@@ -165,6 +169,8 @@ public:	// Set
 	void			Finish_SasType(ESASType eType);
 
 	void			Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasType, _float iChangeEnergy);
+	void			Set_SasEnergy(ESASType eSasType, _float iSetEnergy);
+	void			Release_SasEnergy_All();
 
 	void			Set_BattleState(_bool bBattle) { m_tPlayerStat.bBattle = bBattle; }
 
@@ -182,6 +188,12 @@ public:	// Set
 
 	void			Set_DriveMode(_bool bDrive) { m_tPlayerStat.bDriveMode = bDrive; }
 	void			Set_BrainField(_bool bBrain) { m_tPlayerStat.bBrainField = bBrain; }
+
+	void			Set_Copy(_bool bCopy) { m_tPlayerStat.bCopy = bCopy; }
+	_bool			Get_Copy() { return m_tPlayerStat.bCopy; }
+
+	void			Set_Air(_bool bAir) { m_tPlayerStat.bAir = bAir; }
+	_bool			Get_Air() { return m_tPlayerStat.bAir; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
@@ -204,8 +216,9 @@ public:	// Set
 	}
 
 public:
-	HRESULT	Set_CamSpot(CGameObject* pCamSpot);
+	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
 	void			Camera_Random_Shake(_float fForce);
+	void			Camera_Random_Shake_Maintain(_float fForce, _float fMaintain);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
@@ -231,10 +244,14 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();
+
+private:	// 카메라 셰이크 관련
+	_float	m_fRandomShakeMaintain = 0.f;
+	_float	m_fRandomShakeForce = 0.f;
 
 public:
 	virtual void Free() override;

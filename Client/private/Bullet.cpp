@@ -25,12 +25,24 @@ HRESULT CBullet::Initialize(void * pArg)
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
 		(CComponent**)&m_pRendererCom));
 
+	m_SoundStore.CloneSound("tree_attack_elecball_loop");
+	m_SoundStore.CloneSound("tree_attack_elecball_hit");
 	return S_OK;
 }
 
 void CBullet::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
+
+	if (m_bUseSound)
+	{
+		m_ElectricLoopSound.Tick(TimeDelta);
+		if (m_ElectricLoopSound.CanUse())
+		{
+			m_SoundStore.PlaySound("tree_attack_elecball_loop", m_pTransformCom);
+		}
+	}
+
 
 	if (m_fLife > 0.f)
 		m_fLife -= (_float)TimeDelta;
@@ -73,6 +85,9 @@ void CBullet::Tick(_double TimeDelta)
 		Create_DeadEffects();
 		Create_DeadParticle();
 		m_bDelete = true;
+
+		if(m_bUseSound)
+			m_SoundStore.PlaySound("tree_attack_elecball_hit", m_pTransformCom);
 	}
 }
 
