@@ -15,7 +15,7 @@
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_NRM.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_RMA.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.dds"
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.png"
 		],
 		"Pass": 4,
 		"Float2s": []

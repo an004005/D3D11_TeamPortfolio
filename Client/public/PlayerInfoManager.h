@@ -66,6 +66,8 @@ typedef struct tagPlayerStatus
 
 	_bool bCopy = false;
 
+	_bool bAir = false;
+
 	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
@@ -189,6 +191,9 @@ public:	// Set
 
 	void			Set_Copy(_bool bCopy) { m_tPlayerStat.bCopy = bCopy; }
 	_bool			Get_Copy() { return m_tPlayerStat.bCopy; }
+
+	void			Set_Air(_bool bAir) { m_tPlayerStat.bAir = bAir; }
+	_bool			Get_Air() { return m_tPlayerStat.bAir; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

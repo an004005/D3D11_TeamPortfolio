@@ -10374,6 +10374,8 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 	}
 
 	m_vCamLook = pGameInstance->Get_CamLook();
+
+	CPlayerInfoManager::GetInstance()->Set_Air(m_bAir);
 }
 
 void CPlayer::MoveStateCheck(_double TimeDelta)

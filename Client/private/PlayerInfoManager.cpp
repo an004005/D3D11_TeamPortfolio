@@ -48,6 +48,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iCoin = 5000;
 
 	m_tPlayerStat.bCopy = false;
+
+	m_tPlayerStat.bAir = false;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
