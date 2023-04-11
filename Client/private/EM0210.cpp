@@ -32,6 +32,8 @@ HRESULT CEM0210::Initialize(void * pArg)
 	Json em0210_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0210/em0210Base.json");
 	pArg = &em0210_json;
 
+	m_strDeathSoundTag = "mon_5_fx_death";
+	m_strImpactVoiceTag = "mon_5_impact_voice";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -85,6 +87,21 @@ void CEM0210::SetUpComponents(void * pArg)
 void CEM0210::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("voidflower_attack_spin");
+	m_SoundStore.CloneSound("voidflower_attack_upper");
+	m_SoundStore.CloneSound("mon_5_backdodge");
+	m_SoundStore.CloneSound("mon_5_sidedodge");
+	m_SoundStore.CloneSound("mon_5_step");
+	m_SoundStore.CloneSound("mon_5_rush");
+	m_SoundStore.CloneSound("mon_5_voice_laugh");
+
+	m_pModelCom->Add_EventCaller("voidflower_attack_spin", [this] {m_SoundStore.PlaySound("voidflower_attack_spin", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("voidflower_attack_upper", [this] {m_SoundStore.PlaySound("voidflower_attack_upper", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_backdodge", [this] {m_SoundStore.PlaySound("mon_5_backdodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sidedodge", [this] {m_SoundStore.PlaySound("mon_5_sidedodge", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_step", [this] {m_SoundStore.PlaySound("mon_5_step", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_rush", [this] {m_SoundStore.PlaySound("mon_5_rush", m_pTransformCom); });
 }
 
 void CEM0210::SetUpAnimationEvent()
@@ -626,6 +643,7 @@ void CEM0210::SetUpUI()
 void CEM0210::BeginTick()
 {
 	CEnemy::BeginTick();
+	m_SoundStore.PlaySound("mon_5_voice_laugh");
 }
 
 void CEM0210::Tick(_double TimeDelta)

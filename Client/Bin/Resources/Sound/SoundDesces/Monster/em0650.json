@@ -1,0 +1,43 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "mon_2_attack_ready",
+            "SoundFiles" : ["Monsters/em0650/mon_2_attack_ready.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_attack_shoot",
+            "SoundFiles" : ["Monsters/em0650/mon_2_attack_shoot.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_fx_death",
+            "SoundFiles" : ["Monsters/em0650/mon_2_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_2_move",
+            "SoundFiles" : ["Monsters/em0650/mon_2_move_1.wav",
+            "Monsters/em0650/mon_2_move_2.wav",
+            "Monsters/em0650/mon_2_move_3.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        }
+    ]
+}

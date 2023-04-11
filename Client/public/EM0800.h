@@ -64,6 +64,8 @@ private:
 	CEffectGroup*				m_pWaterPool = nullptr;
 	CParticleGroup*			m_pLeftArmBugParticle = nullptr;
 	CParticleGroup*			 m_pRightArmBugParticle = nullptr;
+
+	CCoolTimeHelper			m_Sound_Fly = CCoolTimeHelper(2.f, false);
 private:
 	_float3						m_vMoveAxis;
 	EBaseTurn				m_eTurn = EBaseTurn::TURN_END;

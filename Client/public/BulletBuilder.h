@@ -31,6 +31,7 @@ public:
 	CBulletBuilder& Set_TurnFixed(_float fRadian);
 	CBulletBuilder& Set_BulletEffPivot(_float4x4 pivot);
 	CBulletBuilder& Set_Radius(_float	fRad);
+	CBulletBuilder& Set_Sound(_bool bSound);
 
 	void Build();
 
@@ -55,6 +56,7 @@ private:
 	_float			m_fRadius = 0.5f;
 	_float4x4		m_BulletEffPivot;
 
+	_bool			m_bUseSound = false;
 public:
 	virtual void Free() override;
 };

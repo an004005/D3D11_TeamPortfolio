@@ -25,8 +25,8 @@ HRESULT CEM0750::Initialize(void * pArg)
 	Json em0750_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPandou/SkummyPandouTrigger.json");
 	pArg = &em0750_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "voidfly_fx_death";
+
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -68,6 +68,13 @@ void CEM0750::SetUpComponents(void * pArg)
 void CEM0750::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("mon_3_attack_airdash");
+	m_SoundStore.CloneSound("mon_3_attack_airdash_up");
+	m_SoundStore.CloneSound("mon_3_move");
+	m_SoundStore.CloneSound("mon_3_provoke");
+
+	m_pModelCom->Add_EventCaller("mon_3_move", [this] {m_SoundStore.PlaySound("mon_3_move", m_pTransformCom); });
 }
 
 void CEM0750::SetUpAnimationEvent()
@@ -314,6 +321,7 @@ void CEM0750::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
+				m_SoundStore.PlaySound("mon_3_provoke", m_pTransformCom);
 			})
 			.AddTransition("Threat to Idle", "Idle")
 				.Predicator([this]
@@ -328,6 +336,7 @@ void CEM0750::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_201_AL_atk_a1_start");
+				m_SoundStore.PlaySound("mon_3_attack_airdash", m_pTransformCom);
 				ClearDamagedTarget();
 			})
 			.Tick([this](_double TimeDelta)
@@ -360,6 +369,9 @@ void CEM0750::SetUpFSM()
 
 					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0750_Dash_Attack")
 						->Start_AttachPivot(this, RushEffectPivotMatrix, "Target", true, true);
+
+					m_SoundStore.PlaySound("mon_3_attack_airdash_up", m_pTransformCom);
+
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -379,6 +391,7 @@ void CEM0750::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_203_AL_atk_a1_end");
+
 			})
 			.Tick([this](_double)
 			{

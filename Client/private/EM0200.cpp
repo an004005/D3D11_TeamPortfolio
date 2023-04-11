@@ -86,26 +86,26 @@ void CEM0200::SetUpSound()
 
 	m_SoundStore.CloneSound("mon_5_backdodge");
 	m_SoundStore.CloneSound("mon_5_sidedodge");
-	m_SoundStore.CloneSound("mon_5_bellattack_ready");
 	m_SoundStore.CloneSound("mon_5_bellattack");
+	m_SoundStore.CloneSound("mon_5_bellattack_ready");
 	m_SoundStore.CloneSound("mon_5_jumpattack_ready");
 	m_SoundStore.CloneSound("mon_5_jumpattack_jump");
 	m_SoundStore.CloneSound("mon_5_jumpattack_kick");
-	m_SoundStore.CloneSound("mon_5_sprayattack_ready");
 	m_SoundStore.CloneSound("mon_5_sprayattack");
+	m_SoundStore.CloneSound("mon_5_sprayattack_ready");
 	m_SoundStore.CloneSound("mon_5_step");
-	m_SoundStore.CloneSound("mon_5_voice_laugh");
 	m_SoundStore.CloneSound("mon_5_rush");
+	m_SoundStore.CloneSound("mon_5_voice_laugh");
 
 	m_pModelCom->Add_EventCaller("mon_5_backdodge", [this] {m_SoundStore.PlaySound("mon_5_backdodge", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_sidedodge", [this] {m_SoundStore.PlaySound("mon_5_sidedodge", m_pTransformCom); });
-	m_pModelCom->Add_EventCaller("mon_5_bellattack_ready", [this] {m_SoundStore.PlaySound("mon_5_bellattack_ready", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_bellattack", [this] {m_SoundStore.PlaySound("mon_5_bellattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_bellattack_ready", [this] {m_SoundStore.PlaySound("mon_5_bellattack_ready", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_jumpattack_ready", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_ready", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_jumpattack_jump", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_jump", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_jumpattack_kick", [this] {m_SoundStore.PlaySound("mon_5_jumpattack_kick", m_pTransformCom); });
-	m_pModelCom->Add_EventCaller("mon_5_sprayattack_ready", [this] {m_SoundStore.PlaySound("mon_5_sprayattack_ready", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_sprayattack", [this] {m_SoundStore.PlaySound("mon_5_sprayattack", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_5_sprayattack_ready", [this] {m_SoundStore.PlaySound("mon_5_sprayattack_ready", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_step", [this] {m_SoundStore.PlaySound("mon_5_step", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_5_rush", [this] {m_SoundStore.PlaySound("mon_5_rush", m_pTransformCom); });
 }

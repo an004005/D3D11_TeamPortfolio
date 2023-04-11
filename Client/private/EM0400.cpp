@@ -28,8 +28,7 @@ HRESULT CEM0400::Initialize(void * pArg)
 	Json em0400_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/BuddyLumi/BuddyLumiTrigger.json");
 	pArg = &em0400_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "mon_1_fx_death";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -80,7 +79,6 @@ void CEM0400::SetUpSound()
 	m_SoundStore.CloneSound("mon_1_attack_voice");
 	m_SoundStore.CloneSound("mon_1_attack_whoosh");
 	m_SoundStore.CloneSound("mon_1_backspin_step");
-	m_SoundStore.CloneSound("mon_1_fx_death");
 	m_SoundStore.CloneSound("mon_1_run");
 	m_SoundStore.CloneSound("mon_1_sidestep_1_step");
 	m_SoundStore.CloneSound("mon_1_voice_attack_ready");
@@ -90,7 +88,6 @@ void CEM0400::SetUpSound()
 	m_pModelCom->Add_EventCaller("mon_1_attack_voice", [this] {m_SoundStore.PlaySound("mon_1_attack_voice", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_1_attack_whoosh", [this] {m_SoundStore.PlaySound("mon_1_attack_whoosh", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_1_backspin_step", [this] {m_SoundStore.PlaySound("mon_1_backspin_step", m_pTransformCom); });
-	m_pModelCom->Add_EventCaller("mon_1_fx_death", [this] {m_SoundStore.PlaySound("mon_1_fx_death", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_1_run", [this] {m_SoundStore.PlaySound("mon_1_run", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_1_sidestep_1_step", [this] {m_SoundStore.PlaySound("mon_1_sidestep_1_step", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_1_voice_attack_ready", [this] {m_SoundStore.PlaySound("mon_1_voice_attack_ready", m_pTransformCom); });

@@ -15,7 +15,7 @@
 CEM0900::CEM0900(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
-	m_eEnemyName = EEnemyName::EM1100;
+	m_eEnemyName = EEnemyName::EM0900;
 }
 
 CEM0900::CEM0900(const CEM0900 & rhs)

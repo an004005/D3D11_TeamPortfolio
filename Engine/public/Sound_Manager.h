@@ -60,7 +60,6 @@ private:
 
 	unordered_map<string, queue<ReservedSound>> m_SoundQs;
 
-	
 	FMOD_SYSTEM* m_pSystem = nullptr;
 	_float m_fMasterVolume = 1.f;
 

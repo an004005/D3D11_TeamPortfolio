@@ -68,6 +68,8 @@ void CEM0221::SetUpComponents(void * pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, TEXT("Prototype_Model_em221"), TEXT("Com_Model"),
 		(CComponent**)&m_pModelCom));
+
+	m_SoundStore.CloneSound("wood_attack_lampbomb");
 }
 
 void CEM0221::SetUpMatrix(CModel* pModle, const _fmatrix TransformMatrix)
@@ -147,6 +149,8 @@ void CEM0221::Explosion()
 		dynamic_cast<CEnemy*>(m_pOwner)->HitTargets(overlapOut, 40, EAttackType::ATK_HEAVY);
 	}
 
+	//»ç¿îµå
+	m_SoundStore.PlaySound("wood_attack_lampbomb", m_pTransformCom);
 }
 
 void CEM0221::Explosion_Ray()

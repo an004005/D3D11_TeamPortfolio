@@ -93,6 +93,12 @@ CBulletBuilder& CBulletBuilder::Set_Radius(_float fRad)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_Sound(_bool bSound)
+{
+	m_bUseSound = bSound;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
@@ -110,6 +116,7 @@ void CBulletBuilder::Build()
 	pBullet->Set_LifeTime(m_fLife);
 	pBullet->Set_DamageParam(m_eDamageParam);
 	pBullet->Set_Radius(m_fRadius);
+	pBullet->Set_Sound(m_bUseSound);
 
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));

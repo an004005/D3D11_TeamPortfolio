@@ -2,10 +2,11 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 #include "EffectGroup.h"
-
+#include "SoundStore.h"
 BEGIN(Engine)
 class CRenderer;
 class CModel;
+
 END
 
 BEGIN(Client)
@@ -47,7 +48,7 @@ private:
 	CModel*					m_pModelCom = nullptr;
 	CEffectGroup*		m_pFallEffect = nullptr;
 	CEffectGroup*		m_pNormalEffect = nullptr;
-
+	CSoundStore		m_SoundStore;
 
 	string					m_szTargetBoneName = "";
 	_float4x4				m_AddPivotMatrix;

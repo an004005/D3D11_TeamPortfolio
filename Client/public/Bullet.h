@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ParticleGroup.h"
 #include "EffectGroup.h"
+#include "SoundStore.h"
+#include "TimerHelper.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -59,6 +61,10 @@ public:
 	void Set_Radius(_float fRad) {
 		m_fRadius = fRad;
 	}
+
+	void Set_Sound(_bool bSound) {
+		m_bUseSound = bSound;
+	}
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -72,6 +78,10 @@ protected:
 protected:
 	CRenderer*				m_pRendererCom = nullptr;
 	class CScarletCharacter* m_pTarget = nullptr;
+	CSoundStore			m_SoundStore;
+	CCoolTimeHelper		m_ElectricLoopSound = CCoolTimeHelper(5.f, false);
+
+	_bool				m_bUseSound = false;
 //	DAMAGE_PARAM			m_Damage_Params;
 	//_float					m_fShootSpeed = 0.f;
 

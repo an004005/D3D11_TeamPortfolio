@@ -44,7 +44,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM1200;
 	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(60.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_fGravity = 20.f;
 
 	//fog

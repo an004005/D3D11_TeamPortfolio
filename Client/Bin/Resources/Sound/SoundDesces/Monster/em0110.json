@@ -1,0 +1,71 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "horse_attack_fieldoil",
+            "SoundFiles": ["Monsters/em0110/horse_attack_fieldoil.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "horse_attack_rush",
+            "SoundFiles": ["Monsters/em0110/horse_attack_rush_mid.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "horse_attack_spin",
+            "SoundFiles": ["Monsters/em0110/horse_attack_spin_1.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "horse_fx_death",
+            "SoundFiles": [
+                "Monsters/em0110/horse_fx_death.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "horse_runs_bip",
+            "SoundFiles": [
+                "Monsters/em0110/horse_runs_bip.1.wav",
+                "Monsters/em0110/horse_runs_bip.2.wav",
+                "Monsters/em0110/horse_runs_bip.3.wav",
+                "Monsters/em0110/horse_runs_bip.4.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "horse_walks_bip",
+            "SoundFiles": [
+                "Monsters/em0110/horse_walks_bip1.wav",
+                "Monsters/em0110/horse_walks_bip2.wav",
+                "Monsters/em0110/horse_walks_bip3.wav",
+                "Monsters/em0110/horse_walks_bip4.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        }
+    ]
+}

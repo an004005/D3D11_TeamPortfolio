@@ -25,8 +25,7 @@ HRESULT CEM0650::Initialize(void * pArg)
 	Json em0650_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/SkummyPool/Test.json");
 	pArg = &em0650_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "mon_2_fx_death";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -67,6 +66,12 @@ void CEM0650::SetUpComponents(void * pArg)
 void CEM0650::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("mon_2_attack_ready");
+	m_SoundStore.CloneSound("mon_2_attack_shoot");
+	m_SoundStore.CloneSound("mon_2_move");
+
+	m_pModelCom->Add_EventCaller("mon_2_move", [this] {m_SoundStore.PlaySound("mon_2_move", m_pTransformCom); });
 }
 
 void CEM0650::SetUpAnimationEvent()
@@ -88,19 +93,7 @@ void CEM0650::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Shoot", [this]
 	{
 			Create_Bullet();
-
-		//auto pObj = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_RedBullet"));
-
-		//if (CRedBullet* pBullet = dynamic_cast<CRedBullet*>(pObj))
-		//{
-		//	pBullet->Set_Owner(this);
-	
-		//	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Alga_F_03") * m_pTransformCom->Get_WorldMatrix();
-		//	_vector vPrePos = BoneMtx.r[3];
-
-		//	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, vPrePos);
-		//	pBullet->GetTransform()->LookAt(m_LastSpotTargetPos); // vPrePos + vLook);
-		//}
+			m_SoundStore.PlaySound("mon_2_attack_shoot", m_pTransformCom);
 	});
 	m_pModelCom->Add_EventCaller("Upper", [this]
 	{
@@ -358,6 +351,7 @@ void CEM0650::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0600_204_AL_atk_a3_shot");
+				m_SoundStore.PlaySound("mon_2_attack_ready", m_pTransformCom);
 			})
 			.AddTransition("Attack to Idle", "Idle")
 				.Predicator([this]

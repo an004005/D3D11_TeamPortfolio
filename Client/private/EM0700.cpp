@@ -32,8 +32,8 @@ HRESULT CEM0700::Initialize(void * pArg)
 	Json em0700_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0700/em0700Base.json");
 	pArg = &em0700_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "voidfly_fx_death";
+
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -85,6 +85,16 @@ void CEM0700::SetUpComponents(void * pArg)
 void CEM0700::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("voidfly_attack_dash");
+	m_SoundStore.CloneSound("voidfly_attack_oil");
+	m_SoundStore.CloneSound("voidfly_move");
+	m_SoundStore.CloneSound("mon_3_move");
+	m_SoundStore.CloneSound("mon_3_provoke");
+
+	m_pModelCom->Add_EventCaller("voidfly_move", [this] {m_SoundStore.PlaySound("voidfly_move", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("mon_3_move", [this] {m_SoundStore.PlaySound("mon_3_move", m_pTransformCom); });
+
 }
 
 void CEM0700::SetUpAnimationEvent()
@@ -475,6 +485,7 @@ void CEM0700::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
+				m_SoundStore.PlaySound("mon_3_provoke", m_pTransformCom);
 			})
 			.AddTransition("Threat to Idle", "Idle")
 				.Predicator([this]
@@ -490,6 +501,7 @@ void CEM0700::SetUpFSM()
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_201_AL_atk_a1_start");
 				ClearDamagedTarget();
+				m_SoundStore.PlaySound("voidfly_attack_dash", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -574,6 +586,7 @@ void CEM0700::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0710_207_AL_atk_a3");
+				m_SoundStore.PlaySound("voidfly_attack_oil", m_pTransformCom);
 			})
 			.OnExit([this] 
 			{
