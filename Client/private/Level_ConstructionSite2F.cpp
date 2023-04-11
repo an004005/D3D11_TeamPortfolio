@@ -26,6 +26,11 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     /*if (FAILED(Ready_Layer_AI(LAYER_AI)))
         return E_FAIL;*/
 
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
+
+    Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_Construction2FBossRoom.json");
+    CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
+
     CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
     return S_OK;
@@ -33,7 +38,7 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
 void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 {
-    //CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+    CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite2F* CLevel_ConstructionSite2F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

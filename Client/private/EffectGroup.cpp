@@ -187,7 +187,8 @@ HRESULT CEffectGroup::Initialize(void* pArg)
 			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F
 			|| LEVEL_NOW == LEVEL_SUBWAY
 			|| LEVEL_NOW == LEVEL_NAOMIROOM
-			|| LEVEL_NOW == LEVEL_HOSPITAL_1F)
+			|| LEVEL_NOW == LEVEL_HOSPITAL_1F
+			|| LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
 		{
 			if (m_iSelectFinishFunc == 0)
 			{
