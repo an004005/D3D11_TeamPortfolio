@@ -4741,6 +4741,28 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_em0100_155_AL_walk": {
+        "Duration": 114.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "horse_walks_bip",
+                "EventTime": 0.0
+            }
+        ]
+    },
+    "AS_em0100_156_AL_run": {
+        "Duration": 50.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "horse_runs_bip",
+                "EventTime": 0.0
+            }
+        ]
+    },
     "AS_em0100_230_AL_atk_g1_turn_L": {
         "Duration": 180.0,
         "TickPerSecond": 50.0,
@@ -4753,6 +4775,10 @@
             {
                 "EventName": "Turn_L_End",
                 "EventTime": 66.0
+            },
+            {
+                "EventName": "horse_attack_spin",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4768,6 +4794,10 @@
             {
                 "EventName": "Turn_R_End",
                 "EventTime": 70.0
+            },
+            {
+                "EventName": "horse_attack_spin",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4808,6 +4838,10 @@
             {
                 "EventName": "Rush_Start",
                 "EventTime": 78.0
+            },
+            {
+                "EventName": "horse_attack_rush",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4840,6 +4874,10 @@
             {
                 "EventName": "AOE_End",
                 "EventTime": 444.0
+            },
+            {
+                "EventName": "horse_attack_fieldoil",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4968,7 +5006,12 @@
         "Duration": 300.0,
         "TickPerSecond": 63.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_5_voice_laugh",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0200_202_AL_atk_a2": {
         "Duration": 230.0,
@@ -5228,6 +5271,12 @@
             }
         ]
     },
+    "AS_em0200_480_AL_down_shock": {
+        "Duration": 80.0,
+        "TickPerSecond": 40.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em0200_485_AL_BCchance_start": {
         "Duration": 72.0,
         "TickPerSecond": 50.0,
@@ -5258,6 +5307,10 @@
             {
                 "EventName": "Somersault_End",
                 "EventTime": 80.0
+            },
+            {
+                "EventName": "voidflower_attack_upper",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5277,6 +5330,10 @@
             {
                 "EventName": "Spin_End",
                 "EventTime": 120.0
+            },
+            {
+                "EventName": "voidflower_attack_spin",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5569,6 +5626,10 @@
             {
                 "EventName": "Dodge_B_Start",
                 "EventTime": 3.0
+            },
+            {
+                "EventName": "mon_1_sidestep_1_step",
+                "EventTime": 155.0
             }
         ]
     },
@@ -5580,6 +5641,10 @@
             {
                 "EventName": "Dodge_L_Start",
                 "EventTime": 3.0
+            },
+            {
+                "EventName": "mon_1_sidestep_1_step",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5591,6 +5656,10 @@
             {
                 "EventName": "Dodge_R_Start",
                 "EventTime": 3.0
+            },
+            {
+                "EventName": "mon_1_sidestep_1_step",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5598,7 +5667,12 @@
         "Duration": 200.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_1_voice_attack_ready",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_em0400_200_AL_atk_a1": {
         "Duration": 420.0,
@@ -5614,12 +5688,12 @@
                 "EventTime": 0.0
             },
             {
-                "EventName": "mon_1_attack_whoosh",
-                "EventTime": 163.0
-            },
-            {
                 "EventName": "Swing_Start",
                 "EventTime": 165.0
+            },
+            {
+                "EventName": "mon_1_attack_whoosh",
+                "EventTime": 150.0
             }
         ]
     },
@@ -5725,9 +5799,15 @@
             }
         ]
     },
+    "AS_em0400_425_AL_down_start": {
+        "Duration": 119.0,
+        "TickPerSecond": 60.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0400_427_AL_getup_01": {
         "Duration": 110.0,
-        "TickPerSecond": 46.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5950,9 +6030,15 @@
             }
         ]
     },
+    "AS_em0600_425_AL_down_start": {
+        "Duration": 90.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0600_427_AL_getup": {
         "Duration": 60.0,
-        "TickPerSecond": 52.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -5988,6 +6074,12 @@
             }
         ]
     },
+    "AS_em0600_480_AL_down_shock": {
+        "Duration": 30.0,
+        "TickPerSecond": 40.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em0700_107_AL_fly_wait": {
         "Duration": 576.0,
         "TickPerSecond": 45.0,
@@ -5998,43 +6090,170 @@
         "Duration": 144.0,
         "TickPerSecond": 49.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 120.0
+            }
+        ]
     },
     "AS_em0700_111_AL_walk_B": {
         "Duration": 144.0,
         "TickPerSecond": 49.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 120.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0700_112_AL_walk_L": {
         "Duration": 144.0,
         "TickPerSecond": 47.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 120.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0700_113_AL_walk_R": {
         "Duration": 144.0,
         "TickPerSecond": 47.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "mon_3_move",
+                "EventTime": 120.0
+            }
+        ]
     },
     "AS_em0700_120_AL_escape": {
         "Duration": 75.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 25.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 50.0
+            }
+        ]
     },
     "AS_em0700_121_AL_randommove_L": {
         "Duration": 120.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 80.0
+            }
+        ]
     },
     "AS_em0700_122_AL_randommove_R": {
         "Duration": 120.0,
         "TickPerSecond": 60.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 40.0
+            },
+            {
+                "EventName": "voidfly_move",
+                "EventTime": 80.0
+            }
+        ]
     },
     "AS_em0700_160_AL_threat": {
         "Duration": 364.0,
@@ -6317,7 +6536,16 @@
         "Duration": 359.0,
         "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0800_110_AL_walk_B_loop.001": {
         "Duration": 359.0,
@@ -6340,7 +6568,16 @@
         "Duration": 61.0,
         "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em0800_115_AL_walk_R_start": {
         "Duration": 31.0,
@@ -6357,7 +6594,16 @@
         "Duration": 61.0,
         "TickPerSecond": 60.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "mon_4_move",
+                "EventTime": 40.0
+            }
+        ]
     },
     "AS_em0800_150_AL_turn_R": {
         "Duration": 46.0,
@@ -6713,6 +6959,21 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em1100_106_AL_walk_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "tree_move",
+                "EventTime": 8.0
+            },
+            {
+                "EventName": "tree_move",
+                "EventTime": 65.0
+            }
+        ]
+    },
     "AS_em1100_107_AL_run_start": {
         "Duration": 54.0,
         "TickPerSecond": 40.0,
@@ -6730,6 +6991,51 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em1100_112_AL_walk_L_start": {
+        "Duration": 120.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": [
+            {
+                "EventName": "tree_move",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "tree_move",
+                "EventTime": 96.0
+            }
+        ]
+    },
+    "AS_em1100_113_AL_walk_L_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "tree_move",
+                "EventTime": 42.0
+            },
+            {
+                "EventName": "tree_move",
+                "EventTime": 100.0
+            }
+        ]
+    },
+    "AS_em1100_116_AL_walk_R_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "tree_move",
+                "EventTime": 45.0
+            },
+            {
+                "EventName": "tree_move",
+                "EventTime": 105.0
+            }
+        ]
+    },
     "AS_em1100_135_AL_dodge_B_start": {
         "Duration": 100.0,
         "TickPerSecond": 40.0,
@@ -6741,11 +7047,33 @@
             }
         ]
     },
+    "AS_em1100_136_AL_dodge_B_stop": {
+        "Duration": 45.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "tree_backstep",
+                "EventTime": 12.0
+            }
+        ]
+    },
     "AS_em1100_202_AL_atk_a1_bringdown_end": {
         "Duration": 57.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
         "vecEvent": []
+    },
+    "AS_em1100_202_AL_atk_a1_bringdown_omen": {
+        "Duration": 40.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "tree_attack_smash",
+                "EventTime": 5.0
+            }
+        ]
     },
     "AS_em1100_202_AL_atk_a1_bringdown_start": {
         "Duration": 33.0,
@@ -6791,6 +7119,10 @@
             {
                 "EventName": "ElectricBall_Ready",
                 "EventTime": 90.0
+            },
+            {
+                "EventName": "tree_attack_elecball",
+                "EventTime": 70.0
             }
         ]
     },
@@ -6861,12 +7193,17 @@
     "AS_em1120_211_AL_atk_a4_sliding_omen": {
         "Duration": 120.0,
         "TickPerSecond": 50.0,
-        "bLooping": false,
-        "vecEvent": []
+        "bLooping": true,
+        "vecEvent": [
+            {
+                "EventName": "tree_attack_spin",
+                "EventTime": 70.0
+            }
+        ]
     },
     "AS_em1120_211_AL_atk_a4_sliding_start": {
         "Duration": 65.0,
-        "TickPerSecond": 32.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {

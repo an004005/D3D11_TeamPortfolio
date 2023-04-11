@@ -47,7 +47,7 @@ public:
 
 public:
 	void Play_LightHitAnim();
-	void Play_MidHitAnim();
+	//void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
 	void FogControl(_double TimeDelta);

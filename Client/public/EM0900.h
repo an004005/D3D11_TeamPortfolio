@@ -48,7 +48,7 @@ public:
 	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
 	_bool CanMove4BC(_float fMinDist);
-	_bool WholeCondition();
+	_bool PriorityCondition();
 private:
 	//충돌 관련 함수 정의
 	void FourAttack_Overlap(_bool Final = false);

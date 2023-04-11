@@ -1,0 +1,173 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "mon_5_backdodge",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_backdodge_1.wav",
+                "Monsters/em0200/mon_5_backdodge_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_sidedodge",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_sidedodge_1.wav",
+                "Monsters/em0200/mon_5_sidedodge_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_bellattack",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_bellattack.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_bellattack_ready",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_bellattack_ready.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_fx_death",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_fx_death.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_impact_voice",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_impact_voice_1.wav",
+                "Monsters/em0200/mon_5_impact_voice_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_jumpattack_ready",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_jumpattack_ready.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_jumpattack_jump",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_jumpattack_jump.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_jumpattack_kick",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_jumpattack_kick.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_sprayattack",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_sprayattack.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_sprayattack_ready",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_sprayattack_ready.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name" : "mon_5_step",
+            "SoundFiles" : ["Monsters/em0200/mon_5_step_1.wav", 
+            "Monsters/em0200/mon_5_step_2.wav",
+             "Monsters/em0200/mon_5_step_3.wav",
+              "Monsters/em0200/mon_5_step_4.wav",                    
+               "Monsters/em0200/mon_5_step_5.wav", 
+               "Monsters/em0200/mon_5_step_6.wav",
+                "Monsters/em0200/mon_5_step_7.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_voice_laugh",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_voice_laugh_1.wav",
+                "Monsters/em0200/mon_5_voice_laugh_2.wav",
+                "Monsters/em0200/mon_5_voice_laugh_3.wav",
+                "Monsters/em0200/mon_5_voice_laugh_4.wav",
+                "Monsters/em0200/mon_5_voice_laugh_5.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        },
+        {
+            "Name": "mon_5_rush",
+            "SoundFiles": [
+                "Monsters/em0200/mon_5_rush_1.wav",
+                "Monsters/em0200/mon_5_rush_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        }
+    
+    
+    ]
+}

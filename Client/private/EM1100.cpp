@@ -10,6 +10,8 @@
 #include "RigidBody.h"
 #include "ControlledRigidBody.h"
 #include "EMBrain.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -28,8 +30,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 	Json em1100_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Base.json");
 	pArg = &em1100_json;
 
-	/*m_strDeathSoundTag = "mon_5_fx_death";
-	m_strImpactVoiceTag = "mon_5_impact_voice";*/
+	m_strDeathSoundTag = "tree_fx_death";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -47,7 +48,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM1100;
 	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	m_fGravity = 20.f;
 	return S_OK;
@@ -62,7 +63,7 @@ void CEM1100::SetUpComponents(void * pArg)
 	assert(m_pWeak != nullptr);
 
 	Json WeakCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Weak.json");
-	Json BodyCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0110/em1100Body.json");
+	Json BodyCol = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1100/em1100Body.json");
 
 	Add_RigidBody("Weak", &WeakCol);
 	Add_RigidBody("Body", &BodyCol);
@@ -81,6 +82,21 @@ void CEM1100::SetUpComponents(void * pArg)
 void CEM1100::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("tree_attack_elecball");
+	m_SoundStore.CloneSound("tree_attack_smash");
+	m_SoundStore.CloneSound("tree_attack_spin");
+	m_SoundStore.CloneSound("tree_attack_watersplash");
+	m_SoundStore.CloneSound("tree_attack_whip");
+	m_SoundStore.CloneSound("tree_backstep");
+	m_SoundStore.CloneSound("tree_move");
+
+	m_pModelCom->Add_EventCaller("tree_attack_elecball", [this] {m_SoundStore.PlaySound("tree_attack_elecball", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("tree_attack_smash", [this]{m_SoundStore.PlaySound("tree_attack_smash", m_pTransformCom);});
+	m_pModelCom->Add_EventCaller("tree_attack_spin", [this]{m_SoundStore.PlaySound("tree_attack_spin", m_pTransformCom);});
+	m_pModelCom->Add_EventCaller("tree_backstep", [this]{m_SoundStore.PlaySound("tree_backstep", m_pTransformCom);});
+	m_pModelCom->Add_EventCaller("tree_move", [this]{m_SoundStore.PlaySound("tree_move", m_pTransformCom);});
+
 }
 
 void CEM1100::SetUpAnimationEvent()
@@ -302,6 +318,8 @@ void CEM1100::SetUpFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
+				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+
 				if (m_bDodge)
 				{
 					m_pTransformCom->MoveVelocity(TimeDelta, m_vOnJumpMoveVelocity);
@@ -310,6 +328,7 @@ void CEM1100::SetUpFSM()
 			.OnExit([this] 
 			{
 				m_pController->SetActive(true);
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 				m_bDodge = false;
 				m_fGravity = 20.f;
 			})
@@ -325,7 +344,14 @@ void CEM1100::SetUpFSM()
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_136_AL_dodge_B_stop");
 				})
-	
+				.Tick([this](_double TimeDelta)
+				{
+					m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
+				})
+				.OnExit([this]
+				{
+						m_pASM->ClearSocketAnim("FullBody", 0.f);
+				})
 				.AddTransition("Dodge_Stop to Idle", "Idle")
 					.Predicator([this]
 					{
@@ -418,80 +444,109 @@ void CEM1100::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_omen");
+				m_SoundStore.PlaySound("tree_attack_watersplash", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				SocketLocalMove(m_pASM);
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 			})
+			.OnExit([this]
+			{
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("WaterAttack_Omen to WaterAttack_Start", "WaterAttack_Start")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
 					})
 
-				.AddState("WaterAttack_Start")
-					.OnStart([this]
-					{
-							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_start");
+		.AddState("WaterAttack_Start")
+			.OnStart([this]
+			{
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_start");
+					ClearDamagedTarget();
+					WaterStart_Overlap();
 
-							_matrix HydroPumpEffect = CImguiUtils::CreateMatrixFromImGuizmoData(
-								{ 0.f, 2.f, 0.f },
-								{ -180.f, -90.f, 80.f},
-								{ 1.f, 1.f, 1.f }
-							);
+					_matrix HydroPumpEffect = CImguiUtils::CreateMatrixFromImGuizmoData(
+						{ 0.f, 2.f, 0.f },
+						{ -180.f, -90.f, 80.f},
+						{ 1.f, 1.f, 1.f }
+					);
 	
-							CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Water_Effect")
-								->Start_AttachPivot(this, HydroPumpEffect, "Shell1", true, true);
+					CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Water_Effect")
+						->Start_AttachPivot(this, HydroPumpEffect, "Shell1", true, true);
 
-							_matrix HydroPumpParticle = CImguiUtils::CreateMatrixFromImGuizmoData(
-								{ 0.f, 0.f, 0.f },
-								{ -180.f, -90.f, 15.f },
-								{ 1.f, 1.f, 1.f }
-							);
+					_matrix HydroPumpParticle = CImguiUtils::CreateMatrixFromImGuizmoData(
+						{ 0.f, 0.f, 0.f },
+						{ -180.f, -90.f, 15.f },
+						{ 1.f, 1.f, 1.f }
+					);
 
-							CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Water_Particle_Cylinder")
-								->Start_AttachPivot(this, HydroPumpParticle, "Shell1", true, true);
+					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Water_Particle_Cylinder")
+						->Start_AttachPivot(this, HydroPumpParticle, "Shell1", true, true);
 
-					
-					})
-				.Tick([this](_double)
+			
+			})
+			.Tick([this](_double)
+			{
+				SocketLocalMove(m_pASM);
+			})
+			.OnExit([this]
+			{
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
+			.AddTransition("WaterAttack_Start to WaterAttack_End", "WaterAttack_End")
+				.Predicator([this]
 				{
-					SocketLocalMove(m_pASM);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
-				.AddTransition("WaterAttack_Start to WaterAttack_End", "WaterAttack_End")
-					.Predicator([this]
-					{
-						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
 
-			.AddState("WaterAttack_End")
-				.OnStart([this]
+		.AddState("WaterAttack_End")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_end");		
+				m_dLoopTime = 1.0;
+
+				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
+						->Start_Attach(this, "Eff02", false);
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				SocketLocalMove(m_pASM);
+				m_dLoopTime += TimeDelta;
+
+				if (m_dLoopTime > 0.7)
 				{
-					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_end");
-						
-					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
-							->Start_Attach(this, "Eff02", false);
-				})
-				.Tick([this](_double)
+					m_dLoopTime = 0.0;
+					ClearDamagedTarget();
+					WaterLoop_Overlap();
+				}
+			})
+			.OnExit([this]
+			{
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
+			.AddTransition("WaterAttack_End to Idle", "Idle")
+				.Predicator([this]
 				{
-					SocketLocalMove(m_pASM);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
-				.AddTransition("WaterAttack_End to Idle", "Idle")
-					.Predicator([this]
-					{
-						return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-					})
 
 		//셋다 로컬있음 , 전기볼이 플레이어를 쫓아가야함, 이벤트로 전기볼 생성
 		.AddState("ElectricBall_Omen")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_208_AL_atk_a3_guidanceshot_omen");
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_208_AL_atk_a3_guidanceshot_omen");		
+
 			})
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
+			})
+			.OnExit([this]
+			{
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("ElectricBall_Omen to ElectricBall_Start", "ElectricBall_Start")
 				.Predicator([this]
@@ -507,6 +562,10 @@ void CEM1100::SetUpFSM()
 			.Tick([this](_double)
 			{
 				SocketLocalMove(m_pASM);
+			})
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("ElectricBall_Start to ElectricBall_End", "ElectricBall_End")
 				.Predicator([this]
@@ -534,18 +593,22 @@ void CEM1100::SetUpFSM()
 		.AddState("Stamp_Omen")
 			.OnStart([this]
 			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_202_AL_atk_a1_bringdown_omen");
+					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_202_AL_atk_a1_bringdown_omen");
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
 				SocketLocalMove(m_pASM);
+				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 			})
-	
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Stamp_Omen to Stamp_Start", "Stamp_Start")
 				.Predicator([this]
-			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-			})
+				{
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				})
 
 		.AddState("Stamp_Start")
 			.OnStart([this]
@@ -556,11 +619,14 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Stamp_Start to Stamp_End", "Stamp_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Stamp_End")
@@ -572,7 +638,10 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-	
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Stamp_End to Idle", "Idle")
 				.Predicator([this]
 				{
@@ -585,16 +654,20 @@ void CEM1100::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1120_211_AL_atk_a4_sliding_omen");
+
 			})
 			.Tick([this](_double TimeDelta)
 			{
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 			})
-
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Rush_Omen to Rush_Start", "Rush_Start")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Rush_Start")
@@ -614,11 +687,12 @@ void CEM1100::SetUpFSM()
 			.OnExit([this]
 			{
 				m_bRush = false;
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
 			})
 			.AddTransition("Rush_Start to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Rush_End")
@@ -630,7 +704,10 @@ void CEM1100::SetUpFSM()
 			{
 				SocketLocalMove(m_pASM);
 			})
-	
+			.OnExit([this]
+			{
+				m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 			.AddTransition("Rush_End to Idle", "Idle")
 				.Predicator([this]
 				{
@@ -642,6 +719,8 @@ void CEM1100::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_204_AL_atk_a2_tailall");
+				m_SoundStore.PlaySound("tree_attack_whip", m_pTransformCom);
+
 			})
 			.Tick([this](_double)
 			{
@@ -664,20 +743,6 @@ void CEM1100::SetUpFSM()
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-		.AddState("Threat")
-			.OnStart([this]
-			{
-				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_160_AL_threat");
-			})
-			.AddTransition("Threat to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-
-				///////////////////////////////////////////////////////////////////////////////////////////
 
 		.Build();
 }
@@ -702,6 +767,7 @@ void CEM1100::Tick(_double TimeDelta)
 
 	//변수 업데이트
 	m_vMoveAxis = m_pController->GetMoveAxis();
+	m_eMoveAxis = CClientUtils::MoveAxisToBaseEnum(m_vMoveAxis);
 	m_vMoveAxis.Normalize();
 	m_eInput = m_pController->GetAIInput();
 	m_bRun = m_pController->IsRun();
@@ -714,23 +780,7 @@ void CEM1100::Tick(_double TimeDelta)
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
 
-
-	if (m_vMoveAxis.LengthSquared() > 0.f)
-	{
-		_float3 vVelocity;
-
-		//뛸때는 방향을 보면서 뛰어야하고 걸을때는 안보고 걸어야 함
-		if (m_bRun)
-		{
-			const _float fYaw = m_pTransformCom->GetYaw_Radian();
-			XMStoreFloat3(&vVelocity, 8.f /*MoveSpeed*/ * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
-		}
-		else
-			XMStoreFloat3(&vVelocity, 2.f /*MoveSpeed*/ * XMVector3Normalize(m_vMoveAxis));
-
-		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
-	}
-
+	Adjust_MoveAxis(TimeDelta);
 	HitWeakProcess(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
@@ -892,17 +942,16 @@ void CEM1100::Create_Bullet()
 			.Set_Owner(this)
 			.Set_Target(m_pTarget)
 			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
-			.Set_BulletEffPivot(pivot)
 			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
-			.Set_ShootSpeed(8.f)
-			.Set_Life(7.f)
+			.Set_ShootSpeed(7.f)
+			.Set_Life(5.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em1100_Elec_Bullet_Dead" })
 			.Set_DeadBulletParticle(L"em1100_Elec_Bullet_Dead_Particle")
 			.Set_Position(vPrePos)
 			.Set_Radius(1.2f)
+			.Set_Sound(true)
 		.Build();
-
 
 }
 
@@ -981,7 +1030,7 @@ void CEM1100::Rush_SweepSphere()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_TO_AIR);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
 	}
 
 	m_BeforePos = vBonePos;
@@ -1009,7 +1058,7 @@ void CEM1100::TailSwing_SweepSphere()
 
 	if (CGameInstance::GetInstance()->SweepSphere(tParams))
 	{
-		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_LIGHT);
+		HitTargets(sweepOut, static_cast<_int>(m_iAtkDamage * 1.2f), EAttackType::ATK_HEAVY);
 	}
 
 	m_BeforePos = vTailPos;
@@ -1017,7 +1066,7 @@ void CEM1100::TailSwing_SweepSphere()
 
 void CEM1100::Stamp_Overlap()
 {	
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("RightHand") * m_pTransformCom->Get_WorldMatrix();
 
 	_vector vBoneVector = BoneMatrix.r[3];
 	_float3 fBone = vBoneVector;
@@ -1026,7 +1075,7 @@ void CEM1100::Stamp_Overlap()
 	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
 
 	SphereOverlapParams param;
-	param.fVisibleTime = 0.1f;
+	param.fVisibleTime = 1.f;
 	param.iTargetType = CTB_PLAYER;
 	param.fRadius = 3.f;
 	param.vPos = XMVectorSetW(fBone, 1.f);
@@ -1034,7 +1083,53 @@ void CEM1100::Stamp_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_DOWN);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
+	}
+}
+
+void CEM1100::WaterStart_Overlap()
+{
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Shell1") * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vBoneVector = BoneMatrix.r[3];
+	_float3 fBone = vBoneVector;
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 1.f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 3.f;
+	param.vPos = XMVectorSetW(fBone, 1.f);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
+	}
+}
+
+void CEM1100::WaterLoop_Overlap()
+{
+	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Eff02") * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vBoneVector = BoneMatrix.r[3];
+	_float3 fBone = vBoneVector;
+
+	physx::PxOverlapHit hitBuffer[3];
+	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+
+	SphereOverlapParams param;
+	param.fVisibleTime = 1.f;
+	param.iTargetType = CTB_PLAYER;
+	param.fRadius = 6.f;
+	param.vPos = XMVectorSetW(fBone, 1.f);
+	param.overlapOut = &overlapOut;
+
+	if (CGameInstance::GetInstance()->OverlapSphere(param))
+	{
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.8f), EAttackType::ATK_LIGHT);
 	}
 }
 
@@ -1047,7 +1142,7 @@ void CEM1100::Dodge_VelocityCalc()
 	const _float fJumpMoveTime = (2 * m_fYSpeed) / m_fGravity;
 
 	const _float fDistance = 8.f;
-	const _vector vDirection =  m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 2.f;
+	const _vector vDirection =  m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 10.f;
 	m_vOnJumpMoveVelocity = XMVector3Normalize(vDirection) * (fDistance / fJumpMoveTime);
 }
 
@@ -1057,6 +1152,47 @@ void CEM1100::AfterLocal180Turn()
 	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 	vPos -= XMVector3Normalize(vLook) * 20.f;
 	m_pTransformCom->LookAt(vPos);
+}
+
+void CEM1100::Adjust_MoveAxis(_double TimeDelta)
+{
+	if (m_vMoveAxis.LengthSquared() > 0.f)
+	{
+		_float3 vVelocity;
+		_float fMoveSpeed = 0.f;
+
+		//뛸때는 방향을 보면서 뛰어야하고 걸을때는 안보고 걸어야 함
+		if (m_bRun)
+		{
+			fMoveSpeed = 8.f;
+			const _float fYaw = m_pTransformCom->GetYaw_Radian();
+			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+		}
+		else
+		{
+			if (m_eMoveAxis == EBaseAxis::WEST)
+			{
+				fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em1100_Walk_L")
+					->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
+			}
+			else if (m_eMoveAxis == EBaseAxis::EAST)
+			{
+				fMoveSpeed = CCurveManager::GetInstance()->GetCurve("em1100_Walk_L")
+					->GetValue(m_pModelCom->GetPlayAnimation()->GetPlayRatio());
+			}
+			else
+				fMoveSpeed = 1.f;
+
+			fMoveSpeed *= 1.3f;
+			const _float fYaw = m_pTransformCom->GetYaw_Radian();
+			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
+
+			//XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3Normalize(m_vMoveAxis));
+		}
+
+		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
+	}
+
 }
 
 

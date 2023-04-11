@@ -1,0 +1,29 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "voidflower_attack_spin",
+            "SoundFiles": [
+                "Monsters/em0210/voidflower_attack_spin_withvoice.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+        "MaxDistance": 20.0
+        },
+        {
+            "Name": "voidflower_attack_upper",
+            "SoundFiles": [
+                "Monsters/em0210/voidflower_attack_uper_withvoice1.wav",
+                "Monsters/em0210/voidflower_attack_uper_withvoice2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 20.0
+        }
+      
+    ]
+}

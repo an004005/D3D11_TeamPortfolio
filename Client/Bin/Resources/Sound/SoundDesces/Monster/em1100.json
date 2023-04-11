@@ -1,0 +1,104 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "tree_attack_elecball",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_elecball.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "tree_attack_elecball_hit",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_elecball_hit.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 15.0
+        },
+        {
+            "Name" : "tree_attack_elecball_loop",
+            "SoundFiles" : [
+                "Monsters/em1100/tree_attack_elecball_loop.wav",
+                "Monsters/em1100/tree_attack_elecball_loop2.wav"
+            ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "tree_attack_smash",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_smash.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "tree_attack_spin",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_spin.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "tree_attack_watersplash",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_watersplash.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "tree_attack_whip",
+            "SoundFiles" : ["Monsters/em1100/tree_attack_whip.wav"],
+            "2DSound" : false,
+            "Volume" : 0.5,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },        
+        {
+            "Name" : "tree_backstep",
+            "SoundFiles" : [
+                "Monsters/em1100/tree_backstep.wav",
+                "Monsters/em1100/tree_backstep_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "tree_fx_death",
+            "SoundFiles" : ["Monsters/em1100/tree_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "tree_move",
+            "SoundFiles" : [
+                "Monsters/em1100/tree_move_foot1.wav",
+                "Monsters/em1100/tree_move_foot2.wav",
+                "Monsters/em1100/tree_move_foot3.wav"
+            ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        }
+    ]
+}

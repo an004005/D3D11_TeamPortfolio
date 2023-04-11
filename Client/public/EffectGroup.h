@@ -49,8 +49,6 @@ public:
 	void		VisibleUpdate();
 	void		Set_Transform(_fmatrix matSocket);
 
-	class CEffectSystem* Get_FirstEF();
-
 public:
 	void		Start_EffectWork();
 
@@ -76,7 +74,7 @@ public:
 	void		Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false);
 
 	void		Call_Event();
-
+	class CEffectSystem* Get_FirstEF();
 public:
 	// For Graph
 	// void Tick_Scale_All( _float fValue);

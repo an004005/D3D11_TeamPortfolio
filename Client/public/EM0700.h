@@ -51,6 +51,10 @@ private:
 	void SelectEscapeAnim_Overlap();
 	void Rush_StaticCheckSweep();
 	void Rush_SweepSphere();
+
+private:
+	_bool PriorityCondition();
+
 private:
 	class CEM0700_Controller*		m_pController = nullptr;
 	class CEM0700_AnimInstance*		m_pASM = nullptr;
@@ -67,6 +71,8 @@ private:
 
 	//Rush
 	_float						m_fRushTime = 1.f;
+
+	_bool						m_bDown = false;
 
 	CController::EHandleInput	m_eInput;
 

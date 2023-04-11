@@ -44,7 +44,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	m_eEnemyName = EEnemyName::EM1200;
 	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(60.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_fGravity = 20.f;
 
 	//fog
@@ -259,20 +259,16 @@ void CEM1200::SetUpFSM()
 			.OnStart([this]
 			{
 				m_fGravity = 20.f;
-			})
-			.AddTransition("Idle to Death" , "Death")
-				.Predicator([this] { return m_bDead; })
+				})
+		.AddTransition("Idle to Death", "Death")
+					.Predicator([this] { return m_bDead; })
+					.AddTransition("Idle to Down", "Down")
+					.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END
+						|| m_eInput == CController::EHandleInput::CTRL; })
 
-			.AddTransition("Idle to Hit_Mid_Heavy", "Hit_Mid_Heavy")
-				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
 	
-			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_LIGHT
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
 
 			.AddTransition("Idle to Fall", "Fall")
 				.Predicator([this] { return m_eInput == CController::EHandleInput::F; })
@@ -300,21 +296,83 @@ void CEM1200::SetUpFSM()
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-	
-		.AddState("Hit_Mid_Heavy")
+			.AddState("Down")
+				.OnStart([this]
+				{
+						if(m_bChangePhase == false)
+							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_421_AL_down_start1");
+						else
+							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_425_AL_down_start2");
+				})
+				.AddTransition("Down to DownLoop", "DownLoop")
+					.Predicator([this]
+					{
+						return m_bDead
+							|| m_pASM->isSocketPassby("FullBody", 0.95f);
+					})
+
+			.AddState("DownLoop")
+				.OnStart([this]
+				{
+						if (m_bChangePhase == false)
+						{
+							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_422_AL_down1");
+							m_pModelCom->Find_Animation("AS_em1200_422_AL_down1")->SetLooping(true);
+						}
+						else
+						{
+							m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_426_AL_down2");
+							m_pModelCom->Find_Animation("AS_em1200_426_AL_down2")->SetLooping(true);
+						}
+
+					m_dLoopTime = 0.0;
+				})
+				.Tick([this](_double TimeDelta)
+				{
+						m_dLoopTime += TimeDelta;
+				})
+				.AddTransition("DownLoop to Getup", "Getup")
+					.Predicator([this]
+					{
+						return m_bDead
+							|| m_dLoopTime >= 5.f;
+					})
+
+			.AddState("Getup")
+				.OnStart([this]
+				{
+					if (m_bChangePhase == false)
+					{
+						m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_423_AL_getup1");
+					}
+					else
+					{
+						m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_427_AL_getup2");
+					}
+
+				})
+				.AddTransition("Getup to Idle", "Idle")
+					.Predicator([this]
+					{
+						return m_bDead
+							|| m_pASM->isSocketPassby("FullBody", 0.95f);
+					})
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+		.AddState("Hit_Heavy")
 			.OnStart([this]
 			{
-				Play_MidHitAnim();
+					Play_LightHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_MIDDLE
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
 				{
 					HeavyAttackPushStart();
-					Play_MidHitAnim();
+					Play_LightHitAnim();
 				}
 
 				_float fPower;
@@ -325,38 +383,12 @@ void CEM1200::SetUpFSM()
 					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
-			.AddTransition("Hit_Mid_Heavy to Idle", "Idle")
+			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead
-						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
-						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
+						|| m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
-
-
-		.AddState("Hit_Light")
-			.OnStart([this]
-			{
-				//FSM의 상태가 변경 되면, 현 상태의 Exit과 변경될 상태의 Start를 실행하고 종료,
-				// Tick은 상태 변경 후 다음 틱 부터 실행된다.
-				Play_LightHitAnim();
-			})
-			.Tick([this](_double)
-			{
-				if (m_eCurAttackType == EAttackType::ATK_LIGHT || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
-				{
-					Play_LightHitAnim();
-				}
-			})
-			.AddTransition("Hit_Light to Idle", "Idle")
-				.Predicator([this]
-				{
-					return m_bDead
-						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
-				})
-
 
 		.AddState("Death")
 				.OnStart([this]
@@ -961,28 +993,28 @@ void CEM1200::Play_LightHitAnim()
 	
 }
 
-void CEM1200::Play_MidHitAnim()
-{
-	switch (m_eHitFrom)
-	{
-	case EBaseAxis::NORTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_411_AL_damage_m_F2");
-		break;
-	case EBaseAxis::EAST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_414_AL_damage_m_R2");
-		break;
-	case EBaseAxis::SOUTH:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_412_AL_damage_m_B2");
-		break;
-	case EBaseAxis::WEST:
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_413_AL_damage_m_L2");
-		break;
-	case EBaseAxis::AXIS_END:
-		FALLTHROUGH;
-	default:
-		NODEFAULT;
-	}
-}
+//void CEM1200::Play_MidHitAnim()
+//{
+//	switch (m_eHitFrom)
+//	{
+//	case EBaseAxis::NORTH:
+//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_411_AL_damage_m_F2");
+//		break;
+//	case EBaseAxis::EAST:
+//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_414_AL_damage_m_R2");
+//		break;
+//	case EBaseAxis::SOUTH:
+//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_412_AL_damage_m_B2");
+//		break;
+//	case EBaseAxis::WEST:
+//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_413_AL_damage_m_L2");
+//		break;
+//	case EBaseAxis::AXIS_END:
+//		FALLTHROUGH;
+//	default:
+//		NODEFAULT;
+//	}
+//}
 
 void CEM1200::HeavyAttackPushStart()
 {

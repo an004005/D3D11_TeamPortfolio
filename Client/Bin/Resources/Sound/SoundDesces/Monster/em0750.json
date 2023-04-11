@@ -1,0 +1,55 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "mon_3_attack_airdash",
+            "SoundFiles" : [
+                "Monsters/em0750/mon_3_attack_airdash_1.wav",
+                "Monsters/em0750/mon_3_attack_airdash_2.wav"
+        ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_3_attack_airdash_up",
+            "SoundFiles" : [
+                "Monsters/em0750/mon_3_attack_airdash_up_1.wav",
+                "Monsters/em0750/mon_3_attack_airdash_up_2.wav"
+            ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_3_move",
+            "SoundFiles" : [
+                "Monsters/em0750/mon_3_move_1.wav",
+                "Monsters/em0750/mon_3_move_2.wav",
+                "Monsters/em0750/mon_3_move_3.wav"
+            ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name" : "mon_3_provoke",
+            "SoundFiles" : [
+                "Monsters/em0750/mon_3_provoke_1.wav",
+                "Monsters/em0750/mon_3_provoke_2.wav"        
+            ],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        }
+       
+    ]
+}

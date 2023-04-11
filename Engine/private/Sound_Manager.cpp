@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Sound_Manager.h"
 #include "JsonStorage.h"
+#include "GameUtils.h"
 
 IMPLEMENT_SINGLETON(CSound_Manager)
 
@@ -147,14 +148,34 @@ void CSound_Manager::PlaySound_Q(const string& QName, CSound* pSound, _float4* p
 
 HRESULT CSound_Manager::Load_SoundFile(const char* pJsonFilePath)
 {
-	const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson(pJsonFilePath);
-	const string soundFilePath = json["SoundFilePath"];
+	CGameUtils::ListFilesRecursive(pJsonFilePath,
+		[this](const string& fileName)
+		{
+			char szFileExt[MAX_PATH]{};
+			_splitpath_s(fileName.c_str(), nullptr, 0, nullptr, 0, nullptr, 0, szFileExt, MAX_PATH);
 
-	for (auto soundInfo : json["Sounds"])
-	{
-		CSound* pSound = CSound::Create(m_pSystem, soundInfo, soundFilePath);
-		m_Sounds.emplace(pSound->GetName(), pSound);
-	}
+			if (0 == strcmp(szFileExt, ".json"))
+			{
+				const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson(fileName);
+				const string soundFilePath = json["SoundFilePath"];
+
+				for (auto soundInfo : json["Sounds"])
+				{
+					CSound* pSound = CSound::Create(m_pSystem, soundInfo, soundFilePath);
+					m_Sounds.emplace(pSound->GetName(), pSound);
+				}
+			}
+		});
+
+
+	//const Json& json = CJsonStorage::GetInstance()->FindOrLoadJson(pJsonFilePath);
+	//const string soundFilePath = json["SoundFilePath"];
+
+	//for (auto soundInfo : json["Sounds"])
+	//{
+	//	CSound* pSound = CSound::Create(m_pSystem, soundInfo, soundFilePath);
+	//	m_Sounds.emplace(pSound->GetName(), pSound);
+	//}
 
 	return S_OK;
 }

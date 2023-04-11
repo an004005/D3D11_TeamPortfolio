@@ -180,7 +180,7 @@ void CEnemy_AnimInstance::AttachAnimSocketOne(const string& strSocName, const st
 		itr->second.front()->Reset();
 	}
 
-	assert(m_pModel->Find_Animation(strAnimName) != nullptr && "attachsocketone");
+	//assert(m_pModel->Find_Animation(strAnimName) != nullptr && "attachsocketone");
 	m_mapAnimSocket[strSocName] = { m_pModel->Find_Animation(strAnimName) };
 }
 
