@@ -1,28 +1,34 @@
 {
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s": [],
-        "Floats": [0.0, 0.0, 0.0, 0.0, 1.0],
-        "Ints": [
-            0
-        ],
-        "Pass": 5,
-        "Textures": [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Mask_COL.png\u0000",
-            "",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch1000/Texture/T_ch1000_Mask_CTL.png\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000",
-            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_PatternMap.png\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
+	"ShaderParams": {
+		"Floats": [
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0
+		],
+		"Float2s": [],
+		"Pass": 5,
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		],
+		"Ints": [
+			0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch1000_Mask_COL.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0100_Mask_AMB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch1000_Mask_CTL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ef_scl_noi_013.dds",
+			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_PatternMap.dds"
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
 }

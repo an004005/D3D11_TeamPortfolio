@@ -1,18 +1,20 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [0.7],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Highway/pr_Highway/T_lo050_en001_streetlight01.dds",
-            "",
-            ""
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 1
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Floats": [
+			0.7
+		],
+		"Float4s": [],
+		"Ints": [],
+		"Float4x4s": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo050_en001_streetlight01.dds",
+			"",
+			""
+		],
+		"Pass": 1,
+		"Float2s": []
+	},
+	"InstancingPass": 1
 }
