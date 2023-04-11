@@ -308,7 +308,7 @@ void CPlayer::Tick(_double TimeDelta)
 	if (m_bOnBattle)
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
-		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
+		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
 	}
 	else
 	{
