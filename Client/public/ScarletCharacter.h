@@ -14,6 +14,8 @@ END
 
 BEGIN(Client)
 
+enum ECOPYCOLTYPE { COPYCOL_MAIN, COPYCOL_LEFT, COPYCOL_RIGHT, COPYCOL_END };
+
 class CScarletCharacter abstract : public CGameObject
 {
 protected:
@@ -52,7 +54,7 @@ protected:
 	virtual void DeBuff_Water() {}
 protected:
 	void		Collision_Check_Capsule(CRigidBody*	AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollision = true, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER, _bool bContinuity = false);
-	_bool		Collision_Check_Capsule_Improved(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER);
+	_bool		Collision_Check_Capsule_Improved(CRigidBody* AttackTrigger, DAMAGE_PARAM DamageParam, _bool bCollisionCheck = false, ECOLLIDER_TYPE_BIT ColType = CTB_MONSTER, ECOPYCOLTYPE eCopyType = COPYCOL_MAIN);
 	list<CScarletCharacter*>	m_DamagedObjectList;
 
 protected:
@@ -82,8 +84,12 @@ public:
 	_bool	Get_CollisionDuplicate() { return m_bCollisionDuplicate; }
 	void	Set_CollisionDuplicate(_bool bDuplicate) { m_bCollisionDuplicate = bDuplicate; }
 
+	_bool	Get_CollisionDuplicate(ECOPYCOLTYPE eType) { return m_vecDuplication[eType]; }
+	void	Set_CollisionDuplicate(_bool bDuplicate, ECOPYCOLTYPE eType = COPYCOL_MAIN) { m_vecDuplication[eType] = bDuplicate; }
+
 protected:
-	_bool	m_bCollisionDuplicate = false;		// true이면 여전히 충돌중인것임
+	_bool			m_bCollisionDuplicate = false;		// true이면 여전히 충돌중인것임
+	vector<_bool>	m_vecDuplication = { false, false, false };
 // ~재충돌 여부
 
 protected:

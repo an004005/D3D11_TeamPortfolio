@@ -64,6 +64,8 @@ typedef struct tagPlayerStatus
 	_bool bBrainField = false;
 	_bool bStartBrainField = false;
 
+	_bool bCopy = false;
+
 	_float m_fBaseAttackDamage;
 
 	ESASType m_eAttack_SAS_Type;
@@ -182,6 +184,9 @@ public:	// Set
 
 	void			Set_DriveMode(_bool bDrive) { m_tPlayerStat.bDriveMode = bDrive; }
 	void			Set_BrainField(_bool bBrain) { m_tPlayerStat.bBrainField = bBrain; }
+
+	void			Set_Copy(_bool bCopy) { m_tPlayerStat.bCopy = bCopy; }
+	_bool			Get_Copy() { return m_tPlayerStat.bCopy; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

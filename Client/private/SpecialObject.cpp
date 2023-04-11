@@ -343,7 +343,7 @@ _bool CSpecialObject::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE
 
 					// 플레이어일 경우 타격 이펙트 생성하도록
 					pTarget->TakeDamage(tParam);
-					pTarget->Set_CollisionDuplicate(true);
+					pTarget->Set_CollisionDuplicate(true, ECOPYCOLTYPE::COPYCOL_MAIN);
 
 					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
 

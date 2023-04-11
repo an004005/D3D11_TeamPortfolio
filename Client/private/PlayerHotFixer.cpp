@@ -91,6 +91,15 @@ void CPlayerHotFixer::Tick()
 		ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
 		ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
 
+		if (ImGui::Button("Copy_On"))
+		{
+			CPlayerInfoManager::GetInstance()->Set_Copy(true);
+		}
+		if (ImGui::Button("Copy_Off"))
+		{
+			CPlayerInfoManager::GetInstance()->Set_Copy(false);
+		}
+
 		if (m_bShakeSmall)
 		{
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.01f);

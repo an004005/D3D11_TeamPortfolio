@@ -42,7 +42,7 @@ HRESULT CWeapon_Player::Initialize(void* pArg)
 	{
 		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
-			pTarget->Set_CollisionDuplicate(false);
+			pTarget->Set_CollisionDuplicate(false, m_eColtype);
 		}
 	});
 
@@ -61,6 +61,8 @@ void CWeapon_Player::BeginTick()
 
 void CWeapon_Player::Tick(_double TimeDelta)
 {
+	Assert(m_eColtype != ECOPYCOLTYPE::COPYCOL_END);	// 복제충돌타입 반드시 정의
+
 	m_fAdaptLength = -0.7f;
 
 	__super::Tick(TimeDelta);
@@ -134,6 +136,14 @@ HRESULT CWeapon_Player::Render()
 		return E_FAIL;
 
 	m_pModel->Render(m_pTransformCom);
+
+	if (CPlayerInfoManager::GetInstance()->Get_Copy())
+	{
+		_float4 vRight = CPlayerInfoManager::GetInstance()->Get_PlayerWorldMatrix().r[0];
+		vRight.Normalize();
+
+		//_float4 vLeft = CPla
+	}
 
 	return S_OK;
 }

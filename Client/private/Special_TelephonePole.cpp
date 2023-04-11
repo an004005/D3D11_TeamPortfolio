@@ -44,7 +44,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		// Capsule Collision Check¸¦ À§ÇÔ
 		if (auto pTarget = dynamic_cast<CEnemy*>(pGameObject))
 		{
-			pTarget->Set_CollisionDuplicate(false);
+			pTarget->Set_CollisionDuplicate(false, ECOPYCOLTYPE::COPYCOL_MAIN);
 		}
 	});
 

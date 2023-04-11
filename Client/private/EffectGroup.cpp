@@ -551,6 +551,58 @@ void CEffectGroup::Start_AttachPosition_Scale(CGameObject* pOwner, _float4 vPosi
 
 }
 
+void CEffectGroup::Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bRemoveScale = false;
+
+	if (m_bUpdate == false)
+	{
+		_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+		
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
+void CEffectGroup::Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot, _bool trueisUpdate)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_BoneName = BoneName;
+	m_bUsePivot = usepivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = false;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+		SocketMatrix.r[3] += vVector;
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_Timeline.PlayFromStart();
+}
+
 void CEffectGroup::Call_Event()
 {
 	m_Timeline.SetEventFunction([this](const string& eventName)

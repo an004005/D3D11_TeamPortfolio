@@ -46,6 +46,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iDefense = 15;
 	m_tPlayerStat.iBP = 50;
 	m_tPlayerStat.iCoin = 5000;
+
+	m_tPlayerStat.bCopy = true;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
