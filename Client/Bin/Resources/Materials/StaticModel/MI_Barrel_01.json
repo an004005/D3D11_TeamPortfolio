@@ -14,7 +14,7 @@
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Barrel_01_D.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Barrel_01_N.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Dummy_RMA.dds",
+			"",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail_N.dds"
 		],
 		"Pass": 4,

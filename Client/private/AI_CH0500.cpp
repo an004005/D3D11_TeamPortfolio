@@ -266,16 +266,16 @@ void CAI_CH0500::Imgui_RenderProperty()
 			m_pModel->Get_AnimList()[szAnimName]->Imgui_RenderProperty();
 	}
 
-	//if (ImGui::CollapsingHeader("Weapons"))
-	//{
-	//	ImGui::Indent(20.f);
-	//	if (m_vecWeapon.empty() == false)
-	//	{
-	//		m_vecWeapon.front()->Imgui_RenderProperty();
-	//		m_vecWeapon.front()->Imgui_RenderComponentProperties();
-	//	}
-	//	ImGui::Unindent(20.f);
-	//}
+	if (ImGui::CollapsingHeader("Weapons"))
+	{
+		ImGui::Indent(20.f);
+		if (m_vecWeapon.empty() == false)
+		{
+			m_vecWeapon.front()->Imgui_RenderProperty();
+			m_vecWeapon.front()->Imgui_RenderComponentProperties();
+		}
+		ImGui::Unindent(20.f);
+	}
 }
 
 _float4x4 CAI_CH0500::GetBoneMatrix(const string& strBoneName, _bool bPivotapply)
