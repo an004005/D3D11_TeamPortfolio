@@ -22,10 +22,10 @@
 			0
 		],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_COL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_NML.dds",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Body_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Body_NML.png",
 			"",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Body_CTL.dds"
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Body_CTL.png"
 		]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

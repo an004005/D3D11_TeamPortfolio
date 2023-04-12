@@ -1,20 +1,20 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"Active": true,
+	"AlphaBlend": false,
 	"ShaderParams": {
-		"Float4s": [],
-		"Floats": [],
 		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/RD_T_BG_TST_T02_FAR_buildings_00_D.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_ef_scl_noi_050.dds",
+			"../Bin/Resources/Texture/VFX/T_ef_scl_noi_050.png",
 			""
 		],
-		"Pass": 1,
-		"Ints": []
+		"Float4s": []
 	},
-	"AlphaBlend": false,
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"InstancingPass": 8
 }

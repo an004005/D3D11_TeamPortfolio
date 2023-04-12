@@ -1,28 +1,25 @@
 {
-	"ShaderParams": {
-		"Floats": [
-			0.0
-		],
-		"Float2s": [],
-		"Pass": 7,
-		"Float4x4s": [],
-		"Float4s": [
-			[
-				0.0,
-				0.0,
-				0.0,
-				0.0
-			]
-		],
-		"Ints": [
-			0,
-			0
-		],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_pr_HS_winparts_a_ALB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_pr_HS_winparts_a_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_pr_HS_winparts_a_RMA.dds"
-		]
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [0.0],
+        "Ints": [
+            0, 0
+        ],
+        "Pass": 7,
+        "Textures": [
+            "../Bin/Resources/Model/AnimModel/Kinetic/IronBars/Texture/T_pr_HS_winparts_a_ALB.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Kinetic/IronBars/Texture/T_pr_HS_winparts_a_NML.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Kinetic/IronBars/Texture/T_pr_HS_winparts_a_RMA.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
 }

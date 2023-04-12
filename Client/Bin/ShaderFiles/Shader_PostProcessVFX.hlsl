@@ -477,8 +477,8 @@ PS_OUT PS_MAIN_Teleport_10(PS_IN In)
 
 	if (vFlags.z == SHADER_TOON_GRAY_INGNORE && alpha > 0.f)
 	{
-		float3 colorNoise = g_tex_0.Sample(LinearSampler, In.vTexUV * 50.f).rgb;
-		Out.vColor.rgb *= colorNoise;
+		float3 colorNoise = saturate(g_tex_0.Sample(LinearSampler, In.vTexUV * 50.f).rgb);
+		Out.vColor.rgb = colorNoise;
 	}
 
 	return Out;

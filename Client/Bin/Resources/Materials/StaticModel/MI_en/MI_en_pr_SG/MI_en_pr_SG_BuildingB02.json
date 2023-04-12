@@ -1,16 +1,16 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingB_ALB_0.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingB_NML_0.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingB_RMA_0.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
-	}
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

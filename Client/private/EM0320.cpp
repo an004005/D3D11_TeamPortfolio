@@ -562,9 +562,8 @@ void CEM0320::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 _float4 CEM0320::GetKineticTargetPos()
 {
-	_float3 vTemp = m_pWeak->GetPxWorldMatrix().Translation();
-
-	return _float4(vTemp.x, vTemp.y + 0.5f, vTemp.z, 1.f);
+	_matrix WeakSocket = m_pModelCom->GetBoneMatrix("Water") * m_pTransformCom->Get_WorldMatrix();
+	return WeakSocket.r[3];
 }
 
 _bool CEM0320::IsPlayingSocket() const

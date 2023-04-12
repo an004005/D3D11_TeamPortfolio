@@ -21,10 +21,10 @@
 			0
 		],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_COL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_AMB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hair_CTL.dds"
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hair_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hair_NML.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hair_AMB.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hair_CTL.png"
 		]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

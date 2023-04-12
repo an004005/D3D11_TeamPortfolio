@@ -22,20 +22,25 @@ def moveTexture(path, filename):
             absPath = absPath.replace("\u0000", "")
             absPath = absPath.replace("\\","/")
 
+            if not os.path.exists(absPath):
+                print(absPath)
 
-            fileNameDDS = str(os.path.basename(absPath)).split('.')[0] + ".dds"
-            outputPath = targetDir + fileNameDDS
-            command = "nvtt_export.exe -o " + outputPath +  " -f 18 " + absPath
-            subprocess.call(command, shell=True)
+            # fileNameDDS = str(os.path.basename(absPath)).split('.')[0] + ".dds"
+            # outputPath = targetDir + fileNameDDS
+            # command = "nvtt_export.exe -o " + outputPath +  " -f 18 " + absPath
+            # subprocess.call(command, shell=True)
+            # outputPath = targetDir + str(os.path.basename(absPath))
+            # print(absPath)
+            # print(outputPath)
+            # shutil.copy(absPath, outputPath)
 
-            print(command)
+            # fileNameDDS = str(os.path.basename(absPath)).split('.')[0] + ".dds"
+            # outputPath = targetDir + fileNameDDS
+            # newTexturePath.append(outputPath)
 
-            newTexturePath.append(outputPath)
-
-        json_data['ShaderParams']['Textures'] = newTexturePath
-    with open(path + '/' + filename, 'w', encoding='utf-8') as make_file:
-        json.dump(json_data, make_file, indent="\t")
-
+    #     json_data['ShaderParams']['Textures'] = newTexturePath
+    # with open(path + '/' + filename, 'w', encoding='utf-8') as make_file:
+    #     json.dump(json_data, make_file, indent="\t")
 
 
 # for (path, dir, files) in os.walk("../Bin/Resources/Materials/AnimationModel/"):
