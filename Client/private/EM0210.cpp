@@ -899,6 +899,13 @@ _bool CEM0210::CanMove4BC(_float fMinDist)
 
 }
 
+//void CEM0210::Play_HitAdditiveAnim(_double TimeDelta)
+//{
+//	//AS_em0200_429_AL_damage_down_add
+//	m_pModelCom->Set_AdditiveAnim("AS_em0200_429_AL_damage_down_add");
+//	m_pModelCom->Play_Animation_Additive(TimeDelta);
+//}
+
 void CEM0210::Swing_SweepSphere()
 {
 	physx::PxSweepHit hitBuffer[3];

@@ -14,6 +14,8 @@
 #include "Imgui_AnimModifier.h"
 #include "PhysX_Manager.h"
 #include "Map_KineticBatchPreset.h"
+#include "GameManager.h"
+#include "InvisibleWall.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -22,9 +24,10 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	// m_bPlayerSpawn = false;
+	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
+
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_FinalBossStage.json";
 
@@ -39,7 +42,7 @@ HRESULT CLevel_FinalStage::Initialize()
 	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 
-	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	// CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	// Json PreviewData;
 	// {
@@ -65,6 +68,22 @@ HRESULT CLevel_FinalStage::Initialize()
 	//	CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
 	//});
 
+	/////////////////////////////////
+	// 투명 벽 생성 코드 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/InvisibleWall_NotVisible.json");
+	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapDecorate")->GetGameObjects())
+	{
+		if (iter->GetPrototypeTag() == L"Prototype_InvisibleWall")
+		{
+			CInvisibleWall* pInvisibleWall = dynamic_cast<CInvisibleWall*>(iter);
+			//Safe_AddRef(pInvisibleWall);
+			pInvisibleWall->Activate(true);
+			//Safe_Release(pInvisibleWall);
+		}		
+	}
+	/////////////////////////////////
+
+	// 염력 물체 프레셋 (재사용 되어지는)
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
 	// FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
