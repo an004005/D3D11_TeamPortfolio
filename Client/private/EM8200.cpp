@@ -331,33 +331,40 @@ void CEM8200::SetUpAnimationEvent()
 	
 	m_pModelCom->Add_EventCaller("Air_Elec_TP_Start", [this]
 		{
-			static _float2 RandomFloat2;
-			_uint iRand = rand() % 4;
-			if (iRand == 0)
+
+			string CmpString = m_pFSM->GetCurStateName();
+
+			if (CmpString == "Air_Elec_Atk_Charge_Start_Before_TP")
 			{
-				RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
-				RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
-			}
-			else if (iRand == 1)
-			{
-				RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
-				RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
-			}
-			else if (iRand == 2)
-			{
-				RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
-				RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
-			}
-			else if (iRand == 3)
-			{
-				RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
-				RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+				static _float2 RandomFloat2;
+				_uint iRand = rand() % 4;
+				if (iRand == 0)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+				}
+				else if (iRand == 1)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+				}
+				else if (iRand == 2)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(3.f, 5.5f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(-5.5f, -3.f);
+				}
+				else if (iRand == 3)
+				{
+					RandomFloat2.x = CGameUtils::GetRandFloat(-5.5f, -3.f);
+					RandomFloat2.y = CGameUtils::GetRandFloat(3.f, 5.5f);
+				}
+
+				_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(RandomFloat2.x, 3.f, RandomFloat2.y, 0.f);
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, TargetPos);
+
+				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 			}
 
-			_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(RandomFloat2.x, 3.f, RandomFloat2.y, 0.f);
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, TargetPos);
-
-			m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 		});
 
 
@@ -376,6 +383,7 @@ void CEM8200::SetUpAnimationEvent()
 		{
 			// 카운터 발찍을 때
 			m_bMeleeCollStart = true;
+		if(CPlayerInfoManager::GetInstance()->Get_Air() == false)
 			Melee_Overlap("Reference", 50, 10.f, EAttackType::ATK_TO_AIR);
 		    m_bMeleeCollStart = false;
 		});
@@ -383,7 +391,6 @@ void CEM8200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
 		{
 			// 번쩍 이펙트
-			// 플레이어 사스 풀기 (게이지 0만들기)
 			CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
 		});
 }
@@ -674,8 +681,6 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				return m_eInput == CController::NUM_2;
 			})
 
-	
-
 	.AddTransition("Idle to Air_Elec_Atk_Charge_Start_Before_TP", "Air_Elec_Atk_Charge_Start_Before_TP")
 		.Predicator([this]
 			{
@@ -767,12 +772,7 @@ void CEM8200::AddState_Teleport(CFSMComponentBuilder& Builder)
 			})
 		.Tick([this](_double TimeDelta)
 			{
-
 				SocketLocalMove_Range(m_pASM, m_fTP_Range);
-
-				// if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.8f, 0.1f) && m_SetTPOnce.IsNotDo())
-				// {
-				// }
 			})
 
 	.OnExit([this]
@@ -1312,7 +1312,6 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 		{
 			// 순간이동 잡아주기
 				SocketLocalMove_Range(m_pASM, m_fTP_Range);
-
 		})
 		.OnExit([this]
 		{
@@ -1905,7 +1904,6 @@ void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad,
 	
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-
 		HitTargets(overlapOut, iDamage * 0.6f, eAtkType);
 	}
 }
