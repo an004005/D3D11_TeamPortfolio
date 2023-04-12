@@ -873,13 +873,17 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_fJustDodgeAble = 1.f;
 	}
+	else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField && CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY))
+	{
+		IM_LOG("BrainField Hardbody");
+	}
 	else if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
 		// 경질?�는 ?�격 ???��?지�?무시?�고 게이지�?10 깎는??
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash || m_bBrainField_Prod)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -1897,6 +1901,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
+			m_bBrainField_Prod = false;
+
 			if (m_bBrainField)
 			{
 				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
@@ -1914,6 +1920,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -1999,6 +2007,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_FINISH_BF")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -3715,7 +3725,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
-			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool 
+			{ 
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_AIR)) return false;
+				return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject());
+			})
 			.Priority(0)
 
 #pragma region ?�래??콤보 1
@@ -4286,7 +4300,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_SLASH04", "KINETIC_COMBO_SLASH04")
-			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Predicator([&]()->_bool 
+			{
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_4)) return false;
+				return m_bLeftClick;
+			})
 			.Priority(0)
 
 

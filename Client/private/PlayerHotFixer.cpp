@@ -210,21 +210,18 @@ void CPlayerHotFixer::Tick()
 		if (ImGui::Button("Heal"))
 			CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_INCREASE, 100);
 
-		if (ImGui::CollapsingHeader("Sheath"))
-		{
-			ImGui::Indent(20.f);
-			if (m_pPlayer->m_vecSheath.empty() == false)
-			{
-				m_pPlayer->m_vecSheath.front()->Imgui_RenderProperty();
-				m_pPlayer->m_vecSheath.front()->Imgui_RenderComponentProperties();
-			}
-			ImGui::Unindent(20.f);
-		}
-
 		if (ImGui::Button("Arrange_Cam"))
 		{
 			m_pPlayer->m_pCamSpot->Arrange_Cam();
 		}
+
+		ImGui::Checkbox("BrainMap_Combo4", &m_bBrainMap_Combo4);
+		ImGui::Checkbox("BrainMap_Air", &m_bBrainMap_Air);
+		ImGui::Checkbox("BrainMap_BF", &m_bBrainMap_BF);
+		CPlayerInfoManager::GetInstance()->Set_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_4, m_bBrainMap_Combo4);
+		CPlayerInfoManager::GetInstance()->Set_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_AIR, m_bBrainMap_Air);
+		CPlayerInfoManager::GetInstance()->Set_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY, m_bBrainMap_BF);
+
 
 		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
 

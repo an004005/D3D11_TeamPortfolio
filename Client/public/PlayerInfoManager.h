@@ -70,6 +70,8 @@ typedef struct tagPlayerStatus
 
 	_float m_fBaseAttackDamage;
 
+	_bool bBrainMap[3] = { false, };
+
 	ESASType m_eAttack_SAS_Type;
 
 	array<SAS_GAGE, SAS_CNT> Sasese{};
@@ -115,6 +117,7 @@ typedef struct tagDamageDesc
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
 enum SASMEET { HANABI, TSUGUMI, GEMMA, LUCA, SEEDEN, ARASHI, KYOTO, SASMEMBER_END };
+enum EBRAINMAP { BRAINMAP_KINETIC_COMBO_4, BRAINMAP_KINETIC_COMBO_AIR, BRAINMAP_BRAINFIELD_HARDBODY, BRAINMAP_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -200,6 +203,9 @@ public:	// Set
 
 	void			Set_Air(_bool bAir) { m_tPlayerStat.bAir = bAir; }
 	_bool			Get_Air() { return m_tPlayerStat.bAir; }
+
+	void			Set_BrainMap(EBRAINMAP eType, _bool bAble) { m_tPlayerStat.bBrainMap[eType] = bAble; }
+	_bool			Get_BrainMap(EBRAINMAP eType) { return m_tPlayerStat.bBrainMap[eType]; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

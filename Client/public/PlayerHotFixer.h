@@ -33,6 +33,10 @@ private:
 
 	_bool	m_bAdditiveOn = false;
 
+	_bool	m_bBrainMap_Combo4 = false;
+	_bool	m_bBrainMap_Air = false;
+	_bool	m_bBrainMap_BF = false;
+
 private:
 	CPlayer* m_pPlayer = nullptr;
 
