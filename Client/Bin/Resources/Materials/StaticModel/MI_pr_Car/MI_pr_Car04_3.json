@@ -1,24 +1,24 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
 		"Floats": [
 			0.0,
 			0.0
 		],
-		"Float4s": [],
-		"Ints": [
-			0
-		],
-		"Float4x4s": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car04_ALB_3.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car04_NML_1.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car04_RMA_1.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car04_EMI_0.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"InstancingPass": 3
 }

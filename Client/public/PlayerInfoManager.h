@@ -152,6 +152,12 @@ public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
 
+	void			Set_HanabiHP(_uint iHP) { m_tHanabiStat.iHP = iHP; }
+	void			Change_HanabiHP(CHANGETYPE eType, _uint ChangeHP);
+
+	void			Set_TsugumiHP(_uint iHP) { m_tTsugumiStat.iHP = iHP; }
+	void			Change_TsugumiHP(CHANGETYPE eType, _uint ChangeHP);
+
 	void			Set_PlayerKineticEnergy(_uint iEnergy) { m_tPlayerStat.m_iKineticEnergy = iEnergy; }
 	void			Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy);
 

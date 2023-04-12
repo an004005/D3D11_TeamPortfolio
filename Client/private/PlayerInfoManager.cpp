@@ -245,6 +245,42 @@ void CPlayerInfoManager::Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP)
 	if (m_tPlayerStat.m_iHP < 0)						m_tPlayerStat.m_iHP = 0;
 }
 
+void CPlayerInfoManager::Change_HanabiHP(CHANGETYPE eType, _uint ChangeHP)
+{
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tHanabiStat.iHP += ChangeHP;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tHanabiStat.iHP < ChangeHP)
+			ChangeHP = m_tHanabiStat.iHP;
+
+		m_tHanabiStat.iHP -= ChangeHP;
+	}
+
+	if (m_tHanabiStat.iHP > m_tHanabiStat.iMaxHP)	m_tHanabiStat.iHP = m_tHanabiStat.iMaxHP;
+	if (m_tHanabiStat.iHP < 0)						m_tHanabiStat.iHP = 0;
+}
+
+void CPlayerInfoManager::Change_TsugumiHP(CHANGETYPE eType, _uint ChangeHP)
+{
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tTsugumiStat.iHP += ChangeHP;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tTsugumiStat.iHP < ChangeHP)
+			ChangeHP = m_tTsugumiStat.iHP;
+
+		m_tTsugumiStat.iHP -= ChangeHP;
+	}
+
+	if (m_tTsugumiStat.iHP > m_tTsugumiStat.iMaxHP)	m_tTsugumiStat.iHP = m_tTsugumiStat.iMaxHP;
+	if (m_tTsugumiStat.iHP < 0)						m_tTsugumiStat.iHP = 0;
+}
+
 void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy)
 {
 	if (CHANGE_INCREASE == eType) 

@@ -147,7 +147,7 @@ void CCamSpot::AfterPhysX()
 
 	if (m_fLerpTime < 1.f)
 	{
-		m_fLerpTime += (_float)g_fTimeDelta * 2.f;
+		m_fLerpTime += (_float)g_fTimeDelta * 4.f;
 
 		if (MOD_SYNC == m_eCamMod)
 		{

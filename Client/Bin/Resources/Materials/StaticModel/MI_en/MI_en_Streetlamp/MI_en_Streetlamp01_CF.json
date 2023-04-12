@@ -1,20 +1,20 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
 		"Floats": [
 			0.7
 		],
-		"Float4s": [],
-		"Ints": [],
-		"Float4x4s": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo050_en001_streetlight01.dds",
 			"",
 			""
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"InstancingPass": 1
 }

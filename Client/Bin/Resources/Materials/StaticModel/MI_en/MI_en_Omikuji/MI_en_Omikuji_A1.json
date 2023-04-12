@@ -1,10 +1,10 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Omikuji_A1_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Omikuji_A1_NML.dds",
@@ -12,7 +12,7 @@
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Omikuji_A1_RMA.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Omikuji_A1_EMI.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
-	}
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

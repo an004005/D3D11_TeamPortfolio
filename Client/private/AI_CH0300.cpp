@@ -169,11 +169,14 @@ void CAI_CH0300::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-	//CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+	CPlayerInfoManager::GetInstance()->Change_HanabiHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 	{
-		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		if(CGameInstance::GetInstance()->Check_ObjectAlive(tDamageParams.pCauser))
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		else if (tDamageParams.vHitFrom.w != 0.f)
+			m_pTransformCom->LookAt_NonY(tDamageParams.vHitFrom);
 	}
 
 	Collision_End();

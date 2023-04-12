@@ -1,17 +1,7 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Floats": [
-			0.0,
-			0.0,
-			0.0,
-			0.0,
-			0.0
-		],
-		"Float4s": [
+		"Float2s": [
 			[
-				0.0,
-				0.0,
 				0.0,
 				0.0
 			]
@@ -22,14 +12,24 @@
 			0,
 			0
 		],
-		"Float4x4s": [],
-		"Textures": [],
 		"Pass": 0,
-		"Float2s": [
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0
+		],
+		"Textures": [],
+		"Float4s": [
 			[
+				0.0,
+				0.0,
 				0.0,
 				0.0
 			]
 		]
-	}
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing"
 }

@@ -12,7 +12,7 @@ CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_Tutorial::Initialize()
 {
-	// m_bPlayerSpawn = false;
+	 m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Tutorial";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Tutorial_ShadowCam.json";
