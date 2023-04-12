@@ -37,6 +37,9 @@ HRESULT CCanvas_ItemMove::Initialize(void* pArg)
 	m_vMaxDestination = { -7.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
+	//m_bInput = true;
+	//Key_Input();
+
 	return S_OK;
 }
 
@@ -53,21 +56,6 @@ void CCanvas_ItemMove::Tick(_double TimeDelta)
 	CCanvas::UIHit(TimeDelta);
 
 	Key_Input();
-}
-
-void CCanvas_ItemMove::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-}
-
-void CCanvas_ItemMove::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_ItemMove::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
 }
 
 void CCanvas_ItemMove::Key_Input()

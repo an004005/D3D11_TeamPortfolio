@@ -12,6 +12,7 @@
 #include "Material.h"
 
 #include "Item_Manager.h"
+#include "GameManager.h"
 
 CConsumption_Item::CConsumption_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
@@ -81,10 +82,22 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
     if (m_bOverlapCheck && !m_bGetItem)
     {      
         // Item_Manager에게 정보 전달
-        CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);                
+        CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);     
         m_pModel->SetPlayAnimation("AS_co0700_002_get");
         m_bGetItem = true;      
         // ★ 애니메이션 교체(Get) -> 애니메이션에 Add_EventCaller로 삭제 적용
+
+        // 획득한 아이템이 10개 이상 이라면 오른쪽에 획득 UI 를 띄우지 않는다.
+        vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
+        auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
+            return pair.first == m_strName;
+            });
+
+        if (iter != vecItemInfo.end())
+        {
+            if(11 >= (*iter).second.iCount + 1)
+                CGameManager::GetInstance()->Set_AddlItem(m_strName);
+        }
     }
 
     if (m_pModel->GetPlayAnimation() == m_pModel->Find_Animation("AS_co0700_002_get") && 

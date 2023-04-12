@@ -13,6 +13,7 @@
 #include "Canvas_Alarm.h"
 #include "Canvas_BossHpMove.h"
 #include "PlayerInfoManager.h"
+#include "Item_Manager.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -140,6 +141,17 @@ void CCanvas_MouseCousor::Imgui_RenderProperty()
 	{
 		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
 	}
+
+	if (ImGui::Button("Add Etc Item"))
+	{
+		CItem_Manager::GetInstance()->Set_ItemCount(L"복제의 김기범", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"발화랑 투시 남았는데.. 의 옥수현", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"초고속의 전인복", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"방전의 정지훈", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"순간이동의 박종욱", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"염력의 안중환", 1);
+	}
+	
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
