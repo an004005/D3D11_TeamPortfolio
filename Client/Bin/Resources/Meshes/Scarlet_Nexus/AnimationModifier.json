@@ -1145,7 +1145,7 @@
             },
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1196,7 +1196,7 @@
             },
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1223,7 +1223,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1290,7 +1290,7 @@
             },
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1329,7 +1329,7 @@
             },
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1563,7 +1563,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1891,7 +1891,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1948,7 +1948,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -1997,7 +1997,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -2072,7 +2072,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -2125,7 +2125,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -2210,7 +2210,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -2271,7 +2271,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",
@@ -2694,7 +2694,7 @@
         "vecEvent": [
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Default_Attack_Dash_Hold_0",
@@ -2765,7 +2765,7 @@
             },
             {
                 "EventName": "Trail_On",
-                "EventTime": 0.0
+                "EventTime": 1.0
             },
             {
                 "EventName": "Trail_Off",

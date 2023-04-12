@@ -178,7 +178,7 @@ void CSpecial_IronBars_MultiBars::Shooting(_float4 vTargetPos)
 		vDir = XMVector3Normalize(vTargetPos - vMyPos);
 	}
 
-	vDir *= 50.f;
+	vDir *= 40.f;
 
 	m_pCollider->AddVelocity(vDir);
 }

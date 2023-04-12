@@ -563,24 +563,22 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
 
-
-
 	return S_OK;
 }
 
 HRESULT CLevel_PlayerTest::Ready_Layer_AI(const _tchar* pLayerTag)
 {
-	//Json PreviewData;
-	//PreviewData["Model"] = "Model_AI_CH0300";
+	Json PreviewData;
+	PreviewData["Model"] = "Model_AI_CH0300";
 
-	//CGameObject* pAI_CH0300 = nullptr;
-	//NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+	CGameObject* pAI_CH0300 = nullptr;
+	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
 
-	//Json Tsugumi;
-	//Tsugumi["Model"] = "Model_AI_CH0500";
+	Json Tsugumi;
+	Tsugumi["Model"] = "Model_AI_CH0500";
 
-	//CGameObject* pAI_CH0500 = nullptr;
-	//NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
+	CGameObject* pAI_CH0500 = nullptr;
+	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
 
 	return S_OK;
 }

@@ -305,10 +305,10 @@ void CPlayer::Tick(_double TimeDelta)
 
 	Production_Tick(TimeDelta);
 
-	if (m_bOnBattle)
+	if (!m_DetectList.empty())
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
-		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
+		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
 	}
 	else
 	{
@@ -885,6 +885,14 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 	{
 		m_DamageDesc.m_iDamage = tDamageParams.iDamage;
 		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+	}
+	else if (	m_pHitStateMachine->GetCurStateName() == "AIRBORNE" ||
+				m_pHitStateMachine->GetCurStateName() == "KNUCKBACK" ||
+				m_pHitStateMachine->GetCurStateName() == "FALLDOWN" ||
+				m_pHitStateMachine->GetCurStateName() == "FALL" ||
+				m_pHitStateMachine->GetCurStateName() == "BREAKFALL")
+	{
+		return;
 	}
 	else
 	{
@@ -2251,9 +2259,34 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	m_pModel->Add_EventCaller("Default_Attack_Dash_1_02", [&]() {Event_Effect("Default_Attack_Dash_1_02"); });
 	m_pModel->Add_EventCaller("Default_Attack_Dash_2", [&]() {Event_Effect("Default_Attack_Dash_2"); });
 	m_pModel->Add_EventCaller("Default_Attack_Dash_3_End", [&]() {Event_Effect("Default_Attack_Dash_3_End"); });
-	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_0", [&]() {Event_Effect("Default_Attack_Dash_Hold_0"); });
-	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_1", [&]() {Event_Effect("Default_Attack_Dash_Hold_1"); });
-	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_2", [&]() {Event_Effect("Default_Attack_Dash_Hold_2"); });
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_0", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Dash_Hold_0", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+		//Event_Effect("Default_Attack_Dash_Hold_0");
+	});
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_1", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Dash_Hold_1", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+		//Event_Effect("Default_Attack_Dash_Hold_1"); 
+	});
+	m_pModel->Add_EventCaller("Default_Attack_Dash_Hold_2", [&]() 
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_NOT)
+		{
+			_float4x4 EffectPivotMatrix = XMMatrixTranslation(0.f, 0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_DEFAULT_ATTACK, L"Default_Attack_Dash_Hold_2", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
+		}
+
+		//Event_Effect("Default_Attack_Dash_Hold_2"); 
+	});
 	m_pModel->Add_EventCaller("Default_Attack_Justdodge_0", [&]() {Event_Effect("Default_Attack_Justdodge_0"); });
 	m_pModel->Add_EventCaller("Default_Attack_Justdodge_1", [&]() {Event_Effect("Default_Attack_Justdodge_1"); });
 	m_pModel->Add_EventCaller("Default_Attack_Justdodge_2", [&]() {Event_Effect("Default_Attack_Justdodge_2"); });
@@ -2478,17 +2511,20 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 	m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001", [&]() 
 	{
-		_float4x4 EffectPivotMatrix = XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixTranslation(0.f, -0.5f, 0.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_AttacK_Air_dash_0_001", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
-
-		if (CPlayerInfoManager::GetInstance()->Get_Copy())
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type == ESASType::SAS_FIRE)
 		{
-			_float4 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
-			vRight.Normalize();
-			_float4 vLeft = vRight * -1.f;
+			_float4x4 EffectPivotMatrix = XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixTranslation(0.f, -0.5f, 0.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_AttacK_Air_dash_0_001", LAYER_PLAYEREFFECT)->Start_AttachPivot(this, EffectPivotMatrix, "Eff01", true);
 
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot_Vector(this, vLeft, EffectPivotMatrix, "Eff01", true);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot_Vector(this, vRight, EffectPivotMatrix, "Eff01", true);
+			if (CPlayerInfoManager::GetInstance()->Get_Copy())
+			{
+				_float4 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
+				vRight.Normalize();
+				_float4 vLeft = vRight * -1.f;
+
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot_Vector(this, vLeft, EffectPivotMatrix, "Eff01", true);
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_FIRE_ATTACK, L"Fire_Attack_Air_dash_0", LAYER_PLAYEREFFECT)->Start_AttachPivot_Vector(this, vRight, EffectPivotMatrix, "Eff01", true);
+			}
 		}
 	});
 	//m_pModel->Add_EventCaller("Fire_AttacK_Air_dash_0_001_Particle", [&]() 
@@ -3052,7 +3088,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 	m_FallDown_Back.push_back(m_pModel->Find_Animation("AS_ch0100_435_AL_wakeup_F"));
 
 	m_BreakFall_Front.push_back(m_pModel->Find_Animation("AS_ch0100_438_AL_breakfall_F"));
-	m_BreakFall_Front.push_back(m_pModel->Find_Animation("AS_ch0100_141_AL_jump_fall"));
 
 	m_BreakFall_Landing.push_back(m_pModel->Find_Animation("AS_ch0100_141_AL_jump_landing"));
 
@@ -3071,6 +3106,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.Tick([&](double fTimeDelta) {m_bHit = false; })
 			.OnExit([&]() 
 			{ 
+				m_pCamSpot->Reset_CamMod();
 				m_pASM->SetCurState("IDLE");
 				m_pASM->SetCurState_BrainField("IDLE");
 				m_bSeperateAnim = false; m_bHit = true;
@@ -3098,8 +3134,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f);
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Knuckback);
-				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
-				m_bHit = false;
 			})
 			.Tick([&](double TimeDelta) 
 			{ 
@@ -3118,8 +3152,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); 
 				Jump();
-				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
-				m_bHit = false;
 			})
 			.Tick([&](double TimeDelta) 
 			{ 
@@ -3379,18 +3411,22 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("BREAKFALL")
 			.OnStart([&]()
 			{
+				m_bAir = true;
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_BreakFall_Front);
-				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
-				m_bHit = false;
-				Jump();
+				m_fYSpeed = 5.f;
 			})
 				.AddTransition("BREAKFALL to BREAKFALL_LANDING", "BREAKFALL_LANDING")
-				.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Hit_AnimSocket", 0.0f) && m_bOnFloor; })
+				.Predicator([&]()->_bool {return m_pASM->isSocketPassby("Hit_AnimSocket", 0.2f) && m_bOnFloor; })
 				.Priority(0)
+
+				.AddTransition("BREAKFALL to NON_HIT", "NON_HIT")
+				.Predicator([&]()->_bool {return m_pASM->isSocketEmpty("Hit_AnimSocket"); })
+				.Priority(1)
 
 		.AddState("BREAKFALL_LANDING")
 			.OnStart([&]()
 			{
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 				m_bHit = false;
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_BreakFall_Landing);
 			})
@@ -7270,7 +7306,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			.Predicator([&]()->_bool 
 			{
 				_bool bAddAble = static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_AddAble();
-				return bAddAble && (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed()) && (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.f));
+				return bAddAble && (false == static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_isDecomposed()) && (m_pASM->isSocketPassby("Kinetic_Special_AnimSocket", 0.05f));
 			})
 			.Priority(0)
 
@@ -9279,7 +9315,7 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 	}
 	else if (szEffectName == "Elec_Attack_Dash_Hold_0")
 	{
-		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.5f, 0.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
@@ -9294,7 +9330,7 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 	}
 	else if (szEffectName == "Elec_Attack_Dash_Hold_1")
 	{
-		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.5f, 0.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
@@ -9309,7 +9345,7 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 	}
 	else if (szEffectName == "Elec_Attack_Dash_Hold_2")
 	{
-		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.5f, 0.f);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, EffectName, LAYER_PLAYEREFFECT)->Start_AttachPivot(this, matEffect, "Eff01", true);
 
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
@@ -9324,7 +9360,7 @@ void CPlayer::Event_ElecEffect(string szEffectName)
 	}
 	else if (szEffectName == "Elec_Attack_Dash_Hold_2_Shoot")
 	{
-		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+		_matrix matEffect = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.f, 0.5f, 0.f);
 		_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ELEC_ATTACK, L"Elec_Attack_Dash_Hold_2", LAYER_PLAYEREFFECT)->Start_AttachPivotMove(this, matEffect, "Eff01", vLook, true);
 		ElecSweep();
@@ -10094,7 +10130,7 @@ void CPlayer::Event_Kinetic_Throw()
 		vDir = XMVector3Normalize(vDir);
 
 		_float3 vForce = { vDir.x, vDir.y, vDir.z };
-		vForce *= m_fThrowPower * g_fTimeDelta;
+		vForce *= m_fThrowPower;
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Add_Physical(vForce);
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetThrow();
 
@@ -10108,7 +10144,7 @@ void CPlayer::Event_Kinetic_Throw()
 
 		_float3 vForce = { XMVectorGetX(m_vCamLook), XMVectorGetY(m_vCamLook), XMVectorGetZ(m_vCamLook) };
 		vForce = XMVector3Normalize(vForce);
-		vForce *= m_fThrowPower * g_fTimeDelta;
+		vForce *= m_fThrowPower;
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Add_Physical(vForce);
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->SetThrow();
 

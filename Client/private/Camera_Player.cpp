@@ -102,6 +102,8 @@ void CCamera_Player::Imgui_RenderProperty()
 	{
 		SetMainCamera(this);
 	}
+
+	ImGui::SliderFloat("CamDistance", &m_fCamDistance, 1.f, 10.f);
 }
 
 void CCamera_Player::Sync_Target(_fvector TargetPos, _fvector TargetLook, _float CamHeight, _double TimeDelta)
@@ -112,7 +114,7 @@ void CCamera_Player::Sync_Target(_fvector TargetPos, _fvector TargetLook, _float
 
 	vLook = XMVector3Normalize(TargetLook) * -3.f;
 
-	_vector vSyncDir = (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * 4.f * m_fDistanceMagnification);
+	_vector vSyncDir = (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * m_fCamDistance * m_fDistanceMagnification);
 	_float fStdDistance = XMVectorGetX(XMVector3Length(vSyncDir));
 	_float fDistance = fStdDistance;
 
@@ -160,7 +162,7 @@ _vector CCamera_Player::Get_SyncPos(_fvector TargetPos, _fvector TargetLook, _fl
 
 	vLook = XMVector3Normalize(TargetLook) * -3.f;
 
-	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * 4.f * m_fDistanceMagnification);
+	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * m_fCamDistance * m_fDistanceMagnification);
 
 	return vCamPos;
 }
@@ -171,7 +173,7 @@ _vector CCamera_Player::Get_SyncLook(_fvector TargetPos, _fvector TargetLook, _f
 
 	vLook = XMVector3Normalize(TargetLook) * -3.f;
 
-	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * 4.f * m_fDistanceMagnification);
+	_vector vCamPos = TargetPos + (XMVector3Normalize(vLook + XMVectorSet(0.f, CamHeight + 3.f, 0.f, 0.f)) * m_fCamDistance * m_fDistanceMagnification);
 
 	return (TargetPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f)) - vCamPos;
 }
