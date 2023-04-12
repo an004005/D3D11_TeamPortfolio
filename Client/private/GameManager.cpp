@@ -47,10 +47,10 @@ HRESULT CGameManager::Initialize()
 	m_pCanvas_Acquisition = dynamic_cast<CCanvas_Acquisition*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Acquisition", &json));
 	assert(m_pCanvas_Acquisition != nullptr && "Failed to Clone : Canvas_Acquisition");
 
-	//// ¿ÞÂÊ¿¡ Á¶ÀßÁ¶Àß¶§ ¶ß´Â UI
-	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
-	//m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
-	//assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
+	// ¿ÞÂÊ¿¡ Á¶ÀßÁ¶Àß¶§ ¶ß´Â UI
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+	m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
+	assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
 
 	return S_OK;
 }
@@ -90,7 +90,12 @@ void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 
 }
 
-void CGameManager::FullItem(const wstring szItemName)
+void CGameManager::Set_AddlItem(const wstring szItemName)
+{
+	m_pCanvas_Acquisition->Set_AddItem(szItemName);
+}
+
+void CGameManager::Set_FullItem(const wstring szItemName)
 {
 	m_pCanvas_Acquisition->Set_FullItem(szItemName);
 }
@@ -106,7 +111,6 @@ void CGameManager::Quest_Tick()
 		json["QuestIndex"] = 0;
 		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
 		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
-		//m_pCanvas_Quest->Set_Quest(0);
 
 		if (LEVEL_UI == LEVEL_NOW) return;
 
