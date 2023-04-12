@@ -4480,6 +4480,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				// 림라?�트 커브 ?�성
 				Start_RimLight("Kinetic_Combo_01_RimLight");
 
+				if (CPlayerInfoManager::GetInstance()->Get_KineticObject())
+				{
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_ToAir(true);
+				}
+
 				m_fKineticCharge = 0.f;
 				m_fKineticCombo_Kinetic = 0.f;
 				m_pASM->InputAnimSocket("Kinetic_Combo_AnimSocket", m_KineticCombo_Pcon);

@@ -56,6 +56,7 @@ public:
 	_bool	Get_Hit() { return m_bHit; }
 
 	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
+	void	Set_ToAir(_bool bAir) { m_bToAir = bAir; }
 
 	_float4 GetPxPostion();
 
@@ -127,6 +128,8 @@ private:
 	_bool				m_bCameRange = { false };
 
 	_bool				m_bBossUse = false; 
+
+	_bool				m_bToAir = false;
 
 	_matrix				m_PreMatrix;
 
