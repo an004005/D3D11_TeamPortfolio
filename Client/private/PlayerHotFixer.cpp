@@ -231,6 +231,18 @@ void CPlayerHotFixer::Tick()
 
 		if (ImGui::Button("Heal"))
 			CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_INCREASE, 100);
+
+		if (ImGui::CollapsingHeader("Sheath"))
+		{
+			ImGui::Indent(20.f);
+			if (m_pPlayer->m_vecSheath.empty() == false)
+			{
+				m_pPlayer->m_vecSheath.front()->Imgui_RenderProperty();
+				m_pPlayer->m_vecSheath.front()->Imgui_RenderComponentProperties();
+			}
+			ImGui::Unindent(20.f);
+		}
+
 	}
 	ImGui::CollapsingHeader("~HotFixer");
 }
