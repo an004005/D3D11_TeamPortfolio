@@ -61,7 +61,10 @@ void CCamSpot::BeginTick()
 		}
 	}
 
+	_float4 vLookAt = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK);
+
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	m_pTransformCom->LookAt_NonY(vLookAt);
 
 	CPlayerInfoManager::GetInstance()->Set_CamSpot(this);
 }

@@ -29,6 +29,8 @@ HRESULT CItem_GaugeUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
+	m_bLight = true;
+
 	return S_OK;
 }
 

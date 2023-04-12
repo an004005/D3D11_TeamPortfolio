@@ -68,7 +68,7 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 	{
 		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) || 
 			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) ||
-			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
+			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::GEMMA))
 			return;
 
 		m_bMember0 = true;
@@ -104,18 +104,19 @@ void CCanvas_SASSkillMove::Tick(_double TimeDelta)
 		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA))
 		{
 			m_eSASType[ONE0] = ESASType::SAS_TELEPORT;
-			Set_IconTypeNotUsed(1, m_eSASType[FOUR0]);
+			Set_IconTypeNotUsed(1, m_eSASType[ONE0]);
 		}
 
 		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
 			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
-			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI))
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI) && 
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
 		{
 			m_bMember1 = true;
 
 			m_eSASType[ONE1] = ESASType::SAS_SUPERSPEED;
 			m_eSASType[TWO1] = ESASType::SAS_ELETRIC;
-
+			m_eSASType[THREE1] = ESASType::SAS_COPY;
 		}
 	}
 #pragma endregion
@@ -136,34 +137,19 @@ void CCanvas_SASSkillMove::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	if (ImGui::Button("Hanabi"))
+	if (ImGui::Button("Member0"))
 	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Tsugumi"))
-	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("GEMMA"))
-	{
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("LUCA"))
+	if (ImGui::Button("Membeer1"))
 	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("SEEDEN"))
-	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("ARASHI"))
-	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
 }
 
@@ -364,11 +350,19 @@ void CCanvas_SASSkillMove::UseSkill_Tick()
 		}
 
 		// 3
-		ESASType eSASType = m_eSASType[THREE1];
-		Set_IconTypeUse(3, eSASType);
+		if (true == m_pPlayer->Get_SASSkillInput(5))
+		{
+			ESASType eSASType = m_eSASType[THREE1];
+			Set_IconTypeUse(3, eSASType);
+		}
+		else
+		{
+			ESASType eSASType = m_eSASType[THREE1];
+			Set_IconTypeNotUsed(3, eSASType);
+		}
 
 		// 4
-		eSASType = m_eSASType[FOUR1];
+		ESASType eSASType = m_eSASType[FOUR1];
 		Set_IconTypeUse(4, eSASType);
 	}
 }
@@ -386,7 +380,6 @@ void CCanvas_SASSkillMove::InputIcon_Tick()
 		Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(true);
 		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(true);
 		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(true);
-
 	}
 	else
 	{
@@ -399,7 +392,6 @@ void CCanvas_SASSkillMove::InputIcon_Tick()
 		Find_ChildUI(L"SASSkill_IconNumber2")->SetVisible(false);
 		Find_ChildUI(L"SASSkill_IconNumber3")->SetVisible(false);
 		Find_ChildUI(L"SASSkill_IconNumber4")->SetVisible(false);
-
 	}
 }
 

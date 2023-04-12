@@ -41,11 +41,20 @@ public:
 		return m_bHitAir;
 	}
 
+	_uint Get_MonstaerDeadCount() {
+		return m_iMonstaerDeadCount;
+	}
+	void	Set_MonsterDeadCount() {
+		m_iMonstaerDeadCount = -1;
+	}
+
 private:
 	_bool m_bKineticAttackCheck = false;
 	_bool m_bKineticAttackAndLockOn[2] = { false, false };
 	_bool m_bFlatHit[2] = { false, false };
 	_bool m_bHitAir = { false };
+	_uint m_iMonstaerDeadCount = { 0 };
+	_uint m_iEM0650Count = { 0 };
 
 public:
 	static CGameManager_Tutorial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

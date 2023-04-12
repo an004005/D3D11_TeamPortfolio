@@ -35,6 +35,8 @@ HRESULT CCanvas_Drive::Initialize(void* pArg)
 	Find_ChildUI(L"Drive_B")->SetVisible(false);
 	Find_ChildUI(L"Drive_Circle1")->SetVisible(false);
 
+	m_bVisible = true;
+
 	return S_OK;
 }
 

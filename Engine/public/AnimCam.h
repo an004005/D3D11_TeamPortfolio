@@ -63,6 +63,7 @@ public:
 	_float GetPlayTime()		{ return m_PlayTime; }
 	_float GetDuration()		{ return m_Duration; }
 	_float GetTickPerSecond()	{ return m_TickPerSecond; }
+	_uint  GetCurKeyFrameIndex() { return m_iCurFrame; }
 
 	vector<CAM_KEYFRAME>& GetKeyFrames() { return m_KeyFrames; }
 	vector<CAM_ANIM_EVENT>& GetEvents() { return m_vecEvent; }
@@ -75,6 +76,7 @@ private:
 	_double					m_PlayTime = 0.0;
 	_bool					m_bFinished = false;
 	_float					m_fNear = 0.1f;
+	_uint					m_iCurFrame = 0;
 
 	vector<CAM_KEYFRAME>	m_KeyFrames;
 	vector<CAM_ANIM_EVENT>  m_vecEvent;
@@ -113,7 +115,7 @@ public:
 	list<string>& GetRequestedEvents() { return m_RequestedEvents; }
 
 	void StartCamAnim_Return_Update(CCamAnimation* pCamAnim, CCamera* pPreCam, CTransform* pTransform, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f, _bool bRotLerp = false);
-	void StartCamAnim_Update(CCamAnimation* pCamAnim, _float4x4 PreCamWorldMatrix, CTransform* pTransform, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
+	void StartCamAnim_Update(CCamAnimation* pCamAnim, CTransform* pTransform, _float fStartLerpTime = 0.f, _float fEndLerpTime = 0.f);
 
 private:
 	_float		m_fMouseSpeed = 0.03f;
@@ -135,6 +137,8 @@ private:
 
 	unordered_map<string, function<void()>> m_Events;
 	list<string> m_RequestedEvents;
+
+	_float4x4	m_matFinishMatrix = XMMatrixIdentity();
 
 private:
 	_int	m_iLookAtPos_Index = 0;

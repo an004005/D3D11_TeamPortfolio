@@ -30,6 +30,7 @@ public:
 
 public:
 	void	Add_Talk(const size_t iIndex);
+
 	_bool Get_End() {
 		return m_bVisible;
 	}

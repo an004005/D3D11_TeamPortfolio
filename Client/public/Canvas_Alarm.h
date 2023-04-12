@@ -33,7 +33,7 @@ public:
 	// 레벨 업 할 때
 	void	Set_LevelUp(const _uint iLevel);
 
-	// 다음 맵으로 넘어가서 맵 이름 띄우기 (일정시간이 지나면 삭제.) => [0] 도시 [1] 지하철 [3] 병원 [3] 공사장
+	// 다음 맵으로 넘어가서 맵 이름 띄우기 (일정시간이 지나면 삭제.) => [0] 도시 [1] 지하철 [3] 병원 [3] 공사장 (나오미 보스, 중대장 보스)
 	void	Set_MapName(const _float & fMapNameIndex) { 
 		m_bMapName = true;
 		m_bMapName_TimeAcc = 0.0;

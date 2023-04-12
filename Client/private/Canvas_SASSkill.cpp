@@ -47,7 +47,7 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 	{
 		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) ||
 			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) ||
-			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
+			false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::GEMMA))
 			return;
 
 		m_bMember0 = true;
@@ -74,17 +74,19 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 #pragma region (2번째 만남)
 	if (true == m_bMember0 && false == m_bMember1)
 	{
-		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA) &&
-			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
-			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI))
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::LUCA))
+		{
+			Find_ChildUI(L"FullCircle1")->SetVisible(true);
+			dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(L"FullCircle1"))->Set_TelepotiCircle();
+		}
+		if(true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::SEEDEN) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::ARASHI) &&
+			true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO))
 		{
 			m_bMember1 = true;
 
 			Find_ChildUI(L"SASSkill_XLeft")->SetVisible(true);
 			Find_ChildUI(L"SASSkill_XRight")->SetVisible(true);
-
-			Find_ChildUI(L"FullCircle1")->SetVisible(true);
-			dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(L"FullCircle1"))->Set_TelepotiCircle();
 		}
 	}
 #pragma endregion
@@ -118,7 +120,8 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5) ||
-		CGameInstance::GetInstance()->KeyDown(DIK_6))
+		CGameInstance::GetInstance()->KeyDown(DIK_6) ||
+		CGameInstance::GetInstance()->KeyDown(DIK_7))
 	{
 		m_bChangeX = true;
 		InputData();
