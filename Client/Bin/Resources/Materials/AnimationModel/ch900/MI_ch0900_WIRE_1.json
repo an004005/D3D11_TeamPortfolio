@@ -19,7 +19,7 @@
 		],
 		"Ints": [],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0000_Wire_COL.dds"
+            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_ch0000_Wire_COL.dds\u0000"
 		]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

@@ -156,6 +156,8 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 		{
 			//Safe_Release(m_pCollider);
 
+			_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
 			for (auto& iter : m_pHBeam_Single)
 			{
 				static_cast<CSpecial_HBeam_Single*>(iter)->Activate(true);
@@ -169,6 +171,23 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 		m_pCollider->Activate(false);
 		for (auto& iter : m_pHBeam_Single)
 			iter->Tick(TimeDelta);
+	}
+
+	if (m_bAddAble && !m_bDeadCheck)
+	{
+		for (auto& iter : m_pHBeam_Single)
+		{
+			_float4 vDir = static_cast<CSpecial_HBeam_Single*>(iter)->GetOriginDir();
+			_float fLength = vDir.Length();
+
+			if (fLength > 0.f)
+			{
+				vDir.Normalize();
+				vDir.w = 0.f;
+				vDir *= -5.f;
+				static_cast<CSpecial_HBeam_Single*>(iter)->AddVelocity({ vDir.x, vDir.y - 0.1f, vDir.z });
+			}
+		}
 	}
 }
 
@@ -259,7 +278,7 @@ void CSpecial_HBeam_Bundle::HBeam_Throw(_float4 vDir)
 	_float3 vTorque = { 0.f, 2000.f, 0.f };
 	vForce.Normalize();
 
-	vForce *= (m_fThrowPower * g_fTimeDelta);
+	vForce *= m_fThrowPower;
 
 	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
@@ -284,7 +303,7 @@ void CSpecial_HBeam_Bundle::HBeam_Single_Turn()
 	for (auto& iter : m_pHBeam_Single)
 	{
 		static_cast<CSpecial_HBeam_Single*>(iter)->HBeam_Turn();
-		static_cast<CSpecial_HBeam_Single*>(iter)->CreateKineticParticle();
+		//static_cast<CSpecial_HBeam_Single*>(iter)->CreateKineticParticle();
 	}
 }
 
@@ -301,6 +320,18 @@ void CSpecial_HBeam_Bundle::HBeam_Single_SetTrigger(_bool bKinetic)
 {
 	for (auto& iter : m_pHBeam_Single)
 		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(bKinetic);
+}
+
+void CSpecial_HBeam_Bundle::HBeam_Slower()
+{
+	for (auto& iter : m_pHBeam_Single)
+	{
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(false);
+		_float4 vDir = static_cast<CSpecial_HBeam_Single*>(iter)->GetOriginDir();
+		vDir.Normalize();
+		vDir.w = 0.f;
+		static_cast<CSpecial_HBeam_Single*>(iter)->AddVelocity({vDir.x, vDir.y, vDir.z});
+	}
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Collision()

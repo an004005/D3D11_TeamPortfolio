@@ -15,6 +15,10 @@ void CGameTime_Manager::Tick(_double TimeDelta)
 	_float fOut;
 	if (m_Timeline.Tick(TimeDelta, fOut))
 	{
+		if (isnan(fOut))
+		{
+			fOut = 1.f;
+		}
 		m_TimeRatio = fOut;
 	}
 	else

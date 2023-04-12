@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "AIController.h"
 #include "TimerHelper.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CFSMComponent;
@@ -32,10 +33,15 @@ public:
 
 	void LookAtNow();
 
+	void	Set_ResetKineticDoOnce() { m_KineticSet.Reset(); }
 private:
 	void Detected_Attack();
+	void Check_PlayerUseSas();
 	void Tick_TP_Cooltime(_double TimeDelta);
 	void Tick_CoolTimeHelper(_double TimeDelta);
+
+public:
+	void CalcTeleport_Dir();
 
 private:
 	void Initialize_CoolTimeHelper();
@@ -54,7 +60,10 @@ private:
 
 	_bool m_bRun = false;
 
-
+	CDoOnce m_KineticSet;
+	
+	
+	
 private:
 	// CoolTime Manage
 
@@ -68,6 +77,15 @@ private:
 	CCoolTimeHelper m_ChaseElec_CoolTimeHelper;
 
 	CCoolTimeHelper m_AirElec_CoolTimeHelper;
+
+	CCoolTimeHelper m_Seethrough_CoolTimeHelper;
+
+	CCoolTimeHelper m_Counter_CoolTimeHelper;
+
+	CCoolTimeHelper m_CaptureKinetic_CoolTimeHelper;
+
+	CCoolTimeHelper m_DetectedCoolTimeHelper;;
+
 
 private:
 	_float			m_fTP_CurCoolTime = 0.f;

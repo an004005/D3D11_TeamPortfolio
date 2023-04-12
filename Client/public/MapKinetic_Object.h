@@ -56,11 +56,22 @@ public:
 	_bool	Get_Hit() { return m_bHit; }
 
 	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
+	void	Set_ToAir(_bool bAir) { m_bToAir = bAir; }
 
 	_float4 GetPxPostion();
 
 public:
 	void	SetOutline(_bool bOutLine) { m_bOutline = bOutLine; }
+
+public:
+	// For Boss Captured
+	void	Set_Counter();
+	void	Boss_Throw(_float4 vTargetPos);
+
+
+	_bool	m_bCounter = false;
+
+
 
 private:
 	void	OutlineMaker();
@@ -127,6 +138,8 @@ private:
 	_bool				m_bCameRange = { false };
 
 	_bool				m_bBossUse = false; 
+
+	_bool				m_bToAir = false;
 
 	_matrix				m_PreMatrix;
 

@@ -1,17 +1,17 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_01_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_01_NML.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Brazilian_Tiles_01_RMA.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_GlayLinear.png"
 		],
-		"Pass": 1,
-		"Float2s": []
-	}
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

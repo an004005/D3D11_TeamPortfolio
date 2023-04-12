@@ -9,10 +9,10 @@
 		"Pass": 10,
 		"Float2s": [],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hood_COL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hood_NML.dds",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hood_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hood_NML.png",
 			"",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Hood_CTL.dds"
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Hood_CTL.png"
 		],
 		"Float4x4s": [],
 		"Float4s": [

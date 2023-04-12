@@ -1,18 +1,18 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1_Subway_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1_Subway_NML.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_crack_tile_1RMA.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"InstancingPass": 1
 }

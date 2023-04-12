@@ -1,18 +1,18 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_Hospital_Lamp_Dif.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_Hospital_Lamp_Nor.dds",
 			""
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"InstancingPass": 1
 }

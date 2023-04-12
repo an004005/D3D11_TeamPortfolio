@@ -168,11 +168,14 @@ void CAI_CH0500::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-	//CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
+	CPlayerInfoManager::GetInstance()->Change_TsugumiHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
 	{
-		m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(tDamageParams.pCauser))
+			m_pTransformCom->LookAt_NonY(tDamageParams.pCauser->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+		else if (tDamageParams.vHitFrom.w != 0.f)
+			m_pTransformCom->LookAt_NonY(tDamageParams.vHitFrom);
 	}
 
 	Collision_End();
@@ -341,7 +344,7 @@ HRESULT CAI_CH0500::SetUp_AttackDesc()
 {
 	m_mapCollisionEvent.emplace("ATK_A1", [this]()
 	{
-		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackSAS = ESASType::SAS_NOT;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
@@ -350,7 +353,7 @@ HRESULT CAI_CH0500::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A2_START", [this]()
 	{
-		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackSAS = ESASType::SAS_NOT;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
@@ -359,7 +362,7 @@ HRESULT CAI_CH0500::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A2", [this]()
 	{
-		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackSAS = ESASType::SAS_NOT;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
@@ -368,7 +371,7 @@ HRESULT CAI_CH0500::SetUp_AttackDesc()
 	});
 	m_mapCollisionEvent.emplace("ATK_A3", [this]()
 	{
-		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
+		m_AttackDesc.eAttackSAS = ESASType::SAS_NOT;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
@@ -646,7 +649,7 @@ void CAI_CH0500::Shoot()
 				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 				tParam.pCauser = this;
 				tParam.eAttackSAS = ESASType::SAS_NOT;
-				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
 				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iAttack * 0.5f;
@@ -713,9 +716,9 @@ void CAI_CH0500::Free()
 {
 	__super::Free();
 
-	//for (auto& iter : m_vecWeapon)
-	//	Safe_Release(iter);
-	//m_vecWeapon.clear();
+	for (auto& iter : m_vecWeapon)
+		Safe_Release(iter);
+	m_vecWeapon.clear();
 
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);
