@@ -1,6 +1,6 @@
 {
     "Active": true,
-    "AlphaBlend": true,
+    "AlphaBlend": false,
     "ShaderParams": {
         "Float2s": [],
         "Float4s": [
@@ -12,7 +12,7 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [],
+        "Floats": [0.5],
         "Ints": [
             0
         ],

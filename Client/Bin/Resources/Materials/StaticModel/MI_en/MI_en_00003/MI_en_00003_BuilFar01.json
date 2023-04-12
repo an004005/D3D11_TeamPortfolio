@@ -1,22 +1,22 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Floats": [
-			0.0
-		],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [
 			0
 		],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [
+			0.0
+		],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall_NML.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall_roughness.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"InstancingPass": 1
 }

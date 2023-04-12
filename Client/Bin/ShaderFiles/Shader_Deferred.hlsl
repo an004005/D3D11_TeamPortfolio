@@ -21,7 +21,7 @@ vector			g_vLightSpecular;
 vector			g_vCamPosition;
 
 vector			g_vMtrlAmbient = (vector)1.f;
-vector			g_vMtrlSpecular = (vector)1.f;
+vector			g_vMtrlSpecular = (vector)0.5f;
 
 texture2D		g_Texture; /* 디버그용텍스처*/
 texture2D		g_NormalTexture; 
@@ -243,7 +243,14 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 	if (fShaderFlag == SHADER_DEFAULT)
 	{
 		Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal)))) * fAtt;
-		Out.vShade.a = 1.f;	
+		Out.vShade.a = 1.f;
+
+		vector		vReflect = reflect(normalize(vLightDir), normalize(vNormal));
+		vector		vLook = vWorldPos - g_vCamPosition;
+
+		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), 30.f) * fAtt;
+
+		Out.vSpecular.a = 0.f;
 	}
 
 	return Out;
@@ -305,9 +312,10 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 	}
 	else if (fShaderFlag == SHADER_DEFAULT)
 	{
+		vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
 		vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexUV);
 		Out.vColor = vShade * pow(2.f, vDepth.b);
-		Out.vColor.a = saturate(vShade.a);
+		Out.vColor.a = saturate(vShade.a) + vSpecular;
 		if (0.0f == Out.vColor.a)
 			discard;
 	}
@@ -326,8 +334,8 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	float3 eyeToPixel;
 
-	// 그림자 연산
 	float fViewZ = vDepth.y * g_Far;
+	float fShadowRate = 0.f;
 	
 	vector vPixelWorld;
 	vPixelWorld.x = In.vTexUV.x * 2.f - 1.f;
@@ -341,34 +349,36 @@ PS_OUT PS_MAIN_BLEND(PS_IN In)
 
 	eyeToPixel = vPixelWorld - g_vCamPosition;
 
-	vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
-	vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
-	float2		vNewUV;
-	vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
-	vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
-	
-	const float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
-
-	float fShadowRate = 0.f;
-
-	[unroll]
-	for (int y = -1; y <= 1; ++y)
+	if (fShaderFlag != SHADER_TOON)
 	{
+		// 그림자 연산
+		vector		vLightViewSpace = mul(vPixelWorld, g_LightViewMatrix);;
+		vector		vLightClipSpace = mul(vLightViewSpace, g_LightProjMatrix);
+		float2		vNewUV;
+		vNewUV.x = (vLightClipSpace.x / vLightClipSpace.w) * 0.5f + 0.5f;
+		vNewUV.y = (vLightClipSpace.y / vLightClipSpace.w) * -0.5f + 0.5f;
+		
+		const float2 TexcelSize = float2( 1.0 / 8192.0,  1.0 / 8192.0);
+
 		[unroll]
-		for (int x = -1; x <= 1; ++x)
+		for (int y = -1; y <= 1; ++y)
 		{
-			float2 offset = float2(x, y) * TexcelSize;
-			vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
-			if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * g_Far)
-				fShadowRate += 1.f;
+			[unroll]
+			for (int x = -1; x <= 1; ++x)
+			{
+				float2 offset = float2(x, y) * TexcelSize;
+				vector		vShadowDepthInfo = g_ShadowDepthTexture.Sample(LinearSampler, vNewUV + offset);
+				if (vLightViewSpace.z - 0.1f > vShadowDepthInfo.x * g_Far)
+					fShadowRate += 1.f;
+			}
 		}
+		
+
+		fShadowRate /= 9.f;
+		fShadowRate *= 0.5f;
+		Out.vColor *= (1.f - fShadowRate);
 	}
 	
-
-	fShadowRate /= 9.f;
-	fShadowRate *= 0.5f;
-	
-	Out.vColor *= (1.f - fShadowRate);
 
 	if (g_bFog)
 		Out.vColor.rgb = ApplyFog(Out.vColor.rgb, g_vCamPosition.y, eyeToPixel);
@@ -461,7 +471,14 @@ PS_OUT_LIGHT PS_MAIN_CAPSULE(PS_IN In)
 	if (fShaderFlag == SHADER_DEFAULT)
 	{
 		Out.vShade = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, normalize(vNormal)))) * fAtt;
-		Out.vShade.a = 1.f;	
+		Out.vShade.a = 1.f;
+
+		vector		vReflect = reflect(normalize(vLightDir), normalize(vNormal));
+		vector		vLook = vWorldPos - g_vCamPosition;
+
+		Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vLook) * -1.f, normalize(vReflect))), 30.f) * fAtt;
+
+		Out.vSpecular.a = 0.f;
 	}
 
 	

@@ -12,7 +12,7 @@
             ]
         ],
         "Float4x4s": [],
-        "Floats": [],
+        "Floats": [0.5],
         "Ints": [
             0
         ],

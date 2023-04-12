@@ -19,7 +19,7 @@
 		],
 		"Ints": [],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_cm_Fil_White.png"
+            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_cm_Fil_White.png\u0000"
 		]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"
