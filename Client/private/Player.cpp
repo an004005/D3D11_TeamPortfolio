@@ -890,7 +890,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 				m_pHitStateMachine->GetCurStateName() == "KNUCKBACK" ||
 				m_pHitStateMachine->GetCurStateName() == "FALLDOWN" ||
 				m_pHitStateMachine->GetCurStateName() == "FALL" ||
-				m_pHitStateMachine->GetCurStateName() == "BREAKFALL")
+				m_pHitStateMachine->GetCurStateName() == "BREAKFALL" ||
+				m_pKineticComboStateMachine->GetCurStateName() == "KINETIC_COMBO_KINETIC04_THROW")
 	{
 		return;
 	}

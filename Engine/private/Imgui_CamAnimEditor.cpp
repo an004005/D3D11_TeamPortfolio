@@ -33,6 +33,8 @@ void CModelTester::Late_Tick(_double TimeDelta)
 {
 	CGameObject::Late_Tick(TimeDelta);
 
+	m_fTimeDelta = TimeDelta;
+
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(m_eRenderGroup, this);
 }
@@ -66,7 +68,12 @@ void CModelTester::SetPlayAnimation(const string& strAnim)
 	m_pModel->SetPlayAnimation(strAnim);
 }
 
-void CModelTester::PlayAnimation(_float fRatio)
+void CModelTester::PlayAnimation()
+{
+	m_pModel->Play_Animation(m_fTimeDelta);
+}
+
+void CModelTester::PlayAnimation_Sync(_float fRatio)
 {
 	m_pModel->Play_Animation_Sync(fRatio);
 }
@@ -154,6 +161,8 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 		}
 	}
 
+
+
 	if (ImGui::Button("Start Anim") && m_pCurAnim && m_pAnimCam)
 	{
 		m_pAnimCam->StartCamAnim(m_pCurAnim,
@@ -211,6 +220,8 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 	static string strSelectModel;
 	if (ImGui::BeginListBox("ModelTesters"))
 	{
+		ImGui::Checkbox("Sync Anim", &m_bSync);
+
 		for (auto model : m_Models)
 		{
 			const bool bSelected = strSelectModel == model.first;
@@ -228,7 +239,12 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 		m_Models.find(strSelectModel)->second->Imgui_RenderComponentProperties();
 
 		if (nullptr != m_pAnimCam)
-			m_Models.find(strSelectModel)->second->PlayAnimation(m_pCurAnim->GetPlayRatio());
+		{
+			if (m_bSync)
+				m_Models.find(strSelectModel)->second->PlayAnimation_Sync(m_pCurAnim->GetPlayRatio());
+			else
+				m_Models.find(strSelectModel)->second->PlayAnimation();
+		}
 	}
 
 	static char szAnimName[MAX_PATH]{};

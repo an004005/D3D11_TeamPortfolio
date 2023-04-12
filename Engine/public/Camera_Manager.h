@@ -35,6 +35,8 @@ public:
 	_float4 Get_CamPosition(const string& strCamTag);
 	CCamera* FindCamera(const string& strCamTag);
 
+	_float4x4 Get_CamMatrix(const string& strCamTag);
+
 	void	Set_Far(_float fFar) { m_fFar = fFar; }
 
 	void Clear();
