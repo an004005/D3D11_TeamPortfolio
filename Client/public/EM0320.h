@@ -9,6 +9,7 @@ class CFSMComponent;
 class CAnimation;
 class CRigidBody;
 class CMaterial;
+class CAnimCam;
 END
 
 BEGIN(Client)
@@ -77,8 +78,12 @@ private:
 	void CreateWeakExplosionEffect();
 
 private:
+	void UpdateCoolTimes(_double TimeDelta);
+
+private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
 	class CEM0320_Controller*		m_pController = nullptr;
+	CAnimCam* m_pAnimCam = nullptr;
 
 	class CRigidBody* m_pWeak = nullptr;
 
@@ -132,6 +137,8 @@ private:
 
 
 	_bool m_bIntro = false;
+	_bool m_bIntroCoolStart = false;
+	_double m_dIntroCool = 0.0;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

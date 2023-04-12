@@ -2,7 +2,7 @@
 #include "..\public\EM0320.h"
 
 #include <GameUtils.h>
-
+#include <AnimCam.h>
 #include "Model.h"
 #include "JsonStorage.h"
 #include "GameInstance.h"
@@ -19,6 +19,7 @@
 
 #include "Canvas_BossHpMove.h"
 #include "ImguiUtils.h"
+#include "PlayerInfoManager.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -68,6 +69,16 @@ void CEM0320::SetUpComponents(void* pArg)
 	Json BossRnage = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Rnage.json");
 	FAILED_CHECK(Add_Component(LEVEL_NOW, TEXT("Prototype_Component_RigidBody"), TEXT("RangeCollider"),
 		(CComponent**)&m_pRange, &BossRnage));
+
+	
+	m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("EnemyAnimCamera"));
+	Safe_AddRef(m_pAnimCam);
+
+	if (m_pAnimCam == nullptr)
+	{
+		m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("EnemyAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+		Safe_AddRef(m_pAnimCam);
+	}
 
 
 	Json BossHeadJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Head.json");
@@ -437,12 +448,14 @@ void CEM0320::SetUpIntroFSM()
 		.InitState("Idle")
 		.AddState("Idle")
 
-			.AddTransition("Idle to JumpAtk", "JumpAtk")
-				.Predicator([this] { return !m_bIntro; })
+		.AddTransition("Idle to JumpAtk", "JumpAtk")
+		.Predicator([this] { return !m_bIntro; })
 
 		.AddState("JumpAtk")
 			.OnStart([this]
 			{
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro");
+				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 				m_pController->SetActive(false);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_204_AL_atk_a3_start");
 				m_pModelCom->Find_Animation("AS_em0300_204_AL_atk_a3_start")->SetPlayRatio(0.3);
@@ -450,29 +463,35 @@ void CEM0320::SetUpIntroFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
-					_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					vPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 5.f * TimeDelta;
+				_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				vPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 5.f * TimeDelta;
 
-					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+				m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
 			})
 			.OnExit([this]
 			{
-				m_fGravity = 25.f;			
+				m_fGravity = 25.f;
 			})
 			.AddTransition("JumpAtk to JumpEnd", "JumpEnd")
 				.Predicator([this] { return m_bOnFloor; })
 
 		.AddState("JumpEnd")
 			.OnStart([this]
-			{	
+			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_207_AL_atk_a3_end");
+			})
+			.OnExit([this]		
+			{
+					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro2");
+					m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+					m_bIntroCoolStart = true;
+					m_dIntroCool = 0.0;
 			})
 			.AddTransition("JumpEnd to Idle", "Idle")
 				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.95f); })
 
 
 		.Build();
-
 }
 
 void CEM0320::BeginTick()
@@ -498,7 +517,6 @@ void CEM0320::BeginTick()
 	vPosition += XMVectorSet(0.f, 1.f, 0.f, 0.f) * 8.f;
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
-	m_pEMUI->Create_BossUI();
 	m_b2ndPhase = true;
 }
 
@@ -547,6 +565,7 @@ void CEM0320::Tick(_double TimeDelta)
 		m_pWaterMtrl->GetParam().Floats[1] = 1.f;
 	}
 
+	UpdateCoolTimes(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -587,7 +606,6 @@ void CEM0320::Imgui_RenderProperty()
 				->Start_AttachPivot(this, pivot, "Target", true, true, true);
 		}
 	}
-
 }
 
 void CEM0320::AfterPhysX()
@@ -913,6 +931,21 @@ void CEM0320::CreateWeakExplosionEffect()
 	}
 }
 
+void CEM0320::UpdateCoolTimes(_double TimeDelta)
+{
+	if (m_bIntroCoolStart == true)
+	{
+		m_dIntroCool += TimeDelta;
+
+		if (m_dIntroCool > 5.0)
+		{
+			m_bIntroCoolStart = false;
+			SetUpMainFSM();
+			m_pController->SetActive(true);
+			m_pEMUI->Create_BossUI();
+		}
+	}
+}
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CEM0320* pInstance = new CEM0320(pDevice, pContext);
@@ -948,7 +981,7 @@ void CEM0320::Free()
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
-
+	Safe_Release(m_pAnimCam);
 	//for. BossUI 
 	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
 	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.

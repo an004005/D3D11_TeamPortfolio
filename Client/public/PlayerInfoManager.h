@@ -8,6 +8,7 @@
 
 BEGIN(Engine)
 class CGameObject;
+class CCamera;
 END
 
 BEGIN(Client)
@@ -228,6 +229,10 @@ public:
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
 
+public:
+		HRESULT         Set_PlayerCam(CCamera* pAnimCam);
+		CCamera* Get_PlayerCam();
+
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
 	list<ESASType>		m_PlayerSasTypeList;
@@ -239,7 +244,7 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
-
+	CCamera*			m_pPlayerCam = nullptr;
 private:
 	CGameObject*	m_pCamSpot = nullptr;
 

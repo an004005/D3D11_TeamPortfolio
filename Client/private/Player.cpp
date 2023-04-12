@@ -214,6 +214,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	Safe_AddRef(m_pPlayerCam);
+	CPlayerInfoManager::GetInstance()->Set_PlayerCam(m_pPlayerCam);
 
 	m_pPlayer_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("PlayerAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
 	Safe_AddRef(m_pPlayer_AnimCam);

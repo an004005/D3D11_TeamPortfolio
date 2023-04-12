@@ -8,6 +8,7 @@
 #include "CamSpot.h"
 #include "JsonStorage.h"
 #include "Canvas_Alarm.h"
+#include "Camera.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -599,6 +600,26 @@ void CPlayerInfoManager::Camera_Axis_Sliding(_float4 vDir, _float fShakePower)
 	{
 		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Sliding(vDir, fShakePower);
 	}
+}
+
+HRESULT CPlayerInfoManager::Set_PlayerCam(CCamera* pCam)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(pCam))
+	{
+		m_pPlayerCam = pCam;
+	}
+
+	return S_OK;
+}
+
+CCamera* CPlayerInfoManager::Get_PlayerCam()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayerCam))
+	{
+		return m_pPlayerCam;
+	}
+
+	return nullptr;
 }
 
 void CPlayerInfoManager::SAS_Checker()
