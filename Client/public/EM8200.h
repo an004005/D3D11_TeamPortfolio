@@ -173,6 +173,10 @@ private:
 	CSimpleTimeline			m_CaptureStart;
 	CSimpleTimeline			m_CaptureEnd;
 
+	class CEM8200_CopyRush* m_pLeftCopy = nullptr;
+	class CEM8200_CopyRush* m_pRightCopy = nullptr;
+
+
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;

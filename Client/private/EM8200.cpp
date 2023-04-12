@@ -17,6 +17,7 @@
 #include "EMCable.h"
 #include "MapKinetic_Object.h"
 #include "PlayerInfoManager.h"
+#include "EM8200_CopyRush.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -85,6 +86,9 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	m_CaptureStart.SetCurve("Simple_Increase_0.2x");
 	m_CaptureEnd.SetCurve("Simple_Decrease_0.2x");
+
+	m_pLeftCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
+	m_pRightCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
 }
 
 void CEM8200::Detected_Attack()
@@ -540,6 +544,9 @@ void CEM8200::Tick(_double TimeDelta)
 
 	m_bSecondPhase = true;
 
+	m_pLeftCopy->Tick(TimeDelta);
+	m_pRightCopy->Tick(TimeDelta);
+
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -547,6 +554,8 @@ void CEM8200::Tick(_double TimeDelta)
 void CEM8200::Late_Tick(_double TimeDelta)
 {
 	CScarletCharacter::Late_Tick(TimeDelta);
+	m_pLeftCopy->Late_Tick(TimeDelta);
+	m_pRightCopy->Late_Tick(TimeDelta);
 
 	if (m_bVisible)
 	{
@@ -1504,6 +1513,13 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_TPEnd.PlayFromStart();
+				_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				_vector vRight = WorldMatrix.r[0];
+
+				WorldMatrix.r[3] += vRight * 3.f;
+				m_pLeftCopy->StartRush(this, m_pTarget, WorldMatrix, 50);
+				WorldMatrix.r[3] -= vRight * 6.f;
+				m_pRightCopy->StartRush(this, m_pTarget, WorldMatrix, 50);
 
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_221_AL_atk_copy_start");
 			})
@@ -1971,5 +1987,8 @@ void CEM8200::Free()
 		m_pKarenMaskEf->SetDelete();
 
 	Safe_Release(m_pKarenMaskEf);
+
+	Safe_Release(m_pLeftCopy);
+	Safe_Release(m_pRightCopy);
 	
 }
