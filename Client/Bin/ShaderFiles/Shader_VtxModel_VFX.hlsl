@@ -485,6 +485,27 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+
+PS_OUT PS_EM8200_COUNTER_WAVE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x , In.vTexUV.y + g_float_0)).r;
+
+	Final.a = Mask;
+
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a *= g_float_2;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 PS_OUT PS_SAS_MASK_PARTICLE(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -2044,4 +2065,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_KAREN_MASK_ALL();
 	}
+
+	//46
+	pass em8200CounterWave
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_COUNTER_WAVE();
+	}
+
 }

@@ -553,6 +553,46 @@ PS_OUT_Flag PS_SPECIAL_G_LARGE_HIT(PS_IN In)
 	if (g_float_3 <= 0.f)
 		discard;
 
+
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM8200_STAMP_IMPACT(PS_IN_SOFT In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask * g_float_0;
+
+	float4 AddTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	AddTex = CalcHDRColor(AddTex, g_float_1);
+	float4 AddColor = saturate(Final + AddTex);
+	Out.vColor = CalcHDRColor(AddColor, g_float_2);
+	Out.vColor.a = saturate(Final.a * (AddTex.r * g_float_5)) * g_float_3;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_4);
+
+	if (g_float_3 <= 0.f)
+		discard;
+
+	//soft effect 
+	float2		vTexUV;
+
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector		vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+
+	float		fOldViewZ = vDepthDesc.y * g_Far;
+	float		fViewZ = In.vProjPos.w;
+
+	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ) * 2.5f));
+
 	return Out;
 }
 
@@ -2349,4 +2389,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM0220_EXPLODE_SOFT();
 	}
+
+	//58
+	pass EM8200_StampImpact
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SOFT();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_STAMP_IMPACT();
+	}
+
 }

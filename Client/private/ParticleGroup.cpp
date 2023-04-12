@@ -286,7 +286,9 @@ void CParticleGroup::Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosit
 
 void CParticleGroup::Start_NoOwnerOnlyPos(_float4 vPositon)
 {
-	_matrix SocketMatrix = XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	_matrix SocketMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z) * XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
 
 	Set_Transform(SocketMatrix);
 
