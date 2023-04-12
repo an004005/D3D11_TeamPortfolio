@@ -135,6 +135,11 @@ void CCanvas_MouseCousor::Imgui_RenderProperty()
 	{
 		CPlayerInfoManager::GetInstance()->Set_Exp(_uint(iExp));
 	}
+
+	if (ImGui::Button("Player Attack"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
+	}
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
