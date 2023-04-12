@@ -182,6 +182,7 @@ void CRedString::Imgui_RenderProperty()
 		CGameUtils::GetPosFromRayCast(vPos);
 		vPos.y -= 1.f;
 		AddPoint_ForTool(vPos);
+		bAddPointUsingPicking = false;
 	}
 
 	ImGui::InputFloat("Curve Smooth", &m_fCurveSmooth);
