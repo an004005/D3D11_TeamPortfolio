@@ -158,6 +158,19 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	return Out;
 }
 
+// g_float_1 : 무기 삭제 디솔브
+PS_OUT PS_CH0300_WEAPON(PS_IN In)
+{
+	float fNoise = g_tex_4.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 0.5f, 0.f)).r;
+	if (g_float_1 < fNoise)
+		discard;
+
+	PS_OUT			Out = PS_TOON_DEFAULT(In);
+
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -186,6 +199,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TOON_DEFAULT();
+	}
+
+	//2
+	pass ch0300_Weapon
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_CH0300_WEAPON();
 	}
 
 }
