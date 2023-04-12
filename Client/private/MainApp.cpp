@@ -343,6 +343,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		/* For.Prototype_Component_Shader_VtxToonModel*/
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
+		pShader->SetCommonTexture("g_scl_noise_030", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_030.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonModel"), pShader)))
 				return E_FAIL;
 	}
