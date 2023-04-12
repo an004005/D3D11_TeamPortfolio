@@ -33,7 +33,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual void PlayBC() override;
-
+	virtual _float4	GetKineticTargetPos() override;
 public:
 	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
 	_bool	Get_RunStart() { return m_bRun_Start; }

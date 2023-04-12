@@ -9,6 +9,7 @@
 #include "MathUtils.h"
 #include "Material.h"
 #include "EMCable.h"
+#include "PlayerInfoManager.h"
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -26,6 +27,8 @@ HRESULT CEM1200::Initialize(void * pArg)
 {
 	Json em1200_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em1200/em1200Base.json");
 	pArg = &em1200_json;
+
+	m_strDeathSoundTag = "crawl_fx_death";
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
@@ -84,6 +87,17 @@ void CEM1200::SetUpComponents(void * pArg)
 void CEM1200::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("crawl_attack_scream");
+	m_SoundStore.CloneSound("crawl_attack_shout");
+	m_SoundStore.CloneSound("crawl_attack_smsh");
+	m_SoundStore.CloneSound("crawl_attack_swing");
+	m_SoundStore.CloneSound("crawl_attack_tenta");
+	m_SoundStore.CloneSound("crawl_attack_tenta_charging_loop");
+	m_SoundStore.CloneSound("crawl_attack_tenta_up");
+	m_SoundStore.CloneSound("crawl_move_groggy");
+
+	m_pModelCom->Add_EventCaller("crawl_move_groggy", [this] {m_SoundStore.PlaySound("crawl_move_groggy"); });
 }
 
 void CEM1200::SetUpAnimationEvent()
@@ -428,13 +442,13 @@ void CEM1200::SetUpFSM()
 					return  m_bDead || m_pASM->isSocketEmpty("FullBody");
 				})
 
-
-
 		//Loop때만 데미지 처리
 		.AddState("Shout1_Start")
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_205_AL_atk_a2_shout1_start");
+					m_SoundStore.PlaySound("crawl_attack_scream", m_pTransformCom);
+
 				})
 				.Tick([this](_double)
 				{
@@ -480,7 +494,7 @@ void CEM1200::SetUpFSM()
 						m_dLoopTick += 0.8;               
 					}
 
-					Shout1_Overlap();
+					Shout_Overlap();
 				})
 				.AddTransition("Shout1_Loop to Shout1_End", "Shout1_End")
 					.Predicator([this]
@@ -510,6 +524,8 @@ void CEM1200::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_224_AL_atk_a8_shout2_start");
+					m_SoundStore.PlaySound("crawl_attack_shout", m_pTransformCom);
+
 					ClearDamagedTarget();
 				})
 				.Tick([this](_double)
@@ -538,6 +554,10 @@ void CEM1200::SetUpFSM()
 					m_dFogTime = 0.0;
 					m_pRendererCom->SetFog(true);
 					m_pRendererCom->GetFogDesc().fGlobalDensity = 0.f;
+
+					////UI
+					//m_pEMUI->Delete_UIInfo();
+					//CPlayerInfoManager::GetInstance()->Set_TargetedMonster(nullptr);
 				})
 
 				.Tick([this](_double TimeDelta)
@@ -550,11 +570,11 @@ void CEM1200::SetUpFSM()
 						m_dLoopTick += 0.6;
 					}
 
-					Shout2_Overlap();
-					_float fMaxFogDensity = 0.6f;
+					Shout_Overlap();
+				/*	_float fMaxFogDensity = 0.8f;
 					_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
 					if (FogGlobalDensity >= fMaxFogDensity)
-						m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+						m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;*/
 
 				})
 				.OnExit([this]
@@ -588,6 +608,7 @@ void CEM1200::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_230_AL_atk9_punch_start");
+					m_SoundStore.PlaySound("crawl_attack_smsh", m_pTransformCom);
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -670,6 +691,8 @@ void CEM1200::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_222_AL_atk_a6_Cleave_L");
+					m_SoundStore.PlaySound("crawl_attack_swing", m_pTransformCom);
+
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -689,6 +712,8 @@ void CEM1200::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_223_AL_atk_a6_Cleave");
+					m_SoundStore.PlaySound("crawl_attack_swing", m_pTransformCom);
+
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -766,6 +791,8 @@ void CEM1200::SetUpFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_217_AL_atk_a5_motif2_start");
+					m_SoundStore.PlaySound("crawl_attack_tenta", m_pTransformCom);
+
 				})
 				.Tick([this](_double TimeDelta)
 				{
@@ -782,6 +809,8 @@ void CEM1200::SetUpFSM()
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_218_AL_atk_a5_motif2_loop");
 					m_pModelCom->Find_Animation("AS_em1200_218_AL_atk_a5_motif2_loop")->SetLooping(true);
+					m_SoundStore.PlaySound("crawl_attack_tenta_charging_loop", m_pTransformCom);
+
 					m_iAttackCount = 0;
 					m_iPreAttackCount = -1;
 					m_dLoopTime = 0.0;
@@ -807,6 +836,8 @@ void CEM1200::SetUpFSM()
 						CGameObject* pCable = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Cable"), TEXT("Prototype_EMCable"));
 						dynamic_cast<CEMCable*>(pCable)->Set_Dest(m_SaveTargetPos);
 						pCable->Set_Owner(this);
+
+						m_SoundStore.PlaySound("crawl_attack_tenta_up", m_pTransformCom);
 
 						m_dLoopTime = 0.0;
 						++m_iAttackCount;
@@ -969,6 +1000,19 @@ _bool CEM1200::IsWeak(CRigidBody* pHitPart)
 	return 	pHitPart == GetRigidBody("Weak");
 }
 
+_float4 CEM1200::GetKineticTargetPos()
+{
+	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
+}
+
+_bool CEM1200::Exclude()
+{
+	if (CheckSASType(ESASType::SAS_PENETRATE) || m_pRendererCom->GetFog() == false)
+		return false;
+	else
+		return true;
+}
+
 _bool CEM1200::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;
@@ -1075,6 +1119,16 @@ void CEM1200::FogControl(_double TimeDelta)
 			m_pRendererCom->GetFogDesc().fGlobalDensity = 0.1f;
 	}
 	
+	if (CheckSASType(ESASType::SAS_PENETRATE) == false)
+	{
+		m_pEMUI->Delete_UIInfo();
+		CPlayerInfoManager::GetInstance()->Set_TargetedMonster(nullptr);
+
+		_float fMaxFogDensity = 0.8f;
+		_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
+		if (FogGlobalDensity >= fMaxFogDensity)
+			m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+	}
 }
 
 void CEM1200::Fall_Overlap()
@@ -1100,7 +1154,7 @@ void CEM1200::Fall_Overlap()
 	}
 }
 
-void CEM1200::Shout1_Overlap()
+void CEM1200::Shout_Overlap()
 {
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
 
@@ -1123,28 +1177,28 @@ void CEM1200::Shout1_Overlap()
 	}
 }
 
-void CEM1200::Shout2_Overlap()
-{
-	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
-
-	_vector vBoneVector = BoneMatrix.r[3];
-	_float3 fBone = vBoneVector + XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 6.f;
-
-	physx::PxOverlapHit hitBuffer[3];
-	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-
-	SphereOverlapParams param;
-	param.fVisibleTime = 1.f;
-	param.iTargetType = CTB_PLAYER;
-	param.fRadius = 7.f;
-	param.vPos = XMVectorSetW(fBone, 1.f);
-	param.overlapOut = &overlapOut;
-
-	if (CGameInstance::GetInstance()->OverlapSphere(param))
-	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
-	}
-}
+//void CEM1200::Shout2_Overlap()
+//{
+//	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
+//
+//	_vector vBoneVector = BoneMatrix.r[3];
+//	_float3 fBone = vBoneVector + XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 6.f;
+//
+//	physx::PxOverlapHit hitBuffer[3];
+//	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
+//
+//	SphereOverlapParams param;
+//	param.fVisibleTime = 1.f;
+//	param.iTargetType = CTB_PLAYER;
+//	param.fRadius = 7.f;
+//	param.vPos = XMVectorSetW(fBone, 1.f);
+//	param.overlapOut = &overlapOut;
+//
+//	if (CGameInstance::GetInstance()->OverlapSphere(param))
+//	{
+//		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
+//	}
+//}
 
 void CEM1200::Stamp_Overlap()
 {

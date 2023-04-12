@@ -22,7 +22,9 @@
 #include "Imgui_Batch.h"
 #include "GameManager.h"
 
-#define ADD_PLAYER
+#include "Imgui_CamAnimEditor.h"
+
+//#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em1100"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -32,7 +34,7 @@ CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceConte
 
 HRESULT CLevel_EnemiesTest::Initialize()
 {
-CGameInstance::GetInstance()->Clear_ImguiObjects();
+	CGameInstance::GetInstance()->Clear_ImguiObjects();
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_PropertyEditor::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
@@ -42,6 +44,7 @@ CGameInstance::GetInstance()->Clear_ImguiObjects();
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CurveManager::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_Batch::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CamAnimEditor::Create(m_pDevice, m_pContext));
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -213,11 +216,11 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Monster(const _tchar * pLayerTag)
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
 #endif // !ADD_PLAYER
 
-#ifdef ADD_ENEMY
-	pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT(ADD_ENEMY))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));
 
-#endif // ADD_ENEMY
+	/*pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Monster_em320"))
+		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(3.f, 3.f, 3.f, 1.f));*/
+
+
 
 	return S_OK;
 }

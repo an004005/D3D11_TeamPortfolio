@@ -516,7 +516,7 @@ void CEM1100::SetUpFSM()
 				SocketLocalMove(m_pASM);
 				m_dLoopTime += TimeDelta;
 
-				if (m_dLoopTime > 0.7)
+				if (m_dLoopTime > 1.0)
 				{
 					m_dLoopTime = 0.0;
 					ClearDamagedTarget();
@@ -875,6 +875,11 @@ void CEM1100::PlayBC()
 	}
 }
 
+_float4 CEM1100::GetKineticTargetPos()
+{
+	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
+}
+
 _bool CEM1100::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;
@@ -1156,6 +1161,9 @@ void CEM1100::AfterLocal180Turn()
 
 void CEM1100::Adjust_MoveAxis(_double TimeDelta)
 {
+	if (m_pModelCom->GetPlayAnimation() == nullptr)
+		return;
+
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		_float3 vVelocity;

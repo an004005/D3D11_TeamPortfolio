@@ -50,6 +50,8 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
+	SetUpIntroFSM();
+
 	m_eEnemyName = EEnemyName::EM0320;
 	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
@@ -226,7 +228,7 @@ void CEM0320::SetUpAnimationEvent()
 		});
 }
 
-void CEM0320::SetUpFSM()
+void CEM0320::SetUpMainFSM()
 {
 	CEnemy::SetUpFSM();
 	/*
@@ -429,6 +431,50 @@ void CEM0320::SetUpFSM()
 		.Build();
 }
 
+void CEM0320::SetUpIntroFSM()
+{
+	m_pFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+
+			.AddTransition("Idle to JumpAtk", "JumpAtk")
+				.Predicator([this] { return !m_bIntro; })
+
+		.AddState("JumpAtk")
+			.OnStart([this]
+			{
+				m_pController->SetActive(false);
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_204_AL_atk_a3_start");
+				m_pModelCom->Find_Animation("AS_em0300_204_AL_atk_a3_start")->SetPlayRatio(0.3);
+				m_bIntro = true;
+			})
+			.Tick([this](_double TimeDelta)
+			{
+					_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+					vPos += XMVectorSet(0.f, -1.f, 0.f, 0.f) * 5.f * TimeDelta;
+
+					m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+			})
+			.OnExit([this]
+			{
+				m_fGravity = 25.f;			
+			})
+			.AddTransition("JumpAtk to JumpEnd", "JumpEnd")
+				.Predicator([this] { return m_bOnFloor; })
+
+		.AddState("JumpEnd")
+			.OnStart([this]
+			{	
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_207_AL_atk_a3_end");
+			})
+			.AddTransition("JumpEnd to Idle", "Idle")
+				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.95f); })
+
+
+		.Build();
+
+}
+
 void CEM0320::BeginTick()
 {
 	CEnemy::BeginTick();
@@ -447,6 +493,10 @@ void CEM0320::BeginTick()
 	}
 
 	// m_pASM->AttachAnimSocket("FullBody", { m_pModelCom->Find_Animation("AS_em0300_160_AL_threat") });
+
+	_vector vPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	vPosition += XMVectorSet(0.f, 1.f, 0.f, 0.f) * 8.f;
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPosition);
 
 	m_pEMUI->Create_BossUI();
 	m_b2ndPhase = true;

@@ -572,6 +572,11 @@ void CEM0110::CheckHP(DAMAGE_PARAM& tDamageParams)
 		__super::CheckHP(tDamageParams);
 }
 
+_float4 CEM0110::GetKineticTargetPos()
+{
+	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
+}
+
 _bool CEM0110::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;

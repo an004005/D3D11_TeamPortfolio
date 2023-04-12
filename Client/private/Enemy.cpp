@@ -238,10 +238,6 @@ void CEnemy::SetUpSound()
 void CEnemy::SetUpFSM()
 {
 	Safe_Release(m_pFSM);
-
-	if (KBSound++ > 0)
-		MSG_BOX("It's an honor!!");
-
 }
 
 void CEnemy::SetUpUI()
@@ -399,6 +395,9 @@ void CEnemy::SetDead()
 	
 	//UI 삭제
 	Safe_Release(m_pEMUI);
+
+	//안개 삭제
+	m_pRendererCom->SetFog(false);
 }
 
 void CEnemy::FindTarget()

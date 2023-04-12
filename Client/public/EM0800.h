@@ -32,7 +32,8 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual void PlayBC() override;
-
+	virtual _float4 GetKineticTargetPos() override;
+	
 public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }

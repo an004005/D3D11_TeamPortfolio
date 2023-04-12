@@ -39,7 +39,7 @@ public:
 	_float GetPlayRatio() const { return static_cast<_float>(m_PlayTime / m_Duration); }
 	_bool IsFinished() const { return m_bFinished; }
 	void SetFinish(_bool bFinish) { m_bFinished = bFinish; }
-
+	 
 	void SetFinish() { m_bFinished = true; }
 	void SetPlayTime(_double PlayTime) { m_PlayTime = PlayTime; }
 	void SetTickPerSec(_double TickPerSec) { m_TickPerSecond = TickPerSec; }

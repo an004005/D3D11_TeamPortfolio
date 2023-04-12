@@ -58,6 +58,21 @@ void CEMUI::Create_UIInfo()
 	}
 }
 
+void CEMUI::Delete_UIInfo()
+{
+	if (m_pShieldUI != nullptr)
+	{
+		m_pShieldUI->SetDelete();
+		m_pShieldUI = nullptr;
+	}
+
+	if (m_pHPUI != nullptr)
+	{
+		m_pHPUI->SetDelete();
+		m_pHPUI = nullptr;
+	}
+}
+
 void CEMUI::Update_UIInfo()
 {
 	//if (m_bDead == true) return;
@@ -86,7 +101,12 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
 	_float4 vHitPosition = tDamageParams.vHitPosition;
-
+	
+	if (tDamageParams.pCauser == nullptr)
+	{
+		vHitPosition = m_pOwner->GetKineticTargetPos();
+	}
+	
 	vHitPosition.x += CMathUtils::RandomFloat(-1.f, 1.f);
 	vHitPosition.y += CMathUtils::RandomFloat(-0.5f, 1.f);
 	vHitPosition.z += CMathUtils::RandomFloat(-1.f, 1.f);
@@ -197,14 +217,23 @@ CEMUI* CEMUI::Create(CEnemy* pEnemy)
 
 void CEMUI::Free()
 {
-	if(m_pShieldUI != nullptr)
+	if (m_pShieldUI != nullptr)
+	{
 		m_pShieldUI->SetDelete();
+		m_pShieldUI = nullptr;
+	}
 
 	if (m_pHPUI != nullptr)
+	{
 		m_pHPUI->SetDelete();
+		m_pHPUI = nullptr;
+	}
 
-	if(m_BossHp != nullptr)
+	if (m_BossHp != nullptr)
+	{
 		m_BossHp->SetDelete();
+		m_BossHp = nullptr;
+	}
 
 	if (m_pCGEffect != nullptr)
 	{

@@ -32,7 +32,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
-
+	virtual _float4 GetKineticTargetPos() override;
+	virtual _bool Exclude();
 public:
 	_bool	IsChangePhase() const { return m_bChangePhase; }
 public:
@@ -54,8 +55,8 @@ public:
 public:
 	//АјАн
 	void Fall_Overlap();
-	void Shout1_Overlap();
-	void Shout2_Overlap();
+	void Shout_Overlap();
+	//void Shout2_Overlap();
 	void Stamp_Overlap();
 	void Swing_SweepSphere(const string& BoneName);
 	void Rush_SweepSphere();

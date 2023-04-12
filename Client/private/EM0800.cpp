@@ -619,6 +619,16 @@ void CEM0800::PlayBC()
 	}
 }
 
+_float4 CEM0800::GetKineticTargetPos()
+{
+	_uint random = CMathUtils::RandomUInt(1);
+
+	_float4	LeftWeak = XMLoadFloat4x4(&GetRigidBody("Weak_LeftArm")->GetPxWorldMatrix()).r[3];
+	_float4 RightWeak = XMLoadFloat4x4(&GetRigidBody("Weak_RightArm")->GetPxWorldMatrix()).r[3];
+	
+	return random == 0 ? LeftWeak : RightWeak;
+}
+
 _bool CEM0800::IsPlayingSocket() const
 {
 	return m_pASM->isSocketEmpty("FullBody") == false;

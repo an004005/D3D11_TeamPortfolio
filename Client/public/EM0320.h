@@ -33,8 +33,8 @@ public:
 	virtual void SetUpComponents(void* pArg) override;
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
-	virtual void SetUpFSM() override;
-
+	 void SetUpMainFSM();
+	void SetUpIntroFSM();
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
@@ -129,6 +129,9 @@ private:
 	_uint m_fWeakExplosionCnt = 0;
 
 	_float4x4 pivot;
+
+
+	_bool m_bIntro = false;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
