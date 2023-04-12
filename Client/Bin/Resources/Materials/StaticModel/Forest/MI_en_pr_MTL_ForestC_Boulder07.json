@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder07_col.dds",
-            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder07_nrm.png",
-            "../Bin/Resources/Environments/Location/LC09/props/Nature/TEX_ForestC_Boulder07_msk.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TEX_ForestC_Boulder07_col.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TEX_ForestC_Boulder07_nrm.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TEX_ForestC_Boulder07_msk.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 1
 }

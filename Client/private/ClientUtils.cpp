@@ -127,6 +127,7 @@ string CClientUtils::GetEnemyProtoTag(EEnemyName eName)
 	   "Monster_em700", // 초파리
 	   "Monster_em750", // 파리
 	   "Monster_em800", // 브론존
+	   "Monster_em900", // 문어
 	   "Monster_em1100", // 물
 	   "Monster_em1200", // 나오미
 	   "NotUsing", // 중대장

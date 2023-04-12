@@ -18,7 +18,7 @@
         "Textures" : [
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/Texture/T_ch0800_Hood_COL.png",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/Texture/T_ch0800_Hood_NML.png",
-            ".",
+            "",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch800/Texture/T_ch0800_Hood_CTL.png"
         ],
         "Pass" : 10

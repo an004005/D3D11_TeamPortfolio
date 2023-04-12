@@ -1,16 +1,16 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_pr_SG_BuildingA_ALB.dds",
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_pr_SG_BuildingA_NML.png",
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_pr_SG_BuildingA_RMA.dds"
-        ],
-        "Pass" : 1
-    }
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingA_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingA_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SG_BuildingA_RMA.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

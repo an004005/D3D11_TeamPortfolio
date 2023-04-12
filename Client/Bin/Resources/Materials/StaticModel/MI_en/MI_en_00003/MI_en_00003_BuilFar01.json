@@ -1,18 +1,22 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [ 0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall.png",
-            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall_NML.png",
-            "../Bin/Resources/Environments/Location/lc001/03_Texture/T_lo055_en001_wall_roughness.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lo055_en001_wall_roughness.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

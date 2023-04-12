@@ -67,13 +67,19 @@ struct PS_OUT
 	float4		vFlag : SV_TARGET6;
 };
 
+struct PS_OUT_ALPHA
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 // g_vec4_0 : 아웃라인 rgb : 컬러, a : 두께
 
 PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	float flags = SHADER_TOON;
+	float flags = SHADER_NONE_SHADE;
 
 	Out.vDiffuse = (float4)1.f;
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -100,6 +106,7 @@ float4 NormalPacking(PS_IN In)
 }
 
 // g_int_0 : 칼 색 플래그
+// g_float_0 : 앰비언트 비율
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
 {
@@ -137,6 +144,9 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 		if (g_tex_on_2)
 			Out.vAMB = g_tex_2.Sample(LinearSampler, In.vTexUV);
+		else
+			Out.vAMB = Out.vDiffuse * g_float_0;
+
 		Out.vCTL = g_tex_3.Sample(LinearSampler, In.vTexUV);
 	}
 
@@ -144,6 +154,19 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
 	Out.vOutline = g_vec4_0;
 	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, 0.f);
+
+	return Out;
+}
+
+// g_float_1 : 무기 삭제 디솔브
+PS_OUT PS_CH0300_WEAPON(PS_IN In)
+{
+	float fNoise = g_tex_4.Sample(LinearSampler, TilingAndOffset(In.vTexUV, 0.5f, 0.f)).r;
+	if (g_float_1 < fNoise)
+		discard;
+
+	PS_OUT			Out = PS_TOON_DEFAULT(In);
+
 
 	return Out;
 }
@@ -177,6 +200,21 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TOON_DEFAULT();
 	}
+
+	//2
+	pass ch0300_Weapon
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_CH0300_WEAPON();
+	}
+
 }
 
 

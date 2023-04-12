@@ -1,18 +1,23 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0, 0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Laboratory_in_Loft_Style/T_Box2_2048_B.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Laboratory_in_Loft_Style/T_Box2_2048_N.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_Laboratory_in_Loft_Style/T_en_Box2_RMA1.png"
-        ],
-        "Pass" : 4
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Box2_2048_B.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Box2_2048_N.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_en_Box2_RMA1.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

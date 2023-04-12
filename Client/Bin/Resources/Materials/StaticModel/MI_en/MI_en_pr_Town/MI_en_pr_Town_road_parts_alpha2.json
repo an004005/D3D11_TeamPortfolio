@@ -1,15 +1,15 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_pr_Town_road_parts_alpha2_ALB.dds",
-            "../Bin/Resources/Environments/Location/CommonLC/LC06_LC56/T_pr_Town_road_parts_alpha2_NML.png"    
-        ],
-        "Pass" : 1
-    }
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_road_parts_alpha2_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_road_parts_alpha2_NML.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

@@ -10,6 +10,7 @@
 #include "ImguiUtils.h"
 #include "Enemy.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_IronBars_SingleBars::CSpecial_IronBars_SingleBars(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -47,6 +48,8 @@ HRESULT CSpecial_IronBars_SingleBars::Initialize(void * pArg)
 			{
 				if (m_bHit) return;
 
+				m_bAddAble = true;
+
 				m_bHit = true;
 				m_fChangeKineticTimer = 0.f;
 
@@ -66,6 +69,8 @@ HRESULT CSpecial_IronBars_SingleBars::Initialize(void * pArg)
 
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Iron_Bar_Hit_Particle")
 					->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), { 0.f, 1.f, 0.f, 0.f });
+
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
 			}
 		});
 
@@ -265,7 +270,7 @@ void CSpecial_IronBars_SingleBars::Shooting(_float4 vTargetPos)
 		vDir = XMVector3Normalize(vTargetPos - vMyPos);
 	}
 
-	vDir *= 50.f;
+	vDir *= 40.f;
 
 	m_pCollider->AddVelocity(vDir);
 }

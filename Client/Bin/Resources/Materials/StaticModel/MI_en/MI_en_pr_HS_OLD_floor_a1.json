@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC13/props/pr_HS_floor_a1_01_HS_floor_a1_M_BaseColor.png",
-            "../Bin/Resources/Environments/Location/LC13/props/pr_HS_floor_a1_01_HS_floor_a1_M_Normal.png",
-            "../Bin/Resources/Environments/Location/LC13/props/pr_HS_floor_a1_01_HS_floor_a1_M_OcclusionRoughnessMetallic.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/pr_HS_floor_a1_01_HS_floor_a1_M_BaseColor.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/pr_HS_floor_a1_01_HS_floor_a1_M_Normal.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/pr_HS_floor_a1_01_HS_floor_a1_M_OcclusionRoughnessMetallic.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 1
 }

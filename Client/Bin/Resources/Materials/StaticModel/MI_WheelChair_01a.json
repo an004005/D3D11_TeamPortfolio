@@ -1,19 +1,24 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0, 0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC14/props/TX_WheelChair_01a_ALB.png",
-            "../Bin/Resources/Environments/Location/LC14/props/TX_WheelChair_01a_NRM.png",
-            "../Bin/Resources/Environments/Location/LC14/props/TX_WheelChair_01a_RMA.png",
-            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_Glay.png"
-        ],
-        "Pass" : 4
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_NRM.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_WheelChair_01a_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.png"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

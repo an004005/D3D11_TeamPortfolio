@@ -1,18 +1,23 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0, 0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car03/T_pr_Car03_ALB_0.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car01_NML_0.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car01/T_pr_Car01_RMA_1.png"
-        ],
-        "Pass" : 4
-    },
-    "InstancingPass" : 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car03_ALB_0.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car01_NML_0.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car01_RMA_1.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

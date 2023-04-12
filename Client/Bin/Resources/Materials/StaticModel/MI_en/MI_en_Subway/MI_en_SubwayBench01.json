@@ -1,1 +1,25 @@
-{"Active":true,"AlphaBlend":false,"InstancingPass":2,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[0],"Pass":4,"Textures":["../Bin/Resources/Environments/Location/LC08/props/pr_SubwayBench01/T_pr_SubwayBench01_ALB.png\u0000","../Bin/Resources/Environments/Location/LC08/props/pr_SubwayBench01/T_pr_SubwayBench01_NML.png\u0000","../Bin/Resources/Environments/Location/LC08/props/pr_SubwayBench01/T_pr_SubwayBench01_RMA.png\u0000","../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Trash_Pack_Vol_7/T_Detail1_N.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}
+{
+	"Active": true,
+	"AlphaBlend": false,
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayBench01_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayBench01_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_SubwayBench01_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail1_N.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 2
+}

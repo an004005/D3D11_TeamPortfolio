@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway_Tunnel/03_Texture/Tiling/TX_wires_01_ALB.png",
-            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway_Tunnel/03_Texture/Tiling/TX_wires_01_NRM.png",
-            "../Bin/Resources/Environments/00_Common/99_Marketplace/Subway_Tunnel/03_Texture/Tiling/TX_wires_01_RMA.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_wires_01_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_wires_01_NRM.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_wires_01_RMA.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 1
 }

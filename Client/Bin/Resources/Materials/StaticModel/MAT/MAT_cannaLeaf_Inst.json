@@ -1,1 +1,22 @@
-{"InstancingPass":1,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0],"Ints":[0],"Pass":4,"Textures":["../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/peaceLily_LPV2_BaseColor.dds\u0000","../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/peaceLily_LPV2_Normal.png\u0000","../Bin/Resources/Environments/Prop/10_Props/Nature/Plants/pr_HouseplantPack/Geometry/T_en_peaceLily_RMA.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}
+{
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/peaceLily_LPV2_BaseColor.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/peaceLily_LPV2_Normal.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_en_peaceLily_RMA.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
+}

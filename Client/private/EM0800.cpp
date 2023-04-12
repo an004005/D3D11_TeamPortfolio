@@ -35,11 +35,11 @@ HRESULT CEM0800::Initialize(void * pArg)
 
 	// 배치툴에서 조절할 수 있게 하기
 	{
-		m_iMaxHP = 5000;
+		m_iMaxHP = 55000;
 		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 8000;
-		m_iMaxCrushGauge = 8000;
+		m_iCrushGauge = m_iMaxHP;
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;

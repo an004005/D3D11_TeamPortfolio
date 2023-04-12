@@ -1,1 +1,25 @@
-{"Active":false,"AlphaBlend":false,"InstancingPass":1,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[0.0,0.0],"Ints":[1],"Pass":4,"Textures":["","../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car05/T_pr_Car05_NML_0.png\u0000","../Bin/Resources/Environments/Prop/10_Props/Vehicles/pr_Car05/T_pr_Car05_RMA_0.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}
+{
+	"Active": false,
+	"AlphaBlend": false,
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			1
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car05_NML_0.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Car05_RMA_0.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
+}

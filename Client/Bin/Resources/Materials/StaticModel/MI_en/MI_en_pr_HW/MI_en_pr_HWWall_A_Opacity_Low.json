@@ -1,19 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [9.2591],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_DT_Abandoned_Prison/Fine_Sand_TEX.dds",
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_DT_Abandoned_Prison/Fine_Sand_NORM.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Interior/pr_DT_Abandoned_Prison/Floor_01_REFL.dds",
-            "../Bin/Resources/Environments/Location/LC10/props/Base/T_Noise_02_N.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 2
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			9.2591
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Fine_Sand_TEX.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Fine_Sand_NORM.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Floor_01_REFL.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Noise_02_N.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 2
 }

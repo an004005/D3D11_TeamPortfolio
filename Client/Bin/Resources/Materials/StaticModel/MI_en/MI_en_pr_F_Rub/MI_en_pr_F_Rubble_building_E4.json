@@ -1,19 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [1],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC10/props/Crack/T_Rubble_Small01_ALB.png",
-            "../Bin/Resources/Environments/Location/LC10/props/Crack/T_Rubble_Small_NML.png",
-            "",
-            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 2
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			1
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Rubble_Small01_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Rubble_Small_NML.dds",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail_N.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 2
 }

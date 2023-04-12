@@ -1,17 +1,17 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Plastic-Rubber/vinyl_floor_tiles_beige/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_ALB.dds",
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Plastic-Rubber/vinyl_floor_tiles_beige/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_NML.png",
-            "../Bin/Resources/Environments/00_Common/01_Material/SBS/Plastic-Rubber/vinyl_floor_tiles_beige/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_RMA.dds",
-            "../Bin/Resources/00_Common/03_Texture/T_cm_Fil_GlayLinear.png"
-        ],
-        "Pass" : 1
-    }
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Vinyl_Floor_Tiles_Beige_01_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_GlayLinear.png"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

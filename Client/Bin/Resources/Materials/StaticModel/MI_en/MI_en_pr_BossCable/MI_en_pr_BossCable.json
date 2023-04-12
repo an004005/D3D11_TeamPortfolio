@@ -1,19 +1,19 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/Cable/pr_Cable01/T_pr_Cable01.dds",
-            "",
-            "",
-            "../Bin/Resources/Environments/Prop/10_Props/Electronics/Cable/pr_Cable01/T_pr_Cable01_EMI.dds"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass" : 3
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Cable01.dds",
+			"",
+			"",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Cable01_EMI.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 3
 }

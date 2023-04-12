@@ -1,18 +1,23 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [0.0, 0.0],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/pr_Hospital_Pack/Tx_IVStand_Dif.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/pr_Hospital_Pack/Tx_IVStand_Nor.png",
-            ""
-        ],
-        "Pass" : 4
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Tx_IVStand_Dif.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Tx_IVStand_Nor.dds",
+			""
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

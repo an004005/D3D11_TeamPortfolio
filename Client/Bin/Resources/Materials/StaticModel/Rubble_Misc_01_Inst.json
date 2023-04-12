@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Rubble_Misc_A_Color.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Rubble_Misc_A_Normal.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Industrial_Decor_Pack/Rubble_Misc_A_Channel.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Misc_A_Color.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Misc_A_Normal.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Misc_A_Channel.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 1
 }

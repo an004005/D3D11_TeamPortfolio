@@ -1,18 +1,18 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_PedestrianBridge02/T_pr_PedestrianBridge02_02_ALB.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_PedestrianBridge02/T_pr_PedestrianBridge02_02_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/Street/pr_PedestrianBridge02/T_pr_PedestrianBridge02_02_RMA.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 1
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_PedestrianBridge02_02_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_PedestrianBridge02_02_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_PedestrianBridge02_02_RMA.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

@@ -1,25 +1,26 @@
-    {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxToonModel",
-    "ShaderParams" : {
-        "Ints" : [0],
-        "Floats" : [],
-        "Float2s" : [],
-        "Float4s" : [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_COL.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_NML.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_cm_Fil_Glay.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_CTL.png",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_DefaultColorGrading.png"
-        ],
-        "Pass" : 1
-    }
+{
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [0.5],
+		"Textures": [
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_NML.png",
+			"",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_CTL.png"
+		],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel"
 }

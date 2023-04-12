@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
 
 CSpecial_HBeam_Bundle::CSpecial_HBeam_Bundle(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CSpecialObject(pDevice, pContext)
@@ -59,6 +60,8 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
+			m_bAddAble = true;
+
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 			tParam.eAttackSAS = ESASType::SAS_END;
@@ -82,6 +85,9 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 				->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f), { 1.f, 1.f ,1.f, 0.f });
 
 			HBeam_Decompose();
+
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
 		}
 	});
 
@@ -97,6 +103,12 @@ void CSpecial_HBeam_Bundle::BeginTick()
 
 void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 {
+	if (m_bUseCheck)
+	{
+		for (auto& iter : m_pHBeam_Single)
+			static_cast<CSpecialObject*>(iter)->Set_Used();
+	}
+
 	if (m_bDeadCheck)
 	{
 		m_fDeadTime -= (_float)TimeDelta;
@@ -144,6 +156,8 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 		{
 			//Safe_Release(m_pCollider);
 
+			_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+
 			for (auto& iter : m_pHBeam_Single)
 			{
 				static_cast<CSpecial_HBeam_Single*>(iter)->Activate(true);
@@ -157,6 +171,23 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 		m_pCollider->Activate(false);
 		for (auto& iter : m_pHBeam_Single)
 			iter->Tick(TimeDelta);
+	}
+
+	if (m_bAddAble && !m_bDeadCheck)
+	{
+		for (auto& iter : m_pHBeam_Single)
+		{
+			_float4 vDir = static_cast<CSpecial_HBeam_Single*>(iter)->GetOriginDir();
+			_float fLength = vDir.Length();
+
+			if (fLength > 0.f)
+			{
+				vDir.Normalize();
+				vDir.w = 0.f;
+				vDir *= -5.f;
+				static_cast<CSpecial_HBeam_Single*>(iter)->AddVelocity({ vDir.x, vDir.y - 0.1f, vDir.z });
+			}
+		}
 	}
 }
 
@@ -247,7 +278,7 @@ void CSpecial_HBeam_Bundle::HBeam_Throw(_float4 vDir)
 	_float3 vTorque = { 0.f, 2000.f, 0.f };
 	vForce.Normalize();
 
-	vForce *= (m_fThrowPower * g_fTimeDelta);
+	vForce *= m_fThrowPower;
 
 	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
@@ -272,7 +303,7 @@ void CSpecial_HBeam_Bundle::HBeam_Single_Turn()
 	for (auto& iter : m_pHBeam_Single)
 	{
 		static_cast<CSpecial_HBeam_Single*>(iter)->HBeam_Turn();
-		static_cast<CSpecial_HBeam_Single*>(iter)->CreateKineticParticle();
+		//static_cast<CSpecial_HBeam_Single*>(iter)->CreateKineticParticle();
 	}
 }
 
@@ -289,6 +320,18 @@ void CSpecial_HBeam_Bundle::HBeam_Single_SetTrigger(_bool bKinetic)
 {
 	for (auto& iter : m_pHBeam_Single)
 		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(bKinetic);
+}
+
+void CSpecial_HBeam_Bundle::HBeam_Slower()
+{
+	for (auto& iter : m_pHBeam_Single)
+	{
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(false);
+		_float4 vDir = static_cast<CSpecial_HBeam_Single*>(iter)->GetOriginDir();
+		vDir.Normalize();
+		vDir.w = 0.f;
+		static_cast<CSpecial_HBeam_Single*>(iter)->AddVelocity({vDir.x, vDir.y, vDir.z});
+	}
 }
 
 void CSpecial_HBeam_Bundle::HBeam_Collision()
@@ -370,6 +413,11 @@ void CSpecial_HBeam_Bundle::HBeam_Explosion()
 
 void CSpecial_HBeam_Bundle::HBeam_SetDeadTimer()
 {
+	for (auto& iter : m_pHBeam_Single)
+	{
+		static_cast<CSpecial_HBeam_Single*>(iter)->Set_Trigger(false);
+	}
+
 	m_bDeadCheck = true;
 	m_fDeadTime = 3.f;
 }

@@ -17,7 +17,7 @@
         "Pass": 5,
         "Textures": [
             "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8205_Mask_COL.png\u0000",
-            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8205_Mask_NML\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8205_Mask_NML.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds\u0000",
             "../Bin/Resources/Model/AnimModel/Monster/em8200/Texture/T_em8205_Mask_CTL.png\u0000",
             "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png\u0000",

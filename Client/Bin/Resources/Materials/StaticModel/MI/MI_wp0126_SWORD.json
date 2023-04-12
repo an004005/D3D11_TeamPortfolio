@@ -1,28 +1,28 @@
 {
-    "Active": true,
-    "AlphaBlend": true,
-    "ShaderParams": {
-        "Float2s": [],
-        "Float4s": [
-            [
-                0.0,
-                0.0,
-                0.0,
-                0.0
-            ]
-        ],
-        "Float4x4s": [],
-        "Floats": [],
-        "Ints": [
-            0
-        ],
-        "Pass": 1,
-        "Textures": [
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_COL.png\u0000",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_NML.png\u0000",
-            "",
-            "../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_CTL.png\u0000"
-        ]
-    },
-    "ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel"
+	"Active": true,
+	"AlphaBlend": false,
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [0.5],
+		"Textures": [
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_NML.png",
+			"",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_126/Texture/T_wp0126_Sword_CTL.png"
+		],
+		"Float4s": [
+			[
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		]
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel"
 }

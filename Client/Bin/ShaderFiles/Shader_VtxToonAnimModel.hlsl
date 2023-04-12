@@ -178,7 +178,8 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 		if (iDebuffState == 1)
 		{
 			vColor = COL_FIRE;
-			fEmissive = 2.f;
+
+			fEmissive = 11.f;
 		}
 		else
 		{

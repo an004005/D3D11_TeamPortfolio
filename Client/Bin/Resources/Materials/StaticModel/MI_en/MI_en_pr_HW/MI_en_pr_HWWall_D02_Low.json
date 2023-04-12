@@ -1,19 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [0.3],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Location/LC10/props/Base/T_HWWall_D02_ALB.dds",
-            "../Bin/Resources/Environments/Location/LC10/props/Base/T_HWWall_D01_NML.png",
-            "../Bin/Resources/Environments/Location/LC10/props/Base/T_HWWall_D01_RMA.dds",
-            "../Bin/Resources/Environments/Prop/10_Props/Industrial/pr_Trash_Pack_Vol_7/T_Detail1_N.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 2
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			0.3
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_HWWall_D02_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_HWWall_D01_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_HWWall_D01_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail1_N.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"InstancingPass": 2
 }

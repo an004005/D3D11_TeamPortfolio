@@ -23,12 +23,16 @@ public:
 	void SetModel(const string & strModelTag);
 	void SetRenderGroup(CRenderer::RENDERGROUP eGroup) { m_eRenderGroup = eGroup; }
 	void SetPlayAnimation(const string& strAnim);
-	void PlayAnimation(_float fRatio);
+	void PlayAnimation();
+	void PlayAnimation_Sync(_float fRatio);
 
 private:
 	class CRenderer* m_pRendererCom = nullptr;
 	class CModel* m_pModel = nullptr;
 	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_NONALPHABLEND_TOON;
+
+private:
+	_double		m_fTimeDelta = 0.f;
 
 public:
 	static CModelTester* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
@@ -53,6 +57,9 @@ private:
 
 	unordered_map<string, CModelTester*> m_Models;
 	unordered_map<string, list<pair<CModelTester*, string>>> m_AnimEvents;
+
+private:
+	_bool	m_bSync = false;
 
 public:
 	static CImgui_CamAnimEditor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);

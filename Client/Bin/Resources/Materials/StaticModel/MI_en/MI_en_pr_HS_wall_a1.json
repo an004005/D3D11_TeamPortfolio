@@ -1,19 +1,21 @@
 {
-    "ShaderProtoTag" : "Prototype_Component_Shader_VtxModel",
-    "ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-    "ShaderParams" : {
-        "Ints" : [],
-        "Floats" : [0.445438],
-        "Float2s" : [],
-        "Float4s" : [],
-        "Float4x4s" : [],
-        "Textures" : [
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/HS_floor/T_pr_HS_wall_a1_ALB.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/HS_floor/T_pr_HS_wall_a1_NML.png",
-            "../Bin/Resources/Environments/Prop/10_Props/Exterior/hospital/HS_floor/T_pr_HS_wall_a1_RMA.png",
-            "../Bin/Resources/Environments/00_Common/03_Texture/T_Detail_N.png"
-        ],
-        "Pass" : 1
-    },
-    "InstancingPass": 2
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			0.445438
+		],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_HS_wall_a1_ALB.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_HS_wall_a1_NML.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_HS_wall_a1_RMA.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_Detail_N.dds"
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 2
 }

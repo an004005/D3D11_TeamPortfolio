@@ -46,6 +46,10 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iDefense = 15;
 	m_tPlayerStat.iBP = 50;
 	m_tPlayerStat.iCoin = 5000;
+
+	m_tPlayerStat.bCopy = false;
+
+	m_tPlayerStat.bAir = false;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
@@ -170,6 +174,17 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	else if (true == m_pSpecialObject->IsDeleted()) m_pSpecialObject = nullptr;
 
 	SAS_Checker();
+
+	if (0.f < m_fRandomShakeMaintain)
+	{
+		m_fRandomShakeMaintain -= (_float)TimeDelta;
+		Camera_Random_Shake(m_fRandomShakeForce);
+	}
+	else
+	{
+		m_fRandomShakeMaintain = 0.f;
+		m_fRandomShakeForce = 0.f;
+	}
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
@@ -229,6 +244,42 @@ void CPlayerInfoManager::Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP)
 
 	if (m_tPlayerStat.m_iHP > m_tPlayerStat.m_iMaxHP)	m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
 	if (m_tPlayerStat.m_iHP < 0)						m_tPlayerStat.m_iHP = 0;
+}
+
+void CPlayerInfoManager::Change_HanabiHP(CHANGETYPE eType, _uint ChangeHP)
+{
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tHanabiStat.iHP += ChangeHP;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tHanabiStat.iHP < ChangeHP)
+			ChangeHP = m_tHanabiStat.iHP;
+
+		m_tHanabiStat.iHP -= ChangeHP;
+	}
+
+	if (m_tHanabiStat.iHP > m_tHanabiStat.iMaxHP)	m_tHanabiStat.iHP = m_tHanabiStat.iMaxHP;
+	if (m_tHanabiStat.iHP < 0)						m_tHanabiStat.iHP = 0;
+}
+
+void CPlayerInfoManager::Change_TsugumiHP(CHANGETYPE eType, _uint ChangeHP)
+{
+	if (CHANGE_INCREASE == eType)
+	{
+		m_tTsugumiStat.iHP += ChangeHP;
+	}
+	else if (CHANGE_DECREASE == eType)
+	{
+		if (m_tTsugumiStat.iHP < ChangeHP)
+			ChangeHP = m_tTsugumiStat.iHP;
+
+		m_tTsugumiStat.iHP -= ChangeHP;
+	}
+
+	if (m_tTsugumiStat.iHP > m_tTsugumiStat.iMaxHP)	m_tTsugumiStat.iHP = m_tTsugumiStat.iMaxHP;
+	if (m_tTsugumiStat.iHP < 0)						m_tTsugumiStat.iHP = 0;
 }
 
 void CPlayerInfoManager::Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy)
@@ -328,6 +379,7 @@ void CPlayerInfoManager::Set_SasType(ESASType eType)
 		case ESASType::SAS_PENETRATE:
 		case ESASType::SAS_SUPERSPEED:
 		case ESASType::SAS_TELEPORT:
+		case ESASType::SAS_COPY:
 		{
 			m_PlayerSasTypeList.push_back(eType);
 			break;
@@ -376,6 +428,22 @@ void CPlayerInfoManager::Change_SasEnergy(CHANGETYPE eChangeType, ESASType eSasT
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].MaxEnergy;
 	if (m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy < 0.f)
 		m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = 0.f;
+}
+
+void CPlayerInfoManager::Set_SasEnergy(ESASType eSasType, _float iSetEnergy)
+{
+	m_tPlayerStat.Sasese[static_cast<_uint>(eSasType)].Energy = iSetEnergy;
+}
+
+void CPlayerInfoManager::Release_SasEnergy_All()
+{
+	for (_uint i = 0; i < SAS_CNT; ++i)
+	{
+		if (Get_isSasUsing(ESASType(i)))
+		{
+			m_tPlayerStat.Sasese[i].Energy = 0.1f;
+		}
+	}
 }
 
 void CPlayerInfoManager::Set_PlayerWorldMatrix(_fmatrix worldmatrix)
@@ -507,6 +575,14 @@ void CPlayerInfoManager::Camera_Random_Shake(_float fForce)
 	{
 		static_cast<CCamSpot*>(m_pCamSpot)->Random_Shaking(fForce);
 	}
+}
+
+void CPlayerInfoManager::Camera_Random_Shake_Maintain(_float fForce, _float fMaintain)
+{
+	if (0.f != m_fRandomShakeMaintain || 0.f != m_fRandomShakeForce) return;
+
+	m_fRandomShakeMaintain = fMaintain;
+	m_fRandomShakeForce = fForce;
 }
 
 void CPlayerInfoManager::Camera_Axis_Shaking(_float4 vDir, _float fShakePower)

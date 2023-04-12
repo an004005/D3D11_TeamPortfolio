@@ -39,6 +39,8 @@ public:
 	void	HBeam_Single_Finish();
 	void	HBeam_Single_SetTrigger(_bool bKinetic);
 
+	void	HBeam_Slower();
+
 	void	HBeam_Collision();
 	void	HBeam_Explosion();
 
@@ -48,6 +50,11 @@ private:
 	_bool  m_bDeadCheck = false;
 	_float m_fDeadTime = 0.f;
 	_float m_fCollisionTime = 0.f;
+	_float4 m_vOriginPos = { 0.f, 0.f, 0.f, 1.f };
+
+private:
+	CDoOnce	HBeam_Control;
+	_float	m_fDecomposeTimer = 0.f;
 
 public:
 	_bool	HBeam_isDecomposed() { return m_bRenderOption; }	// false면 디컴포즈된거임
@@ -63,7 +70,8 @@ private:
 	_bool	m_bThrow = false;
 	_bool	m_bRenderOption = true;	//	true면 번들 렌더, false면 싱글 렌더
 	CDoOnce tt;
-	_float	m_fThrowPower = 3000.f;
+	CDoOnce DecomposeAddForce;
+	_float	m_fThrowPower = 40.f;
 	_float	m_fFloatPower = 11.5f;
 
 public:

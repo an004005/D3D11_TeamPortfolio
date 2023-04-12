@@ -21,7 +21,6 @@ typedef struct tKineticBatch
 	class CMapKinetic_Object* pKineticObj = nullptr;
 
 	_float fCoolTime = 0.f;
-	_bool  bOverlapCheck = false;
 
 }KINETIC_BATCH;
 
@@ -36,6 +35,7 @@ private:
 public:
 	HRESULT	Initialize(Json json);
 	void	Tick(_double TimeDelta);
+	void Clear();
 
 private:
 	void	OverlapCheck(KINETIC_BATCH& tBatch);

@@ -4,7 +4,9 @@
 #include "Shader.h"
 #include "Animation.h"
 #include "Model.h"
+#include "ImguiUtils.h"
 #include "JsonStorage.h"
+#include "JsonLib.h"
 #include "GameUtils.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
@@ -51,6 +53,8 @@ void CConsumption_Item::BeginTick()
     __super::BeginTick();
     m_pModel->SetPlayAnimation("AS_co0700_001_wait");
 
+    m_strName = m_vecItemName[m_eItemType];
+
     _int ia = 0;
 }
 
@@ -59,23 +63,34 @@ void CConsumption_Item::Tick(_double TimeDelta)
     __super::Tick(TimeDelta);
     m_pModel->Tick(TimeDelta);
     m_pModel->Play_Animation(TimeDelta);
-    //Update_Animation(TimeDelta);
 
-    PlayerOverlapCheck();
+    if (!m_bOverlapCheck && m_pModel->Find_Animation("AS_co0700_001_wait")->IsFinished())
+    {
+        m_pModel->Find_Animation("AS_co0700_001_wait")->Reset();
+    }
+
+    //Update_Animation(TimeDelta);
+    if(!m_bGetItem)
+         PlayerOverlapCheck();
 }
 
 void CConsumption_Item::Late_Tick(_double TimeDelta)
 {
     __super::Late_Tick(TimeDelta);
 
-    if (m_bOverlapCheck)
-    {
-        //random_shuffle(m_vecItemName.begin(), m_vecItemName.end());
+    if (m_bOverlapCheck && !m_bGetItem)
+    {      
         // Item_Manager에게 정보 전달
-        CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);
-
-        m_bDelete = true;
+        CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);                
+        m_pModel->SetPlayAnimation("AS_co0700_002_get");
+        m_bGetItem = true;      
         // ★ 애니메이션 교체(Get) -> 애니메이션에 Add_EventCaller로 삭제 적용
+    }
+
+    if (m_pModel->GetPlayAnimation() == m_pModel->Find_Animation("AS_co0700_002_get") && 
+        m_pModel->Find_Animation("AS_co0700_002_get")->IsFinished())
+    {
+        m_bDelete = true;
     }
 
     if (m_bVisible && (nullptr != m_pRenderer))
@@ -123,14 +138,43 @@ void CConsumption_Item::Imgui_RenderProperty()
         }
         ImGui::EndCombo();
     }
+#ifdef _DEBUG
     if (ImGui::Button("Item Name Decision"))
     {
-        for (int i = 0; i < ITEMTYPE_END; ++i)
+        if (MessageBox(NULL, L"Really this Type Save?", L"System Message", MB_YESNO) == IDYES)
         {
-            if (m_eItemType == i)
+            for (int i = 0; i < ITEMTYPE_END; ++i)
             {
-                m_strName = m_vecItemName[i];
+                if (m_eItemType == i)
+                {
+                    m_strName = m_vecItemName[i];
+                }
             }
+        }       
+    }
+#endif
+}
+
+void CConsumption_Item::SaveToJson(Json& json)
+{
+    CGameObject::SaveToJson(json); 
+    for (int i = 0; i < ITEMTYPE_END; ++i)
+    {
+        if (m_eItemType == i)
+        {
+            json["ItemType"] = m_eItemType;
+        }
+    }   
+}
+
+void CConsumption_Item::LoadFromJson(const Json& json)
+{
+    CGameObject::LoadFromJson(json);    
+    for (int i = 0; i < ITEMTYPE_END; ++i)
+    {
+        if (json["ItemType"] == i)
+        {
+            m_eItemType = json["ItemType"];           
         }
     }
 }
