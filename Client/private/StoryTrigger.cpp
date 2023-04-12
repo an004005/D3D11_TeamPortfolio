@@ -2,8 +2,8 @@
 #include "..\public\StoryTrigger.h"
 #include "Player.h"
 #include "JsonStorage.h"
-#include "Canvas_LeftTalk.h"
 #include "Canvas_MainTalk.h"
+#include "GameManager.h"
 
 CStoryTrigger::CStoryTrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CTriggerEx(pDevice, pContext)
@@ -58,13 +58,12 @@ void CStoryTrigger::TriggerInEvent(CGameObject* pObject)
 {
 	if (false == m_bTalk)
 	{
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
-		auto pTips = dynamic_cast<CCanvas_LeftTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
-
 		for (size_t i = 0; i < m_vecTalkIndex.size(); i++)
 		{
-			if(m_vecTalkIndex.size() - 1) pTips->Add_Talk(m_vecTalkIndex[i], true, m_iQuest); // 마지막 Talk 에 Quest 넣기
-			else pTips->Add_Talk(m_vecTalkIndex[i], true, -1);
+			if(m_vecTalkIndex.size() - 1)
+				CGameManager::GetInstance()->Set_LeftTalk(m_vecTalkIndex[i], m_iQuest); // 마지막 Talk 에 Quest 넣기
+			else 
+				CGameManager::GetInstance()->Set_LeftTalk(m_vecTalkIndex[i]);
 		}
 	}
 	else

@@ -19,6 +19,7 @@
 
 #include "Canvas_BossHpMove.h"
 #include "ImguiUtils.h"
+#include "GameManager.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -723,7 +724,18 @@ void CEM0320::DeBuff_Oil()
 
 _bool CEM0320::IsWeak(CRigidBody* pHitPart)
 {
-	return pHitPart == m_pWeak;
+	_bool bisweak =  pHitPart == m_pWeak;
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(93);
+		}
+	}
+
+	return bisweak;
 }
 
 void CEM0320::CheckHP(DAMAGE_PARAM& tDamageParams)
@@ -898,6 +910,10 @@ void CEM0320::Free()
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
+
+	CGameManager::GetInstance()->Set_LeftTalk(7);
+	CGameManager::GetInstance()->Set_LeftTalk(8);
+	CGameManager::GetInstance()->Set_LeftTalk(9);
 
 	//for. BossUI 
 	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 

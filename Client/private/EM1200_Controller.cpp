@@ -92,7 +92,7 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 
-	ESimpleAxis eSimpeAxis = m_pCastedOwner->IsTargetFront(45.f) ? ESimpleAxis::NORTH : ESimpleAxis::SOUTH;
+	ESimpleAxis eSimpeAxis = m_pCastedOwner->IsTargetFront(70.f) ? ESimpleAxis::NORTH : ESimpleAxis::SOUTH;
 
 	if (eSimpeAxis == ESimpleAxis::NORTH)
 	{
@@ -210,7 +210,7 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 
 	if (m_bChangePhase == false)
 	{
-		if (m_fTtoM_Distance <= 7.f)
+		if (m_fTtoM_Distance <= 8.f)
 			Tick_Near_1Phase(TimeDelta);
 		else if(m_fTtoM_Distance <= 20.f)
 			Tick_Mid(TimeDelta);
@@ -220,7 +220,7 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 
 	else
 	{
-		if (m_fTtoM_Distance <= 7.f)
+		if (m_fTtoM_Distance <= 8.f)
 			Tick_Near_2Phase(TimeDelta);
 		else if (m_fTtoM_Distance <= 12.f)
 			Tick_Mid(TimeDelta);

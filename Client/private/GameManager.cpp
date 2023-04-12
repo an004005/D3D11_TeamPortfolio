@@ -71,8 +71,6 @@ void CGameManager::Tick(_double TimeDelta)
 	//	m_bSuccessQuest = true; // 0번 먼저 누르고 9번 누르기
 
 	//}
-
-	Quest_Tick();
 }
 
 void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
@@ -87,12 +85,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 
 void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 {
-
-}
-
-void CGameManager::Set_AddlItem(const wstring szItemName)
-{
-	m_pCanvas_Acquisition->Set_AddItem(szItemName);
+	
 }
 
 void CGameManager::Set_FullItem(const wstring szItemName)
@@ -100,33 +93,48 @@ void CGameManager::Set_FullItem(const wstring szItemName)
 	m_pCanvas_Acquisition->Set_FullItem(szItemName);
 }
 
-void CGameManager::Quest_Tick()
+void CGameManager::Set_AddlItem(const wstring szItemName)
 {
-	// Test 용 각 레벨에서 할 예정
-	if (true == m_bQuest)
-	{
-		m_bQuest = false;
-
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
-		json["QuestIndex"] = 0;
-		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
-		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
-
-		if (LEVEL_UI == LEVEL_NOW) return;
-
-		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
-		json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		m_pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
-		assert(m_pDistanceUI != nullptr && "Failed to Clone : DistanceUI");
-		
-	}
-
-	if (true == m_bSuccessQuest)
-	{
-		m_bSuccessQuest = false;
-		m_pCanvas_Quest->Set_SuccessQuest();
-	}
+	m_pCanvas_Acquisition->Set_AddItem(szItemName);
 }
+
+void CGameManager::Set_LeftTalk(const _int iIndex, const _int iQuest)
+{
+	m_pCanvas_LeftTalk->Add_Talk(iIndex, iQuest);
+}
+
+void CGameManager::Set_SuccessQuest(const _uint iCoin)
+{
+	m_pCanvas_Acquisition->Set_SuccessQuest(iCoin);
+}
+
+//void CGameManager::Quest_Tick()
+//{
+//	// Test 용 각 레벨에서 할 예정
+//	if (true == m_bQuest)
+//	{
+//		m_bQuest = false;
+//
+//		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+//		json["QuestIndex"] = 0;
+//		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+//		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+//
+//		if (LEVEL_UI == LEVEL_NOW) return;
+//
+//		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+//		json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
+//		m_pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+//		assert(m_pDistanceUI != nullptr && "Failed to Clone : DistanceUI");
+//		
+//	}
+//
+//	if (true == m_bSuccessQuest)
+//	{
+//		m_bSuccessQuest = false;
+//		m_pCanvas_Quest->Set_SuccessQuest();
+//	}
+//}
 
 CGameManager* CGameManager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

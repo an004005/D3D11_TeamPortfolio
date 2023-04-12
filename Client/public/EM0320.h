@@ -129,6 +129,9 @@ private:
 	_uint m_fWeakExplosionCnt = 0;
 
 	_float4x4 pivot;
+
+	_bool	m_bWeakTalk = { false };
+
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

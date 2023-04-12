@@ -9,6 +9,9 @@
 #include "MathUtils.h"
 #include "Material.h"
 #include "EMCable.h"
+#include "GameManager.h"
+#include "HelperClasses.h"
+#include "PlayerInfoManager.h"
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -765,6 +768,11 @@ void CEM1200::SetUpFSM()
 			.AddState("Cable_Start")
 				.OnStart([this]
 				{
+						m_bCableTalk.IsNotDo([]
+							{
+								CGameManager::GetInstance()->Set_LeftTalk(88);
+							});
+
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_217_AL_atk_a5_motif2_start");
 				})
 				.Tick([this](_double TimeDelta)
@@ -966,7 +974,18 @@ void CEM1200::Imgui_RenderProperty()
 
 _bool CEM1200::IsWeak(CRigidBody* pHitPart)
 {
-	return 	pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(91);
+		}
+	}
+
+	return bisweak;
 }
 
 _bool CEM1200::IsPlayingSocket() const
@@ -1075,6 +1094,23 @@ void CEM1200::FogControl(_double TimeDelta)
 			m_pRendererCom->GetFogDesc().fGlobalDensity = 0.1f;
 	}
 	
+	if (CheckSASType(ESASType::SAS_PENETRATE) == false)
+	{
+		//m_pEMUI->Delete_UIInfo();
+		CPlayerInfoManager::GetInstance()->Set_TargetedMonster(nullptr);
+
+		_float fMaxFogDensity = 0.8f;
+		_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
+		if (FogGlobalDensity >= fMaxFogDensity)
+		{
+			m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+
+			m_bFogTalk.IsNotDo([]
+				{
+					CGameManager::GetInstance()->Set_LeftTalk(89);
+				});
+		}
+	}
 }
 
 void CEM1200::Fall_Overlap()

@@ -10,6 +10,7 @@
 #include "CurveFloatMapImpl.h"
 #include "ImguiUtils.h"
 #include "Material.h"
+#include "GameManager.h"
 
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -544,7 +545,18 @@ void CEM0110::Imgui_RenderProperty()
 
 _bool CEM0110::IsWeak(CRigidBody* pHitPart)
 {
-	return pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(92);
+		}
+	}
+
+	return bisweak;
 }
 
 void CEM0110::HitEffect(DAMAGE_PARAM& tDamageParams)

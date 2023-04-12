@@ -51,7 +51,7 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	if (LEVEL_NOW != LEVEL_UI) return;
+	//if (LEVEL_NOW != LEVEL_UI) return;
 
 	// 사용 후 삭제되는 애들
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
@@ -88,8 +88,7 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		//m_pCanvas_Alarm->Set_MapName();
 
-
-		
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
 	}
 
 	// 생성후 재사용 하는 애들

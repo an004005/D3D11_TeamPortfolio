@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "UI_Manager.h"
+#include "GameManager.h"
 
 #include "DefaultUI.h"
 #include "ShaderUI.h"
@@ -202,6 +203,10 @@ void CCanvas_Quest::Success_Tick()
 		{
 			Set_SuccessQuest();
 			dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Set_MonsterDeadCount();
+
+			CGameManager::GetInstance()->Set_LeftTalk(13);
+			CGameManager::GetInstance()->Set_LeftTalk(14);
+			CGameManager::GetInstance()->Set_SuccessQuest(500);
 		}
 	}
 }
