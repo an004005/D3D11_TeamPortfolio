@@ -95,32 +95,9 @@ void CPlayerHotFixer::Tick()
 			}
 		}
 
-		if (ImGui::Button("Attach to RightWeapon"))
-		{
-			m_pPlayer->m_strWeaponAttachBone = "RightWeapon";
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Attach to Sheath"))
-		{
-			m_pPlayer->m_strWeaponAttachBone = "Sheath";
-		}
-		if (ImGui::Button("Attach to Sheath"))
-		{
-			m_pPlayer->m_strWeaponAttachBone = "Sheath";
-		}
-
 		ImGui::Checkbox("ShakeSmall", &m_bShakeSmall);
 		ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
 		ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
-
-		if (ImGui::Button("Copy_On"))
-		{
-			CPlayerInfoManager::GetInstance()->Set_Copy(true);
-		}
-		if (ImGui::Button("Copy_Off"))
-		{
-			CPlayerInfoManager::GetInstance()->Set_Copy(false);
-		}
 
 		if (m_bShakeSmall)
 		{
@@ -183,6 +160,7 @@ void CPlayerHotFixer::Tick()
 			m_pPlayer->m_pBrainFieldKineticComboStateMachine->SetState("BF_NO_USE_KINETIC_COMBO");
 			m_pPlayer->m_pBrainFieldAttackStateMachine->SetState("NO_USE_BRAINFIELD");
 			m_pPlayer->m_pBrainFieldFallStateMachine->SetState("BF_NO_USE_KINETIC_FALL");
+			m_pPlayer->m_pBrainFieldProductStateMachine->SetState("BRAINFIELD");
 
 			m_pPlayer->m_pASM->ClearAnimSocket();
 		}
@@ -242,6 +220,13 @@ void CPlayerHotFixer::Tick()
 			}
 			ImGui::Unindent(20.f);
 		}
+
+		if (ImGui::Button("Arrange_Cam"))
+		{
+			m_pPlayer->m_pCamSpot->Arrange_Cam();
+		}
+
+		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
 
 	}
 	ImGui::CollapsingHeader("~HotFixer");

@@ -326,12 +326,10 @@ void CPlayerInfoManager::Change_BrainFieldMaintain(CHANGETYPE eType, _float Chan
 	}
 	else if (CHANGE_DECREASE == eType)
 	{
-		m_tPlayerStat.fBrainFieldMaintain = ChangeBrain;
+		if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
+			ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
 
-		//if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
-		//	ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
-
-		//m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
+		m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
 	}
 
 	if (m_tPlayerStat.fBrainFieldMaintain > m_tPlayerStat.fMaxBrainFieldMaintain)	
@@ -599,6 +597,34 @@ void CPlayerInfoManager::Camera_Axis_Sliding(_float4 vDir, _float fShakePower)
 	{
 		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Sliding(vDir, fShakePower);
 	}
+}
+
+void CPlayerInfoManager::Camera_Arrange()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Arrange_Cam();
+	}
+}
+
+HRESULT CPlayerInfoManager::Set_PlayerCam(CCamera* pCam)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(pCam))
+	{
+		m_pPlayerCam = pCam;
+	}
+
+	return S_OK;
+}
+
+CCamera* CPlayerInfoManager::Get_PlayerCam()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayerCam))
+	{
+		return m_pPlayerCam;
+	}
+
+	return nullptr;
 }
 
 void CPlayerInfoManager::SAS_Checker()

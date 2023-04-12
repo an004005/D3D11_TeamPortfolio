@@ -3,6 +3,7 @@
 #include "Base.h"
 #include "Client_Defines.h"
 #include "Transform.h"
+#include "AnimCam.h"
 
 //플레이어가 가지는 정보를 싱글톤으로 관리
 
@@ -227,6 +228,11 @@ public:
 	void			Camera_Random_Shake_Maintain(_float fForce, _float fMaintain);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
+	void			Camera_Arrange();
+
+public:
+	HRESULT			Set_PlayerCam(CCamera* pAnimCam);
+	CCamera*		Get_PlayerCam();
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
@@ -242,6 +248,7 @@ private:	// 상호작용 관련
 
 private:
 	CGameObject*	m_pCamSpot = nullptr;
+	CCamera*		m_pPlayerCam = nullptr;
 
 private:
 	_matrix			m_PlayerWorldMatrix = XMMatrixIdentity();

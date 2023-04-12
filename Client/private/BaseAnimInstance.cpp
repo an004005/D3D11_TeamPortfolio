@@ -1339,6 +1339,12 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ false, false, false, false, false, true, true, false, true, false });
+
+				CGameInstance::GetInstance()->SetCameraFovCurve("Charge02_ActionCam");
+			})
+			.FinishEvent([&]()
+			{
+				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 
 				.AddTransition("CHARGE_ATTACK_02 to JUMP_FALL", "JUMP_FALL")
@@ -1379,6 +1385,12 @@ HRESULT CBaseAnimInstance::Initialize(CModel * pModel, CGameObject * pGameObject
 			{ 
 				static_cast<CPlayer*>(m_pTargetObject)
 					->SetAbleState({ false, false, false, false, false, true, true, false, true, false });
+
+				CGameInstance::GetInstance()->SetCameraFovCurve("Charge03_ActionCam");
+			})
+			.FinishEvent([&]()
+			{
+				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 
 				.AddTransition("CHARGE_ATTACK_03 to JUMP_FALL", "JUMP_FALL")
