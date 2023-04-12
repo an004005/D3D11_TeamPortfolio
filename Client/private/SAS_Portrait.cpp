@@ -8,7 +8,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 
-#define USE_PORTRAIT
+// #define USE_PORTRAIT
 
 /*********************
  *CPostVFX_SAS_Portrait
@@ -390,10 +390,10 @@ void CSAS_Portrait::Tick(_double TimeDelta)
 	// 	// Start_SAS(ESASType::SAS_PENETRATE);
 	// 	// Start_SAS(ESASType::SAS_SUPERSPEED);
 	// }
-	 if (CGameInstance::GetInstance()->KeyDown(DIK_9))
-	 {
-	 	Start_SAS(ESASType::SAS_HARDBODY);
-	 }
+	 // if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	 // {
+	 // 	Start_SAS(ESASType::SAS_COPY);
+	 // }
 
 	if (m_eCurType != ESASType::SAS_END)
 	{

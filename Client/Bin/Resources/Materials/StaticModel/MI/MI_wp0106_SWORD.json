@@ -1,8 +1,20 @@
 {
-	"AlphaBlend": true,
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel",
 	"Active": true,
+	"AlphaBlend": true,
 	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [0.5],
+		"Textures": [
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_NML.png",
+			"",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_106/Texture/T_wp0106_Sword_CTL.png"
+		],
 		"Float4s": [
 			[
 				0.0,
@@ -10,19 +22,7 @@
 				0.0,
 				0.0
 			]
-		],
-		"Floats": [],
-		"Float2s": [],
-		"Float4x4s": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_COL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_NML.dds",
-			"",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_wp0106_Sword_CTL.dds"
-		],
-		"Pass": 1,
-		"Ints": [
-			0
 		]
-	}
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonModel"
 }

@@ -23,12 +23,12 @@
 			0
 		],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Mask_COL.dds",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Mask_COL.png",
 			"",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0100_Mask_AMB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Mask_CTL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ef_scl_noi_013.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_PatternMap.dds"
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ch0100_Mask_AMB.dds",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Mask_CTL.png",
+            "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_ef_scl_noi_013.png",
+            "..\\Bin\\Resources\\Meshes\\Scarlet_Nexus\\AnimModels\\Player\\Texture\\T_PatternMap.png"
 		]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxToonAnimModel"

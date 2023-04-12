@@ -713,9 +713,9 @@ void CAI_CH0500::Free()
 {
 	__super::Free();
 
-	//for (auto& iter : m_vecWeapon)
-	//	Safe_Release(iter);
-	//m_vecWeapon.clear();
+	for (auto& iter : m_vecWeapon)
+		Safe_Release(iter);
+	m_vecWeapon.clear();
 
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pModel);

@@ -1,22 +1,22 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
-	"InstancingPass": 1,
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Float4s": [],
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 4,
+		"Float4x4s": [],
 		"Floats": [
 			0.0
 		],
-		"Float2s": [],
-		"Float4x4s": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_en_CannaFlower_ALB.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/CannaFlower_LP_Normal.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_en_CannaFlower_RMA.dds"
 		],
-		"Pass": 4,
-		"Ints": [
-			0
-		]
+		"Float4s": []
 	},
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing"
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
 }

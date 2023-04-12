@@ -1,15 +1,15 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.dds",
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_Glay.png",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TX_BonboriLight01_E.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
-	}
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
 }

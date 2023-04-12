@@ -255,7 +255,7 @@ PS_OUT PS_SANKOKU_A3(PS_IN In)
 	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
 	
-	Out.vRMA = float4(g_float_1, g_float_2, g_float_3, 0.f);
+	Out.vRMA = float4(g_vec4_0.xyz, 0.f);
 
 	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
 	return Out;
