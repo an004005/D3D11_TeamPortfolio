@@ -78,7 +78,7 @@ technique11 DefaultTechnique
 {
 	pass Rect
 	{
-		SetRasterizerState(RS_NonCulling);
+		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 

@@ -32,10 +32,12 @@ public:
 
 public:
 	virtual void Imgui_RenderProperty() override;
+	virtual void	SaveToJson(Json& json) override;
+	virtual void	LoadFromJson(const Json& json) override;
 
 private:
 	void	Update_Animation(_double TimeDelta);
-	void	PlayerOverlapCheck();
+	void	PlayerOverlapCheck();	
 
 private:
 	CRenderer* m_pRenderer = nullptr;
@@ -49,6 +51,8 @@ private:
 	_float      m_fDuration = 0.2f;
 
 	_bool		m_bOverlapCheck = false;
+
+	_bool		m_bGetItem = false;
 
 	// 이번에 획득한 아이템이 무엇인가? Item Infomation
 	vector<wstring>		m_vecItemName;

@@ -297,7 +297,7 @@ void CInvisibleWall::CreateInstanceData()
 	}
 
 	VtxData.reserve(SplinePoints.size() * 2);
-	IndexData.reserve(SplinePoints.size() * 2 - 2);
+	IndexData.reserve(SplinePoints.size() * 4);
 	_float fU = 0.f;
 
 	VTXNORTEX vtxNor;
@@ -316,41 +316,66 @@ void CInvisibleWall::CreateInstanceData()
 		VtxData.push_back(vtxNor);
 
 
+	if (i < SplinePoints.size() - 1)
+	{
+		Index._0 = i * 2;
+		Index._1 = Index._0 + 2;
+		Index._2 = Index._0 + 3;
+		IndexData.push_back(Index);
+
+		Index._1 = Index._0 + 3;
+		Index._2 = Index._0 + 1;
+		IndexData.push_back(Index);
+
+		Index._0 = i * 2;
+		Index._1 = Index._0 + 1;
+		Index._2 = Index._0 + 3;
+		IndexData.push_back(Index);
+
+		Index._1 = Index._0 + 3;
+		Index._2 = Index._0 + 2;
+		IndexData.push_back(Index);
+
+		const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+		fU += fLength;
+	}
+
+
 		// 시계방향일 때
-		if (bClockWise)
-		{
-			if (i < SplinePoints.size() - 1)
-			{
-				Index._0 = i * 2;
-				Index._1 = Index._0 + 2;
-				Index._2 = Index._0 + 3;
-				IndexData.push_back(Index);
+		//if (bClockWise)
+		//{
+		//	if (i < SplinePoints.size() - 1)
+		//	{
+		//		Index._0 = i * 2;
+		//		Index._1 = Index._0 + 2;
+		//		Index._2 = Index._0 + 3;
+		//		IndexData.push_back(Index);
 
-				Index._1 = Index._0 + 3;
-				Index._2 = Index._0 + 1;
-				IndexData.push_back(Index);
+		//		Index._1 = Index._0 + 3;
+		//		Index._2 = Index._0 + 1;
+		//		IndexData.push_back(Index);
 
-				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
-				fU += fLength;
-			}
-		}
-		else
-		{
-			if (i < SplinePoints.size() - 1)
-			{
-				Index._0 = i * 2;
-				Index._1 = Index._0 + 1;
-				Index._2 = Index._0 + 3;
-				IndexData.push_back(Index);
+		//		const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+		//		fU += fLength;
+		//	}
+		//}
+		//else
+		//{
+		//	if (i < SplinePoints.size() - 1)
+		//	{
+		//		Index._0 = i * 2;
+		//		Index._1 = Index._0 + 1;
+		//		Index._2 = Index._0 + 3;
+		//		IndexData.push_back(Index);
 
-				Index._1 = Index._0 + 3;
-				Index._2 = Index._0 + 2;
-				IndexData.push_back(Index);
+		//		Index._1 = Index._0 + 3;
+		//		Index._2 = Index._0 + 2;
+		//		IndexData.push_back(Index);
 
-				const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
-				fU += fLength;
-			}
-		}
+		//		const _float fLength = XMVectorGetX(XMVector3Length(SplinePoints[i] - SplinePoints[i + 1]));
+		//		fU += fLength;
+		//	}
+		//}
 	}
 
 

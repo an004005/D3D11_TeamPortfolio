@@ -4741,6 +4741,12 @@
         "bLooping": true,
         "vecEvent": []
     },
+    "AS_co0700_001_wait": {
+        "Duration": 400.0,
+        "TickPerSecond": 24.0,
+        "bLooping": true,
+        "vecEvent": []
+    },
     "AS_em0100_155_AL_walk": {
         "Duration": 114.0,
         "TickPerSecond": 24.0,
