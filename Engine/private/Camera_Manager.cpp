@@ -262,7 +262,7 @@ void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
 		if (0.f == m_pFovCurve->GetValue(fRatio))
 			int iA = 0;
 
-		if (30.f > fRatio || 90.f < fRatio)
+		if (30.f > pMainCam->GetFOV() || 90.f < pMainCam->GetFOV())
 		{
 			ReleaseCameraFovCurve();
 			pMainCam->SetFOV(60.f);

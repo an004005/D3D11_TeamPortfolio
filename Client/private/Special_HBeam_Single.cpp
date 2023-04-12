@@ -68,6 +68,9 @@ void CSpecial_HBeam_Single::AfterPhysX()
 	__super::AfterPhysX();
 
 	m_pCollider->Update_AfterPhysX(m_pTransformCom);
+
+	m_vOriginDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&m_vBeforePos);
+	m_vBeforePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 }
 
 HRESULT CSpecial_HBeam_Single::Render()
@@ -147,6 +150,14 @@ void CSpecial_HBeam_Single::HBeam_Finish()
 void CSpecial_HBeam_Single::Activate(_bool bActivate)
 {
 	m_pCollider->Activate(bActivate);
+}
+
+void CSpecial_HBeam_Single::AddVelocity(_float3 vVelocity)
+{
+	m_pCollider->Set_Trigger(false);
+	m_pCollider->Set_Kinetic(false);
+
+	m_pCollider->AddVelocity(vVelocity);
 }
 
 HRESULT CSpecial_HBeam_Single::SetUp_Components(void * pArg)

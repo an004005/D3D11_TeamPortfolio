@@ -114,7 +114,12 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 				if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 				{
 					DAMAGE_PARAM tParam;
-					tParam.eAttackType = EAttackType::ATK_HEAVY;
+
+					if (false == m_bToAir)
+						tParam.eAttackType = EAttackType::ATK_HEAVY;
+					else
+						tParam.eAttackType = EAttackType::ATK_TO_AIR;
+
 					tParam.iDamage = 200;
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 

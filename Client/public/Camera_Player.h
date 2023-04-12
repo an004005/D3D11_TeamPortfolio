@@ -45,6 +45,7 @@ private:
 	HRESULT SetUp_Components();
 
 private:
+	_float	m_fCamDistance = 4.f;
 	_float	m_fDistanceMagnification = 1.f;
 	_float	m_fBeforeCamDistance = -1.f;
 
