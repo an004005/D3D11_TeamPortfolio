@@ -25,7 +25,6 @@ private:
 	void	RihgtInfoMove_Tick(const _double& TimeDelta);
 	void	WeaponkindPick_Tick();
 
-	void	ChangeWeapon(const wstring wsChangeWeaponName);
 	void	ArrowTick();
 
 private:

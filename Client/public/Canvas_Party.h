@@ -26,7 +26,7 @@ typedef struct tagPickInfo
 
 class CCanvas_Party : public CCanvas
 {
-	enum class SASMEMBER { YUITO, HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
+	enum class SASMEMBER { YUITO, HANABI, TSUGUMI, GEMMA, LUCA, SEEDEN, ARASHI, KYOTO, SASMEMBER_END };
 
 protected:
 	CCanvas_Party(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -50,19 +50,23 @@ private:
 	void	Reserve_Tick();
 	void	ReserveArrow_Tick();
 
+	_int wrap(_int x, _int low, _int high);
+
 private:
 	PICKINFO	m_tPickIngo = {};
 	SASMEMBER	 m_eSASMember = { CCanvas_Party::SASMEMBER::YUITO };
 
-	array<PICKINFO, 4>	m_arrSASInfo;
+	array<PICKINFO, 5>	 m_arrSASInfo;
 
 	// 화살표를 화면에 보이게 하기 위해서
-	array<_bool, 4>	m_arrReserve_Index = { false, false, false, false };	// 한 번만 체크하기 위한 용도
+	array<_bool, 5>	m_arrReserve_Index = { false, false, false, false, false };	// 한 번만 체크하기 위한 용도
 	_uint	m_iReserve_Count = { 0 };
 
 	// SAS
-	array<PICKINFO, 4>	m_arrReserve;	// 앞면 0, 1 / 뒷면 0, 1
-	_bool	m_bFrontPage = { false };
+	array<PICKINFO, 5>	m_arrReserve;	// 앞면 0, 1 / 뒷면 0, 1
+	//_bool	m_bFrontPage = { false };
+	_int	m_iFrontPage = { 0 };
+	_int	m_iCount = { 0 };
 
 public:
 	static CCanvas_Party* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

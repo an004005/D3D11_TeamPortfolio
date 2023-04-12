@@ -9,9 +9,11 @@
 #include "Canvas_SAGragting_Go.h"
 #include "Canvas_SAContainer_Down.h"
 #include "Canvas_MainTalk.h"
+#include "Canvas_LeftTalk.h"
 #include "Canvas_Alarm.h"
 #include "Canvas_BossHpMove.h"
 #include "PlayerInfoManager.h"
+#include "Item_Manager.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -48,6 +50,8 @@ HRESULT CCanvas_MouseCousor::Initialize(void* pArg)
 void CCanvas_MouseCousor::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
+
+	if (LEVEL_NOW != LEVEL_UI) return;
 
 	// 사용 후 삭제되는 애들
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0))
@@ -91,12 +95,20 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 	// 생성후 재사용 하는 애들
 	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
-		// 대화창
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
-		m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
-		m_pCanvas_MainTalk->Add_Talk(0);
+		//// 메인 대화창
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+		//m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
+		//m_pCanvas_MainTalk->Add_Talk(0);
 		//m_pCanvas_MainTalk->Add_Talk(1);
 		//m_pCanvas_MainTalk->Add_Talk(2);
+
+		//// 왼쪽 대화창
+		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+		//CCanvas_LeftTalk * pCanvas_MainTalk = dynamic_cast<CCanvas_LeftTalk * > (CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_LeftTalk", &json));
+		//pCanvas_MainTalk->Add_Talk(0, true);
+		//pCanvas_MainTalk->Add_Talk(1, true);
+		//pCanvas_MainTalk->Add_Talk(2, true);
+		//pCanvas_MainTalk->Add_Talk(3, true, 0);
 
 		//m_pCanvas_SAGragting_Go->Set_Input();
 		//m_pCanvas_SAContainer_Down->Set_Input();
@@ -124,6 +136,22 @@ void CCanvas_MouseCousor::Imgui_RenderProperty()
 	{
 		CPlayerInfoManager::GetInstance()->Set_Exp(_uint(iExp));
 	}
+
+	if (ImGui::Button("Player Attack"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
+	}
+
+	if (ImGui::Button("Add Etc Item"))
+	{
+		CItem_Manager::GetInstance()->Set_ItemCount(L"복제의 김기범", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"발화랑 투시 남았는데.. 의 옥수현", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"초고속의 전인복", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"방전의 정지훈", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"순간이동의 박종욱", 1);
+		CItem_Manager::GetInstance()->Set_ItemCount(L"염력의 안중환", 1);
+	}
+	
 }
 
 CCanvas_MouseCousor* CCanvas_MouseCousor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

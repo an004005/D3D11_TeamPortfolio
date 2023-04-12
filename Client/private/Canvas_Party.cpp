@@ -44,7 +44,6 @@ HRESULT CCanvas_Party::Initialize(void* pArg)
 	m_eSASMember = CCanvas_Party::SASMEMBER::YUITO;
 	PickInfo();
 	SASMemberInfo_Initialize();
-	m_bFrontPage = true;
 
 	return S_OK;
 }
@@ -179,7 +178,7 @@ HRESULT CCanvas_Party::Render()
 #pragma endregion
 
 #pragma region XX
-	if (m_bFrontPage == true)
+	if (0 == m_iFrontPage)
 	{
 		for (size_t i = 0; i < 2; i++)
 		{
@@ -210,13 +209,44 @@ HRESULT CCanvas_Party::Render()
 			}
 		}
 	}
-	else
+	else if (1 == m_iFrontPage)
 	{
 		for (size_t i = 2; i < 4; i++)
 		{
 			if (true == m_arrReserve_Index[i])
 			{
 				if (i == 2)
+				{
+					vPosition = Find_ChildUI(L"Party_XX0_ReserveB")->GetScreenSpaceLeftTop();
+					dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_XX0_Reserve_Info"))->Set_Float2sX(m_arrReserve[i].fShaderInfoIndex);
+				}
+				else
+				{
+					vPosition = Find_ChildUI(L"Party_XX1_ReserveB")->GetScreenSpaceLeftTop();
+					dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_XX1_Reserve_Info"))->Set_Float2sX(m_arrReserve[i].fShaderInfoIndex);
+				}
+
+				wsprintf(szText, TEXT("%d"), m_arrReserve[i].iBondLevel);
+				pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(336.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
+				wsprintf(szText, TEXT("%d"), m_arrReserve[i].iLevel);
+				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(207.0f, 46.0f), 0.f, vFontBigSize, vColor);
+				wsprintf(szText, TEXT("%d / %d"), m_arrReserve[i].iHP, m_arrReserve[i].iMaxHP);
+				CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(283.0f, 70.0f), 0.f, vFontSmaillSize, vColor);
+				dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_03_Member_HpBar"))->Set_Ber(_float(tTsugumiStat.iHP) / tTsugumiStat.iMaxHP);
+
+				pGameInstance->Render_Font(L"Pretendard32", m_arrReserve[i].szName, vPosition + _float2(178.0f, 22.0f), 0.f, vFontBigSize, vColor);
+				pGameInstance->Render_Font(L"Pretendard32", L"레벨", vPosition + _float2(180.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
+				pGameInstance->Render_Font(L"Pretendard32", L"체력", vPosition + _float2(180.0f, 70.0f), 0.f, vFontSmaillSize, vColor);
+			}
+		}
+	}
+	if (2 == m_iFrontPage)
+	{
+		for (size_t i = 3; i < 5; i++)
+		{
+			if (true == m_arrReserve_Index[i])
+			{
+				if (i == 3)
 				{
 					vPosition = Find_ChildUI(L"Party_XX0_ReserveB")->GetScreenSpaceLeftTop();
 					dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_XX0_Reserve_Info"))->Set_Float2sX(m_arrReserve[i].fShaderInfoIndex);
@@ -260,9 +290,9 @@ void CCanvas_Party::Imgui_RenderProperty()
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("KYOTO"))
+	if (ImGui::Button("GEMMA"))
 	{
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("LUCA"))
@@ -279,13 +309,18 @@ void CCanvas_Party::Imgui_RenderProperty()
 	{
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("KYOTO"))
+	{
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
+	}
 }
 
 void CCanvas_Party::SASMemberInfo_Initialize()
 {
 	PICKINFO	tPickInfo;
 
-	tPickInfo.szName = L"쿄카 에덴";
+	tPickInfo.szName = L"겜마 개리슨";
 	tPickInfo.szSASNumber = L"KEK538232";
 	tPickInfo.iLevel = 13;
 	tPickInfo.iRemainingExp = 608;
@@ -340,6 +375,20 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.fShaderInfoIndex = { 4.0f };
 	tPickInfo.iSasMember = 6;
 	m_arrSASInfo[3] = tPickInfo;
+
+	tPickInfo.szName = L"쿄카 에덴";
+	tPickInfo.szSASNumber = L"Y03O15SH1";
+	tPickInfo.iLevel = 12;
+	tPickInfo.iRemainingExp = 958;
+	tPickInfo.iBondLevel = 5;
+	tPickInfo.iHP = 1352;
+	tPickInfo.iMaxHP = 1352;
+	tPickInfo.iSprbrPower = 97;
+	tPickInfo.iAttack = 153;
+	tPickInfo.iDefense = 76;
+	tPickInfo.fShaderInfoIndex = { 5.0f };
+	tPickInfo.iSasMember = 3;
+	m_arrSASInfo[4] = tPickInfo;
 }
 
 void CCanvas_Party::ChildRender_Tick()
@@ -365,12 +414,13 @@ void CCanvas_Party::ChildRender_Tick()
 				else dynamic_cast<CShaderUI*>(Find_ChildUI(L"Party_03_Member_Info"))->Set_Float2sX(1.0f);
 			}
 
-			if (iter->first == L"Party_XXDwonArrow" ||
-				iter->first == L"Party_XXDwonArrowB" ||
-				iter->first == L"Party_XXUpArrow" ||
-				iter->first == L"Party_XXUpArrowB")
+			if (3 > m_iReserve_Count)
 			{
-				continue;
+				if (iter->first == L"Party_XXDwonArrow" ||
+					iter->first == L"Party_XXDwonArrowB" ||
+					iter->first == L"Party_XXUpArrow" ||
+					iter->first == L"Party_XXUpArrowB")
+					continue;
 			}
 		}
 #pragma endregion
@@ -438,10 +488,12 @@ void CCanvas_Party::CurrentPick_Tick()
 	{
 		if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Get_OnButton())
 		{
-			if (m_bFrontPage)
+			if (0 == m_iFrontPage)
 				m_eSASMember = SASMEMBER(m_arrReserve[0].iSasMember);
-			else
+			else if (1 == m_iFrontPage)
 				m_eSASMember = SASMEMBER(m_arrReserve[2].iSasMember);
+			else if (2 == m_iFrontPage)
+				m_eSASMember = SASMEMBER(m_arrReserve[3].iSasMember);
 
 			PickInfo();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnButton();
@@ -461,10 +513,12 @@ void CCanvas_Party::CurrentPick_Tick()
 	{
 		if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Get_OnButton())
 		{
-			if (m_bFrontPage)
+			if (0 == m_iFrontPage)
 				m_eSASMember = SASMEMBER(m_arrReserve[1].iSasMember);
-			else
+			else if (1 == m_iFrontPage)
 				m_eSASMember = SASMEMBER(m_arrReserve[3].iSasMember);
+			else if (2 == m_iFrontPage)
+				m_eSASMember = SASMEMBER(m_arrReserve[4].iSasMember);
 
 			PickInfo();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnButton();
@@ -496,7 +550,7 @@ void CCanvas_Party::PickInfo()
 		m_tPickIngo.iHP = tStat.m_iHP;
 		m_tPickIngo.iMaxHP = tStat.m_iMaxHP;
 		m_tPickIngo.iSprbrPower = tStat.iSprbrPower;
-		m_tPickIngo.iAttack = tStat.iAttack;
+		m_tPickIngo.iAttack = static_cast<_int>(tStat.m_fBaseAttackDamage);
 		m_tPickIngo.iDefense = tStat.iDefense;
 
 		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(0.0f);
@@ -550,7 +604,7 @@ void CCanvas_Party::PickInfo()
 		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(_float(tStat.iExp) / tStat.iMaxExp);
 	}
 		break;
-	case Client::CCanvas_Party::SASMEMBER::KYOTO:
+	case Client::CCanvas_Party::SASMEMBER::GEMMA:
 	{
 		m_tPickIngo.szName = m_arrSASInfo[0].szName;
 		m_tPickIngo.szSASNumber = m_arrSASInfo[0].szSASNumber;
@@ -563,7 +617,7 @@ void CCanvas_Party::PickInfo()
 		m_tPickIngo.iAttack = m_arrSASInfo[0].iAttack;
 		m_tPickIngo.iDefense = m_arrSASInfo[0].iDefense;
 
-		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(8.0f);
+		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(3.0f);
 		dynamic_cast<CMain_SkillIconUI*>(Find_ChildUI(L"Party_BasicInfo_Icon"))->Set_Icon(3.0f);
 		dynamic_cast<CMain_SkillNameUI*>(Find_ChildUI(L"Party_BasicInfo_SkillName"))->Set_Name(3.0f);
 		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(1.0f);
@@ -630,6 +684,26 @@ void CCanvas_Party::PickInfo()
 		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(1.0f);
 	}
 	break;
+	case Client::CCanvas_Party::SASMEMBER::KYOTO:
+	{
+		m_tPickIngo.szName = m_arrSASInfo[4].szName;
+		m_tPickIngo.szSASNumber = m_arrSASInfo[4].szSASNumber;
+		m_tPickIngo.iLevel = m_arrSASInfo[4].iLevel;
+		m_tPickIngo.iRemainingExp = m_arrSASInfo[4].iRemainingExp;
+		m_tPickIngo.iBondLevel = m_arrSASInfo[4].iBondLevel;
+		m_tPickIngo.iHP = m_arrSASInfo[4].iHP;
+		m_tPickIngo.iMaxHP = m_arrSASInfo[4].iMaxHP;
+		m_tPickIngo.iSprbrPower = m_arrSASInfo[4].iSprbrPower;
+		m_tPickIngo.iAttack = m_arrSASInfo[4].iAttack;
+		m_tPickIngo.iDefense = m_arrSASInfo[4].iDefense;
+
+		dynamic_cast<CMain_FaceUI*>(Find_ChildUI(L"Party_BasicInfo_Face"))->Set_Face(8.0f);
+		dynamic_cast<CMain_SkillIconUI*>(Find_ChildUI(L"Party_BasicInfo_Icon"))->Set_Icon(8.0f);
+		dynamic_cast<CMain_SkillNameUI*>(Find_ChildUI(L"Party_BasicInfo_SkillName"))->Set_Name(8.0f);
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_HpBar"))->Set_Ber(1.0f);
+		dynamic_cast<CMain_BarUI*>(Find_ChildUI(L"Party_BasicInfo_LevelBer"))->Set_Ber(1.0f);
+	}
+	break;
 	default:
 		Assert("No Members");
 		break;
@@ -638,14 +712,14 @@ void CCanvas_Party::PickInfo()
 
 void CCanvas_Party::Reserve_Tick()
 {
-	if (m_iReserve_Count >= 4) return;		// 3 과 같아졌다면 모든 데이터를 채운 것 이기 때문에 반복문을 돌지 않도록 한다.
+	if (m_iReserve_Count >= 5) return;		// 3 과 같아졌다면 모든 데이터를 채운 것 이기 때문에 반복문을 돌지 않도록 한다.
 
-	if (CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO) == true)
+	if (CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::GEMMA) == true)
 	{
 		if (m_arrReserve_Index[0] == false)
 		{
 			m_arrReserve_Index[0] = true;
-			m_arrReserve[m_iReserve_Count] = m_arrSASInfo[0]; // m_arrReserve[m_iReserve_Count] : Reserve_Index 에 빈 순서대로 / m_arrSASInfo[0] 즉, 쿄카의 정보가 들어간다.
+			m_arrReserve[m_iReserve_Count] = m_arrSASInfo[0]; // m_arrReserve[m_iReserve_Count] : Reserve_Index 에 빈 순서대로 / m_arrSASInfo[0] 즉, 겜마의 정보가 들어간다.
 			++m_iReserve_Count;	// 현재까지 들어온 Reserve 의 개수를 센다.
 		}
 	}
@@ -680,6 +754,16 @@ void CCanvas_Party::Reserve_Tick()
 		}
 	}
 
+	if (CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::KYOTO) == true)
+	{
+		if (m_arrReserve_Index[4] == false)
+		{
+			m_arrReserve_Index[4] = true;
+			m_arrReserve[m_iReserve_Count] = m_arrSASInfo[4];
+			++m_iReserve_Count;
+		}
+	}
+
 	// m_iReserve_Count 가 3개 이상 이라면 화살표가 On 된다.
 	if (3 <= m_iReserve_Count)
 	{
@@ -697,14 +781,23 @@ void CCanvas_Party::ReserveArrow_Tick()
 	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXUpArrowB"))->Get_Input())
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXUpArrowB"))->Set_Input();
-		m_bFrontPage = true;
+		m_iFrontPage = wrap(--m_iCount, 0, 3);
 	}
 
 	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Get_Input())
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Set_Input();
-		m_bFrontPage = false;
+		m_iFrontPage = wrap(++m_iCount, 0, 3);
 	}
+}
+
+_int CCanvas_Party::wrap(_int x, _int low, _int high)
+{
+	if (0 == low && 0 == high) return 0;
+
+	assert(low < high);
+	const int n = (x - low) % (high - low);
+	return (n >= 0) ? (n + low) : (n + high);
 }
 
 CCanvas_Party * CCanvas_Party::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

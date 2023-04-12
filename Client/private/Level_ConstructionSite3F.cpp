@@ -17,7 +17,7 @@ CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D
 
 HRESULT CLevel_ConstructionSite3F::Initialize()
 {
-	 //m_bPlayerSpawn = false;
+	 //m_bPlayerSpawn = false;6
 
 	m_strLevelName = L"ConstructionSite3F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
@@ -25,8 +25,8 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;*/
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Boss_HBeams.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Monster_PlayerStart.json");
@@ -34,6 +34,8 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/MonsterBatch.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_Construction.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Item_Batch.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_Construction.json");
+ 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/ConstructionSite3F.json");
 
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_BossRoom .json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
