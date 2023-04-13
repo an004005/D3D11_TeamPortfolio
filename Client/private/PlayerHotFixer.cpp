@@ -112,6 +112,11 @@ void CPlayerHotFixer::Tick()
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
 		}
 
+		if (ImGui::Button("ShakeTest"))
+		{
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f);
+		}
+
 		if (ImGui::Button("DMG_Light"))
 		{
 			m_pPlayer->m_bHit = true;
