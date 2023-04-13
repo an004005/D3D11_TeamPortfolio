@@ -128,21 +128,22 @@ void CLight_Manager::AddLifeCapsuleLight(_float fLife, const _float4& vStart, co
 void CLight_Manager::Tick(_double TimeDelta)
 {
 	for (auto& Light : m_TempLights)
-		Light.second -= (_float)TimeDelta;
-
-	for (auto& Light : m_TempLights)
 	{
 		Light.first->Get_LightDesc()->vDiffuse = Light.first->Get_LightDesc()->vOriginDiffuse * (Light.second / Light.first->Get_LightDesc()->fLifeTime);
 		Light.first->Get_LightDesc()->vSpecular = _float4(0.5f, 0.5f, 0.5f, 0.f) * (Light.second / Light.first->Get_LightDesc()->fLifeTime);
+	}
+
+	for (auto& Light : m_TempLights)
+	{
+		Light.second -= (_float)TimeDelta;
+		if (Light.second <= 0.f)
+			Safe_Release(Light.first);
 	}
 
 	m_TempLights.remove_if([](const pair<class CLight*, _float>& Light)
 	{
 		return Light.second <= 0.f;
 	});
-
-	
-
 }
 
 void CLight_Manager::SetShadowCam(CCamera* pShadowCam)
