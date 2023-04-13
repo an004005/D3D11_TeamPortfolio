@@ -16,8 +16,9 @@ HRESULT CPostVFX_WhiteOut::Initialize(void* pArg)
 {
 	FAILED_CHECK(CPostProcess::Initialize(pArg));
 
-	m_iPriority = 9999;// 제일 나중에 실행
+	m_iPriority = 99999;// 제일 나중에 실행
 	// m_bBeforeUI = false; // after ui
+	m_tParam.iPass = 1;
 	m_tParam.Floats.push_back(0.f);
 	return S_OK;
 }

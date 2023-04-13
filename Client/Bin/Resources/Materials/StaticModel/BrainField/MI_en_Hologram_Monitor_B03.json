@@ -3,7 +3,7 @@
 	"ShaderParams": {
 		"Float2s": [],
 		"Ints": [],
-		"Pass": 1,
+		"Pass": 9,
 		"Float4x4s": [],
 		"Floats": [],
 		"Textures": [
@@ -11,7 +11,7 @@
 			"",
 			""
 		],
-		"Float4s": []
+		"Float4s": [[1.0, 0.0, 0.0, 0.0]]
 	},
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"InstancingPass": 9

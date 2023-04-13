@@ -47,6 +47,7 @@ public:
 	void SetStay(_bool bStay) { m_bStay = bStay; }
 	void SetPlayRatio(_double PlayRatio) { m_PlayTime = m_Duration * PlayRatio; }
 	void SetInterpolation(_bool bInterp) { m_bInterpolation = bInterp; }
+	void SetDuration(_double Duration) { m_Duration = Duration; }
 	void Reset();
 
 	void SetLocalRotation(_bool bLocalRotation);

@@ -6,6 +6,8 @@
 #include "ImguiUtils.h"
 #include "MathUtils.h"
 
+_bool CMapInstance_Object::s_bPhysX = true;
+
 CMapInstance_Object::CMapInstance_Object(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CMapObject(pDevice, pContext)
 {
@@ -40,6 +42,12 @@ HRESULT CMapInstance_Object::Initialize(void * pArg)
 		{
 			_float4x4 WorldMat = WorldMatrix;
 			m_pModel_InstancingCom->Add_Instance(WorldMat);
+
+			if (s_bPhysX == false)
+			{
+				m_pPxModels.emplace_back(nullptr);
+				continue;
+			}
 
 			// 스케일 변경한 경우, 피직스를 생성하지 않게 하는 코드
 			_matrix mat = WorldMat;
@@ -298,13 +306,16 @@ HRESULT CMapInstance_Object::SetUp_Components()
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, m_strModelTag.c_str(), TEXT("Com_Model"),
 		(CComponent**)&m_pModel_InstancingCom));
 
-
-	m_PxModelTag = MakePxModelProtoTag();
-	if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, m_PxModelTag.c_str()))
+	if (s_bPhysX)
 	{
-		FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
-			m_PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
+		m_PxModelTag = MakePxModelProtoTag();
+		if (nullptr == CGameInstance::GetInstance()->Find_Prototype_Component(LEVEL_NOW, m_PxModelTag.c_str()))
+		{
+			FAILED_CHECK(CGameInstance::GetInstance()->Add_Prototype(LEVEL_NOW,
+				m_PxModelTag.c_str(), CPhysXStaticModel::Create(m_pDevice, m_pContext, ws2s(m_strModelTag).c_str())));
+		}
 	}
+
 	return S_OK;
 }
 

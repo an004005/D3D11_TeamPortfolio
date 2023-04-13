@@ -37,6 +37,7 @@ public:
 public:
 	void	Trail_Setting(_bool TrailOn) { m_bTrailOn = TrailOn; }
 	void	Trail_Tick(_double TimeDelta);
+	CModel* GetModel() { return m_pModel; }
 
 protected:
 	_bool	m_bTrailOn = false;
