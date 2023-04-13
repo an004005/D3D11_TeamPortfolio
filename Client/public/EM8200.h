@@ -140,6 +140,8 @@ private:
 
 	CDoOnce m_SecondPhase;
 
+	CCoolTimeHelper m_CounterEFCoolTimeHelper;
+
 	_bool	m_bMeleeCollStart = false; 
 	_bool	m_bRangeCollStart = false;
 
