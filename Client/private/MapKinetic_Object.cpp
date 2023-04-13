@@ -210,6 +210,13 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 		}
 	}
 
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+	{
+		m_fRefloatTime = 5.f;
+	}
+
+	m_fDissolve = 1.f;
+
 	return S_OK;
 }
 
@@ -219,6 +226,18 @@ void CMapKinetic_Object::BeginTick()
 {
 	__super::BeginTick();
 	//m_PreMatrix = m_pTransformCom->Get_WorldMatrix();
+
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+	{
+		m_pCollider->Set_Trigger(true);
+
+		_float4 vRandom = XMVectorSet(CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f), 0.f);
+		vRandom.Normalize();
+		vRandom.w = 0.f;
+
+		m_pTransformCom->Rotation(vRandom, XMConvertToRadians(CMathUtils::RandomFloat(-150.f, 150.f)));
+	}
+
 	m_pCollider->UpdateChange();
 }
 
@@ -231,6 +250,16 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
 
 	OutlineMaker();
+
+	if (0.f <= m_fRefloatTime)
+	{
+		m_fRefloatTime -= (_float)TimeDelta;
+		m_pTransformCom->MoveVelocity(TimeDelta, _float4(0.f, m_fRefloatTime * 0.5f, 0.f, 0.f));
+	}
+	if (false == m_pCollider->IsTrigger() || m_bSwing)
+	{
+		m_fRefloatTime = 0.f;
+	}
 
 	if (m_bThrow)
 		m_bUsable = false;
@@ -258,6 +287,10 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 				this->SetDelete();
 		}
 	}
+	else
+	{
+		m_fDissolve = max(m_fDissolve - (_float)TimeDelta, 0.f);
+	}
 
 	m_pCollider->Update_Tick(m_pTransformCom);
 
@@ -272,6 +305,14 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 void CMapKinetic_Object::Late_Tick(_double TimeDelta)
 {
 	__super::Late_Tick(TimeDelta);
+
+	_bool IsInFrustum = CGameInstance::GetInstance()->isInFrustum_WorldSpace(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 5.f);
+	
+	if (m_bVisible && IsInFrustum)
+	{
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+	}
 }
 
 void CMapKinetic_Object::AfterPhysX()
@@ -508,6 +549,19 @@ void CMapKinetic_Object::OutlineMaker()
 	}
 
 	m_bBeforeOutline = m_bOutline;
+}
+
+void CMapKinetic_Object::SetRefloat()
+{
+	m_fRefloatTime = 5.f;
+
+	m_pCollider->Set_Trigger(true);
+
+	_float4 vRandom = XMVectorSet(CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f), CMathUtils::RandomFloat(-1.f, 1.f), 0.f);
+	vRandom.Normalize();
+	vRandom.w = 0.f;
+
+	m_pTransformCom->Rotation(vRandom, XMConvertToRadians(CMathUtils::RandomFloat(-150.f, 150.f)));
 }
 
 void CMapKinetic_Object::BrightChecker()
