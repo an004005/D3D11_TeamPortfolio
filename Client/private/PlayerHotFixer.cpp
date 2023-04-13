@@ -228,6 +228,11 @@ void CPlayerHotFixer::Tick()
 		CPlayerInfoManager::GetInstance()->Set_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY, m_bBrainMap_BF);
 
 
+		if (ImGui::Button("PointLightTest"))
+		{
+			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f), 10.f, { 0.145098f, 0.01f, 0.2f, 1.f });
+		}
+
 		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
 
 	}

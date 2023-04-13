@@ -108,6 +108,11 @@ void CAI_CH0300::Tick(_double TimeDelta)
 	m_pASM->Tick(TimeDelta);
 	BehaviorCheck();
 
+	//if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBattle)
+	//{
+	//	m_fWeaponDissolve;
+	//}
+
 	for (auto& iter : m_vecWeapon)
 	{
 		iter->Tick(TimeDelta);

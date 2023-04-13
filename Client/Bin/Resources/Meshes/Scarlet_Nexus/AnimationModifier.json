@@ -18,7 +18,16 @@
         "Duration": 350.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_BC_em0200m_ch0100_end": {
         "Duration": 350.0,
@@ -90,7 +99,16 @@
         "Duration": 207.0,
         "TickPerSecond": 69.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_BC_em_common_em0200": {
         "Duration": 207.0,

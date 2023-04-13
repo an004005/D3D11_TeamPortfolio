@@ -140,9 +140,6 @@ void CLight_Manager::Tick(_double TimeDelta)
 	{
 		return Light.second <= 0.f;
 	});
-
-	
-
 }
 
 void CLight_Manager::SetShadowCam(CCamera* pShadowCam)
