@@ -334,8 +334,8 @@ PS_OUT_ALPHABLEND PS_RED_LINE_TOWER_6(PS_IN In)
 	float4 vLineColor = g_tex_0.Sample(LinearSampler, vUV);
 	if (vLineColor.a < 0.01f)
 		discard;
-
-	Out.vDiffuse = lerp(float4(1.f, 0.f, 0.f, 0.f), 1.f, vLineColor.a * 0.05f);
+	
+	Out.vDiffuse = lerp(float4(g_vec4_0.rgb, 0.f), 1.f, vLineColor.a * 0.05f);
 	Out.vDiffuse.rgb = Out.vDiffuse.rgb * 2.5f;
 	Out.vDiffuse.a = vLineColor.a;
 
@@ -379,7 +379,7 @@ PS_OUT_ALPHABLEND PS_BRAIN_FIELD_HOLOGRAM_MONITOR_9(PS_IN In)
 	float4 vViewDir = g_vCamPosition - In.vWorldPos;
 	float fFresnel = FresnelEffect(In.vNormal.xyz, vViewDir.xyz, 0.05f);
 
-	float4 vColor = lerp(float4(1.f, 0.f, 0.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
+	float4 vColor = lerp(float4(g_vec4_0.rgb, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
 	Out.vDiffuse = CalcHDRColor(vColor, fFresnel * 2.f);
 
 	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);

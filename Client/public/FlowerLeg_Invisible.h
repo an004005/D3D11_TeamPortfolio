@@ -34,7 +34,6 @@ public:
 
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	//virtual void SetActive() override;
-	virtual void SetUp_UI() override;
 
 	void	Strew_Overlap(); // Atk_Strew �浹ü
 	void	Spin_SweepCapsule(_bool bCol);

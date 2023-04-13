@@ -30,22 +30,24 @@ HRESULT CEM0900::Initialize(void * pArg)
 	pArg = &em900_json;
 
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 1000;
-		m_iHP = m_iMaxHP; // ★
+		m_iMaxHP = LEVEL_NOW * (250 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.9f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.6f;
 		m_iCrushGauge = m_iMaxCrushGauge;
-		
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+
+		iEemeyLevel = ((LEVEL_NOW - 20) * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0900;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0900;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(90.f));
 
 	m_fGravity = 20.f;

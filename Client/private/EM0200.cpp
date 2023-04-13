@@ -30,22 +30,25 @@ HRESULT CEM0200::Initialize(void* pArg)
 	m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";
 
-	// 배치에서 지정하지 않을 때의 기본 스텟
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 3000;
-		m_iHP = 3000; // ★
-		m_iCrushGauge = 400;
-		m_iMaxCrushGauge = 400;
-		m_bHasCrushGauge = false;
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
+
+		m_iMaxCrushGauge = m_iMaxHP * 10;
+		m_iCrushGauge = m_iMaxCrushGauge;
+
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0200;
+		m_bHasCrushGauge = false;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0200;
-	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	return S_OK;
@@ -711,29 +714,6 @@ void CEM0200::Imgui_RenderProperty()
 	}
 }
 
-void CEM0200::SetUpUI()
-{
-	__super::SetUpUI();
-
-	//HP UI
-	_float4x4 UI_InfoPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.241f, 0.0f, 1.0f
-	);
-
-	//FindEye
-	_float4x4 UI_EyesPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		-0.481f, 0.945f, 0.0f, 1.0f
-	);
-
-	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
-
-}
 
 void CEM0200::AfterPhysX()
 {

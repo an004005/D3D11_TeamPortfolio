@@ -160,6 +160,8 @@ private:
 
 	_bool	m_bGroupVisible = { true };
 
+
+
 private:
 	CGameObject* m_pAttachWeapon = nullptr;
 

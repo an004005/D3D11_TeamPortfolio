@@ -1567,6 +1567,13 @@
     <ClInclude Include="..\public\StoryTrigger.h">
       <Filter>Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM8200_CopyRush.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EM8200_BrainField.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentEffect.h" />
     <ClInclude Include="..\public\Canvas_WorldMap.h">
       <Filter>02.GameObjects\UI\WorldMap</Filter>
     </ClInclude>
@@ -2576,6 +2583,13 @@
     <ClCompile Include="..\private\StoryTrigger.cpp">
       <Filter>Trigger</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\EM8200_CopyRush.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EM8200_BrainField.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentEffect.cpp" />
     <ClCompile Include="..\private\Canvas_WorldMap.cpp">
       <Filter>02.GameObjects\UI\WorldMap</Filter>
     </ClCompile>

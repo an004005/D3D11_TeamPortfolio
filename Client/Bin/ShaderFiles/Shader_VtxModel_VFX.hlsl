@@ -2,6 +2,9 @@
 #include "Shader_Utils.h"
 #include "Shader_Params.h"
 
+Texture2D g_DepthTex;
+
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -58,6 +61,22 @@ struct PS_OUT_NORM
 	float4		vFlag : SV_TARGET5;
 };
 
+struct VS_OUT_SOFT
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
+	float4		vProjPos : TEXCOORD2;
+};
+
+struct PS_IN_SOFT
+{
+	float4		vPosition : SV_POSITION;
+	float2		vTexUV : TEXCOORD0;
+	float4		vWorldPos : TEXCOORD1;
+	float4		vProjPos : TEXCOORD2;
+};
+
 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -72,6 +91,23 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	Out.vTexUV = In.vTexUV;
 
+	return Out;
+}
+
+VS_OUT_SOFT VS_MAIN_SOFT(VS_IN In)
+{
+	VS_OUT_SOFT		Out = (VS_OUT_SOFT)0;
+
+
+	matrix		matWV, matWVP;
+
+	matWV = mul(g_WorldMatrix, g_ViewMatrix);
+	matWVP = mul(matWV, g_ProjMatrix);
+
+	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+	Out.vTexUV = In.vTexUV;
+	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+	Out.vProjPos = Out.vPosition;
 	return Out;
 }
 
@@ -479,6 +515,27 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	Out.vColor = CalcHDRColor(g_vec4_0, g_float_0);
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+
+PS_OUT PS_EM8200_COUNTER_WAVE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	float Mask = g_tex_1.Sample(LinearSampler, float2(In.vTexUV.x , In.vTexUV.y + g_float_0)).r;
+
+	Final.a = Mask;
+
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a *= g_float_2;
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
@@ -993,6 +1050,25 @@ PS_OUT PS_TUTORIALBOSS_SPIN(PS_IN In)
 	return Out;
 }
 
+
+PS_OUT PS_ENV_CRUSH1_1(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = Tex * Color * 2.0f;
+	float4 Final = saturate(Blend);
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a = Tex.r * g_float_1;
+	
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+
 PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -1002,6 +1078,39 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	Out.vColor = CalcHDRColor(OriginTex, g_float_0);
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+PS_OUT PS_DRIVEMODE_END_SPH(PS_IN_SOFT In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 TEX = g_tex_0.Sample(LinearSampler, In.vTexUV * g_int_0);
+	float4 Color = g_vec4_0;
+	float4 Blend = TEX * Color * 2.0f;
+	float4 Final = saturate(Blend);
+
+	Out.vColor = CalcHDRColor(Final, g_float_0);
+	Out.vColor.a *= g_float_1;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
+	float2		vTexUV;
+
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector		vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+
+	float		fOldViewZ = vDepthDesc.y * g_Far;
+	float		fViewZ = In.vProjPos.w;
+
+	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ)));
+
+
 	return Out;
 }
 
@@ -2043,5 +2152,48 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_KAREN_MASK_ALL();
+	}
+
+	//46
+	pass em8200CounterWave
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_COUNTER_WAVE();
+	}
+
+
+	// 47
+	pass DriveModeEnd_Sph
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SOFT();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMODE_END_SPH();
+	}
+
+	//48
+	pass Env_Crush1_1
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENV_CRUSH1_1();
 	}
 }

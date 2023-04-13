@@ -32,8 +32,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
-	virtual void PlayBC() override;
-
+	virtual _float4	GetKineticTargetPos() override;
 public:
 	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
 	_bool	Get_RunStart() { return m_bRun_Start; }
@@ -95,10 +94,6 @@ private:
 	_float4 m_vPushVelocity;
 
 	_float4x4	pivot;
-
-	//Brain Crush
-	_double		m_BCLoopTime = 0.0;
-	_bool		m_CanFullBC = false;
 
 	_bool	m_bWeakTalk = { false };
 

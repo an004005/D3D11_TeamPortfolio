@@ -71,6 +71,7 @@
 #include "EM0800.h"
 
 #include "Renderer.h"
+#include "Map_KineticBatchPreset.h"
 
 #include "UI_Manager.h"
 #include "Canvas_BrainField.h"
@@ -217,6 +218,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_pPlayerCam = m_pGameInstance->Add_Camera("PlayerCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_GameObject_Camera_Player");
 	Safe_AddRef(m_pPlayerCam);
+	CPlayerInfoManager::GetInstance()->Set_PlayerCam(m_pPlayerCam);
 
 	m_pPlayer_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("PlayerAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
 	Safe_AddRef(m_pPlayer_AnimCam);
@@ -308,7 +310,13 @@ void CPlayer::Tick(_double TimeDelta)
 
 	Production_Tick(TimeDelta);
 
-	if (!m_DetectList.empty())
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField || CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		m_bOnBattle = true;
+		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
+		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
+	}
+	else if (!m_DetectList.empty())
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
 		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
@@ -562,13 +570,6 @@ void CPlayer::Tick(_double TimeDelta)
 	m_strCurStateName = m_pASM->GetCurStateName();
 	if (m_strBefStateName != m_strCurStateName)
 	{
-		Event_Trail(false);
-
-		for (auto& iter : m_vecWeapon)
-		{
-			static_cast<CScarletWeapon*>(iter)->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
-		}
-
 		m_bActionAble = true;
 	}
 
@@ -734,7 +735,11 @@ void CPlayer::Tick(_double TimeDelta)
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dynamic();
 	}
 
-	m_pBattleChecker->Update_Tick(m_pTransformCom);
+	// m_pBattleChecker->Update_Tick(m_pTransformCom);
+
+
+	m_CopyStart.Tick(TimeDelta, fCopyDissolve);
+	m_CopyEnd.Tick(TimeDelta, fCopyDissolve);
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -744,6 +749,18 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
+		// 0 번은 원본, 
+		for (int i = 1; i < m_vecWeapon.size(); ++i)
+		{
+			auto pWp = static_cast<CScarletWeapon*>(m_vecWeapon[i]);
+			for (auto pMtrl : pWp->GetModel()->GetMaterials())
+				pMtrl->GetParam().Floats[2] = fCopyDissolve;
+
+			for (auto pMtrl : m_vecSheath[i]->GetModel()->GetMaterials())
+				pMtrl->GetParam().Floats[2] = fCopyDissolve;
+		}
+		
+
 		for (auto& iter : m_vecWeapon)
 		{
 			iter->Late_Tick(TimeDelta);
@@ -782,7 +799,7 @@ void CPlayer::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	m_pBattleChecker->Update_AfterPhysX(m_pTransformCom);
+	//m_pBattleChecker->Update_AfterPhysX(m_pTransformCom);
 
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
@@ -841,8 +858,14 @@ HRESULT CPlayer::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
+		_float fOriginTeleportDissolve = m_pModel->GetMaterials().front()->GetParam().Floats[2];
+
+		for (auto pMtrl : m_pModel->GetMaterials())
+			pMtrl->GetParam().Floats[2] = fCopyDissolve;
+
 		_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float4 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 		vRight.Normalize();
@@ -854,6 +877,9 @@ HRESULT CPlayer::Render()
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vRightPos);
 		m_pModel->Render(m_pTransformCom);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+
+		for (auto pMtrl : m_pModel->GetMaterials())
+			pMtrl->GetParam().Floats[2] = fOriginTeleportDissolve;
 	}
 
 	return S_OK;
@@ -872,7 +898,11 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->isSocketExactlyEmpty() &&
 		tDamageParams.eAttackType != EAttackType::ATK_END)
 	{
-		m_fJustDodgeAble = 2.f;
+		m_fJustDodgeAble = 1.f;
+	}
+	else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField && CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY))
+	{
+		IM_LOG("BrainField Hardbody");
 	}
 	else if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
@@ -880,7 +910,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash || m_bBrainField_Prod)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -1410,6 +1440,7 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_ELETRIC == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_ELEC"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle_Fire))
 				{
 					m_pSwordParticle_Fire->SetDelete();
@@ -1419,8 +1450,10 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_COPY == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_HARDBODY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_COPY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				CPlayerInfoManager::GetInstance()->Set_Copy(true);
+
+				m_CopyStart.PlayFromStart();
 			}
 		}
 	}
@@ -1636,6 +1669,8 @@ void CPlayer::SasStateCheck()
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
+
+			m_CopyEnd.PlayFromStart();
 		}
 
 		m_bSASSkillInput[6] = false;
@@ -1753,6 +1788,34 @@ void CPlayer::CamZoom(_double TimeDelta)
 	}
 }
 
+void CPlayer::SetOutLine(_bool bOutLine)
+{
+	if (bOutLine)
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+		{
+			for (auto& iter : m_pModel->GetMaterials())
+			{
+				iter->GetParam().Float4s[0] = { 1.f, 1.f, 0.01f, 1.f };
+			}
+		}
+		else
+		{
+			for (auto& iter : m_pModel->GetMaterials())
+			{
+				iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
+			}
+		}
+	}
+	else if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		for (auto& iter : m_pModel->GetMaterials())
+		{
+			iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 1.f };
+		}
+	}
+}
+
 HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 {
 	m_pDriveModeProductionStateMachine = 
@@ -1769,6 +1832,12 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode && (0.f == CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy))
 			{
 				CPlayerInfoManager::GetInstance()->Set_DriveMode(false);
+
+				m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
+				m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 0;
+				m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
+				m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(true);
+				m_bDriveMask = false;
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
 			{
@@ -1819,7 +1888,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
+			CPlayerInfoManager::GetInstance()->Set_DriveEnergy(10.f);
 		})
 			.AddTransition("DRIVEMODE_ANIMCAM_START to DRIVEMODE_CAM_AWAY", "DRIVEMODE_CAM_AWAY")
 			.Predicator([&]()->_bool {return m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100")->IsFinished(); })
@@ -1840,7 +1910,6 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -1864,12 +1933,12 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
-				if (m_bBrainField)
-				{
-					CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
-				}
+			m_bBrainField_Prod = false;
 
-			//IM_LOG("BF : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain);
+			if (m_bBrainField)
+			{
+				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+			}
 		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
@@ -1883,6 +1952,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			// 브레인필드 연출 시작
 			CUI_Manager::GetInstance()->Set_TempOff(true);
 
@@ -1923,9 +1994,22 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			m_pBrainField->OpenBrainField();
 
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainField_01");
+			m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
 			// m_pBrainField->CloseBrainField();  끄는거
 		})
-		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
+		.Tick([&](double fTimeDelta) 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f);
+
+			if (m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->GetPlayRatio() >= 0.8f && BF_Start.IsNotDo())
+			{
+				CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(70.f);
+				m_bBrainField = true;
+				CPlayerInfoManager::GetInstance()->Set_BrainField(m_bBrainField);
+			}
+
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD_ACTIONCAM_01 to BRAINFIELD_ACTIONCAM_02", "BRAINFIELD_ACTIONCAM_02")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->IsFinished(); })
@@ -1934,9 +2018,21 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_ACTIONCAM_02")
 		.OnStart([&]() 
 		{
+			BF_Start.Reset();
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(1.f);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->SetRefloat();
+				}
+			}
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
@@ -1963,11 +2059,24 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_FINISH_BF")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(5.f);
 		})
-		.Tick([&](double fTimeDelta) {})
+		.Tick([&](double fTimeDelta) 
+		{
+			if (m_pASM->GetSocketAnimation("Common_AnimSocket") != m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"))
+			{
+				list<CAnimation*> TestAnim;
+				TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
+				m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+			}
+		})
+
 		.OnExit([&]() 
 		{ 
 			m_bBrainField = false;
@@ -1995,6 +2104,15 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			for (auto& iter : m_vecWeapon)
 				iter->SetVisible(true);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
+				}
+			}
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() {})
@@ -2050,6 +2168,11 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	Assert(m_pBrainField != nullptr);
 	m_pBrainField->SetTargetInfo(this, m_pTransformCom, m_pModel);
 
+	// copy 
+	m_CopyStart.SetCurve("Simple_Decrease_0.5x");
+	m_CopyEnd.SetCurve("Simple_Increase_0.5x");
+	// copy 
+
 	return S_OK;
 }
 
@@ -2057,11 +2180,11 @@ HRESULT CPlayer::SetUp_RigidBody()
 {
 	m_TransBattleSocket.push_back(m_pModel->Find_Animation("AS_ch0100_004_Up_trans_battle"));
 
-	Json jsonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PlayerBattleChecker.json");
-	Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"BattleChecker", (CComponent**)&m_pBattleChecker, &jsonTrigger);
-	NULL_CHECK(m_pBattleChecker);
+	//Json jsonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PlayerBattleChecker.json");
+	//Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"BattleChecker", (CComponent**)&m_pBattleChecker, &jsonTrigger);
+	//NULL_CHECK(m_pBattleChecker);
 
-	m_pBattleChecker->SetOnTriggerIn([this](CGameObject* pGameObject)
+	/*m_pBattleChecker->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (auto pEnemy = dynamic_cast<CEnemy*>(pGameObject))
 		{
@@ -2100,9 +2223,9 @@ HRESULT CPlayer::SetUp_RigidBody()
 				}
 			}
 		}
-	});
+	});*/
 
-	m_pBattleChecker->UpdateChange();
+	//m_pBattleChecker->UpdateChange();
 
 	return S_OK;
 }
@@ -2828,7 +2951,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		}
 	});
 
-	m_pModel->Add_EventCaller("WeaponBright_On", [&]()
+	m_pModel->Add_EventCaller("Bright_On", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
 		{
@@ -2843,7 +2966,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		}
 	});
 
-	m_pModel->Add_EventCaller("WeaponBright_Off", [&]()
+	m_pModel->Add_EventCaller("Bright_Off", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
 		{
@@ -3637,8 +3760,6 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
 			}
 
-			Event_Trail(false);
-
 			IM_LOG("Kinetic No Use");
 		})
 		.Tick([&](double fTimeDelta)
@@ -3658,8 +3779,6 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			{
 				iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
 			}
-
-			Event_Trail(false);
 		})
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_SLASH01", "KINETIC_COMBO_SLASH01")
@@ -3671,7 +3790,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
-			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool 
+			{ 
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_AIR)) return false;
+				return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject());
+			})
 			.Priority(0)
 
 #pragma region ?щ옒??肄ㅻ낫 1
@@ -4242,7 +4365,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_SLASH04", "KINETIC_COMBO_SLASH04")
-			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Predicator([&]()->_bool 
+			{
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_4)) return false;
+				return m_bLeftClick;
+			})
 			.Priority(0)
 
 
@@ -4656,7 +4783,6 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			.OnStart([&]()
 			{
 				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// ?щ줈??
-//				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -4670,7 +4796,6 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 				m_pASM->SetCurState("IDLE");
 
 				m_fJustDodgeAble = 0.f;
-//				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 			
 				.AddTransition("JUSTDODGE_USABLE to JUSEDODGE_NONUSE", "JUSTDODGE_NONUSE")
@@ -4997,15 +5122,20 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 				if (m_pASM->isSocketPassby("BrainField_AnimSocket", 0.35f) && BF_Combo_Throw.IsNotDo())
 				{
 					Event_Kinetic_Throw();
-					KineticObject_Targeting();
 				}
-				else
+				else if (false == m_pASM->isSocketPassby("BrainField_AnimSocket", 0.35f))
 				{
 					BrainField_ObjectAnimation_Socket("BrainField_AnimSocket", 0.f, 1.f);
+				}
+
+				if (m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f) && BF_Retarget.IsNotDo())
+				{
+					KineticObject_Targeting();
 				}
 			})
 			.OnExit([&]() 
 			{
+				BF_Retarget.Reset();
 				BF_Combo_Throw.Reset();
 				BF_BeginTick.Reset();
 				m_pASM->SetCurState_BrainField("IDLE");
@@ -5859,7 +5989,7 @@ void CPlayer::EnemyReportCheck()
 		}
 		else if (eAtkType == EAttackType::ATK_MIDDLE)
 		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f);
 			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Middle");
 		}
 
@@ -7099,6 +7229,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					{
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+						//m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -10186,7 +10317,11 @@ void CPlayer::Event_Kinetic_Throw()
 		m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
 	}
 
-	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 15);
+	if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField &&
+		false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 15);
+	}
 }
 
 void CPlayer::Event_KineticSlowAction()
@@ -10206,18 +10341,6 @@ void CPlayer::Event_Trail(_bool bTrail)
 	else
 	{
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(bTrail);
-	}
-
-	if (CPlayerInfoManager::GetInstance()->Get_Copy())
-	{
-		for (auto& iter : m_vecWeapon)
-		{
-			static_cast<CScarletWeapon*>(iter)->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, bTrail);
-		}
-	}
-	else
-	{
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, bTrail);
 	}
 }
 
@@ -10444,6 +10567,16 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		}
 	}
 
+	// 아웃라인 체크
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode || CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField || m_pKineticStataMachine->GetCurStateName() != "NO_USE_KINETIC")
+	{
+		SetOutLine(true);
+	}
+	else
+	{
+		SetOutLine(false);
+	}
+
 	m_vCamLook = pGameInstance->Get_CamLook();
 
 	CPlayerInfoManager::GetInstance()->Set_Air(m_bAir);
@@ -10552,6 +10685,7 @@ void CPlayer::HitCheck()
 		Event_Trail(false);
 		Event_collisionEnd();
 		m_bTeleport = false;
+		Event_FinishFovActionCam();
 	}
 
 	if (!m_pASM->isSocketEmpty("Hit_AnimSocket"))
@@ -10681,8 +10815,10 @@ void CPlayer::Update_NotiveNeon()
 
 void CPlayer::Update_TargetUI()
 {
-
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+
+	if (pTarget != nullptr && pTarget->Exclude() == true)
+		pTarget = nullptr;
 
 	if (m_pSettedTarget != pTarget)
 	{
@@ -10697,7 +10833,6 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 
 		}
-
 
 		//원래 타겟이 있었는데 사라진 경우
 		else if (m_pSettedTarget != nullptr && pTarget == nullptr)
@@ -10810,6 +10945,62 @@ _bool CPlayer::Detector(_bool bComplusion)
 
 	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
+	if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster") == nullptr ||
+		CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects().empty())
+	{
+		return false;
+	}
+	else
+	{
+		_float fDistance = 20.f;
+		list<pair<CGameObject*, _float>>	DistanceList;
+		for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+		{
+			//if ((!static_cast<CEnemy*>(iter)->IsDead()))
+			if ((!static_cast<CEnemy*>(iter)->IsDead()) && (!static_cast<CEnemy*>(iter)->Exclude()))
+			{
+				_float4 vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float	fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+				if (fDistance > fCurDistance)
+				{
+					if (m_DetectList.empty())
+					{
+						m_DetectList.push_back(static_cast<CEnemy*>(iter));
+
+						if (false == m_bOnBattle)
+						{
+							m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+							m_bOnBattle = true;
+						}
+					}
+					else
+					{
+						for (auto& Detect : m_DetectList)
+						{
+							if (false == CGameInstance::GetInstance()->Check_ObjectAlive(Detect))
+								continue;
+
+							if (static_cast<CEnemy*>(iter) == Detect)
+								break;
+
+							if (Detect == m_DetectList.back())
+							{
+								m_DetectList.push_back(static_cast<CEnemy*>(iter));
+
+								if (false == m_bOnBattle)
+								{
+									m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+									m_bOnBattle = true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	for (auto& iter = m_DetectList.begin(); iter != m_DetectList.end();)
 	{
 		if (false == CGameInstance::GetInstance()->Check_ObjectAlive(*iter))
@@ -10840,10 +11031,12 @@ _bool CPlayer::Detector(_bool bComplusion)
 		}
 		else
 		{
+			IM_LOG("DETECT : %f", m_DetectList.size());
 			return true;
 		}
 	}
 
+	IM_LOG("DETECT : %f", m_DetectList.size());
 	return false;
 }
 
@@ -11753,6 +11946,7 @@ void CPlayer::BrainField_FindGatherObjectList()
 				if (fDistance > fCurDistance)
 				{
 					m_GatherObjectList.push_back(iter);
+					static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
 				}
 			}
 		}
@@ -12085,7 +12279,7 @@ void CPlayer::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
 	Safe_Release(m_pPlayerCam);
-	Safe_Release(m_pBattleChecker);
+	//Safe_Release(m_pBattleChecker);
 
 	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayer_AnimCam))
 		Safe_Release(m_pPlayer_AnimCam);

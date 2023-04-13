@@ -55,7 +55,7 @@ void CMap_KineticBatchPreset::Tick(_double TimeDelta)
 		{
 			iter.fCoolTime += TimeDelta;
 
-			if (iter.fCoolTime >= 5.f)
+			if (iter.fCoolTime >= m_fRespawnTime)
 			{
 				OverlapCheck(iter);
 			}
@@ -87,7 +87,7 @@ void CMap_KineticBatchPreset::OverlapCheck(KINETIC_BATCH& tBatch)
 
 	if (CGameInstance::GetInstance()->OverlapSphere(tParams))
 	{
-		tBatch.fCoolTime -= 2.5f;
+		tBatch.fCoolTime -= m_fRespawnTime * 0.5f;
 		return;
 	}
 	else

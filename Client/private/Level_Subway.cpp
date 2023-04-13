@@ -11,7 +11,7 @@ CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 HRESULT CLevel_Subway::Initialize()
 {
-	 m_bPlayerSpawn = false;
+	// m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Subway";
 	m_strShadowCamJsonPath.clear();
@@ -19,15 +19,16 @@ HRESULT CLevel_Subway::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetics_Test.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Player_AI_StartPos.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKientics_Train.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/SpecialKinetics.json");
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches_2.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches_2_Fix.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/MonsterBatches_3.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Kinetic_Normal.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Item_Batch.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Subway.json");

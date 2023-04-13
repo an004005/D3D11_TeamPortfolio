@@ -50,6 +50,7 @@ private:
 	_float	m_fDeadTimer = 0.f;
 	_bool	m_bDeadCheck = false;
 	CDoOnce	m_Effect;
+	CDoOnce m_Slow;
 
 private:
 	_float	m_fLerpTime = 0.2f;

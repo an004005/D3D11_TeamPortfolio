@@ -32,23 +32,26 @@ HRESULT CEM0110::Initialize(void * pArg)
 
 	m_strDeathSoundTag = "horse_fx_death";
 
-	// 배치툴에서 조절할 수 있게 하기
-	{
-		m_iMaxHP = 1100;
-		m_iHP = m_iMaxHP; // ★
+	// 초기값 지정. LEVEL_NOW 에 따라
+	{	
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
-		m_iCrushGauge = 3000;
-		m_iMaxCrushGauge = m_iCrushGauge;
+		//5000
+		m_iMaxHP = LEVEL_NOW * (250  + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		m_iMaxCrushGauge = m_iMaxHP * 10;
+		m_iCrushGauge = m_iMaxCrushGauge;
+
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0110;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
-
-	m_eEnemyName = EEnemyName::EM0110;
-	m_bHasCrushGauge = true;
-	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
+	m_pTransformCom->SetRotPerSec(XMConvertToRadians(150.f));
 
 	return S_OK;
 }
@@ -460,7 +463,7 @@ void CEM0110::SetUpFSM()
 void CEM0110::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_iArmorHp = m_iMaxHP * 0.2;
+	m_iArmorHp = m_iMaxHP * 0.1;
 
 	//Create BugParticle
 	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
@@ -582,6 +585,11 @@ void CEM0110::CheckHP(DAMAGE_PARAM& tDamageParams)
 	}
 	else
 		__super::CheckHP(tDamageParams);
+}
+
+_float4 CEM0110::GetKineticTargetPos()
+{
+	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
 }
 
 _bool CEM0110::IsPlayingSocket() const

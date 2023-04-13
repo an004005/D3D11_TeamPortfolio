@@ -38,7 +38,9 @@ HRESULT CPxModel::Initialize(void* pArg)
 	m_pStartBone = dynamic_cast<CPxBone*>(Get_BonePtr("cable_02_a"));
 	if (m_pStartBone == nullptr)
 		m_pStartBone = dynamic_cast<CPxBone*>(Get_BonePtr("cable_01_a"));
-		
+
+	m_pSecondStartBone = dynamic_cast<CPxBone*>(Get_BonePtr("cable_thorn"));
+
 
 	return S_OK;
 }
@@ -87,6 +89,10 @@ void CPxModel::Update_Tick(_double TimeDelta, const _float4x4& WorldMatrix)
 	if (m_bActivatePhysX)
 	{
 		m_pStartBone->SetWorldMatrix(m_WorldMatrix, m_PivotMatrix);
+		if (m_pSecondStartBone)
+		{
+			m_pSecondStartBone->SetWorldMatrix(m_WorldMatrix, m_PivotMatrix);
+		}
 		// auto pNotControlledBone = dynamic_cast<CPxBone*>(Get_BonePtr("Reference"));
 		// pNotControlledBone->SetNotControlledWorld(pNotControlledBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix) * XMLoadFloat4x4(&m_WorldMatrix));
 
@@ -108,6 +114,9 @@ void CPxModel::Render_PxModel(_fmatrix WorldMatrix)
 	if (m_bActivatePhysX)
 	{
 		m_pStartBone->SetWorldMatrix(m_WorldMatrix, m_PivotMatrix);
+		if (m_pSecondStartBone)
+			m_pSecondStartBone->SetWorldMatrix(m_WorldMatrix, m_PivotMatrix);
+
 		auto pNotControlledBone = dynamic_cast<CPxBone*>(Get_BonePtr("Reference"));
 		pNotControlledBone->SetNotControlledWorld(pNotControlledBone->Get_CombindMatrix() * XMLoadFloat4x4(&m_PivotMatrix) * TempWorldMatrix);
 
@@ -151,11 +160,19 @@ void CPxModel::ActivatePhysX(_bool bActive)
 void CPxModel::CreateJoints()
 {
 	m_pStartBone->CreateJointsRecur(nullptr, m_PivotMatrix, m_WorldMatrix);
+	if (m_pSecondStartBone)
+	{
+		m_pSecondStartBone->CreateJointsRecur(nullptr, m_PivotMatrix, m_WorldMatrix);
+	}
 }
 
 void CPxModel::ReleaseJoints()
 {
 	m_pStartBone->ReleaseJointsRecur();
+	if (m_pSecondStartBone)
+	{
+		m_pSecondStartBone->ReleaseJointsRecur();
+	}
 }
 
 CPxModel* CPxModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const char* pModelFilePath,

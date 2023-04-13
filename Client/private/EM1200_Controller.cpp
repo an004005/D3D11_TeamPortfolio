@@ -76,11 +76,11 @@ void CEM1200_Controller::Tick_Near_1Phase(_double TimeDelta)
 	case 0:
 	case 1:
 		AddCommand("Shout1", 0.f, &CAIController::Input, NUM_1);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
+		AddCommand("Wait", 2.0f, &CAIController::Wait);
 		break;
 	case 2:
 		AddCommand("Fall", 0.f, &CAIController::Input, F);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
+		AddCommand("Wait", 2.0f, &CAIController::Wait);
 		break;
 	}
 
@@ -92,30 +92,29 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 {
 	m_eDistance = DIS_NEAR;
 
-	ESimpleAxis eSimpeAxis = m_pCastedOwner->IsTargetFront(70.f) ? ESimpleAxis::NORTH : ESimpleAxis::SOUTH;
+	ESimpleAxis eSimpeAxis = m_pCastedOwner->IsTargetFront(60.f) ? ESimpleAxis::NORTH : ESimpleAxis::SOUTH;
 
 	if (eSimpeAxis == ESimpleAxis::NORTH)
 	{
 		if (m_dShoutCoolTime[CURTIME] >= m_dShoutCoolTime[MAXTIME])
 		{
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Shout2", 0.f, &CAIController::Input, NUM_2);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dShoutCoolTime[CURTIME] = 0.0;
 		}
 		else if (m_dStampCoolTime[CURTIME] >= m_dStampCoolTime[MAXTIME])
 		{
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
+			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
 			m_dStampCoolTime[CURTIME] = 0.0;
 		}
 		else
 		{
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
+			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
 		}
 	}
 	else
@@ -135,23 +134,16 @@ void CEM1200_Controller::Tick_Mid(_double TimeDelta)
 {
 	m_eDistance = DIS_MIDDLE;
 
-	if (m_bChangePhase == false)
+	if (m_pCastedOwner->IsTargetFront())
 	{
 		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-		AddCommand("Walk", 2.f, &CAIController::Move, EMoveAxis::NORTH);
+		AddCommand("Wait", 0.5f, &CAIController::Wait);
+		AddCommand("Rush", 0.f, &CAIController::Input, R);
 	}
 	else
 	{
-		if (m_pCastedOwner->IsTargetFront())
-		{
-			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
-			//AddCommand("Wait", 1.f, &CAIController::Wait);
-			AddCommand("Rush", 0.f, &CAIController::Input, R);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
-		}
-	
-	}	
-
+		AddCommand("Cable", 0.f, &CAIController::Input, C);
+	}
 }
 
 void CEM1200_Controller::Tick_Far(_double TimeDelta)
@@ -212,8 +204,6 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 	{
 		if (m_fTtoM_Distance <= 8.f)
 			Tick_Near_1Phase(TimeDelta);
-		else if(m_fTtoM_Distance <= 20.f)
-			Tick_Mid(TimeDelta);
 		else
 			Tick_Outside(TimeDelta);
 	}

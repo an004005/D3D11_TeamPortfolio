@@ -29,6 +29,7 @@ private:
 private:
 	_bool m_bActivatePhysX = false;
 	class CPxBone* m_pStartBone = nullptr; // root bone
+	class CPxBone* m_pSecondStartBone = nullptr;
 	_float4x4 m_ScalePivot;
 	_float4x4 m_WorldMatrix;
 

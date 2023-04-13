@@ -9,6 +9,7 @@ class CFSMComponent;
 class CAnimation;
 class CRigidBody;
 class CMaterial;
+class CAnimCam;
 END
 
 BEGIN(Client)
@@ -35,8 +36,8 @@ public:
 	virtual void SetUpComponents(void* pArg) override;
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
-	virtual void SetUpFSM() override;
-
+	 void SetUpMainFSM();
+	void SetUpIntroFSM();
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
@@ -79,8 +80,12 @@ private:
 	void CreateWeakExplosionEffect();
 
 private:
+	void UpdateCoolTimes(_double TimeDelta);
+
+private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
 	class CEM0320_Controller*		m_pController = nullptr;
+	CAnimCam* m_pAnimCam = nullptr;
 
 	class CRigidBody* m_pWeak = nullptr;
 
@@ -131,6 +136,11 @@ private:
 	_uint m_fWeakExplosionCnt = 0;
 
 	_float4x4 pivot;
+
+
+	_bool m_bIntro = false;
+	_bool m_bIntroCoolStart = false;
+	_double m_dIntroCool = 0.0;
 
 	_bool	m_bWeakTalk = { false };
 

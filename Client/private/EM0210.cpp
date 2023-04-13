@@ -35,23 +35,25 @@ HRESULT CEM0210::Initialize(void * pArg)
 	m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 1100;
-		m_iHP = m_iMaxHP; // ★
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
+		
+		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
 
-		m_iAtkDamage = 50;
-
-		m_iMaxCrushGauge = m_iMaxHP * 0.9f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
 		m_iCrushGauge = m_iMaxCrushGauge;
-	
-		iEemeyLevel = 2;
+
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0210;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0210;
-	m_bHasCrushGauge = true;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	//시작부터 투명상태 적용
@@ -633,11 +635,6 @@ void CEM0210::SetUpFSM()
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		.Build();
-}
-
-void CEM0210::SetUpUI()
-{
-	__super::SetUpUI();
 }
 
 void CEM0210::BeginTick()

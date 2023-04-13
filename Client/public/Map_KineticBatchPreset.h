@@ -37,8 +37,14 @@ public:
 	void	Tick(_double TimeDelta);
 	void Clear();
 
+public:
+	void	Set_RespawnTime(_float fRespawnTime) { m_fRespawnTime = fRespawnTime; }
+
 private:
 	void	OverlapCheck(KINETIC_BATCH& tBatch);
+
+private:
+	_float	m_fRespawnTime = 0.f;
 
 private:
 	vector<KINETIC_BATCH> m_KineticPresets;

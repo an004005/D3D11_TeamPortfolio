@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CRigidBody;
 class CMaterial;
+class CAnimCam;
 END
 
 BEGIN(Client)
@@ -23,7 +24,9 @@ public:
 	virtual void SetUpComponents(void* pArg) override;
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
-	virtual void SetUpFSM() override;
+	void SetUpMainFSM();
+	void SetUpIntro();
+	void SetUpChange();
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -32,7 +35,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
-
+	virtual _float4 GetKineticTargetPos() override;
+	virtual _bool Exclude();
 public:
 	_bool	IsChangePhase() const { return m_bChangePhase; }
 public:
@@ -54,8 +58,8 @@ public:
 public:
 	//АјАн
 	void Fall_Overlap();
-	void Shout1_Overlap();
-	void Shout2_Overlap();
+	void Shout_Overlap();
+	//void Shout2_Overlap();
 	void Stamp_Overlap();
 	void Swing_SweepSphere(const string& BoneName);
 	void Rush_SweepSphere();
@@ -64,6 +68,7 @@ private:
 	class CEM1200_Controller*		m_pController = nullptr;
 	class CEM1200_AnimInstance*		m_pASM = nullptr;
 	CMaterial* m_pWeak = nullptr;
+	CAnimCam* m_pAnimCam = nullptr;
 
 private:
 	_float3						m_vMoveAxis;
@@ -71,6 +76,7 @@ private:
 	_bool						m_bRun = false;
 	_bool						m_bChangePhase = false;
 
+	CDoOnce					m_bSetUpChange;
 	//Attack
 	_double						m_dLoopTime = 0.0;
 	_double						m_dLoopTick = 0.0;
@@ -80,6 +86,7 @@ private:
 	_double				m_dFogTime = 0.0;
 
 	_float4					m_SaveTargetPos;
+
 	//Dodge
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;
@@ -99,6 +106,8 @@ private:
 
 	_bool	m_bWeakTalk = { false };
 
+
+	_bool			m_OnAnimCam = false;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

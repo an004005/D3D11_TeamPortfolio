@@ -33,22 +33,26 @@ HRESULT CEM0220::Initialize(void * pArg)
 	m_strDeathSoundTag = "wood_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 1100;
-		m_iHP = 1100; // ★
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
-		m_iCrushGauge = 700;
-		m_iMaxCrushGauge = m_iCrushGauge;
+		m_iMaxHP = LEVEL_NOW * (150 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		m_iMaxCrushGauge = m_iMaxHP * 0.5f;
+		m_iCrushGauge = m_iMaxCrushGauge;
+
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0220;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0220;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	SetUp_Lantern();

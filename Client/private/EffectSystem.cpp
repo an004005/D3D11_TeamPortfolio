@@ -36,6 +36,21 @@ HRESULT CEffectSystem::Initialize(void* pArg)
 	if (m_ChildBuffers.empty())
 		m_ChildBuffers.emplace_back(_float4x4::Identity);
 
+	if (m_bTurn == true)
+		m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+
+	if(m_bUseMoveCurve == true)
+	{
+	m_MoveTimeline.PlayFromStart();
+	}
+
+	for (auto& childMatrix : m_ChildBuffers)
+	{
+		_matrix MatChild = childMatrix;
+		_float4 Pos = MatChild.r[3];
+		m_fDefaultY = Pos.y;
+	}
+
 	return S_OK;
 }
 
@@ -49,6 +64,66 @@ void CEffectSystem::Tick(_double TimeDelta)
 	{
 		m_pShaderCom->Tick(TimeDelta);
 	}
+
+	if(m_bUseMoveCurve == true)
+	{
+		if(m_MoveTimeline.Tick(TimeDelta, m_fMoveRange))
+		{
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				_matrix MatChild = childMatrix;
+				_float4 Pos = MatChild.r[3];
+				_float ChildY = Pos.y;
+				Pos.y = (m_fMoveRange * 2.f - 1.f);
+				MatChild.r[3] = Pos;
+				childMatrix = MatChild;
+			}
+		}
+		else
+		{
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				_matrix MatChild = childMatrix;
+				_float4 Pos = MatChild.r[3];
+				Pos.y = m_fDefaultY;
+				MatChild.r[3] = Pos;
+				childMatrix = MatChild;
+			}
+		}
+	}
+
+	if (m_bTurn == true)
+	{
+		if (m_fTurnAngle != 0.f)
+		{
+			for (auto& childMatrix : m_ChildBuffers)
+			{
+				_matrix MatChild = childMatrix;
+
+				_matrix		RotationMatrix = XMMatrixRotationAxis(m_fTurnAxis, XMConvertToRadians(m_fTurnAngle) * TimeDelta);
+
+				// _vector		vRight = MatChild.r[0];
+				// _vector		vUp = MatChild.r[1];
+				// _vector		vLook = MatChild.r[2];
+
+				MatChild.r[0] = XMVector4Transform(MatChild.r[0], RotationMatrix);
+				MatChild.r[1] = XMVector4Transform(MatChild.r[1], RotationMatrix);
+				MatChild.r[2] = XMVector4Transform(MatChild.r[2], RotationMatrix);
+
+				// Set_State(CTransform::STATE_RIGHT, XMVector4Transform(vRight, RotationMatrix));
+				// Set_State(CTransform::STATE_UP, XMVector4Transform(vUp, RotationMatrix));
+				// Set_State(CTransform::STATE_LOOK, XMVector4Transform(vLook, RotationMatrix));
+
+				childMatrix = MatChild;
+			}
+
+
+			// m_pTransformCom->SetRotPerSec(XMConvertToRadians(m_fTurnAngle));
+			// m_pTransformCom->Turn(m_fTurnAxis, TimeDelta);
+		}
+		// m_pTransformCom->Rotation(m_pTransformCom->Get_State(CTransform::STATE_UP), m_fTurnAxis.x);
+	}
+
 }
 
 void CEffectSystem::Late_Tick(_double TimeDelta)
@@ -145,6 +220,11 @@ HRESULT CEffectSystem::Render()
 	return S_OK;
 }
 
+void CEffectSystem::Play_MoveCurve()
+{
+	m_MoveTimeline.PlayFromStart();
+}
+
 void CEffectSystem::Check_ModelSprite()
 {
 	if (m_vecModelDir.empty() == false && m_vecModelCom.empty() == false)
@@ -235,6 +315,7 @@ void CEffectSystem::SaveToJson(Json& json)
 {
 	CShader::SaveShaderParam(m_tParam, json);
 
+	json["DefaultY"] = m_fDefaultY;
 	json["bModelSprite"] = m_bModelSprite;
 	json["bBillBoard"] = m_bBillBoard;
 	json["BillBoardType"] = static_cast<_uint>(m_eBillBoardType);
@@ -246,6 +327,12 @@ void CEffectSystem::SaveToJson(Json& json)
 	json["ShaderProtoTag"] = m_ShaderProtoTag;
 	json["ModelProtoTag"] = m_ModelProtoTag;
 	json["ModelFolderDir"] = m_ModelFolderDir;
+	json["bUseMoveCurve"] = m_bUseMoveCurve;
+	json["MoveCurveName"] = m_MoveTimeline.GetCurveName();
+	json["bTurn"] = m_bTurn;
+	json["TurnAxis"] = m_fTurnAxis;
+	json["TurnAngle"] = m_fTurnAngle;
+
 
 	if(m_bModelSprite == true)
 	{
@@ -258,6 +345,34 @@ void CEffectSystem::LoadFromJson(const Json& json)
 	CGameObject::LoadFromJson(json);
 
 	CShader::LoadShaderParam(m_tParam, json);
+
+	if(json.contains("DefaultY"))
+	{
+		m_fDefaultY = json["DefaultY"];
+	}
+
+	if (json.contains("bTurn"))
+	{
+		m_bTurn = json["bTurn"];
+	}
+
+	if (json.contains("TurnAxis"))
+		m_fTurnAxis = json["TurnAxis"];
+
+	if (json.contains("TurnAngle"))
+		m_fTurnAngle = json["TurnAngle"];
+
+	if (json.contains("bUseMoveCurve"))
+	{
+		m_bUseMoveCurve = json["bUseMoveCurve"];
+	}
+	else
+	{
+		m_bUseMoveCurve = false;
+	}
+
+	if (json.contains("MoveCurveName"))
+		m_MoveTimeline.SetCurve(json["MoveCurveName"]);
 
 	if(json.contains("bNormal"))
 	{
@@ -328,7 +443,34 @@ void CEffectSystem::Imgui_RenderProperty()
 	
 	ImGui::Separator();
 
-	
+	if(ImGui::Button("Reset MoveRange"))
+	{
+		m_fMoveRange = 0.5f;
+	}
+
+
+	static _int iCurveIdx = 0;
+	ImGui::InputInt("CurveID", &iCurveIdx);
+	switch (iCurveIdx)
+	{
+	case 0:
+		break;
+	case 1:
+		m_MoveTimeline.Imgui_RenderEditor();
+		break;
+	}
+
+	ImGui::Checkbox("Use MoveCurve", &m_bUseMoveCurve);
+
+	ImGui::Checkbox("IsTurn", &m_bTurn);
+
+	if (m_bTurn == true)
+	{
+		CImguiUtils::InputFloat3(&m_fTurnAxis, "Turn Axis");
+		ImGui::InputFloat("Turn Speed", &m_fTurnAngle);
+
+	}
+
 	CShader::Imgui_RenderShaderParams(m_tParam);
 
 	if(ImGui::Button("Set_OriginColor"))
@@ -361,7 +503,11 @@ void CEffectSystem::Imgui_RenderProperty()
 		static GUIZMO_INFO tInfo;
 		CImguiUtils::Render_Guizmo(&m_ChildBuffers[iSelectBuffer], tInfo, true, true);
 	}
+
+	ImGui::InputFloat("Default Y", &m_fDefaultY);
+
 	
+
 	ImGui::Separator();
 	{
 		char BufferProtoTag[MAX_PATH];

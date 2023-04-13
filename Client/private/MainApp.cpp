@@ -50,7 +50,8 @@
 #include "PostVFX_SuperSpeed.h"
 #include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
-
+#include "PostVFX_WhiteOut.h"
+#include "EnvironmentEffect.h"
 #include "VIBuffer_Point_Instancing.h"
 #include "Map_KineticBatchPreset.h"
 
@@ -201,6 +202,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_SuperSpeed"),
 		CPostVFX_SuperSpeed::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_WhiteOut"),
+		CPostVFX_WhiteOut::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For. Prototype_Component_SuperSpeedTrail */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SuperSpeedTrail"),
@@ -344,6 +348,7 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		/* For.Prototype_Component_Shader_VtxToonModel*/
 		auto pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxToonModel.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements);
 		pShader->SetCommonTexture("g_WaveTile", "../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Texture/T_Wave_Tile_00.dds");
+		pShader->SetCommonTexture("g_scl_noise_030", "../Bin/Resources/Texture/VFX/T_ef_scl_noi_030.png");
 		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxToonModel"), pShader)))
 				return E_FAIL;
 	}
@@ -477,7 +482,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CombinedRedString"), CCombinedRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_EnvironmentEffect"), CEnvironmentEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))
