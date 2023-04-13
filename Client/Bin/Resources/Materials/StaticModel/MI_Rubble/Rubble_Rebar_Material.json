@@ -1,18 +1,18 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
-		"Floats": [],
-		"Float4s": [],
+		"Float2s": [],
 		"Ints": [],
+		"Pass": 1,
 		"Float4x4s": [],
+		"Floats": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Props_Rebar_Color_Texture.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Props_Rebar_NM_Texture.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Props_Rebar_ORM_Texture_RMA.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
 	"InstancingPass": 1
 }

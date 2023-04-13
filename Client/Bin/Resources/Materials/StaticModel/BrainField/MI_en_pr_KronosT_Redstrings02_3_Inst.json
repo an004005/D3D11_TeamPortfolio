@@ -1,26 +1,26 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"Active": true,
+	"AlphaBlend": true,
 	"ShaderParams": {
-		"Float4s": [],
-		"Floats": [
-			10.0,
-			-0.10000000149011612
-		],
 		"Float2s": [
 			[
 				10.0,
 				3.0
 			]
 		],
+		"Ints": [],
+		"Pass": 6,
 		"Float4x4s": [],
+		"Floats": [
+			10.0,
+			-0.10000000149011612
+		],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_RedStrings03.dds"
 		],
-		"Pass": 6,
-		"Ints": []
+		"Float4s": []
 	},
-	"AlphaBlend": true,
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"InstancingPass": 6
 }

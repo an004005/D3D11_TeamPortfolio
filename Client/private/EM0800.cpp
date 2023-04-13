@@ -33,22 +33,29 @@ HRESULT CEM0800::Initialize(void * pArg)
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 5000;
+		m_iMaxHP = LEVEL_NOW * (300 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 8000;
-		m_iMaxCrushGauge = 8000;
+		m_iMaxCrushGauge = m_iMaxHP * 10;
+		m_iCrushGauge = m_iMaxCrushGauge;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		if (LEVEL_NOW == LEVEL_TUTORIAL)
+			iEemeyLevel = 10;
+		else
+			iEemeyLevel = 18;
+		
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0800;
+		m_bHasCrushGauge = true;
 	}
+
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0800;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
 
@@ -617,6 +624,16 @@ void CEM0800::PlayBC()
 		m_CanFullBC = false;
 		return;
 	}
+}
+
+_float4 CEM0800::GetKineticTargetPos()
+{
+	_uint random = CMathUtils::RandomUInt(1);
+
+	_float4	LeftWeak = XMLoadFloat4x4(&GetRigidBody("Weak_LeftArm")->GetPxWorldMatrix()).r[3];
+	_float4 RightWeak = XMLoadFloat4x4(&GetRigidBody("Weak_RightArm")->GetPxWorldMatrix()).r[3];
+	
+	return random == 0 ? LeftWeak : RightWeak;
 }
 
 _bool CEM0800::IsPlayingSocket() const

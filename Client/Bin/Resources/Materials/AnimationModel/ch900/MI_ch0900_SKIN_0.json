@@ -9,10 +9,10 @@
 		"Pass": 1,
 		"Float2s": [],
 		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Skin_COL.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Skin_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Skin_AMB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_ch0900_Skin_CTL.dds"
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Skin_COL.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Skin_NML.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Skin_AMB.png",
+			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/ch900/Texture/T_ch0900_Skin_CTL.png"
 		],
 		"Float4x4s": [],
 		"Float4s": [

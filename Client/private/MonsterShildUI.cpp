@@ -48,8 +48,9 @@ void CMonsterShildUI::BeginTick()
 	Assert(m_pGroup != nullptr);
 	Assert(m_pMonsterName != nullptr);
 
-	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
-	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	_float4x4	EyesPivot = XMMatrixTranslation(0.f, 0.5f, 0.f);
+	m_pGroup->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
 
 	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_eMonsterName) };
 }
@@ -58,6 +59,8 @@ void CMonsterShildUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	//m_pGroup->GetTransform()->CopyState(CTransform::STATE_TRANSLATION, m_pTransformCom);
+
+	if (m_pGroup == nullptr) return;
 
 	HpBack_Tick(TimeDelta);
 	//Broken_Tick(TimeDelta);
@@ -88,6 +91,8 @@ void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)
 	// 2: Hp, 3: HpBack, 4: Shild
 	//m_pGroup->GetSecondEffect()->GetParams().Floats[0] = fHP;
 	//m_fHpBack = fHP;
+	if (m_pGroup == nullptr) return;
+
 	m_pGroup->GetThirdEffect()->GetParams().Floats[0] = fHP;
 	m_pGroup->GetFourthEffect()->GetParams().Floats[0] = fShild;
 	
@@ -162,13 +167,14 @@ void CMonsterShildUI::Free()
 		{
 			m_pGroup->SetDelete();
 			Safe_Release(m_pGroup);
+			m_pGroup = nullptr;
 		}
-
 
 		if (m_pMonsterName != nullptr)
 		{
 			m_pMonsterName->SetDelete();
 			Safe_Release(m_pMonsterName);
+			m_pMonsterName = nullptr;
 		}
 	}
 }

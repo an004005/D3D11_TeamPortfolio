@@ -25,7 +25,7 @@ public:
 	virtual void   Tick(_double TimeDelta) override;
 
 public:
-	void	Add_Talk(const size_t iIndex);
+	void	Add_Talk(const _int iIndex, const _bool bDead = false, const _int iQuest = -1);
 
 private:
 	void	Show_Talk();
@@ -33,8 +33,11 @@ private:
 private:
 	std::list<TALKINFO>	m_qCurrentTalk;
 
-	_bool		m_bRunning = false;
+	_bool		m_bRunning = { false };
 	_double	m_dTalk_TimeAcc = { 3.0 };
+
+	_bool		m_bDead = { false };
+	_int		m_iQuestNum = { -1 };
 
 public:
 	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

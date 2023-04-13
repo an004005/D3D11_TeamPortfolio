@@ -4,12 +4,15 @@
 #include "Shader.h"
 #include "Animation.h"
 #include "Model.h"
+#include "ImguiUtils.h"
 #include "JsonStorage.h"
+#include "JsonLib.h"
 #include "GameUtils.h"
 #include "PhysX_Manager.h"
 #include "Material.h"
 
 #include "Item_Manager.h"
+#include "GameManager.h"
 
 CConsumption_Item::CConsumption_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject(pDevice, pContext)
@@ -37,11 +40,17 @@ HRESULT CConsumption_Item::Initialize(void* pArg)
    // 이 아이템이 무엇인가를 Item_Manager로부터 Random하게 받는다.
     for (auto& iter : CItem_Manager::GetInstance()->Get_ItmeInfo())
     {
-        if (iter.second.eType == CItem_Manager::MAINITEM::BATTLE)
+        if (iter.second.eType == CItem_Manager::MAINITEM::BATTLE) // 소모품 이름
         {
             m_vecItemName.push_back(iter.first);
         }
+        else if (iter.second.eType == CItem_Manager::MAINITEM::ETC) // 업적 이름
+        {
+            m_vecAchieveName.push_back(iter.first);
+        }
     }
+
+    m_pTransformCom->SetTransformDesc({ 18.f, 18.f }); 
 
     return S_OK;
 }
@@ -51,6 +60,9 @@ void CConsumption_Item::BeginTick()
     __super::BeginTick();
     m_pModel->SetPlayAnimation("AS_co0700_001_wait");
 
+    m_strName = m_vecItemName[m_eItemType];
+    m_AchieveName = m_vecAchieveName[m_eAchieveType];
+
     _int ia = 0;
 }
 
@@ -59,23 +71,64 @@ void CConsumption_Item::Tick(_double TimeDelta)
     __super::Tick(TimeDelta);
     m_pModel->Tick(TimeDelta);
     m_pModel->Play_Animation(TimeDelta);
-    //Update_Animation(TimeDelta);
 
-    PlayerOverlapCheck();
+    if (!m_bOverlapCheck && m_pModel->Find_Animation("AS_co0700_001_wait")->IsFinished())
+    {
+        m_pModel->Find_Animation("AS_co0700_001_wait")->Reset();
+    }
+
+    //Update_Animation(TimeDelta);
+    if(!m_bGetItem)
+         PlayerOverlapCheck();
 }
 
 void CConsumption_Item::Late_Tick(_double TimeDelta)
 {
     __super::Late_Tick(TimeDelta);
 
-    if (m_bOverlapCheck)
-    {
-        //random_shuffle(m_vecItemName.begin(), m_vecItemName.end());
-        // Item_Manager에게 정보 전달
-        CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);
+    if (m_bOverlapCheck && !m_bGetItem)  // Player가 Item을 먹었을 경우 Item_Manager에게 정보 전달
+    {    
+        // 소모 아이템일 경우
+        if (m_eTypeInfo == TYPE_USE)
+        {
+            CItem_Manager::GetInstance()->Set_ItemCount(m_strName, 1);
+            // 획득한 아이템이 10개 이상 이라면 오른쪽에 획득 UI 를 띄우지 않는다.
+            vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
+            auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
+                return pair.first == m_strName;
+                });
 
+            if (iter != vecItemInfo.end())
+            {
+                if (11 >= (*iter).second.iCount + 1)
+                    CGameManager::GetInstance()->Set_AddlItem(m_strName);
+            }
+        }
+        // 업적 아이템일 경우 
+        else if (m_eTypeInfo == TYPE_ACHIEVE)
+        {
+            CItem_Manager::GetInstance()->Set_ItemCount(m_AchieveName, 1);
+
+            vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
+            auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
+                return pair.first == m_AchieveName;
+                });
+
+            if (iter != vecItemInfo.end())
+            {               
+                CGameManager::GetInstance()->Set_AddlItem(m_AchieveName);
+            }
+        }
+        // ★ 애니메이션 교체(Get)
+        m_pModel->SetPlayAnimation("AS_co0700_002_get"); 
+        m_bGetItem = true;      
+    }
+
+    // 아이템 먹었으면 애니메이션 실행 후 삭제
+    if (m_pModel->GetPlayAnimation() == m_pModel->Find_Animation("AS_co0700_002_get") && 
+        m_pModel->Find_Animation("AS_co0700_002_get")->IsFinished())
+    {
         m_bDelete = true;
-        // ★ 애니메이션 교체(Get) -> 애니메이션에 Add_EventCaller로 삭제 적용
     }
 
     if (m_bVisible && (nullptr != m_pRenderer))
@@ -109,7 +162,17 @@ HRESULT CConsumption_Item::Render_ShadowDepth()
 void CConsumption_Item::Imgui_RenderProperty()
 {
     __super::Imgui_RenderProperty();
-
+    
+    ImGui::Text("Root Item Type");
+    if (ImGui::RadioButton("Type Use", m_eTypeInfo == TYPE_USE))
+    {
+        m_eTypeInfo = TYPE_USE;
+    }
+    if (ImGui::RadioButton("Type Achieve", m_eTypeInfo == TYPE_ACHIEVE))
+    {
+        m_eTypeInfo = TYPE_ACHIEVE;
+    }
+    
     static array<const char*, ITEMTYPE_END> ItemTypeNames{
         "Solo_Small", "Solo_Mid", "Solo_Big", "Party_Small", "Party_Mid", "Party_Big", "SAS_Full"
     };
@@ -123,13 +186,101 @@ void CConsumption_Item::Imgui_RenderProperty()
         }
         ImGui::EndCombo();
     }
+
+    static array<const char*, AC_END> AchieveTypeNames{
+        "Achiveve_KKB", "Achiveve_OSH", "Achiveve_JIB", "Achiveve_JJH", "Achiveve_PJW", "Achiveve_AJH"
+    };
+    if (ImGui::BeginCombo("Achieve Name Seletor", AchieveTypeNames[m_eAchieveType]))
+    {
+        for (int i = 0; i < AC_END; ++i)
+        {
+            const bool bSelectAC = false;
+            if (ImGui::Selectable(AchieveTypeNames[i], bSelectAC))
+                m_eAchieveType = static_cast<ACHIEVETYPE>(i);
+        }
+        ImGui::EndCombo();
+    }
+#ifdef _DEBUG
     if (ImGui::Button("Item Name Decision"))
+    {
+        if (MessageBox(NULL, L"Really this Setting Save?", L"System Message", MB_YESNO) == IDYES)
+        {
+            if (m_eTypeInfo == TYPE_USE)
+            {
+                for (int i = 0; i < ITEMTYPE_END; ++i)
+                {
+                    if (m_eItemType == i)
+                    {
+                        m_strName = m_vecItemName[i];
+                    }
+                }
+            }
+            else if (m_eTypeInfo == TYPE_ACHIEVE)
+            {
+                for (int i = 0; i < AC_END; ++i)
+                {
+                    if (m_eAchieveType == i)
+                    {
+                        m_AchieveName = m_vecAchieveName[i];
+                    }
+                }
+            }            
+        }       
+    }
+#endif
+}
+
+void CConsumption_Item::SaveToJson(Json& json)
+{
+    CGameObject::SaveToJson(json); 
+    json["RootType"] = m_eTypeInfo;
+    if (m_eTypeInfo == TYPE_USE)
     {
         for (int i = 0; i < ITEMTYPE_END; ++i)
         {
             if (m_eItemType == i)
             {
-                m_strName = m_vecItemName[i];
+                json["ItemType"] = m_eItemType;
+            }
+        }        
+    }
+    else if (m_eTypeInfo == TYPE_ACHIEVE)
+    {
+        for (int i = 0; i < AC_END; ++i)
+        {
+            if (m_eAchieveType == i)
+            {
+                json["AchieveType"] = m_eAchieveType;
+            }
+        }
+    }         
+}
+
+void CConsumption_Item::LoadFromJson(const Json& json)
+{
+    CGameObject::LoadFromJson(json);  
+
+    if (json.contains("RootType"))
+        m_eTypeInfo = json["RootType"];
+
+    if (m_eTypeInfo == TYPE_USE)
+    {
+        for (int i = 0; i < ITEMTYPE_END; ++i)
+        {
+            if (json["ItemType"] == i)
+            {
+                m_eItemType = json["ItemType"];
+            }
+        }
+    }
+    
+    else if (m_eTypeInfo == TYPE_ACHIEVE)
+    {
+        for (int i = 0; i < AC_END; ++i)
+        {
+            if (json["AchieveType"] == i)
+            {
+                m_eAchieveType = json["AchieveType"];
             }
         }
     }

@@ -6,6 +6,7 @@
 
 #include "DefaultUI.h"
 #include "ShaderUI.h"
+#include "GameManager_Tutorial.h"
 
 CCanvas_Quest::CCanvas_Quest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -32,8 +33,6 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 
 	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Quest", this);
 	
-	Quest_Initialize();
-
 	m_fBackGround_StartPos = Find_ChildUI(L"BackGround")->Get_Position();
 	Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
 
@@ -51,12 +50,12 @@ void CCanvas_Quest::Tick(_double TimeDelta)
 		m_bVisible = true;
 	}
 
+	Success_Tick();
 	if (!m_bVisible) return;
 
 	CCanvas::Tick(TimeDelta);
 
 	Move_Tick(TimeDelta);
-
 }
 
 HRESULT CCanvas_Quest::Render()
@@ -69,8 +68,7 @@ HRESULT CCanvas_Quest::Render()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	_float2 vPosition = Find_ChildUI(L"ChakeBase")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", m_vecQuestInfo[m_iQuestIndex].wsQuest0.c_str(), vPosition + _float2(50.0f, 7.0f), 0.f, vFontSize, vColor);
-	//pGameInstance->Render_Font(L"Pretendard32", m_vecQuestInfo[m_iQuestIndex].wsQuest1.c_str(), vPosition + _float2(20.0f, -20.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_wsQuest.c_str(), vPosition + _float2(50.0f, 7.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -90,21 +88,44 @@ void CCanvas_Quest::Imgui_RenderProperty()
 	//}
 }
 
-void CCanvas_Quest::LoadFromJson(const Json& json)
+void CCanvas_Quest::Add_Quest(const _int iIndex)
 {
-	__super::LoadFromJson(json);
+	m_iQuestIndex = iIndex;
 
-	m_iQuestIndex = json["QuestIndex"];
-}
-
-void CCanvas_Quest::Quest_Initialize()
-{
 	QUESTINFO tQuestInfo;
 
-	tQuestInfo.wsQuest0 = L"병원에서 나오미의 약을 찾아 중대장에게 가기.";
-	tQuestInfo.wsQuest1 = L"어쩌고를 하세요.";
-	m_vecQuestInfo.push_back(tQuestInfo);
+	switch (iIndex)
+	{
+	case 0 :
+	{
+		m_wsQuest = L"도로에 나타난 모든 괴이를 처치하세요.";
+	}
+	break;
 
+	case 1:
+	{
+		m_wsQuest = L"동료와 함께 공사장에 나타난 괴이를 처치하세요.";
+	}
+	break;
+
+	case 2:
+	{
+		m_wsQuest = L"하나비를 위한 히마와리를 찾아 전달하기.";
+	}
+	break;
+
+	case 3:
+	{
+		m_wsQuest = L"병원에서 나오미의 약을 찾아 중대장에게 가기.";
+	}
+	break;
+
+	default:
+	{
+		m_wsQuest = L"쥬신 게임 아카데미 졸업하기.";
+	}
+	break;
+	}
 }
 
 void CCanvas_Quest::Move_Tick(const _double& TimeDelta)
@@ -173,6 +194,18 @@ void CCanvas_Quest::Success(const _double& TimeDelta)
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Chake"))->Set_Floats0(fRatio);
 }
 
+void CCanvas_Quest::Success_Tick()
+{
+	if (0 == m_iQuestIndex)
+	{
+		if (10 == dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Get_MonstaerDeadCount())
+		{
+			Set_SuccessQuest();
+			dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Set_MonsterDeadCount();
+		}
+	}
+}
+
 CCanvas_Quest* CCanvas_Quest::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CCanvas_Quest* pInstance = new CCanvas_Quest(pDevice, pContext);
@@ -202,3 +235,48 @@ void CCanvas_Quest::Free()
 	CCanvas::Free();
 
 }
+
+//L
+//유이토는 이제 공식적인 대원이 되었고, 첫번째 퀘스트로 도로로 향하게 됩니다.
+//첫 번째 퀘스트는 도로 맵의 괴이를 모두 처치해야 합니다.
+
+//M
+//퀘스트를 완료하고 마을로 가서 돌아다니다가 동료 3명을 만납니다. (메인 메뉴에서 동료의 정보를 확인할 수 있습니다.)
+//이때 동료들이 상점에 대해 설명하고 배틀 아이템을 사고, 판매 후 두 번째 퀘스트를 받습니다.
+
+//L
+//두 번째 퀘스트는 공사장 3층 에서 강해진 괴물 출현으로 인해 동료들과 함께 출동하여 괴이를 처하라고 미션을 받습니다.
+
+//L
+//괴이를 모두 처치하고 이후 마을로 돌아가는데 이 때 하나비는 중대장의 호출로 나머지 친구들과 마을로 향한다.
+
+//M
+//나머지 친구들과 마을로 돌아갑니다.마을에 돌아가고 남은 대원끼리 하나비의 생일 선물을 위해 어떤 것을 해줄까 고민하다가
+//츠구미가 공사장 2층에서 특별하고 찾기 어려운 꽃 "히마와리"를 찾자고 합니다.이 꽃을 전달하면 사랑이 이루어진다는 전설이 있다고 알려줍니다.
+//+
+//그렇게 하나비가 때 마침 돌아오고 하나비가 브레인맵에 대해 설명을 듣고 왔다면서 알려줍니다.
+
+//L
+//그리고 나서 아까 받아둔 미션이 있다면서 다 같이 공사장 2층으로 향한다.
+
+//M
+//퀘스트를 마치고 다시 마을로 돌아가서 나머지 동료들을 만나면서 어떤 괴이가 있었다면서 잠시 수다를 떱니다. (만약 마을이 초토화 되어 있었다면 초토화 된 이유를 상상해서 이야기 한다.)
+//
+//M
+//그러다가 갑자기 모든 대원들이 달려갑니다.달려간 곳에는 중대장이 있었고, 중대장에게 네 번째 퀘스트를 받게 됩니다.
+//네번 째 퀘스트는 지금 지하철에 있는 중대장의 딸 "나오미"를 구해야 하는 미션이라고 합니다.
+
+//M
+//하지만 몬스터를 모두 처치하고 보스 까지 처치하려는 순간 중대장이 나타나면서 자신의 딸 이라고 공격을 멈추라고 합니다.
+//그렇게 중대장은 마지막 퀘스트로 나오미를 구하기 위해 구 토벌군 병원으로 가서 나오미의 약을 찾아 달라고 합니다.
+//그러나 병원은 물 보스가 장악하고 있어서 약을 구할 수 없습니다.
+
+//L
+//이때 하루카의 연락을 받아서 중대장이 시간 역행을 하려고 한다는 것을 알게 됩니다.시간 역행이 일어나면 모든 대원들과 시민들이 위험하다는 것을 알고, 모든 대원들에게 이를 막기 위해 도와달라고 합니다.
+//그렇게 마을로 돌아가서 돌아다니다가 트리거를 밟고, 대원들이 사라지면서 중대장의 소환으로 보스맵으로 이동하게 됩니다.
+
+//M
+//그곳에서 중대장이 자신의 딸 하나만을 위해서 시간 역행을 하기 위해 대원에게 부탁을 했고,
+//그러기에는 다른 시민들에게 피해가 갈 수 있기 때문에 대원들은 반대합니다.
+//그러나 중대장은 혼자서 하겠다면서 방해나 되지 말라고 합니다.
+//그렇게 중대장을 막기 위해서 중대장과 대원의 싸움이 시작 되고 결론은 대원의 승리로 끝나게 된다.

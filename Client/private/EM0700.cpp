@@ -35,23 +35,26 @@ HRESULT CEM0700::Initialize(void * pArg)
 	m_strDeathSoundTag = "voidfly_fx_death";
 
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 3000;
-		m_iHP = 3000; // ★
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
+		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 2500;
-		m_iMaxCrushGauge = m_iCrushGauge;
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iCrushGauge = m_iMaxCrushGauge;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0700;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0700;
-	m_bHasCrushGauge = true;
+	
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_pTransformCom->SetSpeed(2.f);
 
@@ -389,7 +392,9 @@ void CEM0700::SetUpFSM()
 			.Tick([this](_double TimeDelta)
 			{
 					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+					if (nullptr != m_pBrain)
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
 					m_BCLoopTime += TimeDelta;
 			})
 
@@ -599,29 +604,6 @@ void CEM0700::SetUpFSM()
 				})
 
 		.Build();
-}
-
-void CEM0700::SetUpUI()
-{
-	__super::SetUpUI();
-
-	//HP UI
-	_float4x4 UI_InfoPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.413f, 0.0f, 1.0f
-	);
-
-	//FindEye
-	_float4x4 UI_EyesPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.413f, 0.0f, 1.0f
-	);
-
-	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
 }
 
 void CEM0700::BeginTick()

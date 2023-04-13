@@ -57,6 +57,8 @@
 #include "GameManager.h"
 #include "Imgui_CamAnimEditor.h"
 
+#include "InvisibleWall.h"
+
 CLevel_PlayerTest::CLevel_PlayerTest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -124,6 +126,20 @@ HRESULT CLevel_PlayerTest::Initialize()
 	m_BGM.CloneSound("Attention Please"); 
 	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	// PJW add 0412
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/PlayerTestWall.json");
+	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapDecorate")->GetGameObjects())
+	{
+		if (iter->GetPrototypeTag() == L"Prototype_InvisibleWall")
+		{
+			CInvisibleWall* pInvisibleWall = dynamic_cast<CInvisibleWall*>(iter);
+			//Safe_AddRef(pInvisibleWall);
+			pInvisibleWall->Activate(true);
+			//Safe_Release(pInvisibleWall);
+		}
+	}
+	// ~PJW add 0412
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
@@ -563,24 +579,22 @@ HRESULT CLevel_PlayerTest::Ready_Layer_UI(const _tchar* pLayerTag)
 	//	pGameInstance->Clone_GameObject(pLayerTag, protoTag.c_str(), &json);
 	//});
 
-
-
 	return S_OK;
 }
 
 HRESULT CLevel_PlayerTest::Ready_Layer_AI(const _tchar* pLayerTag)
 {
-	//Json PreviewData;
-	//PreviewData["Model"] = "Model_AI_CH0300";
+	Json PreviewData;
+	PreviewData["Model"] = "Model_AI_CH0300";
 
-	//CGameObject* pAI_CH0300 = nullptr;
-	//NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
+	CGameObject* pAI_CH0300 = nullptr;
+	NULL_CHECK(pAI_CH0300 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0300"), &PreviewData));
 
-	//Json Tsugumi;
-	//Tsugumi["Model"] = "Model_AI_CH0500";
+	Json Tsugumi;
+	Tsugumi["Model"] = "Model_AI_CH0500";
 
-	//CGameObject* pAI_CH0500 = nullptr;
-	//NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
+	CGameObject* pAI_CH0500 = nullptr;
+	NULL_CHECK(pAI_CH0500 = CGameInstance::GetInstance()->Clone_GameObject_Get(pLayerTag, TEXT("AI_CH0500"), &Tsugumi));
 
 	return S_OK;
 }

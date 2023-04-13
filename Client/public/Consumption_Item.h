@@ -14,6 +14,8 @@ class CConsumption_Item : public CGameObject
 {
 public:
 	enum ITEMTYPE { SOLO_SMALL, SOLO_MID, SOLO_BIG, PARTY_SMALL, PARTY_MID, PARTY_BIG, SAS_FULL, ITEMTYPE_END };
+	enum ACHIEVETYPE { AC_KKB, AC_OSH, AC_JIB, AC_JJH, AC_PJW, AC_AJH, AC_END };
+	enum TYPEINFO { TYPE_USE, TYPE_ACHIEVE, TYPE_END };
 
 private:
 	CConsumption_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,10 +34,12 @@ public:
 
 public:
 	virtual void Imgui_RenderProperty() override;
+	virtual void	SaveToJson(Json& json) override;
+	virtual void	LoadFromJson(const Json& json) override;
 
 private:
 	void	Update_Animation(_double TimeDelta);
-	void	PlayerOverlapCheck();
+	void	PlayerOverlapCheck();	
 
 private:
 	CRenderer* m_pRenderer = nullptr;
@@ -50,10 +54,20 @@ private:
 
 	_bool		m_bOverlapCheck = false;
 
+	_bool		m_bGetItem = false;
+
 	// 이번에 획득한 아이템이 무엇인가? Item Infomation
 	vector<wstring>		m_vecItemName;
 	wstring				m_strName = L"";
 	ITEMTYPE			m_eItemType = SOLO_SMALL;
+
+	// 이번에 획득한 업적이 무엇인가? Achievement -> Item_Manager
+	vector<wstring>		m_vecAchieveName;
+	wstring				m_AchieveName = L"";
+	ACHIEVETYPE			m_eAchieveType = AC_KKB;
+
+	// 근본적으로 이 아이템은 일단 무엇인가?
+	TYPEINFO			m_eTypeInfo = TYPE_USE;
 
 public:
 	static CConsumption_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

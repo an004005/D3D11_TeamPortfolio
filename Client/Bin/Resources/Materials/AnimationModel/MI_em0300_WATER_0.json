@@ -1,26 +1,24 @@
 {
-	"ShaderParams": {
-		"Floats": [
-			0.0,
-			1.0
-		],
-		"Float2s": [],
-		"Pass": 2,
-		"Float4x4s": [],
-		"Float4s": [],
-		"Ints": [
-			0
-		],
-		"Textures": [
-			"",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_Water_N.dds",
-			"",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0300_WaterNoise01.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0300_WaterNoise02.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0300_WaterNoise03.dds",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/Arch41_036_leaf_bump.png",
-			"../Bin/Resources/Texture/MaterialTexture/AnimationModelTextures/T_em0300_Regeneration_00.dds"
-		]
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0.0,
+            1.0
+        ],
+        "Ints": [0],
+        "Pass": 2,
+        "Textures": [
+            "",
+            "..\\Bin\\Resources\\Model\\AnimModel\\Monster\\boss1_em320\\Texture\\T_Water_N.png\u0000",
+            "",
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0300_WaterNoise01.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0300_WaterNoise02.png\u0000",
+            "../Bin/Resources/Model/AnimModel/Monster/boss1_em320/Texture/T_em0300_WaterNoise03.png\u0000",
+            "..\\Bin\\Resources\\Model\\AnimModel\\Monster\\boss1_em320\\Texture\\Arch41_036_leaf_bump.png\u0000",
+            "..\\Bin\\Resources\\Model\\AnimModel\\Monster\\boss1_em320\\Texture\\T_em0300_Regeneration_00.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxAnimModel"
 }

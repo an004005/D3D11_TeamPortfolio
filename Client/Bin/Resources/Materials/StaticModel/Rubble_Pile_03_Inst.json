@@ -1,21 +1,21 @@
 {
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
 		"Floats": [
 			2.34121
 		],
-		"Float4s": [],
-		"Ints": [],
-		"Float4x4s": [],
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Pile_C_Color.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Pile_C_Normal.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Rubble_Pile_C_Channel.dds",
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/TSBSM_ShoreRockSand_01_NML.dds"
 		],
-		"Pass": 1,
-		"Float2s": []
+		"Float4s": []
 	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"InstancingPass": 2
 }

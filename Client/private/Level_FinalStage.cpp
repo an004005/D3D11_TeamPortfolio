@@ -33,8 +33,8 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		// return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 	CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
