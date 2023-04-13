@@ -72,6 +72,9 @@
 
 #include "Renderer.h"
 
+#include "UI_Manager.h"
+#include "Canvas_BrainField.h"
+
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -1880,6 +1883,9 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
+			// 브레인필드 연출 시작
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -1935,6 +1941,18 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
 		{
+			// 브레인 필드가 시작되는 부분
+			if (nullptr == m_pCanvas_BrainField)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainField.json");
+				m_pCanvas_BrainField = dynamic_cast<CCanvas_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BrainField", &json));
+				assert(m_pCanvas_BrainField != nullptr && "Failed to Clone : CCanvas_BrainField");
+			}
+
+			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(true);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(true);
+
 			CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(60.f);
 			m_bBrainField = true;
 		})
@@ -1950,7 +1968,18 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
 		})
 		.Tick([&](double fTimeDelta) {})
-		.OnExit([&]() { m_bBrainField = false; })
+		.OnExit([&]() 
+		{ 
+			m_bBrainField = false;
+			// 브레인 필드가 꺼지는 부분
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCanvas_BrainField))
+			{
+				m_pCanvas_BrainField->SetDelete();
+			}
+
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(false);
+		})
 			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
 			.Priority(0)

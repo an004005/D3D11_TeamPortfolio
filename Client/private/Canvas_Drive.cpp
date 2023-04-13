@@ -2,7 +2,6 @@
 #include "..\public\Canvas_Drive.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
-#include "PlayerInfoManager.h"
 
 #include "DefaultUI.h"
 
@@ -57,34 +56,15 @@ HRESULT CCanvas_Drive::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Drive_BackGround"))->GetScreenSpaceLeftTop();
+	_float2 vPosition = Find_ChildUI(L"Drive_BackGround")->GetScreenSpaceLeftTop();
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 97.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-
-	_uint iPlayerHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
-	_uint iPlayerMaxHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
-	_tchar szChildTag[MAX_PATH] = TEXT("");
-
-	if (1000 <= iPlayerHp)
-	{
-		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-75.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-25.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-	}
-	else
-	{
-		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-60.0f, 65.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(-17.0f, 68.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-	}
 
 	return S_OK;
 }
 
 void CCanvas_Drive::Set_DriveB(const _bool DriveB)
 {
-	Find_ChildUI(L"Drive_B")->SetVisible(DriveB);			// 드라이게이지를 사용하고 반 이하로 남았을 때
+	//Find_ChildUI(L"Drive_B")->SetVisible(DriveB);			// 드라이게이지를 사용하고 반 이하로 남았을 때
 	Find_ChildUI(L"Drive_Circle1")->SetVisible(DriveB);
 }
 

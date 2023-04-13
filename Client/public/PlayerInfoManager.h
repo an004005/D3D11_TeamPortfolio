@@ -43,10 +43,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
-
 	_bool bAttackEnable = false;
 
-	
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
 
@@ -61,7 +59,6 @@ typedef struct tagPlayerStatus
 	_bool bBattle = false;
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
-	_bool bStartBrainField = false;
 
 	_bool bCopy = false;
 
@@ -213,7 +210,6 @@ public:	// Set
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 
 	void			Set_Exp(const _uint iExp);
-	void			Set_StartBrainField();
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 

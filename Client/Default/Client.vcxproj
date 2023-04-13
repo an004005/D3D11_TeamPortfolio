@@ -211,6 +211,8 @@
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Acquisition.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
+    <ClInclude Include="..\public\Canvas_BrainField.h" />
+    <ClInclude Include="..\public\Canvas_BrainFieldMove.h" />
     <ClInclude Include="..\public\Canvas_BrainMap.h" />
     <ClInclude Include="..\public\Canvas_Equipment.h" />
     <ClInclude Include="..\public\Canvas_ItemWindow.h" />
@@ -557,6 +559,8 @@
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
+    <ClCompile Include="..\private\Canvas_BrainField.cpp" />
+    <ClCompile Include="..\private\Canvas_BrainFieldMove.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_MainTalk.cpp" />
     <ClCompile Include="..\private\Canvas_MapBar.cpp" />

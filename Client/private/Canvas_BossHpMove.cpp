@@ -41,6 +41,8 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
+	Partner_Initialize();
+
 	return S_OK;
 }
 
