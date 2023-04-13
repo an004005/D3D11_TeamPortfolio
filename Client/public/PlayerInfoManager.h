@@ -71,7 +71,7 @@ typedef struct tagPlayerStatus
 
 	_float m_fBaseAttackDamage;
 
-	_bool bBrainMap[3] = { false, };
+	_bool bBrainMap[3] = { true, true, true };
 
 	ESASType m_eAttack_SAS_Type;
 

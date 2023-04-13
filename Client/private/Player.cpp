@@ -1412,6 +1412,7 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_ELETRIC == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_ELEC"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle_Fire))
 				{
 					m_pSwordParticle_Fire->SetDelete();
@@ -1421,7 +1422,7 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_COPY == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_HARDBODY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_COPY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				CPlayerInfoManager::GetInstance()->Set_Copy(true);
 			}
 		}

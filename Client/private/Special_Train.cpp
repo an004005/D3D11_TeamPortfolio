@@ -230,7 +230,7 @@ void CSpecial_Train::Train_Collision_On()
 	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
 	tParam.iDamage = 9999;
 
-	if(Collision_Check_Capsule(m_pCollider, tParam, true))
+	if(Collision_Check_Capsule(m_pCollider, tParam, true) && m_Slow.IsNotDo())
 		CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 }
 

@@ -1633,6 +1633,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Middle_CamShake_0.2",
+                "EventTime": 35.0
             }
         ]
     },
