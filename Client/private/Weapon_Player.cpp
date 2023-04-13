@@ -194,10 +194,10 @@ HRESULT CWeapon_Player::SetUp_Components()
 	m_pModelComs.push_back(pModel);
 
 	// wp0190
-	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model");
+	m_pModelTags.push_back(L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model2");
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW,
-		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", 
-		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model", 
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model2", 
+		L"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_190/wp0190.static_model2", 
 		(CComponent**)&pModel));
 	m_pModelComs.push_back(pModel);
 

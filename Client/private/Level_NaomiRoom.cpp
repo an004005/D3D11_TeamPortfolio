@@ -18,7 +18,7 @@ CLevel_NaomiRoom::CLevel_NaomiRoom(ID3D11Device * pDevice, ID3D11DeviceContext *
 
 HRESULT CLevel_NaomiRoom::Initialize()
 {
-	// m_bPlayerSpawn = false;
+	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"NaomiRoom";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/NaomiRoom_ShadowCam.json";
@@ -31,7 +31,12 @@ HRESULT CLevel_NaomiRoom::Initialize()
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Naomi_SpeicialContainer.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Player_AI_Pos.json");	
-	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Kinetic_Normal.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Trigger_Naomi_Invisible.json");
+
+	// Red String Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Red_Test1.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/RedString_1.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/RedString_2.json");
 
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Kinetic_Normal.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);

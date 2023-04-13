@@ -57,6 +57,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
 	Safe_AddRef(m_pKarenMaskEf);
 
+	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
 
 	return S_OK;
 }
@@ -397,12 +398,28 @@ void CEM8200::SetUpAnimationEvent()
 		if(CPlayerInfoManager::GetInstance()->Get_Air() == false)
 			Melee_Overlap("Reference", 50, 10.f, EAttackType::ATK_TO_AIR);
 		    m_bMeleeCollStart = false;
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Stamp_Impact"))->Start_Attach(this, "LeftToeBase", false, true);
+			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+
+		});
+
+	m_pModelCom->Add_EventCaller("Stamp_Start", [this]
+		{
+			// 발찍기 전 최고높이로 들어올린
+			_matrix Pivot = XMMatrixRotationX(XMConvertToRadians(180.f));
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Stamp"))->Start_AttachPivot(this , Pivot, "LeftToeBase", true, true, true);
+
 		});
 
 	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
 		{
 			// 번쩍 이펙트
 			CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Seethrough"))->Start_Attach(this, "RightWeapon", false, true);
+			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+
 		});
 }
 
@@ -439,6 +456,8 @@ void CEM8200::BeginTick()
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	m_CounterEFCoolTimeHelper.Tick(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
 
@@ -1721,7 +1740,16 @@ void CEM8200::AddState_Counter(CFSMComponentBuilder& Builder)
 					if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.4f, 0.2f) && m_SetTPOnce.IsNotDo())
 					{
 						m_CounterStart.PlayFromStart();
+						CGameInstance::GetInstance()->AddLifePointLight(2.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 10.f, _float4(1.f, 1.f, 1.f, 1.f));
 					}
+
+					if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.6f, 0.4f) && m_CounterEFCoolTimeHelper.Use())
+					{
+						CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Start"))->Start_Attach(this, "Reference", false, true);
+					}
+
+
+			
 			})
 		.OnExit([this]
 			{

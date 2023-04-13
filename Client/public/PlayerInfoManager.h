@@ -3,11 +3,13 @@
 #include "Base.h"
 #include "Client_Defines.h"
 #include "Transform.h"
+#include "AnimCam.h"
 
 //플레이어가 가지는 정보를 싱글톤으로 관리
 
 BEGIN(Engine)
 class CGameObject;
+class CCamera;
 END
 
 BEGIN(Client)
@@ -39,7 +41,6 @@ typedef struct tagPlayerStatus
 	_uint iMaxExp = { 0 };
 	_uint iLevel = { 0 };
 	_uint iSprbrPower = { 0 };
-	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
@@ -69,6 +70,8 @@ typedef struct tagPlayerStatus
 	_bool bAir = false;
 
 	_float m_fBaseAttackDamage;
+
+	_bool bBrainMap[3] = { true, true, true };
 
 	ESASType m_eAttack_SAS_Type;
 
@@ -114,7 +117,8 @@ typedef struct tagDamageDesc
 }	DAMAGE_DESC;
 
 enum CHANGETYPE { CHANGE_INCREASE, CHANGE_DECREASE, CHANGE_END };
-enum SASMEET { HANABI, TSUGUMI, KYOTO, LUCA, SEEDEN, ARASHI, SASMEMBER_END };
+enum SASMEET { HANABI, TSUGUMI, GEMMA, LUCA, SEEDEN, ARASHI, KYOTO, SASMEMBER_END };
+enum EBRAINMAP { BRAINMAP_KINETIC_COMBO_4, BRAINMAP_KINETIC_COMBO_AIR, BRAINMAP_BRAINFIELD_HARDBODY, BRAINMAP_END };
 
 class CPlayerInfoManager final : public CBase
 {
@@ -152,6 +156,12 @@ public:	// Get
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
+
+	void			Set_HanabiHP(_uint iHP) { m_tHanabiStat.iHP = iHP; }
+	void			Change_HanabiHP(CHANGETYPE eType, _uint ChangeHP);
+
+	void			Set_TsugumiHP(_uint iHP) { m_tTsugumiStat.iHP = iHP; }
+	void			Change_TsugumiHP(CHANGETYPE eType, _uint ChangeHP);
 
 	void			Set_PlayerKineticEnergy(_uint iEnergy) { m_tPlayerStat.m_iKineticEnergy = iEnergy; }
 	void			Change_PlayerKineticEnergy(CHANGETYPE eType, _uint ChangeEnergy);
@@ -195,6 +205,9 @@ public:	// Set
 	void			Set_Air(_bool bAir) { m_tPlayerStat.bAir = bAir; }
 	_bool			Get_Air() { return m_tPlayerStat.bAir; }
 
+	void			Set_BrainMap(EBRAINMAP eType, _bool bAble) { m_tPlayerStat.bBrainMap[eType] = bAble; }
+	_bool			Get_BrainMap(EBRAINMAP eType) { return m_tPlayerStat.bBrainMap[eType]; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -221,6 +234,11 @@ public:
 	void			Camera_Random_Shake_Maintain(_float fForce, _float fMaintain);
 	void			Camera_Axis_Shaking(_float4 vDir, _float fShakePower);
 	void			Camera_Axis_Sliding(_float4 vDir, _float fShakePower);
+	void			Camera_Arrange();
+
+public:
+	HRESULT			Set_PlayerCam(CCamera* pAnimCam);
+	CCamera*		Get_PlayerCam();
 
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
@@ -233,7 +251,7 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
-
+	CCamera*			m_pPlayerCam = nullptr;
 private:
 	CGameObject*	m_pCamSpot = nullptr;
 
@@ -244,7 +262,8 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true };
+	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

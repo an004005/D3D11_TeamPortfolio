@@ -230,7 +230,7 @@ void CSpecial_Train::Train_Collision_On()
 	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
 	tParam.iDamage = 9999;
 
-	if(Collision_Check_Capsule(m_pCollider, tParam, true))
+	if(Collision_Check_Capsule(m_pCollider, tParam, true) && m_Slow.IsNotDo())
 		CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 }
 
@@ -253,22 +253,35 @@ void CSpecial_Train::Train_SparkEffect_Set()
 	// 위치가 본에 잘 안 붙음 -> 확인 필
 
 	m_pSpark[0] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[0]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -10.f), "M_BehindWheel_02", true, true);
+	//m_pSpark[0]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, -10.f), "M_BehindWheel_02", true, true);
+	m_pSpark[0]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, -10.f),
+		true, true);
 
 	m_pSpark[1] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[1]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -10.f), "M_BehindWheel_02", true, true);
+	m_pSpark[1]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(-1.f, 0.f, -10.f),
+		true, true);
 
 	m_pSpark[2] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[2]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -12.f), "M_BehindWheel_02", true, true);
+	m_pSpark[2]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, -12.f),
+		true, true);
 
 	m_pSpark[3] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[3]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -12.f), "M_BehindWheel_02", true, true);
+	m_pSpark[3]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(-1.f, 0.f, -12.f),
+		true, true);
 
 	m_pSpark[4] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[4]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(1.f, 0.f, -14.f), "M_BehindWheel_02", true, true);
+	m_pSpark[4]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(1.f, 0.f, -14.f),
+		true, true);
 
 	m_pSpark[5] = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_Train_Break_Particles");
-	m_pSpark[5]->Start_AttachPivot(this, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(-1.f, 0.f, -14.f), "M_BehindWheel_02", true, true);
+	m_pSpark[5]->Start_Attach_Transform(this, m_pTransformCom,
+		XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(-1.f, 0.f, -14.f),
+		true, true);
 
 }
 

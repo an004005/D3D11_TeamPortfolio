@@ -14,6 +14,13 @@ NoticeNeon_water
 ../Bin/Resources/Meshes/VFX/NoticeNeon_water.static_model
 
 
+SM_PR_neon_crash1_1
+../Bin/Resources/Meshes/VFX/SM_PR_neon_crash1_1.static_model
+
+SM_PR_neon_crash1_2
+../Bin/Resources/Meshes/VFX/SM_PR_neon_crash1_2.static_model
+
+
 
 VFX_Mesh_Karen_Mask_All
 ../Bin/Resources/Meshes/VFX/VFX_Mesh_Karen_Mask_All.static_model

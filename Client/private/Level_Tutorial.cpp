@@ -12,7 +12,7 @@ CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_Tutorial::Initialize()
 {
-	// m_bPlayerSpawn = false;
+	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Tutorial";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Tutorial_ShadowCam.json";
@@ -24,6 +24,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/TutorialBatch_Enemy.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/Tutorial_UI.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Tutorial/MapKineticObject.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Tutorial.json");
 
 	CGameManager_Tutorial::SetGameManager(CGameManager_Tutorial::Create(m_pDevice, m_pContext));
 

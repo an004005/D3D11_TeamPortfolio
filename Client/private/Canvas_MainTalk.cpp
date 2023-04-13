@@ -110,33 +110,364 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	switch (iIndex)
 	{
+		//******************************************************** 상점
 	case 0:
 	{
-		tTalkInfo.wsName = { L"상점인 사토리"};
+		tTalkInfo.wsName = { L"상점인 사토리" };
 		tTalkInfo.wsTalk0 = { L"내 영혼의 비극과 새로운 의지를 모아 판매한다." };
 		tTalkInfo.wsTalk1 = { L"계속해서, 난 공기니까......" };
 	}
 	break;
 
+	//******************************************************** [0] 1 ~ 11
 	case 1:
 	{
-		tTalkInfo.wsName = { L"유이토"};
-		tTalkInfo.wsTalk0 = { L"쓸데없는 건 생각하지 말자." };
-		tTalkInfo.wsTalk1 = { L"그저 눈앞에 있는 것에 집중하는 거야.)" };
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"유이토! 첫 임무는 잘 하고 왔어?" };
+		tTalkInfo.wsTalk1 = { L"어땠어? 어땠어? 괜찮았어?" };
 	}
 	break;
 
 	case 2:
 	{
-		tTalkInfo.wsName = { L"겐토" };
-		tTalkInfo.wsTalk0 = { L"테스트 용." };
-		tTalkInfo.wsTalk1 = { L"임다." };
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"응 하나비 너는  괜찮아?" };
+		tTalkInfo.wsTalk1 = { L"" };
 	}
 	break;
 
+	case 3:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"웅웅 나 정말 잘 할 수 있을 것 같아!" };
+		tTalkInfo.wsTalk1 = { L"그렇죠? 쿄카 선배?" };
+	}
+	break;
+
+	case 4:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"하나비 잘했어 그렇지만 항상 조심해야해" };
+		tTalkInfo.wsTalk1 = { L"아까 츠구미 아니였으면 다칠뻔 했어" };
+	}
+	break;
+
+	case 5:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"네! 주의 할게요 감사합니다! " };
+		tTalkInfo.wsTalk1 = { L"그리고 항상 고마워 츠구미!" };
+	}
+	break;
+
+	case 6:
+	{
+		tTalkInfo.wsName = { L"츠구미" };
+		tTalkInfo.wsTalk0 = { L"응..." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 7:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"아! 유이토 사토리씨 이야기 들었어?" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 8:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"사토리씨 라면 그 상점인 사토리씨?" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 9:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"응!! 맞아!! 아까 쿄카 선배가 알려주셨어." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 10:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"맞아 유이토 상점인 사토리 씨께서는" };
+		tTalkInfo.wsTalk1 = { L"우리가 괴이랑 싸울 때 필요한 아이템들을 사거나 판매를 하고 계셔." };
+	}
+	break;
+
+	case 11:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"아 그렇군요 좋은 정보 감사드려요. 쿄카 선배." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	//******************************************************** [0] 11 ~ 21
+
+	case 12:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"유이토 고민이 많아 보이네? 무슨일 있어?" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 13:
+	{
+		tTalkInfo.wsName = { L"츠구미" };
+		tTalkInfo.wsTalk0 = { L"하나비 생일...?" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 14:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"하하.. 들켜버렸나 그렇게 티가 났어요?" };
+		tTalkInfo.wsTalk1 = { L"하나비 생일이 다가오는데 뭘해주면 좋아해 줄지 잘 모르겠어요." };
+	}
+	break;
+
+	case 15:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"하나비 생일 선물 때문에 고민이였구나." };
+		tTalkInfo.wsTalk1 = { L"그러게... 하나비는 유이토 너가 준거라면 뭐든 좋아할 것 같은데?" };
+	}
+	break;
+
+	case 16:
+	{
+		tTalkInfo.wsName = { L"츠구미" };
+		tTalkInfo.wsTalk0 = { L"공사장 2층... 에 특별한 꽃이 있대... " };
+		tTalkInfo.wsTalk1 = { L"\"히마와리\" 였나..." };
+	}
+	break;
+
+	case 17:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"맞아! 그 꽃을 좋아하는 사람 한테 전해주면," };
+		tTalkInfo.wsTalk1 = { L"사랑이 이루어지는 전설이 있다고 했지! 그런데 아마 구하기 정말 어려울껄?" };
+	}
+	break;
+
+	case 18:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"정말요? 하나비가 받으면 정말 좋아할 것 같은데..." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 19:
+	{
+		tTalkInfo.wsName = { L"츠구미" };
+		tTalkInfo.wsTalk0 = { L"도와줄게 유이토..." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 20:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"당연하지 동료의 기쁨은 모두의 기쁨이니까." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 21:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"다들 정말 감사해요!" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	//******************************************************** [1] 22 ~ 26
+
+	case 22:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"다들 여기 계셨군요!" };
+		tTalkInfo.wsTalk1 = { L"유이토! 츠구미! 중대장님이 아주 좋은걸 알려주셨어." };
+	}
+	break;
+
+	case 23:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"중대장님이 좋은걸 알려주셨다면..." };
+		tTalkInfo.wsTalk1 = { L"브레인 맵을 말하는 거구나?" };
+	}
+	break;
+
+	case 24:
+	{
+		tTalkInfo.wsName = { L"하나비" };
+		tTalkInfo.wsTalk0 = { L"맞아요! 쿄카선배!" };
+		tTalkInfo.wsTalk1 = { L"브레인 맵에서는 우리가 가지고 있는 초 뇌능력을 더욱 더 높일 수 있대!" };
+	}
+	break;
+
+	case 25:
+	{
+		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsTalk0 = { L"맞아 각자의 초능력에 맞게 서로 다른 브레인 맵이 존재해." };
+		tTalkInfo.wsTalk1 = { L"자기에게 맞는 쪽으로 잘 확인하고 찍는게 중요하지." };
+	}
+	break;
+
+	case 26:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"듣기만 해도 벌써 기대 되는걸." };
+		tTalkInfo.wsTalk1 = { L"얼른 브레인 맵을 확인해 보자." };
+	}
+	break;
+
+	//******************************************************** [2] 27 ~ 28
+	case 27:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"다들 여기 계셨네요." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 28:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"???" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	//******************************************************** [3] 29
+	case 29:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"다들 마침 여기 있었군 지금 지하철에 내 딸이 있어" };
+		tTalkInfo.wsTalk1 = { L"어서 내 딸을 무사히 구출해 주기를 부탁한다." };
+	}
+	break;
+
+	//******************************************************** [3] 30 ~ 34
+	case 30:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"다들 멈춰!!!!!" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 31:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"지금 나도 믿기지 않지만 뒤에 있는 아이는 내 딸이다." };
+		tTalkInfo.wsTalk1 = { L"내 딸이야... 도대체 무슨 일 이 있었던 거지..." };
+	}
+	break;
+
+	case 32:
+	{
+		tTalkInfo.wsName = { L"루카" };
+		tTalkInfo.wsTalk0 = { L"나오미 라구요...?" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 33:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"그렇다... 어쩌다 내 딸이 이렇게 되었는지는 모르겠지만 여긴 내가 지킬 테니" };
+		tTalkInfo.wsTalk1 = { L"다들 구 토벌 병원으로 가서 약을 구해다 줘 거기라면 해결할 방법이 있을 거야" };
+	}
+	break;
+	
+	case 34:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"알겠습니다." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	//******************************************************** [4] 35 ~ 42
+	case 35:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"너희들의 도움이 필요해. 얼른 한 시라도 빨리 시간을 돌려서 " };
+		tTalkInfo.wsTalk1 = { L"나오미가 그렇게 변해버리기 전으로 돌아가야만 해." };
+	}
+	break;
+	
+	case 36:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"나오미... 나오미를 위해서..." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 37:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"중대장님, 멈춰주세요." };
+		tTalkInfo.wsTalk1 = { L"시간 역행을 하게 되면 미래가 어떻게 변할지 모르는거 알고 계시잖아요." };
+	}
+	break;
+
+	case 38:
+	{
+		tTalkInfo.wsName = { L"루카" };
+		tTalkInfo.wsTalk0 = { L"맞아요, 중대장님. 나오미를 돌아오게 할 방법이 있을 거예요." };
+		tTalkInfo.wsTalk1 = { L"저희가 도와드릴게요." };
+	}
+	break;
+	
+	case 39:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"조용히 해!!!" };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 40:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"너희가 딸을 잃은 아픔을 알기나해?" };
+		tTalkInfo.wsTalk1 = { L"그깟 미래? 내 딸이 없는 미래는 난 아무래도 상관없어." };
+	}
+	break;
+
+	case 41:
+	{
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"중대장님이 원하시는 대로 저희가 가만히 있지 않을 겁니다." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	case 42:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"너희가 그렇게 나온다면 너희를 없애서라도 내 딸을 지켜낼거다." };
+		tTalkInfo.wsTalk1 = { L"" };
+	}
+	break;
+
+	//******************************************************** 
 	default:
 	{
-		tTalkInfo.wsName = { L"루카"};
+		tTalkInfo.wsName = { L"131" };
 		tTalkInfo.wsTalk0 = { L"쥬신 게임 아카데미 \" | \' " };
 		tTalkInfo.wsTalk1 = { L"......" };
 	}

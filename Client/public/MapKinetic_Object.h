@@ -56,6 +56,7 @@ public:
 	_bool	Get_Hit() { return m_bHit; }
 
 	void	Set_Swing(_bool bSwing) { m_bSwing = bSwing; }
+	void	Set_ToAir(_bool bAir) { m_bToAir = bAir; }
 
 	_float4 GetPxPostion();
 
@@ -79,6 +80,9 @@ private:
 
 public:
 	void	KineticRimLightFix(_bool bFix) { m_bRimFix = bFix; }
+
+public:
+	void	SetRefloat();
 
 private:
 	void	BrightChecker();
@@ -138,7 +142,12 @@ private:
 
 	_bool				m_bBossUse = false; 
 
+	_bool				m_bToAir = false;
+
 	_matrix				m_PreMatrix;
+
+private:
+	_float				m_fRefloatTime = 0.f;
 
 private:
 	vector<wstring>		m_vecRandomParticle{

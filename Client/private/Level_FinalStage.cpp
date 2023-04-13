@@ -24,7 +24,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 // m_bPlayerSpawn = false;
+	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
@@ -33,8 +33,8 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		// return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 	CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
 		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));

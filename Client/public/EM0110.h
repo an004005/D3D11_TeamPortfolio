@@ -34,7 +34,7 @@ public:
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual void HitEffect(DAMAGE_PARAM& tDamageParams);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
-
+	virtual _float4 GetKineticTargetPos() override;
 public:
 	//행동 관련 함수 정의
 	_bool IsMove() const { return m_vMoveAxis != _float3::Zero; }

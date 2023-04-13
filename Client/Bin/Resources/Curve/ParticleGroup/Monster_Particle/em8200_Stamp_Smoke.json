@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"em8200_Stamp_Smoke","Particles":[{"ObjectTag":"em8200_Stamp_Smoke","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/em8200/em8200_Stamp_Smoke.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[10.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,10.0,0.0,0.0,0.0,0.0,1.0]}}

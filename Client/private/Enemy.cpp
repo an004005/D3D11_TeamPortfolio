@@ -238,10 +238,6 @@ void CEnemy::SetUpSound()
 void CEnemy::SetUpFSM()
 {
 	Safe_Release(m_pFSM);
-
-	if (KBSound++ > 0)
-		MSG_BOX("It's an honor!!");
-
 }
 
 void CEnemy::SetUpUI()
@@ -302,13 +298,13 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 void CEnemy::SetEnemyBatchDataStat(ENEMY_STAT tStat)
 {
-	m_iMaxHP = tStat.iMaxHP;
-	m_iHP = m_iMaxHP;
-	m_iMaxCrushGauge = tStat.iMaxCrushGage;
-	m_iCrushGauge = m_iMaxCrushGauge;
-	m_bHasCrushGauge = tStat.bHasCrushGage;
-	m_iAtkDamage = tStat.iAtkDamage;
-	iEemeyLevel = tStat.iLevel;
+	//m_iMaxHP = tStat.iMaxHP;
+	//m_iHP = m_iMaxHP;
+	//m_iMaxCrushGauge = tStat.iMaxCrushGage;
+	//m_iCrushGauge = m_iMaxCrushGauge;
+	//m_bHasCrushGauge = tStat.bHasCrushGage;
+	//m_iAtkDamage = tStat.iAtkDamage;
+	//iEemeyLevel = tStat.iLevel;
 }
 
 ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
@@ -399,6 +395,9 @@ void CEnemy::SetDead()
 	
 	//UI 삭제
 	Safe_Release(m_pEMUI);
+
+	//안개 삭제
+	m_pRendererCom->SetFog(false);
 }
 
 void CEnemy::FindTarget()

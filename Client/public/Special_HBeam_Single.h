@@ -36,12 +36,17 @@ public:
 	void	HBeam_Turn();
 	void	HBeam_Finish();
 	void	Activate(_bool bActivate);
+	void	AddVelocity(_float3 vVelocity);
+	_float4 GetOriginDir() { return m_vOriginDir; }
 
 private:
 	HRESULT	SetUp_Components(void* pArg);
 
 private:
 	_bool	m_bFinish = false;
+	_float4 m_vOriginDir = { 0.f, 0.f, 0.f, 0.f };
+	_float4 m_vBeforePos = { 0.f, 0.f, 0.f, 1.f };
+	_float	m_fDecomposeTimer = 0.f;
 
 public:
 	static CSpecial_HBeam_Single* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -41,6 +41,9 @@ public:
 	ECamMod	GetCamMod() { return m_eCamMod; }
 
 public:
+	void	Arrange_Cam();
+
+public:
 	_bool	Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit = 0.25f);
 	_bool	Cam_Away(_double TimeDelta, _float fRatio, _float fLimit = 1.f);
 

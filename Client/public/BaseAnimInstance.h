@@ -36,7 +36,6 @@ public:
 
 	void			SetCurState(const string& szStateName) { m_pASM_Base->SetCurState(szStateName); }
 
-
 	void			SetCurState_BrainField(const string& szStateName) { m_pASM_BrainField->SetCurState(szStateName); }
 	const string&	GetCurAnimName_BrainField() { return m_pASM_BrainField->GetCurState()->m_Animation->GetName(); } // 현재 재생중인 애니메이션 이름은 모델에서 가져올 것 -> State Machine은 Transition이 겹치면 통과함
 	const string&	GetCurStateName_BrainField() { return m_pASM_BrainField->GetCurState()->m_strName; } // 현재 상태 이름

@@ -61,7 +61,10 @@ void CCamSpot::BeginTick()
 		}
 	}
 
+	_float4 vLookAt = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK);
+
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+	m_pTransformCom->LookAt_NonY(vLookAt);
 
 	CPlayerInfoManager::GetInstance()->Set_CamSpot(this);
 }
@@ -147,7 +150,7 @@ void CCamSpot::AfterPhysX()
 
 	if (m_fLerpTime < 1.f)
 	{
-		m_fLerpTime += (_float)g_fTimeDelta * 2.f;
+		m_fLerpTime += (_float)g_fTimeDelta * 4.f;
 
 		if (MOD_SYNC == m_eCamMod)
 		{
@@ -260,6 +263,18 @@ void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
 }
 
+void CCamSpot::Arrange_Cam()
+{
+	_float4 vLookAt = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK);
+
+	_float4 vTarget = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.2f, 0.f, 0.f);
+
+	m_fCamHeight = 0.f;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vTarget);
+	m_pTransformCom->LookAt_NonY(vLookAt);
+}
+
 _bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
 {
 	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() - (TimeDelta / fRatio);
@@ -303,6 +318,12 @@ void CCamSpot::Random_Shaking(_float fShakePower)
 		CMathUtils::RandomFloat(-fShakePower, fShakePower),
 		CMathUtils::RandomFloat(-fShakePower, fShakePower),
 		0.f);
+
+	//_vector vShakeDir = XMVectorSet(
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	0.f);
 
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
 }

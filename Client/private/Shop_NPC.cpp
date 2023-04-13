@@ -57,9 +57,7 @@ void CShop_NPC::BeginTick()
     __super::BeginTick();    
     m_pModel->SetPlayAnimation("AS_np0100_002_AL_wait02");
 
-	CEffectGroup* pShopUI = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
-	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	pShopUI->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.5f, vPos.z, 1.0));
+
 }
 
 void CShop_NPC::Tick(_double TimeDelta)
@@ -74,30 +72,47 @@ void CShop_NPC::Tick(_double TimeDelta)
 	{
 		// UI 출력 (E 버튼 "상점" -> (필요 시)대사창 1회 출력 -> 상점 출력 (기능 이용)
 
+		if (false == m_iEffectCheck)
+		{
+			m_iEffectCheck = true;
+
+			m_pShopEffect = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
+			_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			m_pShopEffect->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.5f, vPos.z, 1.0));
+		}
+
 		if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
 		{
-			if (m_iCheck == false && nullptr == m_pCanvas_MainTalk)
+			if (false == m_iTalkCheck && nullptr == m_pCanvas_MainTalk)
 			{
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
 				m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_MainTalk", &json));
 				m_pCanvas_MainTalk->Add_Talk(0);
 			}
 
-			if (true == m_iCheck)
+			if (true == m_iTalkCheck)
 			{
-				m_iCheck = false;
+				m_pShopEffect->SetDelete();
+				m_pShopEffect = nullptr;
+				m_iTalkCheck = false;
 				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
+			}
+
+			if (nullptr == m_pShopEffect)
+			{
+				m_iEffectCheck = false;
 			}
 		}
 
-		if (nullptr == m_pCanvas_MainTalk) return;
-
-		if (false == m_pCanvas_MainTalk->Get_End())
+		if (nullptr != m_pCanvas_MainTalk)
 		{
-			m_pCanvas_MainTalk->SetDelete();
-			m_pCanvas_MainTalk = nullptr;
-			dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
-			m_iCheck = true;
+			if (false == m_pCanvas_MainTalk->Get_End())
+			{
+				m_iTalkCheck = true;
+				m_pCanvas_MainTalk->SetDelete();
+				m_pCanvas_MainTalk = nullptr;
+				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
+			}
 		}
 	}
 }

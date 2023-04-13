@@ -132,7 +132,7 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 		// AddCommand("CaptureKinetic", 0.f, &CAIController::Input, B);
 
 		// AddCommand("Seethrough", 0.f, &CEM8200_Controller::Input, L);
-		// AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
+		AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
 
 	}
 

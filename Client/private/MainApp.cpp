@@ -53,6 +53,7 @@
 #include "PostVFX_WhiteOut.h"
 
 #include "VIBuffer_Point_Instancing.h"
+#include "Map_KineticBatchPreset.h"
 
 //////////
 #include "InvisibleWall.h"
@@ -563,6 +564,7 @@ void CMainApp::Free()
 	CPlayerInfoManager::GetInstance()->DestroyInstance();
 	CGameManager::GetInstance()->DestroyInstance();
 	CItem_Manager::GetInstance()->DestroyInstance();
+	CMap_KineticBatchPreset::GetInstance()->DestroyInstance();
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();
