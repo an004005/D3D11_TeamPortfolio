@@ -33,22 +33,29 @@ HRESULT CEM0800::Initialize(void * pArg)
 	/*m_strDeathSoundTag = "mon_5_fx_death";
 	m_strImpactVoiceTag = "mon_5_impact_voice";*/
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 55000;
+		m_iMaxHP = LEVEL_NOW * (300 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = m_iMaxHP;
-		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iMaxCrushGauge = m_iMaxHP * 10;
+		m_iCrushGauge = m_iMaxCrushGauge;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		if (LEVEL_NOW == LEVEL_TUTORIAL)
+			iEemeyLevel = 10;
+		else
+			iEemeyLevel = 18;
+		
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0800;
+		m_bHasCrushGauge = true;
 	}
+
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM0800;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(120.f));
 	m_fGravity = 20.f;
 

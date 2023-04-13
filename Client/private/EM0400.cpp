@@ -30,20 +30,24 @@ HRESULT CEM0400::Initialize(void * pArg)
 
 	m_strDeathSoundTag = "mon_1_fx_death";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 10000;
-		m_iHP = m_iMaxHP; // ★
+		_uint iBaseLevel = max(0, (LEVEL_NOW - 20));
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
-	
+		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iHP = m_iMaxHP;
+
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iCrushGauge = m_iMaxCrushGauge;
+
+		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
+
+		m_eEnemyName = EEnemyName::EM0400;
+		m_bHasCrushGauge = false;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
-
-	m_eEnemyName = EEnemyName::EM0400;
-	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	return S_OK;
@@ -483,29 +487,6 @@ void CEM0400::SetUpFSM()
 		.Build();
 }
 
-void CEM0400::SetUpUI()
-{
-	__super::SetUpUI();
-
-	//HP UI
-	_float4x4 UI_InfoPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.41f, 0.0f, 1.0f
-	);
-
-	//FindEye
-	_float4x4 UI_EyesPivotMatrix = Matrix(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		-0.324f, 1.014f, 0.0f, 1.0f
-	);
-
-	m_pEMUI->SetUpPivots(UI_InfoPivotMatrix, UI_EyesPivotMatrix);
-
-}
 
 void CEM0400::BeginTick()
 {

@@ -29,7 +29,9 @@ void CEMUI::TurnEyesOut()
 	assert(pEffectGroup != nullptr);
 
 	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(m_pOwner, m_EnemyFindEyesPivot, "Target", true, true, true);
+
+	_float4x4	EyesPivot = XMMatrixTranslation(0.f, 1.5f, 0.f);
+	pEffectGroup->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true, true);
 }
 
 void CEMUI::Create_UIInfo()
@@ -44,7 +46,6 @@ void CEMUI::Create_UIInfo()
 		assert(m_pShieldUI != nullptr);
 
 		m_pShieldUI->Set_Owner(m_pOwner);
-		m_pShieldUI->SetPivotMatrix(m_EnemyInfoBarPivot);
 		m_pShieldUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
 	}
 	else
@@ -53,7 +54,6 @@ void CEMUI::Create_UIInfo()
 		assert(m_pHPUI != nullptr);
 
 		m_pHPUI->Set_Owner(m_pOwner);
-		m_pHPUI->SetPivotMatrix(m_EnemyInfoBarPivot);
 		m_pHPUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
 	}
 }

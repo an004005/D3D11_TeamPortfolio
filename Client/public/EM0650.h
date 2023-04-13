@@ -19,7 +19,6 @@ public:
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
 	virtual void SetUpFSM() override;
-	virtual void SetUpUI() override;
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;

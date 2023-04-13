@@ -24,8 +24,8 @@
 
 #include "Imgui_CamAnimEditor.h"
 
-//#define ADD_PLAYER
-//#define ADD_PREVIEW "Prototype_Model_em1100"
+#define ADD_PLAYER
+//#define ADD_PREVIEW "Prototype_Model_em1200"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -255,7 +255,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_Map(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_TestPlace.json");
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_NaomiRoom.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 

@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CRigidBody;
 class CMaterial;
+class CAnimCam;
 END
 
 BEGIN(Client)
@@ -23,7 +24,9 @@ public:
 	virtual void SetUpComponents(void* pArg) override;
 	virtual void SetUpSound() override;
 	virtual void SetUpAnimationEvent() override;
-	virtual void SetUpFSM() override;
+	void SetUpMainFSM();
+	void SetUpIntro();
+	void SetUpChange();
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -65,6 +68,7 @@ private:
 	class CEM1200_Controller*		m_pController = nullptr;
 	class CEM1200_AnimInstance*		m_pASM = nullptr;
 	CMaterial* m_pWeak = nullptr;
+	CAnimCam* m_pAnimCam = nullptr;
 
 private:
 	_float3						m_vMoveAxis;
@@ -72,6 +76,7 @@ private:
 	_bool						m_bRun = false;
 	_bool						m_bChangePhase = false;
 
+	CDoOnce					m_bSetUpChange;
 	//Attack
 	_double						m_dLoopTime = 0.0;
 	_double						m_dLoopTick = 0.0;
@@ -81,6 +86,7 @@ private:
 	_double				m_dFogTime = 0.0;
 
 	_float4					m_SaveTargetPos;
+
 	//Dodge
 	_bool						m_bDodge = false;
 	_float3						m_vOnJumpMoveVelocity;
@@ -94,6 +100,8 @@ private:
 	_float4 m_vPushVelocity;
 
 	_float4x4		pivot;
+
+	_bool			m_OnAnimCam = false;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

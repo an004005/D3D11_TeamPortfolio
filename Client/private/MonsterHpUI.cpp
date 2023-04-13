@@ -62,8 +62,9 @@ void CMonsterHpUI::BeginTick()
 	Assert(m_pMonsterName != nullptr);
 
 	//첫 인자에 넣어준 포인터의 뼈를 찾음.
-	m_pGroup->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
-	m_pMonsterName->Start_AttachPivot(m_pOwner, m_PivotMatrix, "Target", true, true);
+	_float4x4	EyesPivot = XMMatrixTranslation(0.f, 0.5f, 0.f);
+	m_pGroup->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
 
 	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_eMonsterName) };
 }

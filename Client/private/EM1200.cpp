@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\EM1200.h"
 #include <FSMComponent.h>
+#include <AnimCam.h>
 #include "RigidBody.h"
 #include "JsonStorage.h"
 #include "EM1200_AnimInstance.h"
@@ -10,6 +11,7 @@
 #include "Material.h"
 #include "EMCable.h"
 #include "PlayerInfoManager.h"
+#include "HelperClasses.h"
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -30,23 +32,24 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	m_strDeathSoundTag = "crawl_fx_death";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 3000;
-		m_iHP = 3000; // ★
+		m_iMaxHP = LEVEL_NOW * 500;
+		m_iHP = m_iMaxHP;
 
+		m_iMaxCrushGauge = m_iMaxHP * 10.f;
+		m_iCrushGauge = m_iMaxCrushGauge;
 
-		m_iCrushGauge = 8000;
-		m_iMaxCrushGauge = 8000;
+		iEemeyLevel = 39;
+		m_iAtkDamage = 200;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		m_eEnemyName = EEnemyName::EM1200;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM1200;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 	m_fGravity = 20.f;
 
@@ -60,6 +63,15 @@ void CEM1200::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1200", L"Model", (CComponent**)&m_pModelCom));
+
+	m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("EnemyAnimCamera"));
+	Safe_AddRef(m_pAnimCam);
+
+	if (m_pAnimCam == nullptr)
+	{
+		m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("EnemyAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+		Safe_AddRef(m_pAnimCam);
+	}
 
 	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1200_WEAK_0");
 	assert(m_pWeak != nullptr);
@@ -247,11 +259,36 @@ void CEM1200::SetUpAnimationEvent()
 				->Start_NoAttachPivot(this, FearPivot);
 	});
 
+	//////////////////////////////////////CamEvent//////////////////////////////////////
+
+
+	m_pAnimCam->AddEvent("em1200IntroEnd", [this]
+	{
+		m_pController->SetActive(true);
+		m_pASM->ClearSocketAnim("FullBody");
+		SetUpMainFSM();
+		m_pEMUI->Create_BossUI();
+		m_OnAnimCam = false;
+	});
+
+	m_pAnimCam->AddEvent("em1200ChangeEnd", [this]
+	{
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change2");
+			m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);	
+	});
+
+	m_pAnimCam->AddEvent("em1200Change2End", [this]
+	{
+			m_pController->SetActive(true);
+			SetUpMainFSM();
+			m_pEMUI->Create_UIInfo();
+			m_OnAnimCam = false;
+	});
 
 	
 }
 
-void CEM1200::SetUpFSM()
+void CEM1200::SetUpMainFSM()
 {
 	CEnemy::SetUpFSM();
 
@@ -872,10 +909,36 @@ void CEM1200::SetUpFSM()
 		.Build();
 }
 
+void CEM1200::SetUpIntro()
+{
+	m_pController->SetActive(false);
+	m_OnAnimCam = true;
+	//m_pASM->AttachAnimSocketMany("FullBody", { "AS_m02c00920c01_em1200", "AS_m02c00920c02_em1200"});
+
+	m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_165_AL_waver_motif1");
+	m_pModelCom->Find_Animation("AS_em1200_165_AL_waver_motif1")->SetLooping(true);
+
+	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Intro");
+	m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+}
+
+void CEM1200::SetUpChange()
+{
+	CEnemy::SetUpFSM();
+
+	m_pController->SetActive(false);
+	m_pEMUI->Delete_UIInfo();
+
+	m_pASM->AttachAnimSocketMany("FullBody", { "AS_m02c00920c01_em1200" , "AS_m02c00920c02_em1200"});
+
+	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change");
+	m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+}
+
 void CEM1200::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_pEMUI->Create_BossUI();
+	SetUpIntro();
 }
 
 void CEM1200::Tick(_double TimeDelta)
@@ -898,8 +961,20 @@ void CEM1200::Tick(_double TimeDelta)
 	m_eTurn = m_pController->GetBaseTurn();
 	m_bChangePhase = m_pController->IsChangePhase();
 
+	//AnimCam
+	if (m_bChangePhase == true)
+	{
+		m_bSetUpChange.IsNotDo([this]
+		{
+				m_OnAnimCam = true;
+				SetUpChange();
+		});
+	}
+
 	//ASM, FSM tick
-	m_pFSM->Tick(TimeDelta);
+	if(m_pFSM != nullptr)
+		m_pFSM->Tick(TimeDelta);
+
 	m_pASM->Tick(TimeDelta);
 
 	const _float MoveSpeed = m_bRun ? 2.f : 0.7f;
@@ -1007,6 +1082,9 @@ _float4 CEM1200::GetKineticTargetPos()
 
 _bool CEM1200::Exclude()
 {
+	if (m_OnAnimCam == true)
+		return true;
+
 	if (CheckSASType(ESASType::SAS_PENETRATE) || m_pRendererCom->GetFog() == false)
 		return false;
 	else

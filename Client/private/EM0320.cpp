@@ -37,16 +37,19 @@ HRESULT CEM0320::Initialize(void* pArg)
 	Json em0320_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_en320.json");
 	pArg = &em0320_json;
 
-	// 배치에서 지정하지 않을 때의 기본 스텟
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 5000;
-		m_iHP = m_iMaxHP; // ★
-		m_iCrushGauge = 400;
-		m_iMaxCrushGauge = 400;
-		m_bHasCrushGauge = false;
+		m_iMaxHP = LEVEL_NOW * 500;
+		m_iHP = m_iMaxHP;
 
-		m_iAtkDamage = 200;
-		iEemeyLevel = 7;
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iCrushGauge = m_iMaxCrushGauge;
+
+		iEemeyLevel = 17;
+		m_iAtkDamage = 130;
+
+		m_eEnemyName = EEnemyName::EM0320;
+		m_bHasCrushGauge = false;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));

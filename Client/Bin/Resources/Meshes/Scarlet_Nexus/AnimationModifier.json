@@ -8017,6 +8017,18 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_m02c00920c01_em1200": {
+        "Duration": 971.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_m02c00920c02_em1200": {
+        "Duration": 533.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_mg02_372_train_cancel_L": {
         "Duration": 57.0,
         "TickPerSecond": 57.0,
