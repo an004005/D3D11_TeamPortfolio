@@ -237,6 +237,8 @@ void CGameInstance::Tick_Engine(_double TimeDelta)
 	m_pCamera_Manager->Tick();
 	m_pPipeLine->Tick();
 
+	m_pFrustum->Transform_ToWorldSpace();
+
 	if (m_pCamera_Manager->GetMainCam())
 	{
 		const _float4x4 ListenerWorldMatrix = m_pCamera_Manager->GetMainCam()->GetTransform()->Get_WorldMatrix_f4x4();

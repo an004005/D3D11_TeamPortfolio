@@ -29,7 +29,9 @@ void CEMUI::TurnEyesOut()
 	assert(pEffectGroup != nullptr);
 
 	//TimeLine 끝나고 삭제
-	pEffectGroup->Start_AttachPivot(m_pOwner, m_EnemyFindEyesPivot, "Target", true, true, true);
+
+	_float4x4	EyesPivot = XMMatrixTranslation(0.f, 1.5f, 0.f);
+	pEffectGroup->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true, true);
 }
 
 void CEMUI::Create_UIInfo()
@@ -44,7 +46,6 @@ void CEMUI::Create_UIInfo()
 		assert(m_pShieldUI != nullptr);
 
 		m_pShieldUI->Set_Owner(m_pOwner);
-		m_pShieldUI->SetPivotMatrix(m_EnemyInfoBarPivot);
 		m_pShieldUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
 	}
 	else
@@ -53,8 +54,22 @@ void CEMUI::Create_UIInfo()
 		assert(m_pHPUI != nullptr);
 
 		m_pHPUI->Set_Owner(m_pOwner);
-		m_pHPUI->SetPivotMatrix(m_EnemyInfoBarPivot);
 		m_pHPUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
+	}
+}
+
+void CEMUI::Delete_UIInfo()
+{
+	if (m_pShieldUI != nullptr)
+	{
+		m_pShieldUI->SetDelete();
+		m_pShieldUI = nullptr;
+	}
+
+	if (m_pHPUI != nullptr)
+	{
+		m_pHPUI->SetDelete();
+		m_pHPUI = nullptr;
 	}
 }
 
@@ -86,7 +101,12 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 {
 	_int iDamage = tDamageParams.iDamage;
 	_float4 vHitPosition = tDamageParams.vHitPosition;
-
+	
+	if (tDamageParams.pCauser == nullptr)
+	{
+		vHitPosition = m_pOwner->GetKineticTargetPos();
+	}
+	
 	vHitPosition.x += CMathUtils::RandomFloat(-1.f, 1.f);
 	vHitPosition.y += CMathUtils::RandomFloat(-0.5f, 1.f);
 	vHitPosition.z += CMathUtils::RandomFloat(-1.f, 1.f);
@@ -197,14 +217,23 @@ CEMUI* CEMUI::Create(CEnemy* pEnemy)
 
 void CEMUI::Free()
 {
-	if(m_pShieldUI != nullptr)
+	if (m_pShieldUI != nullptr)
+	{
 		m_pShieldUI->SetDelete();
+		m_pShieldUI = nullptr;
+	}
 
 	if (m_pHPUI != nullptr)
+	{
 		m_pHPUI->SetDelete();
+		m_pHPUI = nullptr;
+	}
 
-	if(m_BossHp != nullptr)
+	if (m_BossHp != nullptr)
+	{
 		m_BossHp->SetDelete();
+		m_BossHp = nullptr;
+	}
 
 	if (m_pCGEffect != nullptr)
 	{

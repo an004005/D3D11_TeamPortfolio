@@ -365,7 +365,7 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 				{
 					if (m_pCurState->m_SpairAnimation == m_pCurState->m_ReserveAnimation)
 					{
-t						m_pCurState->m_ReserveAnimation = nullptr;
+						m_pCurState->m_ReserveAnimation = nullptr;
 					}
 					else if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
 					{

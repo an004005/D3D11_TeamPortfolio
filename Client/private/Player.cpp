@@ -10761,8 +10761,10 @@ void CPlayer::Update_NotiveNeon()
 
 void CPlayer::Update_TargetUI()
 {
-
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+
+	if (pTarget != nullptr && pTarget->Exclude() == true)
+		pTarget = nullptr;
 
 	if (m_pSettedTarget != pTarget)
 	{
@@ -10777,7 +10779,6 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
 
 		}
-
 
 		//원래 타겟이 있었는데 사라진 경우
 		else if (m_pSettedTarget != nullptr && pTarget == nullptr)

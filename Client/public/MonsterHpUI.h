@@ -22,10 +22,6 @@ public:
 	virtual void   Imgui_RenderProperty() override;
 
 public:
-	void SetPivotMatrix(_float4x4 pivotMatrix) {
-		m_PivotMatrix = pivotMatrix;
-	}
-
 	void Set_MonsterInfo(const _int iLevel, const EEnemyName eName);
 
 	void Set_HpRatio(_float fHpRatio);
@@ -38,8 +34,6 @@ private:
 
 	_float		m_fHpBack = { 1.0f };
 	_float		m_fCurrentHpBack = { 1.0f };
-
-	_float4x4	m_PivotMatrix;
 
 	_int		m_iMonsterLevel = { 0 };
 	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;

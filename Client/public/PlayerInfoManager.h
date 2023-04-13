@@ -9,6 +9,7 @@
 
 BEGIN(Engine)
 class CGameObject;
+class CCamera;
 END
 
 BEGIN(Client)
@@ -250,10 +251,9 @@ private:	// 상호작용 관련
 	CGameObject*	m_pKineticObject;
 	CGameObject*	m_pTargetedMonster;
 	CGameObject*	m_pSpecialObject;
-
+	CCamera*			m_pPlayerCam = nullptr;
 private:
 	CGameObject*	m_pCamSpot = nullptr;
-	CCamera*		m_pPlayerCam = nullptr;
 
 private:
 	_matrix			m_PlayerWorldMatrix = XMMatrixIdentity();

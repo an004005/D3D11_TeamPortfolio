@@ -235,6 +235,16 @@ void CCamera_Manager::Imgui_Render()
 
 		ImGui::EndListBox();
 	}
+
+
+	if (ImGui::Button("Delete CamAnim"))
+	{
+		if (strSelectCurve != "")
+		{
+			m_CamAnims.erase(strSelectCurve);
+			strSelectCurve = "";
+		}
+	}
 }
 
 void CCamera_Manager::SetCameraFovCurve(const string & strCurveTag)
