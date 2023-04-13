@@ -359,6 +359,42 @@ PS_OUT PS_PARTICLE_EM0650(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_ENV_SPARK(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 DefaultTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	// float GradientTex = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+	float4 Choose = g_vec4_0;
+	float4 BlendColor = DefaultTex * Choose * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0 ); // color * emissive
+
+	if (g_tex_on_1)
+	{
+		float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
+		Out.vColor.a = Mask;
+		if (Mask <= 0.f)
+			discard;
+	}
+	else
+	{
+		// Out.vColor.a = GradientTex;
+		Out.vColor = DefaultTex;
+
+		if (Out.vColor.a < 0.01f)
+			discard;
+	}
+
+	Out.vColor.a *= In.RamainLifeRatio;
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
+	return Out;
+}
+
 PS_OUT PS_EM1100_RAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -834,7 +870,29 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 	float4 BlendColor = MixColor * Color * 2.0f;
 	float4 FinalColor = saturate(BlendColor);
 
-	Out.vColor = CalcHDRColor(FinalColor, saturate(g_float_0 *In.RamainLifeRatio));
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+
+	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
+
+	if (Out.vColor.a < 0.01f)
+		discard;
+
+	return Out;
+}
+
+PS_OUT PS_BRAINFIELD_PARTICLE_TEXT(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float2 MixUV = Get_FlipBookUV(In.vTexUV, In.CurLife, g_float_1, 4, 4);
+
+	float4 MixColor = g_tex_0.Sample(LinearSampler, MixUV);
+	float4 Color = g_vec4_0;
+
+	float4 BlendColor = MixColor * Color * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 
 	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
@@ -1298,5 +1356,34 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_AURAPARTICLE();
+	}
+
+
+	//31
+	pass BrainField_Text
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAINFIELD_PARTICLE_TEXT();
+	}
+
+	//32
+	pass Env_Spark_Particle
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENV_SPARK();
 	}
 }

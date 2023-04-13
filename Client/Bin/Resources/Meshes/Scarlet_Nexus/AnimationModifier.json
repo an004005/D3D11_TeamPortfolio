@@ -8619,6 +8619,10 @@
             {
                 "EventName": "Counter_Start",
                 "EventTime": 30.0
+            },
+            {
+                "EventName": "Stamp_Start",
+                "EventTime": 22.0
             }
         ]
     },
