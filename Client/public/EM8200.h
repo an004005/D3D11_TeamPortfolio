@@ -58,6 +58,7 @@ protected:
 	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
 	void				AddState_Counter(CFSMComponentBuilder& Builder);
 	void				AddState_CaptureKinetic(CFSMComponentBuilder& Builder);
+	void				AddState_BrainField(CFSMComponentBuilder& Builder);
 
 
 
@@ -175,6 +176,8 @@ private:
 
 	class CEM8200_CopyRush* m_pLeftCopy = nullptr;
 	class CEM8200_CopyRush* m_pRightCopy = nullptr;
+
+	class CEM8200_BrainField* m_pBrainField = nullptr;
 
 
 public:

@@ -1558,7 +1558,10 @@
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Invisible.h" />
-    <ClInclude Include="..\public\EM8200_CopyRush.h" />
+    <ClInclude Include="..\public\EM8200_CopyRush.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EM8200_BrainField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2553,7 +2556,10 @@
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
-    <ClCompile Include="..\private\EM8200_CopyRush.cpp" />
+    <ClCompile Include="..\private\EM8200_CopyRush.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EM8200_BrainField.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

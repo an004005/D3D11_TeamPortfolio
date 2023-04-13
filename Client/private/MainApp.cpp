@@ -50,6 +50,7 @@
 #include "PostVFX_SuperSpeed.h"
 #include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
+#include "PostVFX_WhiteOut.h"
 
 #include "VIBuffer_Point_Instancing.h"
 
@@ -199,6 +200,9 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For. ProtoPostVFX_SuperSpeed */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_SuperSpeed"),
 		CPostVFX_SuperSpeed::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_WhiteOut"),
+		CPostVFX_WhiteOut::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For. Prototype_Component_SuperSpeedTrail */

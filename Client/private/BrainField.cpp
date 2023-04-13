@@ -16,6 +16,7 @@
 #include "GameUtils.h"
 #include "RedString.h"
 #include "VFX_Manager.h"
+#include "MapInstance_Object.h"
 
 /**********************
  * CBrainField
@@ -66,9 +67,11 @@ HRESULT CBrainField::Initialize(void* pArg)
 	m_pMapAppear_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MapAppear");
 
 	{
+		CMapInstance_Object::s_bPhysX = false;
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
 		m_pBrainFieldMap = dynamic_cast<CScarletMap*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
 		m_pBrainFieldMap->SetVisible_MapObjects(false);
+		CMapInstance_Object::s_bPhysX = true;
 	}
 	{
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
@@ -87,7 +90,7 @@ HRESULT CBrainField::Initialize(void* pArg)
 }
 
 void CBrainField::BeginTick()
-{\
+{
 	CGameObject::BeginTick();
 	m_pBrainFieldCables->BeginTick();
 	m_pChromaticAberration->BeginTick();
@@ -554,8 +557,6 @@ HRESULT CBrainFieldCables::Render()
 
 void CBrainFieldCables::Imgui_RenderProperty()
 {
-	CGameObject::Imgui_RenderProperty();
-
 	CGameObject::Imgui_RenderProperty();
 
 	if (ImGui::CollapsingHeader("Pivot Bone"))

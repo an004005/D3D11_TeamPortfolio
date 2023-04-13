@@ -676,6 +676,75 @@ PS_OUT PS_BRAINFIELD_MAP_14(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM8200_BRAINFIELD_MAP_15(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlag = g_FlagTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vFlagNonAlpha = g_FlagTextureNonAlpha.Sample(LinearSampler, In.vTexUV);
+	float4 vDepthDesc = g_DepthTexture.Sample(LinearSampler, In.vTexUV);
+	float fViewZ = vDepthDesc.y * g_Far;
+
+	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.a = 1.f;
+
+	if (g_int_0 == 0 && g_float_0 > 0.f) // 흑백
+	{
+		if (g_float_0 >= 1.f) // 흑백
+		{
+			if (vFlagNonAlpha.z == SHADER_TOON_GRAY_INGNORE)
+				Out.vColor.rgb = 1.f;
+			else
+				Out.vColor.rgb = 0.f;
+		}
+		else // 점점 흰색
+		{
+			Out.vColor.rgb = lerp(Out.vColor.rgb, COL_WHITE, g_float_0);
+		}
+	}
+	else if (g_int_0 == 1 && g_float_0 < 1.f) // 기존 맵 천천히 보이기
+	{
+		if (g_float_0 < 0.1)
+		{
+			Out.vColor.rgb = lerp(0.f, Out.vColor.rgb, g_float_0 * 10.f);
+		}
+		else if (vFlag.y == SHADER_POST_OBJECTS || vFlagNonAlpha.y == SHADER_POST_OBJECTS || fViewZ >= g_Far)
+		{
+			vector		vWorldPos;
+			vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+			vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+			vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
+			vWorldPos.w = 1.0f;
+		 
+			vWorldPos *= fViewZ;
+			vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+			vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+			float fRange = g_float_0 * g_Far;
+
+			float fScanRange = g_float_1;
+			float fDistance = length(vWorldPos - g_vCamPosition);
+
+			if (fDistance > fRange + fScanRange)
+			{
+				Out.vColor.rgb = 0.f;
+			}
+			else if (fDistance <= fRange + fScanRange && fDistance > fRange)
+			{
+				float fRatio = Remap(fDistance, float2(fRange, fRange + fScanRange), float2(0.f, 1.f));
+				Out.vColor.rgb = lerp(COL_PURPLE, (float3)0.f, fRatio);
+			}
+			else if (fDistance <= fRange && fDistance > fRange - fScanRange)
+			{
+				float fRatio = Remap(fDistance, float2(fRange - fScanRange, fRange), float2(0.f, 1.f));
+				Out.vColor.rgb = lerp(Out.vColor.rgb, COL_PURPLE, fRatio);
+			}
+		}
+	}
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default_Test
@@ -883,5 +952,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRAINFIELD_MAP_14();
+	}
+
+	//15
+	pass EM8200_BrainField_MAP_15
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_BRAINFIELD_MAP_15();
 	}
 }

@@ -18,6 +18,7 @@
 #include "MapKinetic_Object.h"
 #include "PlayerInfoManager.h"
 #include "EM8200_CopyRush.h"
+#include "EM8200_BrainField.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -89,6 +90,12 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	m_pLeftCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
 	m_pRightCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
+
+	m_pBrainField = dynamic_cast<CEM8200_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_BrainField"));
+	m_pBrainField->SetTargetInfo(this, m_pTransformCom, m_pModelCom);
+
+	_double TickPerSec = m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->GetTickPerSec();
+	m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->SetTickPerSec(TickPerSec * 2.0);
 }
 
 void CEM8200::Detected_Attack()
@@ -417,6 +424,7 @@ void CEM8200::SetUpFSM()
 	AddState_Counter(Builder);
 	AddState_CaptureKinetic(Builder);
 	AddState_Damaged(Builder);
+	AddState_BrainField(Builder);
 
 	m_pFSM = Builder.Build();
 }
@@ -562,6 +570,9 @@ void CEM8200::Late_Tick(_double TimeDelta)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 	}
+
+	m_pBrainField->Tick(TimeDelta);
+	m_pBrainField->Late_Tick(TimeDelta);
 }
 
 void CEM8200::AfterPhysX()
@@ -618,6 +629,16 @@ void CEM8200::Imgui_RenderProperty()
 
 		Safe_Release(pComponent);
 	}
+
+	if (ImGui::CollapsingHeader("BrainField"))
+	{
+		m_pBrainField->Imgui_RenderProperty();
+		m_pBrainField->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::Button("CloseBrainField"))
+	{
+		m_pBrainField->CloseBrainField();
+	}
 }
 
 void CEM8200::SetUpUI()
@@ -653,6 +674,12 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 		})
 	.AddTransition("Idle to Death", "Death")
 			.Predicator([this] {return m_bDead; })
+
+	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
+		.Predicator([this]
+		{
+			return CGameInstance::GetInstance()->KeyDown(DIK_P);
+		})
 
 	.AddTransition("Idle to Hit_Mid", "Hit_Mid_Heavy")
 		.Predicator([this]
@@ -1815,6 +1842,38 @@ void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
 
 }
 
+void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
+{
+
+	Builder
+	.AddState("BrainFieldStart")
+		.OnStart([this]
+		{
+			m_pBrainField->OpenBrainField();
+			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
+		})
+		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketEmpty("FullBody");
+			})
+	.AddState("BrainFieldTrans")
+		.OnStart([this]
+		{
+			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_trans");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+			SocketLocalMove(m_pASM);
+		})
+		.AddTransition("BrainFieldStart to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+	;
+}
+
 
 void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 {
@@ -1990,5 +2049,7 @@ void CEM8200::Free()
 
 	Safe_Release(m_pLeftCopy);
 	Safe_Release(m_pRightCopy);
-	
+
+	Safe_Release(m_pBrainField);
+
 }

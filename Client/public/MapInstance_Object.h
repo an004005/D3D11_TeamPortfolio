@@ -34,6 +34,8 @@ public:
 	//툴에서 생성이나 삭제 후 자동으로 다음이나 이전 객체를 선택
 	void		Set_Focus();
 	void		Create_PhsyX(_fmatrix WorldMatrix);
+
+	static _bool s_bPhysX;
 private:
 	wstring MakePxModelProtoTag();
 private:

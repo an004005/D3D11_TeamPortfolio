@@ -121,7 +121,7 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 
-		m_pFSM->Tick(TimeDelta);
+		// m_pFSM->Tick(TimeDelta);
 
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
 		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
