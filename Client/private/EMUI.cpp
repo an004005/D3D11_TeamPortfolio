@@ -79,7 +79,7 @@ void CEMUI::Create_BossUI()
 
 	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
 	assert(m_BossHp != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-
+	m_pOwner->GetEnemyName();
 }
 
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)

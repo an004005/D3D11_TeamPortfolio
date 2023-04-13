@@ -48,12 +48,12 @@
             "ChildTag": "Boss_Name\u0000",
             "ObjectTag": "Boss_Name",
             "Pivot": 2,
-            "PositionX": -228.0,
-            "PositionY": -47.0,
+            "PositionX": -200.0,
+            "PositionY": -50.0,
             "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
             "ScaleX": 0.5,
-            "ScaleY": 0.550000011920929,
+            "ScaleY": 0.5,
             "ShaderParams": {
                 "Float2s": [
                     [
@@ -62,7 +62,7 @@
                     ],
                     [
                         20.0,
-                        13.0
+                        14.0
                     ]
                 ],
                 "Float4s": [],
@@ -83,15 +83,15 @@
                     0.0,
                     0.0,
                     0.0,
-                    27.5,
+                    25.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -228.0,
-                    403.0,
+                    -200.0,
+                    400.0,
                     0.0,
                     1.0
                 ]

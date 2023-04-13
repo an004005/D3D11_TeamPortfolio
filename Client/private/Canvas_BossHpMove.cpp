@@ -41,17 +41,6 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
-	m_pCanvas_BossHp =  dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_BossHp", &json));
-	assert(m_pCanvas_BossHp != nullptr && "Failed to Clone : CCanvas_BossHp");
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));
-	assert(m_pUI_Alarm != nullptr && "Failed to Clone : CCanvas_Alarm");
-	m_pUI_Alarm->Set_Appeart();
-
 	return S_OK;
 }
 
@@ -125,6 +114,25 @@ void CCanvas_BossHpMove::Set_BossShild(const _float & fShild)
 {
 	Find_ChildUI(L"Boss_Shild")->SetVisible(true);
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Shild"))->Set_Floats0(fShild);
+}
+
+void CCanvas_BossHpMove::Partner_Initialize()
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHp.json");
+	m_pCanvas_BossHp = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_BossHp", &json));
+	assert(m_pCanvas_BossHp != nullptr && "Failed to Clone : CCanvas_BossHp");
+
+	//_float fNameIndex = 0.0f;
+	//if(EEnemyName::EM0320 == m_eEnemyName) fNameIndex = 10.0f;
+
+	//m_pCanvas_BossHp->Set_Name(fNameIndex);
+
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));
+	assert(m_pUI_Alarm != nullptr && "Failed to Clone : CCanvas_Alarm");
+	m_pUI_Alarm->Set_Appeart();
 }
 
 CCanvas_BossHpMove * CCanvas_BossHpMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

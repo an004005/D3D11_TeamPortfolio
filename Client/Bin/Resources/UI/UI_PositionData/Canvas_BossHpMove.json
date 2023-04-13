@@ -22,16 +22,11 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    1.0,
-                    0.0
+                    1.0
                 ],
-                "Ints": [
-                    2
-                ],
-                "Pass": 23,
+                "Ints": [],
+                "Pass": 7,
                 "Textures": [
-                    "",
-                    "",
                     "..\\Bin\\Resources\\UI\\InGame\\Boss_HpBack.png\u0000"
                 ]
             },

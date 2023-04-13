@@ -14,6 +14,7 @@
 #include "Canvas_BossHpMove.h"
 #include "PlayerInfoManager.h"
 #include "Item_Manager.h"
+#include "Canvas_BossHpMove.h"
 
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -89,6 +90,11 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_Alarm->Set_MapName();
 
 		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
+
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
+		CCanvas_BossHpMove* pBossHpMove = dynamic_cast<CCanvas_BossHpMove*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_BossHpMove", &json));
+		
 	}
 
 	// 생성후 재사용 하는 애들

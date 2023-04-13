@@ -37,40 +37,15 @@ void CCanvas_BossHp::Tick(_double TimeDelta)
 
 }
 
-void CCanvas_BossHp::Late_Tick(_double TimeDelta)
-{
-	CCanvas::Late_Tick(TimeDelta);
-
-}
-
-HRESULT CCanvas_BossHp::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CCanvas_BossHp::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-}
-
-void CCanvas_BossHp::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_BossHp::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-}
-
 void CCanvas_BossHp::Set_BossHp()
 {
 	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(true);
 	Find_ChildUI(L"Boss_Name")->SetVisible(true);
+}
+
+void CCanvas_BossHp::Set_Name(const _float fName)
+{
+	m_tParams.Float2s[0] = { 0.0f, fName };
 }
 
 CCanvas_BossHp * CCanvas_BossHp::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

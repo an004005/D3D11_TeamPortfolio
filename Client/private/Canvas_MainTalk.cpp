@@ -65,12 +65,6 @@ HRESULT CCanvas_MainTalk::Render()
 	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(25.0f, 35.0f), 0.f, vFontSize, vColor);
 	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(27.0f, 77.0f), 0.f, vFontSize, vColorB);
 	pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(25.0f, 75.0f), 0.f, vFontSize, vColor);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(82.0f, 12.0f), 0.f, vFontSize, vColorB);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsName.c_str(), vPosition + _float2(80.0f, 10.0f), 0.f, vFontSize, vColor);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(82.0f, 47.0f), 0.f, vFontSize, vColorB);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk0.c_str(), vPosition + _float2(80.0f, 45.0f), 0.f, vFontSize, vColor);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(82.0f, 82.0f), 0.f, vFontSize, vColorB);
-	//pGameInstance->Render_Font(L"NeoPro", m_tTalkInfo.wsTalk1.c_str(), vPosition + _float2(80.0f, 80.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -140,13 +134,13 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	{
 		tTalkInfo.wsName = { L"하나비" };
 		tTalkInfo.wsTalk0 = { L"웅웅 나 정말 잘 할 수 있을 것 같아!" };
-		tTalkInfo.wsTalk1 = { L"그렇죠? 쿄카 선배?" };
+		tTalkInfo.wsTalk1 = { L"그렇죠? 겜마 선배?" };
 	}
 	break;
 
 	case 4:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"하나비 잘했어 그렇지만 항상 조심해야해" };
 		tTalkInfo.wsTalk1 = { L"아까 츠구미 아니였으면 다칠뻔 했어" };
 	}
@@ -194,7 +188,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	case 10:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"맞아 유이토 상점인 사토리 씨께서는" };
 		tTalkInfo.wsTalk1 = { L"우리가 괴이랑 싸울 때 필요한 아이템들을 사거나 판매를 하고 계셔." };
 	}
@@ -203,7 +197,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	case 11:
 	{
 		tTalkInfo.wsName = { L"유이토" };
-		tTalkInfo.wsTalk0 = { L"아 그렇군요 좋은 정보 감사드려요. 쿄카 선배." };
+		tTalkInfo.wsTalk0 = { L"아 그렇군요 좋은 정보 감사드려요. 겜마 선배." };
 		tTalkInfo.wsTalk1 = { L"" };
 	}
 	break;
@@ -212,7 +206,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	case 12:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"유이토 고민이 많아 보이네? 무슨일 있어?" };
 		tTalkInfo.wsTalk1 = { L"" };
 	}
@@ -252,9 +246,9 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	case 17:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
-		tTalkInfo.wsTalk0 = { L"맞아! 그 꽃을 좋아하는 사람 한테 전해주면," };
-		tTalkInfo.wsTalk1 = { L"사랑이 이루어지는 전설이 있다고 했지! 그런데 아마 구하기 정말 어려울껄?" };
+		tTalkInfo.wsName = { L"겜마" };
+		tTalkInfo.wsTalk0 = { L"하하. 나도 들어본 것 같네 그 꽃을 좋아하는 사람 한테 전해주면," };
+		tTalkInfo.wsTalk1 = { L"사랑이 이루어지는 전설이 있다고 하더나... 그런데 아마 구하기 정말 어려울껄?" };
 	}
 	break;
 
@@ -276,7 +270,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	case 20:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"당연하지 동료의 기쁨은 모두의 기쁨이니까." };
 		tTalkInfo.wsTalk1 = { L"" };
 	}
@@ -302,7 +296,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 
 	case 23:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"중대장님이 좋은걸 알려주셨다면..." };
 		tTalkInfo.wsTalk1 = { L"브레인 맵을 말하는 거구나?" };
 	}
@@ -311,14 +305,14 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	case 24:
 	{
 		tTalkInfo.wsName = { L"하나비" };
-		tTalkInfo.wsTalk0 = { L"맞아요! 쿄카선배!" };
+		tTalkInfo.wsTalk0 = { L"맞아요! 겜마선배!" };
 		tTalkInfo.wsTalk1 = { L"브레인 맵에서는 우리가 가지고 있는 초 뇌능력을 더욱 더 높일 수 있대!" };
 	}
 	break;
 
 	case 25:
 	{
-		tTalkInfo.wsName = { L"쿄카" };
+		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"맞아 각자의 초능력에 맞게 서로 다른 브레인 맵이 존재해." };
 		tTalkInfo.wsTalk1 = { L"자기에게 맞는 쪽으로 잘 확인하고 찍는게 중요하지." };
 	}

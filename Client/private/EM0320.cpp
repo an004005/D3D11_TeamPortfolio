@@ -17,7 +17,6 @@
 #include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
-#include "Canvas_BossHpMove.h"
 #include "ImguiUtils.h"
 #include "GameManager.h"
 
@@ -910,10 +909,6 @@ void CEM0320::Free()
 	Safe_Release(m_pLeftArm);
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
-
-	CGameManager::GetInstance()->Set_LeftTalk(7);
-	CGameManager::GetInstance()->Set_LeftTalk(8);
-	CGameManager::GetInstance()->Set_LeftTalk(9);
 
 	//for. BossUI 
 	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 

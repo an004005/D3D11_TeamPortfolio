@@ -541,6 +541,9 @@
     <Filter Include="02.GameObjects\Item\Consumption_Item">
       <UniqueIdentifier>{2258b2b9-7b16-4f26-8c7a-6f9a626391ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\WorldMap">
+      <UniqueIdentifier>{6203072a-9451-4ae2-af0f-ea36161466dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1561,6 +1564,12 @@
     <ClInclude Include="..\public\StoryTrigger.h">
       <Filter>Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_WorldMap.h">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MapBar.h">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2557,6 +2566,12 @@
     <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\StoryTrigger.cpp">
       <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_WorldMap.cpp">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MapBar.cpp">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

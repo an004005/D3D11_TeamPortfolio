@@ -13,6 +13,8 @@ END
 
 BEGIN(Client)
 
+// 경견페리
+
 class CEM0320 : public CEnemy
 {
 	enum EAttackStateType

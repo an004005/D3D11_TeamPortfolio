@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\GameManager.h"
 #include "JsonStorage.h"
-#include "GameInstance.h"
+#include "GameInstance.h"	
 
 #include "Canvas_Acquisition.h"
 #include "Canvas_LeftTalk.h"
@@ -81,11 +81,30 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 	}
 
 	m_EneymyReports.push_back(tReport);
+
+	// 몬스터 상태이상
+	if (EDeBuffType::DEBUFF_FIRE == tReport.eBeDeBuff) Set_LeftTalk(98);
+	if (EDeBuffType::DEBUFF_OIL == tReport.eBeDeBuff) Set_LeftTalk(99);
+	if (EDeBuffType::DEBUFF_THUNDER == tReport.eBeDeBuff) Set_LeftTalk(100);
+	if (EDeBuffType::DEBUFF_WATER == tReport.eBeDeBuff) Set_LeftTalk(101);
+
+	//// 공사장에서 경견페리 죽었을 때
+	//CGameManager::GetInstance()->Set_LeftTalk(7);
+	//CGameManager::GetInstance()->Set_LeftTalk(8);
+	//CGameManager::GetInstance()->Set_LeftTalk(9);
 }
 
 void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 {
-	
+	// 플레이어 상태이상
+	if (EDeBuffType::DEBUFF_FIRE == tReport.eBeDeBuff) Set_LeftTalk(94);
+	if (EDeBuffType::DEBUFF_OIL == tReport.eBeDeBuff) Set_LeftTalk(95);
+	if (EDeBuffType::DEBUFF_THUNDER == tReport.eBeDeBuff) Set_LeftTalk(96);
+	if (EDeBuffType::DEBUFF_WATER == tReport.eBeDeBuff) Set_LeftTalk(97);
+
+
+
+
 }
 
 void CGameManager::Set_FullItem(const wstring szItemName)
