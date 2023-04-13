@@ -263,6 +263,18 @@ void CCamSpot::SetUp_BoneMatrix(CModel * pModel, _fmatrix Transform)
 	m_AttachMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * pModel->GetBoneMatrix("CameraPos") * Transform;
 }
 
+void CCamSpot::Arrange_Cam()
+{
+	_float4 vLookAt = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_LOOK);
+
+	_float4 vTarget = m_pTargetObject->GetTransform()->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.2f, 0.f, 0.f);
+
+	m_fCamHeight = 0.f;
+
+	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vTarget);
+	m_pTransformCom->LookAt_NonY(vLookAt);
+}
+
 _bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
 {
 	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() - (TimeDelta / fRatio);

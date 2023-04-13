@@ -308,15 +308,31 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 
 			if (m_pCurState->m_ReserveAnimation != nullptr)
 			{
-				if (m_pCurState->m_Animation == m_pCurState->m_ReserveAnimation)
+				if (m_pCurState->m_SpairAnimation == m_pCurState->m_ReserveAnimation)
+				{
+					m_pCurState->m_ReserveAnimation = nullptr;
+				}
+				else if (m_pCurState->m_Animation == m_pCurState->m_ReserveAnimation)
 				{
 					m_pCurState->m_SpairAnimation = nullptr;
 					m_pCurState->m_ReserveAnimation = nullptr;
 				}
 				else if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
 				{
+					_float fRatio = 0.f;
+					if (nullptr != m_pCurState->m_SpairAnimation)
+					{
+						fRatio = m_pCurState->m_SpairAnimation->GetPlayRatio();
+					}
+					else
+					{
+						fRatio = m_pCurState->m_Animation->GetPlayRatio();
+					}
+
 					m_pCurState->m_SpairAnimation = m_pCurState->m_ReserveAnimation;
 					m_pCurState->m_ReserveAnimation = nullptr;
+
+					m_pCurState->m_SpairAnimation->SetPlayRatio(fRatio);
 				}
 			}
 		}
@@ -347,9 +363,23 @@ void CAnimationStateMachine::Tick(_double TimeDelta, _bool bUpdateBone)
 			{
 				if (nullptr != m_pCurState->m_ReserveAnimation)
 				{
-					if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
+					if (m_pCurState->m_SpairAnimation == m_pCurState->m_ReserveAnimation)
 					{
-						m_pCurState->m_ReserveAnimation->SetPlayRatio(m_pCurState->m_Animation->GetPlayRatio());
+t						m_pCurState->m_ReserveAnimation = nullptr;
+					}
+					else if (m_pCurState->m_Animation != m_pCurState->m_ReserveAnimation)
+					{
+						_float fRatio = 0.f;
+						if (nullptr != m_pCurState->m_SpairAnimation)
+						{
+							fRatio = m_pCurState->m_SpairAnimation->GetPlayRatio();
+						}
+						else
+						{
+							fRatio = m_pCurState->m_Animation->GetPlayRatio();
+						}
+
+						m_pCurState->m_ReserveAnimation->SetPlayRatio(fRatio);
 						m_pCurState->m_SpairAnimation = m_pCurState->m_ReserveAnimation;
 						m_pCurState->m_ReserveAnimation = nullptr;
 					}
@@ -462,7 +492,7 @@ void CAnimationStateMachine::SetSpairAnim(const string & stateName, CAnimation *
 		pState->second->m_ReserveAnimation = pSpairAnim;
 	}
 
-	m_fCurTransitionTime = 0.f;
+	//m_fCurTransitionTime = 0.f;
 }
 
 void CAnimationStateMachine::ResetSpairAnim()

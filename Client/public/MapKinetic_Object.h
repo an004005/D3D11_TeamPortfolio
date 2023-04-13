@@ -81,6 +81,9 @@ private:
 public:
 	void	KineticRimLightFix(_bool bFix) { m_bRimFix = bFix; }
 
+public:
+	void	SetRefloat();
+
 private:
 	void	BrightChecker();
 	_float	m_fBright = 0.f;
@@ -142,6 +145,9 @@ private:
 	_bool				m_bToAir = false;
 
 	_matrix				m_PreMatrix;
+
+private:
+	_float				m_fRefloatTime = 0.f;
 
 private:
 	vector<wstring>		m_vecRandomParticle{
