@@ -29,7 +29,7 @@ HRESULT CEM0650::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		_uint iBaseLevel = max(0, (LEVEL_NOW - 20));
+		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
 		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;

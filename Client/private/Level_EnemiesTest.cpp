@@ -21,7 +21,6 @@
 #include "VFX_Manager.h"
 #include "Imgui_Batch.h"
 #include "GameManager.h"
-
 #include "Imgui_CamAnimEditor.h"
 
 #define ADD_PLAYER
