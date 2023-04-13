@@ -521,7 +521,7 @@
     <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="EM8200_BrainField.h" />
-    <ClInclude Include="EnviromentEffect.h" />
+    <ClInclude Include="EnvironmentEffect.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -869,7 +869,7 @@
     <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="EM8200_BrainField.cpp" />
-    <ClCompile Include="EnviromentEffect.cpp" />
+    <ClCompile Include="EnvironmentEffect.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

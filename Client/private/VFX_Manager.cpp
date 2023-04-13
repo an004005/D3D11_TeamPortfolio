@@ -57,7 +57,7 @@ CEffectGroup* CVFX_Manager::Find_Effect(EFFECT eType, const wstring& wstrEffectT
 	return Add_Effect(EffectDir, wszLayerTag);
 }
 
-CEffectGroup* CVFX_Manager::Add_Effect(string strEffectDir, const _tchar* wszLayerTag)
+CEffectGroup* CVFX_Manager::Add_Effect(const string& strEffectDir, const _tchar* wszLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -85,18 +85,12 @@ CParticleGroup* CVFX_Manager::Find_Particle(PARTICLE eType, const wstring& wstrP
 	if (iter == Particles[eType].end())
 		return nullptr;
 
-	string Dirpath = arrayParticleMatch[eType];
-
-	wstring Tmp = wstrParticleTag + L".json";
-
-	string ParticleName = ws2s(Tmp);
-
-	string ParticleDir = Dirpath + ParticleName;
+	string ParticleDir = arrayParticleMatch[eType] + ws2s(wstrParticleTag + L".json");
 
 	return Add_Particle(ParticleDir, wszLayerTag);
 }
 
-CParticleGroup* CVFX_Manager::Add_Particle(string strParticleDir, const _tchar* wszLayerTag)
+CParticleGroup* CVFX_Manager::Add_Particle(const string& strParticleDir, const _tchar* wszLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 

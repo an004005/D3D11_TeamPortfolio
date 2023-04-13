@@ -51,7 +51,7 @@
 #include "SuperSpeedTrail.h"
 #include "Item_Manager.h"
 #include "PostVFX_WhiteOut.h"
-
+#include "EnvironmentEffect.h"
 #include "VIBuffer_Point_Instancing.h"
 #include "Map_KineticBatchPreset.h"
 
@@ -482,7 +482,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_CombinedRedString"), CCombinedRedString::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_EnvironmentEffect"), CEnvironmentEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Regular32"), TEXT("../Bin/Resources/Fonts/kim_regular32.spritefont"))))
 	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Font(m_pDevice, m_pContext, TEXT("Bold32"), TEXT("../Bin/Resources/Fonts/kim_bold32.spritefont"))))

@@ -1567,7 +1567,7 @@
     <ClInclude Include="EM8200_BrainField.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
-    <ClInclude Include="EnviromentEffect.h" />
+    <ClInclude Include="EnvironmentEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2571,7 +2571,7 @@
     <ClCompile Include="EM8200_BrainField.cpp">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
-    <ClCompile Include="EnviromentEffect.cpp" />
+    <ClCompile Include="EnvironmentEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

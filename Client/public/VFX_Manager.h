@@ -72,7 +72,7 @@ public:
 	// For Effect
 	CEffectGroup*	GetEffect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag = strEffectLayerTag);
 	CEffectGroup*	Find_Effect(EFFECT eType, const wstring& wstrEffectTag, const _tchar* wszLayerTag);
-	CEffectGroup*	Add_Effect(string strEffectDir, const _tchar* wszLayerTag);
+	CEffectGroup*	Add_Effect(const string& strEffectDir, const _tchar* wszLayerTag);
 
 private:
 	HRESULT			CreateEffect(LEVEL eLevel);
@@ -82,7 +82,7 @@ public:
 	// For Particle
 	CParticleGroup* GetParticle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag = strParticleLayerTag);
 	CParticleGroup* Find_Particle(PARTICLE eType, const wstring& wstrParticleTag, const _tchar* wszLayerTag);
-	CParticleGroup* Add_Particle(string strParticleDir, const _tchar* wszLayerTag);
+	CParticleGroup* Add_Particle(const string& strParticleDir, const _tchar* wszLayerTag);
 
 private:
 	HRESULT			CreateParticle(LEVEL eLevel);

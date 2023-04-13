@@ -135,7 +135,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	else if (iColorFlag == 2) // ºÒ
 	{
 		flags = SHADER_NONE_SHADE;
-		Out.vDiffuse = float4(COL_FIRE, 1.f);
+		Out.vDiffuse = float4(COL_FIRE_DEBUF, 1.f);
 		fEmissive = 4.f;
 	}
 	else if (iColorFlag == 3) // Àü±â
