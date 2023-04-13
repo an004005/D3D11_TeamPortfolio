@@ -43,7 +43,6 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iMaxExp = 100;
 	m_tPlayerStat.iLevel = 1;
 	m_tPlayerStat.iSprbrPower = 110;
-	m_tPlayerStat.iAttack = 30;
 	m_tPlayerStat.iDefense = 15;
 	m_tPlayerStat.iBP = 50;
 	m_tPlayerStat.iCoin = 5000;
@@ -327,12 +326,10 @@ void CPlayerInfoManager::Change_BrainFieldMaintain(CHANGETYPE eType, _float Chan
 	}
 	else if (CHANGE_DECREASE == eType)
 	{
-		m_tPlayerStat.fBrainFieldMaintain = ChangeBrain;
+		if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
+			ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
 
-		//if (m_tPlayerStat.fBrainFieldMaintain < ChangeBrain)
-		//	ChangeBrain = m_tPlayerStat.fBrainFieldMaintain;
-
-		//m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
+		m_tPlayerStat.fBrainFieldMaintain -= ChangeBrain;
 	}
 
 	if (m_tPlayerStat.fBrainFieldMaintain > m_tPlayerStat.fMaxBrainFieldMaintain)	
@@ -510,7 +507,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tPlayerStat.iExp = 0;
 		m_tPlayerStat.m_iMaxHP += 50;
 		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
-		m_tPlayerStat.iAttack += m_tPlayerStat.iLevel;
+		m_tPlayerStat.m_fBaseAttackDamage += static_cast<_float>(m_tPlayerStat.iLevel);
 		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
 
 		m_tPlayerStat.iExp = iOverExp;
@@ -600,6 +597,34 @@ void CPlayerInfoManager::Camera_Axis_Sliding(_float4 vDir, _float fShakePower)
 	{
 		static_cast<CCamSpot*>(m_pCamSpot)->Axis_Sliding(vDir, fShakePower);
 	}
+}
+
+void CPlayerInfoManager::Camera_Arrange()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCamSpot))
+	{
+		static_cast<CCamSpot*>(m_pCamSpot)->Arrange_Cam();
+	}
+}
+
+HRESULT CPlayerInfoManager::Set_PlayerCam(CCamera* pCam)
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(pCam))
+	{
+		m_pPlayerCam = pCam;
+	}
+
+	return S_OK;
+}
+
+CCamera* CPlayerInfoManager::Get_PlayerCam()
+{
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayerCam))
+	{
+		return m_pPlayerCam;
+	}
+
+	return nullptr;
 }
 
 HRESULT CPlayerInfoManager::Set_PlayerCam(CCamera* pCam)

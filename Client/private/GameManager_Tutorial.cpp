@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "..\public\GameManager_Tutorial.h"
 #include "GameInstance.h"
+#include "JsonStorage.h"
+
+#include "Canvas_LeftTalk.h"
 
 CGameManager_Tutorial* CGameManager_Tutorial::s_GameManager = nullptr;
 
@@ -64,6 +67,28 @@ void CGameManager_Tutorial::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport
 		}
 	}
 
+	if (-1 != m_iMonstaerDeadCount)
+	{
+		if (tReport.bDead)
+			++m_iMonstaerDeadCount;
+	}
+
+	if (3 > m_iEM0650Count)
+	{
+		if (EEnemyName::EM0650 == tReport.eName && tReport.bDead)
+		{
+			++m_iEM0650Count;
+			if (2 == m_iEM0650Count)
+			{
+				++m_iEM0650Count;
+
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
+				auto pTips = dynamic_cast<CCanvas_LeftTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
+				pTips->Add_Talk(36);
+				pTips->Add_Talk(37);
+			}
+		}
+	}
 }
 
 void CGameManager_Tutorial::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)

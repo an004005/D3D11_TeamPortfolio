@@ -40,9 +40,9 @@ private:
 	_int wrap(_int x, _int low, _int high);
 
 	void	PlayerFontHp(_uint iHp);
-	void	PlayerHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
-	void	HanabiHpSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
-	void	TsugumiSet(const _uint iRandomMinHp, const _uint iRandomMaxHp);
+	void	PlayerHpSet(const _float & fPercentage);
+	void	HanabiHpSet(const _float& fPercentage);
+	void	TsugumiSet(const _float& fPercentage);
 
 private:
 	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;

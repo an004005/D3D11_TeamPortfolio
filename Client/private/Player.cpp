@@ -71,6 +71,7 @@
 #include "EM0800.h"
 
 #include "Renderer.h"
+#include "Map_KineticBatchPreset.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -870,7 +871,11 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pASM->isSocketExactlyEmpty() &&
 		tDamageParams.eAttackType != EAttackType::ATK_END)
 	{
-		m_fJustDodgeAble = 2.f;
+		m_fJustDodgeAble = 1.f;
+	}
+	else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField && CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY))
+	{
+		IM_LOG("BrainField Hardbody");
 	}
 	else if (CPlayerInfoManager::GetInstance()->Get_isSasUsing(ESASType::SAS_HARDBODY))
 	{
@@ -878,7 +883,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		IM_LOG("No Damage");
 		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
 	}
-	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash)
+	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash || m_bBrainField_Prod)
 	{
 		IM_LOG("JustDodge Activate")
 	}
@@ -1751,6 +1756,34 @@ void CPlayer::CamZoom(_double TimeDelta)
 	}
 }
 
+void CPlayer::SetOutLine(_bool bOutLine)
+{
+	if (bOutLine)
+	{
+		if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+		{
+			for (auto& iter : m_pModel->GetMaterials())
+			{
+				iter->GetParam().Float4s[0] = { 1.f, 1.f, 0.01f, 1.f };
+			}
+		}
+		else
+		{
+			for (auto& iter : m_pModel->GetMaterials())
+			{
+				iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
+			}
+		}
+	}
+	else if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		for (auto& iter : m_pModel->GetMaterials())
+		{
+			iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 1.f };
+		}
+	}
+}
+
 HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 {
 	m_pDriveModeProductionStateMachine = 
@@ -1767,6 +1800,12 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode && (0.f == CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy))
 			{
 				CPlayerInfoManager::GetInstance()->Set_DriveMode(false);
+
+				m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
+				m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 0;
+				m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
+				m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(true);
+				m_bDriveMask = false;
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
 			{
@@ -1817,7 +1856,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
+			CPlayerInfoManager::GetInstance()->Set_DriveEnergy(10.f);
 		})
 			.AddTransition("DRIVEMODE_ANIMCAM_START to DRIVEMODE_CAM_AWAY", "DRIVEMODE_CAM_AWAY")
 			.Predicator([&]()->_bool {return m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100")->IsFinished(); })
@@ -1838,7 +1878,6 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
-			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -1862,12 +1901,12 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
-				if (m_bBrainField)
-				{
-					CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
-				}
+			m_bBrainField_Prod = false;
 
-			//IM_LOG("BF : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain);
+			if (m_bBrainField)
+			{
+				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+			}
 		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
@@ -1881,6 +1920,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -1918,9 +1959,22 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			m_pBrainField->OpenBrainField();
 
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainField_01");
+			m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
 			// m_pBrainField->CloseBrainField();  끄는거
 		})
-		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
+		.Tick([&](double fTimeDelta) 
+		{
+			static_cast<CCamSpot*>(m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f);
+
+			if (m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->GetPlayRatio() >= 0.8f && BF_Start.IsNotDo())
+			{
+				CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(70.f);
+				m_bBrainField = true;
+				CPlayerInfoManager::GetInstance()->Set_BrainField(m_bBrainField);
+			}
+
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD_ACTIONCAM_01 to BRAINFIELD_ACTIONCAM_02", "BRAINFIELD_ACTIONCAM_02")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->IsFinished(); })
@@ -1929,15 +1983,25 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_ACTIONCAM_02")
 		.OnStart([&]() 
 		{
+			BF_Start.Reset();
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(1.f);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->SetRefloat();
+				}
+			}
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
 		{
-			CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(60.f);
-			m_bBrainField = true;
 		})
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
@@ -1946,11 +2010,23 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_FINISH_BF")
 		.OnStart([&]() 
 		{
+			m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(5.f);
 		})
-		.Tick([&](double fTimeDelta) {})
+		.Tick([&](double fTimeDelta) 
+		{
+			if (m_pASM->GetSocketAnimation("Common_AnimSocket") != m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"))
+			{
+				list<CAnimation*> TestAnim;
+				TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
+				m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+			}
+		})
 		.OnExit([&]() { m_bBrainField = false; })
 			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
@@ -1967,6 +2043,15 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			for (auto& iter : m_vecWeapon)
 				iter->SetVisible(true);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
+				}
+			}
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() {})
@@ -3643,7 +3728,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_AIR_CAP", "KINETIC_COMBO_AIR_CAP")
-			.Predicator([&]()->_bool { return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()); })
+			.Predicator([&]()->_bool 
+			{ 
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_AIR)) return false;
+				return CanKinetic(15) && !m_bHit && m_bKineticRB && (m_fKineticCombo_Slash > 0.f) && m_bAir && (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject());
+			})
 			.Priority(0)
 
 #pragma region ?щ옒??肄ㅻ낫 1
@@ -4214,7 +4303,11 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			.Priority(0)
 
 			.AddTransition("KINETIC_COMBO_KINETIC03_THROW to KINETIC_COMBO_SLASH04", "KINETIC_COMBO_SLASH04")
-			.Predicator([&]()->_bool {return m_bLeftClick; })
+			.Predicator([&]()->_bool 
+			{
+				if (false == CPlayerInfoManager::GetInstance()->Get_BrainMap(EBRAINMAP::BRAINMAP_KINETIC_COMBO_4)) return false;
+				return m_bLeftClick;
+			})
 			.Priority(0)
 
 
@@ -4628,7 +4721,6 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			.OnStart([&]()
 			{
 				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// ?щ줈??
-//				CGameInstance::GetInstance()->SetCameraFovCurve("Charge01_ActionCam");
 			})
 			.Tick([&](double fTimeDelta)
 			{
@@ -4642,7 +4734,6 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 				m_pASM->SetCurState("IDLE");
 
 				m_fJustDodgeAble = 0.f;
-//				CGameInstance::GetInstance()->ReleaseCameraFovCurve();
 			})
 			
 				.AddTransition("JUSTDODGE_USABLE to JUSEDODGE_NONUSE", "JUSTDODGE_NONUSE")
@@ -4969,15 +5060,20 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 				if (m_pASM->isSocketPassby("BrainField_AnimSocket", 0.35f) && BF_Combo_Throw.IsNotDo())
 				{
 					Event_Kinetic_Throw();
-					KineticObject_Targeting();
 				}
-				else
+				else if (false == m_pASM->isSocketPassby("BrainField_AnimSocket", 0.35f))
 				{
 					BrainField_ObjectAnimation_Socket("BrainField_AnimSocket", 0.f, 1.f);
+				}
+
+				if (m_pASM->isSocketPassby("BrainField_AnimSocket", 0.5f) && BF_Retarget.IsNotDo())
+				{
+					KineticObject_Targeting();
 				}
 			})
 			.OnExit([&]() 
 			{
+				BF_Retarget.Reset();
 				BF_Combo_Throw.Reset();
 				BF_BeginTick.Reset();
 				m_pASM->SetCurState_BrainField("IDLE");
@@ -7071,6 +7167,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					{
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+						//m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -10416,6 +10513,16 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		}
 	}
 
+	// 아웃라인 체크
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode || CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField || m_pKineticStataMachine->GetCurStateName() != "NO_USE_KINETIC")
+	{
+		SetOutLine(true);
+	}
+	else
+	{
+		SetOutLine(false);
+	}
+
 	m_vCamLook = pGameInstance->Get_CamLook();
 
 	CPlayerInfoManager::GetInstance()->Set_Air(m_bAir);
@@ -10524,6 +10631,7 @@ void CPlayer::HitCheck()
 		Event_Trail(false);
 		Event_collisionEnd();
 		m_bTeleport = false;
+		Event_FinishFovActionCam();
 	}
 
 	if (!m_pASM->isSocketEmpty("Hit_AnimSocket"))
@@ -11726,6 +11834,7 @@ void CPlayer::BrainField_FindGatherObjectList()
 				if (fDistance > fCurDistance)
 				{
 					m_GatherObjectList.push_back(iter);
+					static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
 				}
 			}
 		}

@@ -60,10 +60,10 @@ void CGameManager::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyDown(DIK_0) && LEVEL_NOW == LEVEL_UI)
 	{
 		m_pCanvas_Acquisition->Set_EnemyUI(EEnemyName::EM0400, 5); 
-		m_pCanvas_LeftTalk->Add_Talk(0);
+		//m_pCanvas_LeftTalk->Add_Talk(0);
 		//m_pCanvas_LeftTalk->Add_Talk(1);
 		//m_pCanvas_LeftTalk->Add_Talk(2);
-		m_bQuest = true;
+		//m_bQuest = true;
 	}
 
 	//if (CGameInstance::GetInstance()->KeyDown(DIK_9) && LEVEL_NOW == LEVEL_UI)
@@ -90,7 +90,12 @@ void CGameManager::ConsumePlayerDamageReport(PLAYER_DAMAGE_REPORT tReport)
 
 }
 
-void CGameManager::FullItem(const wstring szItemName)
+void CGameManager::Set_AddlItem(const wstring szItemName)
+{
+	m_pCanvas_Acquisition->Set_AddItem(szItemName);
+}
+
+void CGameManager::Set_FullItem(const wstring szItemName)
 {
 	m_pCanvas_Acquisition->Set_FullItem(szItemName);
 }
@@ -106,7 +111,6 @@ void CGameManager::Quest_Tick()
 		json["QuestIndex"] = 0;
 		m_pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
 		assert(m_pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
-		//m_pCanvas_Quest->Set_Quest(0);
 
 		if (LEVEL_UI == LEVEL_NOW) return;
 

@@ -485,6 +485,7 @@
     <ClInclude Include="..\public\Special_TelephonePole.h" />
     <ClInclude Include="..\public\Special_Train.h" />
     <ClInclude Include="..\public\SpawnTrigger.h" />
+    <ClInclude Include="..\public\StoryTrigger.h" />
     <ClInclude Include="..\public\SuperSpeedTrail.h" />
     <ClInclude Include="..\public\Talk_BackGroundUI.h" />
     <ClInclude Include="..\public\Talk_FaceUI.h" />
@@ -829,6 +830,7 @@
     <ClCompile Include="..\private\Special_TelephonePole.cpp" />
     <ClCompile Include="..\private\Special_Train.cpp" />
     <ClCompile Include="..\private\SpawnTrigger.cpp" />
+    <ClCompile Include="..\private\StoryTrigger.cpp" />
     <ClCompile Include="..\private\SuperSpeedTrail.cpp" />
     <ClCompile Include="..\private\Talk_BackGroundUI.cpp" />
     <ClCompile Include="..\private\Talk_FaceUI.cpp" />

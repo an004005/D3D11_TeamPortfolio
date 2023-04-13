@@ -8,7 +8,7 @@ BEGIN(Client)
 typedef struct tagQuestInfo
 {
 	wstring wsQuest0 = L"";
-	wstring wsQuest1 = L"";
+	//wstring wsQuest1 = L"";
 
 	//  L"Chake" 글씨에 따라서 길이를 조절하고 싶은 경우 추가하기
 	// Quest 가 2개 이상 생길 경우 첫 Y Pos 를 지정할 수 있도록 하면 된다.
@@ -28,13 +28,9 @@ public:
 	virtual HRESULT Render() override;
 
 	virtual void	Imgui_RenderProperty() override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	//void	Set_Quest(const size_t iIndex) {
-	//	m_iQuestIndex = iIndex;
-	//}
-
+	void	Add_Quest(const _int iIndex);
 	void	Set_SuccessQuest() {
 		m_bVisible = true;
 		m_fQuestMove = true;
@@ -42,14 +38,14 @@ public:
 	}
 
 private:
-	void		Quest_Initialize();
 
-	void		Move_Tick(const _double & TimeDelta);
+	void		Move_Tick(const _double& TimeDelta);
 	void		Success(const _double& TimeDelta);
+	void		Success_Tick();
 
 private:
-	vector<QUESTINFO>	m_vecQuestInfo;
-	size_t	m_iQuestIndex = { 0 };
+	wstring m_wsQuest = L"";
+	_int	m_iQuestIndex = { 0 };
 
 	_float2		m_fBackGround_StartPos = { 0.0f, 0.0f };
 

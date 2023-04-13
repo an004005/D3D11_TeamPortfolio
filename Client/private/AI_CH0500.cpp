@@ -652,7 +652,7 @@ void CAI_CH0500::Shoot()
 				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
-				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iAttack * 0.5f;
+				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f;
 				tParam.vHitFrom = GetColliderPosition();
 				tParam.vHitPosition = { pHit.position.x, pHit.position.y, pHit.position.z, 1.f };
 				tParam.vSlashVector = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_SlashVector();

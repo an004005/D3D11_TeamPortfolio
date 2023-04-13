@@ -1558,6 +1558,9 @@
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Invisible.h" />
+    <ClInclude Include="..\public\StoryTrigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2552,6 +2555,9 @@
       <Filter>01.Levels\02.GamePlay\03.ConstructionSite2F</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
+    <ClCompile Include="..\private\StoryTrigger.cpp">
+      <Filter>Trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
