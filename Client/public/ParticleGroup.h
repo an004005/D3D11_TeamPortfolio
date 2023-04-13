@@ -47,6 +47,9 @@ public:
 	void		Start_Attach_Vector(CGameObject* pOwner, _fvector vVector, string BoneName, _bool trueisUpdate = false);
 	void		Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVector, _float4x4 PivotMatrix, string BoneName, _bool usepivot = false, _bool trueisUpdate = false);
 
+	void		Start_Attach_Transform(CGameObject* pOwner, CTransform* pOwnerTransform, _float4x4 PivotMatrix = XMMatrixIdentity(), _bool UsePivot = false, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
+
+
 private:
 	// [ObjectTag : Key] [Value : <Directory, Ptr>]
 	unordered_map<string, pair<string, CParticleSystem*>> m_mapParticleSystem;
@@ -60,6 +63,11 @@ private:
 	_float4x4 m_PivotMatrix = XMMatrixIdentity();
 
 	_bool m_bForBulletUpdate = false;
+
+private:	// 특정 트랜스폼에 붙이는데 피벗을 사용해서 붙인다.
+	CTransform* m_pTargetTransform = nullptr;
+	_float3 m_vParticleScale = _float3::Zero;
+
 private:
 	CGameObject* m_pAttachWeapon = nullptr;
 

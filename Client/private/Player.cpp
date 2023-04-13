@@ -1958,6 +1958,9 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				iter->SetVisible(false);
 
 			m_pBrainField->OpenBrainField();
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainField_01");
+			m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, m_fCameraLerpTime_In, m_fCameraLerpTime_Out);
 			// m_pBrainField->CloseBrainField();  ²ô´Â°Å
 		})
 		.Tick([&](double fTimeDelta) 

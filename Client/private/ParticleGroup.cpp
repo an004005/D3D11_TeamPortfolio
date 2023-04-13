@@ -371,6 +371,38 @@ void CParticleGroup::Start_AttachPivot_Vector(CGameObject* pOwner, _fvector vVec
 	m_bGenerate = true;
 }
 
+void CParticleGroup::Start_Attach_Transform(CGameObject* pOwner, CTransform* pOwnerTransform, _float4x4 PivotMatrix, _bool UsePivot, _bool trueisUpdate, _bool trueisRemoveScale)
+{
+	if (pOwner == nullptr)
+	{
+		SetDelete();
+		return;
+	}
+
+	m_pOwner = pOwner;
+	m_bUpdate = trueisUpdate;
+	m_bUsePivot = UsePivot;
+	m_PivotMatrix = PivotMatrix;
+	m_bRemoveScale = trueisRemoveScale;
+	m_pTargetTransform = pOwnerTransform;
+
+	if (trueisUpdate == false)
+	{
+		_matrix	SocketMatrix = m_PivotMatrix * m_pTargetTransform->Get_WorldMatrix();
+
+		if (m_bRemoveScale == true)
+		{
+			SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+			SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+			SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+		}
+
+		Set_Transform(SocketMatrix);
+	}
+
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Set_Transform(_matrix socket)
 {
 	for(auto iter : m_mapParticleSystem)
@@ -421,55 +453,72 @@ void CParticleGroup::Tick(_double TimeDelta)
 		}
 	}
 
-	if(m_bUpdate == true 
-		&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
-		&& m_pOwner->IsDeleted() == false 
-		&& (nullptr == m_pAttachWeapon))
+	if (nullptr == m_pTargetTransform)
 	{
-		if (m_BoneName != "")
+		if (m_bUpdate == true
+			&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
+			&& m_pOwner->IsDeleted() == false
+			&& (nullptr == m_pAttachWeapon))
 		{
-			// 뼈에 붙이는 경우
-			if (m_bUsePivot)
+			if (m_BoneName != "")
 			{
-				// 피봇행렬을 쓰는 경우
-				_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+				// 뼈에 붙이는 경우
+				if (m_bUsePivot)
+				{
+					// 피봇행렬을 쓰는 경우
+					_matrix	SocketMatrix = m_PivotMatrix * m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
 
-				Set_Transform(SocketMatrix);
+					Set_Transform(SocketMatrix);
+				}
+				else
+				{
+					// 피봇행렬을 안쓰는 경우
+					_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
+
+					Set_Transform(SocketMatrix);
+				}
 			}
 			else
 			{
-				// 피봇행렬을 안쓰는 경우
-				_matrix	SocketMatrix = m_pOwner->GetBoneMatrix(m_BoneName, true) * m_pOwner->GetTransform()->Get_WorldMatrix();
-
-				Set_Transform(SocketMatrix);
+				// 뼈에 안붙이는 경우
+				if (m_bUsePivot)
+				{
+					// 피봇행렬을 쓰는 경우
+					_matrix Socket = m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix();
+					Set_Transform(Socket);
+				}
+				else
+				{
+					// 피봇행렬을 안쓰는 경우
+					Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
+				}
 			}
+		}
+		else if (nullptr != m_pAttachWeapon)
+		{
+			_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
+
+			_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
+				XMVector3Normalize(WeaponMatrix.r[1]),
+				XMVector3Normalize(WeaponMatrix.r[2]),
+				WeaponMatrix.r[3] + WeaponMatrix.r[0] };
+
+			Set_Transform(SocketMatrix);
+		}
+	}
+	else
+	{
+		if (m_bUsePivot)
+		{
+			// 피봇행렬을 쓰는 경우
+			_matrix Socket = m_PivotMatrix * m_pTargetTransform->Get_WorldMatrix();
+			Set_Transform(Socket);
 		}
 		else
 		{
-			// 뼈에 안붙이는 경우
-			if(m_bUsePivot)
-			{
-				// 피봇행렬을 쓰는 경우
-				_matrix Socket = m_PivotMatrix * m_pOwner->GetTransform()->Get_WorldMatrix();
-				Set_Transform(Socket);
-			}
-			else
-			{
-				// 피봇행렬을 안쓰는 경우
-				Set_Transform(m_pOwner->GetTransform()->Get_WorldMatrix());
-			}
+			// 피봇행렬을 안쓰는 경우
+			Set_Transform(m_pTargetTransform->Get_WorldMatrix());
 		}
-	}
-	else if (nullptr != m_pAttachWeapon)
-	{
-		_matrix WeaponMatrix = static_cast<CScarletWeapon*>(m_pAttachWeapon)->Get_WeaponCenterMatrix();
-
-		_matrix	SocketMatrix = { XMVector3Normalize(WeaponMatrix.r[0]),
-			XMVector3Normalize(WeaponMatrix.r[1]),
-			XMVector3Normalize(WeaponMatrix.r[2]),
-			WeaponMatrix.r[3] + WeaponMatrix.r[0] };
-
-		Set_Transform(SocketMatrix);
 	}
 
 	if (m_bGenerate == true)

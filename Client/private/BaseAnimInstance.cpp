@@ -4226,19 +4226,19 @@ void CBaseAnimInstance::SpairAnimationManager()
 
 	// 변경을 확인했으므로 SpairAnim을 싹 비움
 	// Spair가 꺼질 때 현재 재생중인 애니메이션은 꺼지면 안됨 -> 이거 변경할 것
-	for (auto& iter : m_pASM_Base->Get_MapStates())
-	{
-		/*if (m_pASM_Base->GetCurState() == iter.second && (m_bOnBattle))
-		{
-			iter.second->m_ReserveAnimation = iter.second->m_Animation;
-			_float fRatio = iter.second->m_Animation->GetPlayRatio();
-			iter.second->m_ReserveAnimation->SetPlayRatio(fRatio);
-		}
-		else
-		{*/
-			iter.second->m_SpairAnimation = nullptr;
-		//}
-	}
+	//for (auto& iter : m_pASM_Base->Get_MapStates())
+	//{
+	//	/*if (m_pASM_Base->GetCurState() == iter.second && (m_bOnBattle))
+	//	{
+	//		iter.second->m_ReserveAnimation = iter.second->m_Animation;
+	//		_float fRatio = iter.second->m_Animation->GetPlayRatio();
+	//		iter.second->m_ReserveAnimation->SetPlayRatio(fRatio);
+	//	}
+	//	else
+	//	{*/
+	//		iter.second->m_SpairAnimation = nullptr;
+	//	//}
+	//}
 
 	/*
 	분기 종류
@@ -4435,6 +4435,14 @@ void CBaseAnimInstance::SpairAnimationManager()
 		m_pASM_Base->SetSpairAnim("AIR_DODGE_BACK", m_pModel->Find_Animation("AS_ch0100_165_AL_air_dodge_B"));
 		m_pASM_Base->SetSpairAnim("AIR_DODGE_LEFT", m_pModel->Find_Animation("AS_ch0100_167_AL_air_dodge_L"));
 		m_pASM_Base->SetSpairAnim("AIR_DODGE_RIGHT", m_pModel->Find_Animation("AS_ch0100_163_AL_air_dodge_R"));
+	}
+	else
+	{
+		for (auto& iter : m_pASM_Base->Get_MapStates())
+		{
+			iter.second->m_SpairAnimation = nullptr;
+			iter.second->m_ReserveAnimation = nullptr;
+		}
 	}
 
 }
