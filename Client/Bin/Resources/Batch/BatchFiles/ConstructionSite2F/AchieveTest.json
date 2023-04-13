@@ -1,0 +1,55 @@
+{
+    "BatchObjs": [
+        {
+            "JsonData": {
+                "AchieveType": 2,
+                "ObjectTag": "",
+                "Prototype_GameObject": "ConsumptionItem\u0000",
+                "RootType": 1,
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -3.1632862091064453,
+                        0.9499997496604919,
+                        -18.061697006225586,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_ITEM",
+                "ProtoTag": "ConsumptionItem"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -3.1632862091064453,
+                0.9499997496604919,
+                -18.061697006225586,
+                1.0
+            ]
+        }
+    ]
+}
