@@ -354,5 +354,6 @@ void CCanvas_Main::Free()
 {
 	CCanvas::Free();
 
-	Safe_Release(m_pShaderUI);
+	if(CGameInstance::GetInstance()->Check_ObjectAlive(m_pShaderUI))
+		m_pShaderUI->SetDelete();
 }

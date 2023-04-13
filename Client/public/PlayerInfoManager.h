@@ -71,7 +71,7 @@ typedef struct tagPlayerStatus
 
 	_float m_fBaseAttackDamage;
 
-	_bool bBrainMap[3] = { false, };
+	_bool bBrainMap[3] = { true, true, true };
 
 	ESASType m_eAttack_SAS_Type;
 
@@ -262,7 +262,8 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
+	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

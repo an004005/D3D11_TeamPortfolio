@@ -319,6 +319,12 @@ void CCamSpot::Random_Shaking(_float fShakePower)
 		CMathUtils::RandomFloat(-fShakePower, fShakePower),
 		0.f);
 
+	//_vector vShakeDir = XMVectorSet(
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	CMathUtils::RandomFloat(fShakePower * 0.5f, fShakePower) * (rand() % 2 == 0 ? 1.f : -1.f),
+	//	0.f);
+
 	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos + vShakeDir);
 }
 

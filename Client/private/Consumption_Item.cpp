@@ -50,6 +50,8 @@ HRESULT CConsumption_Item::Initialize(void* pArg)
         }
     }
 
+    m_pTransformCom->SetTransformDesc({ 18.f, 18.f }); 
+
     return S_OK;
 }
 

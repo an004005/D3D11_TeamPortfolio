@@ -307,7 +307,13 @@ void CPlayer::Tick(_double TimeDelta)
 
 	Production_Tick(TimeDelta);
 
-	if (!m_DetectList.empty())
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField || CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		m_bOnBattle = true;
+		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
+		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
+	}
+	else if (!m_DetectList.empty())
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
 		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
@@ -561,13 +567,6 @@ void CPlayer::Tick(_double TimeDelta)
 	m_strCurStateName = m_pASM->GetCurStateName();
 	if (m_strBefStateName != m_strCurStateName)
 	{
-		Event_Trail(false);
-
-		for (auto& iter : m_vecWeapon)
-		{
-			static_cast<CScarletWeapon*>(iter)->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, false);
-		}
-
 		m_bActionAble = true;
 	}
 
@@ -733,7 +732,7 @@ void CPlayer::Tick(_double TimeDelta)
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dynamic();
 	}
 
-	m_pBattleChecker->Update_Tick(m_pTransformCom);
+	//m_pBattleChecker->Update_Tick(m_pTransformCom);
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -781,7 +780,7 @@ void CPlayer::AfterPhysX()
 {
 	__super::AfterPhysX();
 
-	m_pBattleChecker->Update_AfterPhysX(m_pTransformCom);
+	//m_pBattleChecker->Update_AfterPhysX(m_pTransformCom);
 
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
@@ -1413,6 +1412,7 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_ELETRIC == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_ELEC"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSwordParticle_Fire))
 				{
 					m_pSwordParticle_Fire->SetDelete();
@@ -1422,7 +1422,7 @@ void CPlayer::SasMgr()
 
 			if (ESASType::SAS_COPY == CPlayerInfoManager::GetInstance()->Get_PlayerSasList().back())
 			{
-				//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_HARDBODY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
+				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_COPY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				CPlayerInfoManager::GetInstance()->Set_Copy(true);
 			}
 		}
@@ -2114,11 +2114,11 @@ HRESULT CPlayer::SetUp_RigidBody()
 {
 	m_TransBattleSocket.push_back(m_pModel->Find_Animation("AS_ch0100_004_Up_trans_battle"));
 
-	Json jsonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PlayerBattleChecker.json");
-	Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"BattleChecker", (CComponent**)&m_pBattleChecker, &jsonTrigger);
-	NULL_CHECK(m_pBattleChecker);
+	//Json jsonTrigger = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/PlayerBattleChecker.json");
+	//Add_Component(LEVEL_NOW, L"Prototype_Component_RigidBody", L"BattleChecker", (CComponent**)&m_pBattleChecker, &jsonTrigger);
+	//NULL_CHECK(m_pBattleChecker);
 
-	m_pBattleChecker->SetOnTriggerIn([this](CGameObject* pGameObject)
+	/*m_pBattleChecker->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (auto pEnemy = dynamic_cast<CEnemy*>(pGameObject))
 		{
@@ -2157,9 +2157,9 @@ HRESULT CPlayer::SetUp_RigidBody()
 				}
 			}
 		}
-	});
+	});*/
 
-	m_pBattleChecker->UpdateChange();
+	//m_pBattleChecker->UpdateChange();
 
 	return S_OK;
 }
@@ -2885,7 +2885,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		}
 	});
 
-	m_pModel->Add_EventCaller("WeaponBright_On", [&]()
+	m_pModel->Add_EventCaller("Bright_On", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
 		{
@@ -2900,7 +2900,7 @@ HRESULT CPlayer::SetUp_EffectEvent()
 		}
 	});
 
-	m_pModel->Add_EventCaller("WeaponBright_Off", [&]()
+	m_pModel->Add_EventCaller("Bright_Off", [&]()
 	{
 		if (CPlayerInfoManager::GetInstance()->Get_Copy())
 		{
@@ -3694,8 +3694,6 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
 			}
 
-			Event_Trail(false);
-
 			IM_LOG("Kinetic No Use");
 		})
 		.Tick([&](double fTimeDelta)
@@ -3715,8 +3713,6 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			{
 				iter->GetParam().Float4s[0] = { 0.945098f, 0.4f, 1.f, 1.f };
 			}
-
-			Event_Trail(false);
 		})
 
 			.AddTransition("KINETIC_COMBO_NOUSE to KINETIC_COMBO_SLASH01", "KINETIC_COMBO_SLASH01")
@@ -5927,7 +5923,7 @@ void CPlayer::EnemyReportCheck()
 		}
 		else if (eAtkType == EAttackType::ATK_MIDDLE)
 		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f);
 			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Middle");
 		}
 
@@ -10255,7 +10251,11 @@ void CPlayer::Event_Kinetic_Throw()
 		m_SoundStore.PlaySound("fx_kinetic_shot", m_pTransformCom);
 	}
 
-	CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 15);
+	if (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField &&
+		false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+	{
+		CPlayerInfoManager::GetInstance()->Change_PlayerKineticEnergy(CHANGE_DECREASE, 15);
+	}
 }
 
 void CPlayer::Event_KineticSlowAction()
@@ -10275,18 +10275,6 @@ void CPlayer::Event_Trail(_bool bTrail)
 	else
 	{
 		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Trail_Setting(bTrail);
-	}
-
-	if (CPlayerInfoManager::GetInstance()->Get_Copy())
-	{
-		for (auto& iter : m_vecWeapon)
-		{
-			static_cast<CScarletWeapon*>(iter)->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, bTrail);
-		}
-	}
-	else
-	{
-		static_cast<CScarletWeapon*>(m_vecWeapon.front())->Set_Bright(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type, bTrail);
 	}
 }
 
@@ -10891,6 +10879,62 @@ _bool CPlayer::Detector(_bool bComplusion)
 
 	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
+	if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster") == nullptr ||
+		CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects().empty())
+	{
+		return false;
+	}
+	else
+	{
+		_float fDistance = 20.f;
+		list<pair<CGameObject*, _float>>	DistanceList;
+		for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster")->GetGameObjects())
+		{
+			//if ((!static_cast<CEnemy*>(iter)->IsDead()))
+			if ((!static_cast<CEnemy*>(iter)->IsDead()) && (!static_cast<CEnemy*>(iter)->Exclude()))
+			{
+				_float4 vTargetPos = iter->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float	fCurDistance = XMVectorGetX(XMVector3Length(vTargetPos - vMyPos));
+
+				if (fDistance > fCurDistance)
+				{
+					if (m_DetectList.empty())
+					{
+						m_DetectList.push_back(static_cast<CEnemy*>(iter));
+
+						if (false == m_bOnBattle)
+						{
+							m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+							m_bOnBattle = true;
+						}
+					}
+					else
+					{
+						for (auto& Detect : m_DetectList)
+						{
+							if (false == CGameInstance::GetInstance()->Check_ObjectAlive(Detect))
+								continue;
+
+							if (static_cast<CEnemy*>(iter) == Detect)
+								break;
+
+							if (Detect == m_DetectList.back())
+							{
+								m_DetectList.push_back(static_cast<CEnemy*>(iter));
+
+								if (false == m_bOnBattle)
+								{
+									m_pASM->InputAnimSocket("Netual_Saperate_Animation", m_TransBattleSocket);
+									m_bOnBattle = true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	for (auto& iter = m_DetectList.begin(); iter != m_DetectList.end();)
 	{
 		if (false == CGameInstance::GetInstance()->Check_ObjectAlive(*iter))
@@ -10921,10 +10965,12 @@ _bool CPlayer::Detector(_bool bComplusion)
 		}
 		else
 		{
+			IM_LOG("DETECT : %f", m_DetectList.size());
 			return true;
 		}
 	}
 
+	IM_LOG("DETECT : %f", m_DetectList.size());
 	return false;
 }
 
@@ -12167,7 +12213,7 @@ void CPlayer::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pController);
 	Safe_Release(m_pPlayerCam);
-	Safe_Release(m_pBattleChecker);
+	//Safe_Release(m_pBattleChecker);
 
 	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayer_AnimCam))
 		Safe_Release(m_pPlayer_AnimCam);
