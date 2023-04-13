@@ -1561,7 +1561,10 @@
     <ClInclude Include="..\public\EM8200_CopyRush.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
-    <ClInclude Include="EM8200_BrainField.h" />
+    <ClInclude Include="EM8200_BrainField.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EnviromentEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2559,7 +2562,10 @@
     <ClCompile Include="..\private\EM8200_CopyRush.cpp">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
-    <ClCompile Include="EM8200_BrainField.cpp" />
+    <ClCompile Include="EM8200_BrainField.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EnviromentEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
