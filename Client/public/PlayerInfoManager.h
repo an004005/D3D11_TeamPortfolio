@@ -240,10 +240,6 @@ public:
 	HRESULT			Set_PlayerCam(CCamera* pAnimCam);
 	CCamera*		Get_PlayerCam();
 
-public:
-		HRESULT         Set_PlayerCam(CCamera* pAnimCam);
-		CCamera* Get_PlayerCam();
-
 private:	// 스탯 정보 관련
 	PLAYER_STAT		m_tPlayerStat;
 	list<ESASType>		m_PlayerSasTypeList;
@@ -258,7 +254,6 @@ private:	// 상호작용 관련
 	CCamera*			m_pPlayerCam = nullptr;
 private:
 	CGameObject*	m_pCamSpot = nullptr;
-	CCamera*		m_pPlayerCam = nullptr;
 
 private:
 	_matrix			m_PlayerWorldMatrix = XMMatrixIdentity();

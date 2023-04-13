@@ -627,26 +627,6 @@ CCamera* CPlayerInfoManager::Get_PlayerCam()
 	return nullptr;
 }
 
-HRESULT CPlayerInfoManager::Set_PlayerCam(CCamera* pCam)
-{
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(pCam))
-	{
-		m_pPlayerCam = pCam;
-	}
-
-	return S_OK;
-}
-
-CCamera* CPlayerInfoManager::Get_PlayerCam()
-{
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayerCam))
-	{
-		return m_pPlayerCam;
-	}
-
-	return nullptr;
-}
-
 void CPlayerInfoManager::SAS_Checker()
 {
 	for (_uint i = 0; i < SAS_CNT; ++i)
