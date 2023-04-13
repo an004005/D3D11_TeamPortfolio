@@ -45,6 +45,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 		m_eEnemyName = EEnemyName::EM1100;
 		m_bHasCrushGauge = true;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -233,10 +234,15 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
-			/*.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })*/
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+
+			.AddTransition("Idle to Hit_Light", "Hit_Light")
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
+
 			.AddTransition("Idle to Dodge_Start", "Dodge_Start")
 				.Predicator([this] { return m_eInput == CController::SHIFT; })
 
@@ -257,17 +263,40 @@ void CEM1100::SetUpFSM()
 			
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-			.AddState("Hit_Heavy")
-				.OnStart([this]
-			{
-				//Play_MidHitAnim();
+
+		.AddState("Hit_Light")
+			.OnStart([this]
+			{		
 				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_END);
+				})
+
+
+		.AddState("Hit_Heavy")
+			.OnStart([this]
+			{
+				Play_MidHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+				if(m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
 					Play_MidHitAnim();
 				}
@@ -285,7 +314,8 @@ void CEM1100::SetUpFSM()
 				{
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY;
 				})
 		.AddState("Death")
 				.OnStart([this]
@@ -334,7 +364,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Dodge_Start to Dodge_Stop", "Dodge_Stop")
 				.Predicator([this]
 				{
-					return  m_bDead || (m_bDodge && m_bOnFloor);
+					return  PriorityCondition() || (m_bDodge && m_bOnFloor);
 				})
 
 				//착지. 움직임x
@@ -354,7 +384,7 @@ void CEM1100::SetUpFSM()
 				.AddTransition("Dodge_Stop to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -378,7 +408,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("WaterAttack_Omen to WaterAttack_Start", "WaterAttack_Start")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.99f);
 					})
 
 		.AddState("WaterAttack_Start")
@@ -419,7 +449,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("WaterAttack_Start to WaterAttack_End", "WaterAttack_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("WaterAttack_End")
@@ -450,7 +480,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("WaterAttack_End to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		//셋다 로컬있음 , 전기볼이 플레이어를 쫓아가야함, 이벤트로 전기볼 생성
@@ -471,7 +501,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("ElectricBall_Omen to ElectricBall_Start", "ElectricBall_Start")
 				.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 
 		.AddState("ElectricBall_Start")
@@ -490,7 +520,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("ElectricBall_Start to ElectricBall_End", "ElectricBall_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("ElectricBall_End")
@@ -505,7 +535,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("ElectricBall_End to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -527,7 +557,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Stamp_Omen to Stamp_Start", "Stamp_Start")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Stamp_Start")
@@ -546,7 +576,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Stamp_Start to Stamp_End", "Stamp_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Stamp_End")
@@ -565,7 +595,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Stamp_End to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -587,7 +617,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Rush_Omen to Rush_Start", "Rush_Start")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Rush_Start")
@@ -612,7 +642,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("Rush_Start to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.99f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 		.AddState("Rush_End")
@@ -659,7 +689,7 @@ void CEM1100::SetUpFSM()
 			.AddTransition("TailSwing to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -775,9 +805,9 @@ _bool CEM1100::IsPlayingSocket() const
 void CEM1100::Play_LightHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_401_AL_damage_l_F");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_401_AL_damage_l_F");
 	else
-		m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_402_AL_damage_l_B");
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_402_AL_damage_l_B");
 }
 
 void CEM1100::Play_MidHitAnim()
@@ -835,7 +865,7 @@ void CEM1100::Create_Bullet()
 			.Set_Target(m_pTarget)
 			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
 			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
-			.Set_ShootSpeed(7.f)
+			.Set_ShootSpeed(10.f)
 			.Set_Life(5.f)
 			.Set_DamageParam(eDamageParam)
 			.Set_DeadBulletEffect({ L"em1100_Elec_Bullet_Dead" })
@@ -898,6 +928,11 @@ _bool CEM1100::CanMove4BC(_float fMinDist)
 
 	//장애물이 없으니 무조건 가능
 	return true;
+}
+
+_bool CEM1100::PriorityCondition()
+{
+	return m_bDead || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 }
 
 void CEM1100::Rush_SweepSphere()
@@ -1021,7 +1056,7 @@ void CEM1100::WaterLoop_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.8f), EAttackType::ATK_LIGHT);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.8f), EAttackType::ATK_END);
 	}
 }
 

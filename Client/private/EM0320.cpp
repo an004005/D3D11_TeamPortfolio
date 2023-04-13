@@ -50,6 +50,7 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 		m_eEnemyName = EEnemyName::EM0320;
 		m_bHasCrushGauge = false;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));

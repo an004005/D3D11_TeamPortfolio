@@ -12,6 +12,7 @@
 #include "EMCable.h"
 #include "PlayerInfoManager.h"
 #include "HelperClasses.h"
+#include "ShaderUI.h"
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -45,6 +46,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 		m_eEnemyName = EEnemyName::EM1200;
 		m_bHasCrushGauge = true;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -56,6 +58,11 @@ HRESULT CEM1200::Initialize(void * pArg)
 	//fog
 	m_pRendererCom->GetFogDesc().vFogColor = _float3(0.2667f, 0.247f, 0.1804f);
 	m_pRendererCom->GetFogDesc().fStartDepth = 5.f;
+
+	//shaderUI
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
+	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
 	return S_OK;
 }
 
@@ -311,15 +318,21 @@ void CEM1200::SetUpMainFSM()
 			{
 				m_fGravity = 20.f;
 				})
-		.AddTransition("Idle to Death", "Death")
-					.Predicator([this] { return m_bDead; })
-					.AddTransition("Idle to Down", "Down")
-					.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END
-						|| m_eInput == CController::EHandleInput::CTRL; })
+			.AddTransition("Idle to Death", "Death")
+				.Predicator([this] { return m_bDead; })
+			.AddTransition("Idle to Down", "Down")
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END
+					|| m_eInput == CController::EHandleInput::CTRL; })
 
-			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
-	
+	/*		.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+				.Predicator([this] { return
+					(m_eCurAttackType == EAttackType::ATK_HEAVY
+					&& m_bChangePhase); })*/
+
+			//.AddTransition("Idle to Hit_Light", "Hit_Light")
+			//	.Predicator([this] { return
+			//		m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
+
 
 			.AddTransition("Idle to Fall", "Fall")
 				.Predicator([this] { return m_eInput == CController::EHandleInput::F; })
@@ -405,25 +418,45 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Getup to Idle", "Idle")
 					.Predicator([this]
 					{
-						return m_bDead
+						return PriorityCondition()
 							|| m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+		.AddState("Hit_Light")
+			.OnStart([this]
+			{
+				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_END);
+				})
+
 		.AddState("Hit_Heavy")
 			.OnStart([this]
 			{
-					Play_LightHitAnim();
+				Play_MidHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
+				if(m_eCurAttackType == EAttackType::ATK_HEAVY)
 				{
-					HeavyAttackPushStart();
-					Play_LightHitAnim();
+					Play_MidHitAnim();
 				}
 
 				_float fPower;
@@ -438,7 +471,9 @@ void CEM1200::SetUpMainFSM()
 				.Predicator([this]
 				{
 					return m_bDead
-						|| m_pASM->isSocketPassby("FullBody", 0.95f);
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 				})
 
 		.AddState("Death")
@@ -476,7 +511,7 @@ void CEM1200::SetUpMainFSM()
 			.AddTransition("Fall to Idle", "Idle")
 				.Predicator([this]
 				{
-					return  m_bDead || m_pASM->isSocketEmpty("FullBody");
+					return  PriorityCondition() || m_pASM->isSocketEmpty("FullBody");
 				})
 
 		//Loop때만 데미지 처리
@@ -494,7 +529,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout1_Start to Shout1_Loop", "Shout1_Loop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 		.AddState("Shout1_Loop")
@@ -536,7 +571,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout1_Loop to Shout1_End", "Shout1_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_dLoopTime >= 3.0;
+						return  PriorityCondition() || m_dLoopTime >= 3.0;
 					})
 
 			.AddState("Shout1_End")
@@ -552,7 +587,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout1_End to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 
@@ -573,7 +608,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout2_Start to Shout2_Loop", "Shout2_Loop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Shout2_Loop")
@@ -621,7 +656,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout2_Loop to Shout2_End", "Shout2_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_dLoopTime >= 3.0;
+						return  PriorityCondition() || m_dLoopTime >= 3.0;
 					})
 
 			.AddState("Shout2_End")
@@ -636,7 +671,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Shout2_End to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 
@@ -654,7 +689,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Stamp_Start to Stamp_StartLoop", "Stamp_StartLoop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Stamp_StartLoop")
@@ -673,7 +708,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Stamp_StartLoop to Stamp_Hit", "Stamp_Hit")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Stamp_Hit")
@@ -688,7 +723,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Stamp_Hit to Stamp_Loop", "Stamp_Loop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Stamp_Loop")
@@ -705,7 +740,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Stamp_Loop to Stamp_End", "Stamp_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_dLoopTime >= 2.0;
+						return  PriorityCondition() || m_dLoopTime >= 2.0;
 					})
 
 			.AddState("Stamp_End")
@@ -720,7 +755,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Stamp_End to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			//얜 절대 로컬 움직이지않기
@@ -742,7 +777,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Swing_L to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Swing_R")
@@ -763,7 +798,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Swing_R to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			//Loop빼고 로컬, Start때 이벤트로 sweep 타이밍 알려줌
@@ -783,7 +818,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Rush_Start to Rush_Loop", "Rush_Loop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Rush_Loop")
@@ -804,7 +839,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_dLoopTime >= 3.0;
+						return  PriorityCondition() || m_dLoopTime >= 3.0;
 					})
 
 			.AddState("Rush_End")
@@ -819,7 +854,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Rush_End to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			//Start끝나는 모션이 조금 길게한데 걍 루프에서.. 4번 공격하고 끝남
@@ -838,7 +873,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Cable_Start to Cable_Loop", "Cable_Loop")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 
 			.AddState("Cable_Loop")
@@ -887,7 +922,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Cable_Loop to Cable_End", "Cable_End")
 					.Predicator([this]
 					{
-						return  m_bDead || m_iAttackCount == 4;
+						return  PriorityCondition() || m_iAttackCount == 4;
 					})
 				
 			.AddState("Cable_End")
@@ -902,7 +937,7 @@ void CEM1200::SetUpMainFSM()
 				.AddTransition("Cable_End to Idle", "Idle")
 					.Predicator([this]
 					{
-						return  m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+						return  PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 					})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -926,6 +961,7 @@ void CEM1200::SetUpChange()
 {
 	CEnemy::SetUpFSM();
 
+	m_OnAnimCam = true;
 	m_pController->SetActive(false);
 	m_pEMUI->Delete_UIInfo();
 
@@ -961,15 +997,7 @@ void CEM1200::Tick(_double TimeDelta)
 	m_eTurn = m_pController->GetBaseTurn();
 	m_bChangePhase = m_pController->IsChangePhase();
 
-	//AnimCam
-	if (m_bChangePhase == true)
-	{
-		m_bSetUpChange.IsNotDo([this]
-		{
-				m_OnAnimCam = true;
-				SetUpChange();
-		});
-	}
+	PlayAnimCam_PhaseChange();
 
 	//ASM, FSM tick
 	if(m_pFSM != nullptr)
@@ -1096,6 +1124,11 @@ _bool CEM1200::IsPlayingSocket() const
 	return m_pASM->isSocketEmpty("FullBody") == false;
 }
 
+_bool CEM1200::PriorityCondition()
+{
+	return m_bDead || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+}
+
 void CEM1200::Play_LightHitAnim()
 {
 	if (m_bChangePhase == false)
@@ -1115,28 +1148,28 @@ void CEM1200::Play_LightHitAnim()
 	
 }
 
-//void CEM1200::Play_MidHitAnim()
-//{
-//	switch (m_eHitFrom)
-//	{
-//	case EBaseAxis::NORTH:
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_411_AL_damage_m_F2");
-//		break;
-//	case EBaseAxis::EAST:
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_414_AL_damage_m_R2");
-//		break;
-//	case EBaseAxis::SOUTH:
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_412_AL_damage_m_B2");
-//		break;
-//	case EBaseAxis::WEST:
-//		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_413_AL_damage_m_L2");
-//		break;
-//	case EBaseAxis::AXIS_END:
-//		FALLTHROUGH;
-//	default:
-//		NODEFAULT;
-//	}
-//}
+void CEM1200::Play_MidHitAnim()
+{
+	switch (m_eHitFrom)
+	{
+	case EBaseAxis::NORTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_411_AL_damage_m_F2");
+		break;
+	case EBaseAxis::EAST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_414_AL_damage_m_R2");
+		break;
+	case EBaseAxis::SOUTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_412_AL_damage_m_B2");
+		break;
+	case EBaseAxis::WEST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_413_AL_damage_m_L2");
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH;
+	default:
+		NODEFAULT;
+	}
+}
 
 void CEM1200::HeavyAttackPushStart()
 {
@@ -1209,6 +1242,52 @@ void CEM1200::FogControl(_double TimeDelta)
 	}
 }
 
+void CEM1200::PlayAnimCam_PhaseChange()
+{
+	//AnimCam
+	if (m_bChangePhase == true)
+	{
+		m_bSetUpChange.IsNotDo([this]
+		{
+				m_bAlpha = true;
+				m_pShaderUI->SetVisible(true);
+		});
+	}
+
+	if(m_iUseCound++ == 0 && m_bGetBright)
+	{
+		SetUpChange();
+	}
+	else if (m_iUseCound == 1 && m_bGetBright)
+	{
+
+	}
+
+	if (false == m_bAlpha)
+		return;
+
+	m_pShaderUI->Set_Size({ _float(g_iWinSizeX), _float(g_iWinSizeY) });
+	_float fAlpha = m_pShaderUI->Get_Float4s_W();
+	if (m_bReverse == false && fAlpha >= 0.5f)
+	{
+		m_bReverse = true;
+	}
+	else if (m_bReverse == true && fAlpha <= 0.0f)
+	{
+		m_bReverse = false;
+		m_bAlpha = false;
+		m_pShaderUI->SetVisible(false);
+		m_bGetBright = true;
+	}
+
+	_float fSpeed = 0.3f;
+	if (m_bReverse == false)
+		fAlpha += _float(TIME_DELTA) * fSpeed;
+	else
+		fAlpha -= _float(TIME_DELTA) * fSpeed;
+	m_pShaderUI->Set_Float4s_W(fAlpha);
+}
+
 void CEM1200::Fall_Overlap()
 {
 	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
@@ -1254,29 +1333,6 @@ void CEM1200::Shout_Overlap()
 		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
 	}
 }
-
-//void CEM1200::Shout2_Overlap()
-//{
-//	_matrix BoneMatrix = m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix();
-//
-//	_vector vBoneVector = BoneMatrix.r[3];
-//	_float3 fBone = vBoneVector + XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 6.f;
-//
-//	physx::PxOverlapHit hitBuffer[3];
-//	physx::PxOverlapBuffer overlapOut(hitBuffer, 3);
-//
-//	SphereOverlapParams param;
-//	param.fVisibleTime = 1.f;
-//	param.iTargetType = CTB_PLAYER;
-//	param.fRadius = 7.f;
-//	param.vPos = XMVectorSetW(fBone, 1.f);
-//	param.overlapOut = &overlapOut;
-//
-//	if (CGameInstance::GetInstance()->OverlapSphere(param))
-//	{
-//		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
-//	}
-//}
 
 void CEM1200::Stamp_Overlap()
 {
@@ -1386,4 +1442,5 @@ void CEM1200::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pAnimCam);
 }

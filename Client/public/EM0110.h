@@ -46,7 +46,8 @@ public:
 	void Adjust_MoveAxis(_double TimeDelta);
 
 private:
-	void Play_HeavyHitAnim();
+	void Play_LightHitAnim();
+	void Play_MidHitAnim();
 	void	HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
 

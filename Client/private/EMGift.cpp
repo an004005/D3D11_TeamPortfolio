@@ -28,7 +28,6 @@ HRESULT CEMGift::Initialize(void* pArg)
 	m_pModelCom.fill(nullptr);
 
 	SetUpComponents();
-
 	return S_OK;
 }
 
