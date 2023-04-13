@@ -8,6 +8,7 @@
 #include "CamSpot.h"
 #include "JsonStorage.h"
 #include "Canvas_Alarm.h"
+#include "Camera.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 

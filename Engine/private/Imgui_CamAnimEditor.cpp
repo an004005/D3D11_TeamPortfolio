@@ -258,6 +258,7 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 		string strEventName(szEventName);
 		auto pModelTester = m_Models.find(strSelectModel)->second;
 
+		
 		if (m_AnimEvents.find(strEventName) == m_AnimEvents.end())
 		{
 			list<pair<CModelTester*, string>> tmp;
@@ -266,7 +267,10 @@ void CImgui_CamAnimEditor::Imgui_RenderTab()
 
 		auto eventList = m_AnimEvents.find(strEventName);
 
-		eventList->second.push_back({ pModelTester, strAnimName });
+		if (pModelTester != nullptr)
+			eventList->second.push_back({ pModelTester, strAnimName });
+		else
+			MSG_BOX("No Exist Selected Model");
 	}
 
 }

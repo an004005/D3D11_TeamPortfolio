@@ -6116,6 +6116,12 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0300_101_AL_wait01": {
+        "Duration": 240.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em0300_111_AL_walk_L_start": {
         "Duration": 60.0,
         "TickPerSecond": 48.0,
@@ -6225,12 +6231,12 @@
     },
     "AS_em0300_411_AL_WT_break": {
         "Duration": 70.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 15.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "DeadFlower",
-                "EventTime": 37.0
+                "EventTime": 60.0
             }
         ]
     },
@@ -7883,7 +7889,7 @@
     },
     "AS_em1100_215_AL_atk_a5_drainage_start": {
         "Duration": 77.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 60.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -7982,6 +7988,10 @@
             {
                 "EventName": "Fall",
                 "EventTime": 175.0
+            },
+            {
+                "EventName": "crawl_move_groggy",
+                "EventTime": 85.0
             }
         ]
     },
@@ -8730,6 +8740,18 @@
     "AS_em8200_481_AL_down_B_shock": {
         "Duration": 200.0,
         "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_m02c00920c01_em1200": {
+        "Duration": 971.0,
+        "TickPerSecond": 40.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_m02c00920c02_em1200": {
+        "Duration": 533.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": []
     },

@@ -32,22 +32,24 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	m_strDeathSoundTag = "tree_fx_death";
 
-	// 배치툴에서 조절할 수 있게 하기
+	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 3000;
-		m_iHP = 3000; // ★
+		m_iMaxHP = LEVEL_NOW * 500;
+		m_iHP = m_iMaxHP;
 
-		m_iCrushGauge = 8000;
-		m_iMaxCrushGauge = 8000;
+		m_iMaxCrushGauge = m_iMaxHP * 10.f;
+		m_iCrushGauge = m_iMaxCrushGauge;
 
-		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
+		iEemeyLevel = 34;
+		m_iAtkDamage = 180;
+
+		m_eEnemyName = EEnemyName::EM1100;
+		m_bHasCrushGauge = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-	m_eEnemyName = EEnemyName::EM1100;
-	m_bHasCrushGauge = true;
+
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	m_fGravity = 20.f;
@@ -235,9 +237,6 @@ void CEM1100::SetUpFSM()
 				.Predicator([this] { return
 					m_eCurAttackType == EAttackType::ATK_HEAVY
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })*/
-			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_bCrushStart; })
-	
 			.AddTransition("Idle to Dodge_Start", "Dodge_Start")
 				.Predicator([this] { return m_eInput == CController::SHIFT; })
 
@@ -360,85 +359,6 @@ void CEM1100::SetUpFSM()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-		.AddState("BrainCrushStart")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody",  "AS_em1100_485_AL_BCchance_start");
-			})
-			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
-				.Predicator([this]
-				{
-					return m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
-
-		.AddState("BrainCrushLoop")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_486_AL_BCchance_loop");
-				m_pModelCom->Find_Animation("AS_em1100_486_AL_BCchance_loop")->SetLooping(true);
-
-				//브레인 생성
-				m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
-
-				m_BCLoopTime = 0.0;
-			})
-			.Tick([this](_double TimeDelta)
-			{
-					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
-					m_BCLoopTime += TimeDelta;
-			})
-
-			.AddTransition("BrainCrushLoop to BrainCrushLoopDead", "BrainCrushLoopDead")
-				.Predicator([this]
-				{
-					//브레인 크러쉬를 하지 않았을때는 부모쪽에서 3초 안에 죽임
-					return m_BCLoopTime >= 3.0;
-				})
-			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
-				.Predicator([this]
-					{
-						return	m_bBrainCrush;
-					})
-		.AddState("BrainCrushLoopDead")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_487_AL_BCchance_end");
-				m_pBrain->SetDelete();
-				SetDead();
-			})
-		
-		.AddState("BrainCrushEnd")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em1100m_em1100");
-				m_pBrain->BeginBC();
-			})
-			.Tick([this](_double)
-			{
-					SocketLocalMove(m_pASM);
-
-					if (m_pBrain != nullptr)
-					{
-						_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
-
-						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
-						const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.55f;
-
-						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
-						{
-							m_pBrain->EndBC();
-							m_pBrain->SetDelete();
-							m_pBrain = nullptr;
-							SetDead();
-						}
-					}
-				
-			})
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
 		//셋다 로컬, 이벤트 없이 start에서 데미지 처리 해주면됨
 		.AddState("WaterAttack_Omen")
 			.OnStart([this]
@@ -516,7 +436,7 @@ void CEM1100::SetUpFSM()
 				SocketLocalMove(m_pASM);
 				m_dLoopTime += TimeDelta;
 
-				if (m_dLoopTime > 0.7)
+				if (m_dLoopTime > 1.0)
 				{
 					m_dLoopTime = 0.0;
 					ClearDamagedTarget();
@@ -842,37 +762,9 @@ _bool CEM1100::IsWeak(CRigidBody* pHitPart)
 	return 	pHitPart == GetRigidBody("Weak");
 }
 
-void CEM1100::PlayBC()
+_float4 CEM1100::GetKineticTargetPos()
 {
-	__super::PlayBC();
-
-	// 브레인 크러시 동작 중에는 모든 콜라이더를 사용하지 않도록 함
-	m_pCollider->SetActive(false);
-	for (auto& iter : m_pRigidBodies)
-	{
-		iter.second->Activate(false);
-	}
-
-	const _float fMinDist = 5.f; //플레이어에서 벽까지의 거리, 
-	const _float fMaxDist = 7.f; //플레이어에서 몬스터까지의 거리
-
-	m_CanFullBC = CanMove4BC(fMinDist);
-
-	//가까우면 들어서 올림
-	if (m_CanFullBC == false) return;
-
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vTargetLook = m_pTarget->GetTransform()->Get_State(CTransform::STATE_LOOK);
-
-	_vector vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_float fDist = XMVectorGetX(XMVector4Length(vMyPos - vTargetPos));
-
-	//너무 멀면 이동 안시킴
-	if (fDist > fMaxDist)
-	{
-		m_CanFullBC = false;
-		return;
-	}
+	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
 }
 
 _bool CEM1100::IsPlayingSocket() const
@@ -1156,6 +1048,9 @@ void CEM1100::AfterLocal180Turn()
 
 void CEM1100::Adjust_MoveAxis(_double TimeDelta)
 {
+	if (m_pModelCom->GetPlayAnimation() == nullptr)
+		return;
+
 	if (m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		_float3 vVelocity;
