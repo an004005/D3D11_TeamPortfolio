@@ -175,8 +175,19 @@ void CRenderer::Clear()
 
 	for (_uint i = 0; i < RENDER_END; ++i)
 	{
+
+		_uint iCnt = 0;
 		for (auto& pGameObject : m_RenderObjects[i])
+		{
+			if (!CGameInstance::GetInstance()->Check_ObjectAlive(pGameObject))
+			{
+				int iA = i;
+				IM_LOG("%d", iA);
+			}
 			Safe_Release(pGameObject);
+			iCnt++;
+		}
+
 
 		m_RenderObjects[i].clear();
 	}
