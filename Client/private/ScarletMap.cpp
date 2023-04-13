@@ -389,6 +389,15 @@ void CScarletMap::SetVisible_MapObjects(_bool bVisible)
 		pMapObj->SetVisible(bVisible);
 }
 
+void CScarletMap::SetPos_MapObjects(_float4 vPos)
+{
+	_vector _vPos = vPos;
+	for (auto pMapObj : m_pMapObjects)
+	{
+		pMapObj->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _vPos);
+	}
+}
+
 
 HRESULT CScarletMap::SetUp_Components()
 {

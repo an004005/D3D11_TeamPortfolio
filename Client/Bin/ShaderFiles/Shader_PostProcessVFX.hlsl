@@ -616,19 +616,44 @@ PS_OUT PS_BRAINFIELD_MAP_14(PS_IN In)
 
 	if (vFlag.y == SHADER_POST_OBJECTS || vFlagNonAlpha.y == SHADER_POST_OBJECTS || fViewZ >= g_Far)
 	{
-		if (g_int_0 == 0) // 기존 맵 검게 지우기
+		if (g_int_0 == 0) 
 		{
-			if (g_float_0 >= 1.f)
-				Out.vColor.rgb = 0.f;
-			else if (g_float_0 >= 0.7f)
+			if (g_float_2 > 0.f) // 브레인 필드 뒤 잠깐 보이기용
 			{
-				float fRemap = Remap(g_float_0, float2(0.7f, 1.f), float2(0.f, 1.f));
-				Out.vColor.rgb = lerp(float3(1.f, 0.2f, 0.1f), (float3)0.f, fRemap);
+				vector		vWorldPos;
+				vWorldPos.x = In.vTexUV.x * 2.f - 1.f;
+				vWorldPos.y = In.vTexUV.y * -2.f + 1.f;
+				vWorldPos.z = vDepthDesc.x; /* 0 ~ 1 */
+				vWorldPos.w = 1.0f;
+			 
+				vWorldPos *= fViewZ;
+				vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+				vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+				float fDistance = length(vWorldPos - g_vCamPosition);
+				if (fDistance > 50.f && fDistance < g_Far)
+				{
+					Out.vColor.rgb = lerp(0.f, float3(1.f, 0.f, 0.f), g_float_2);
+				}
+				else
+				{
+					Out.vColor.rgb = 0.f;
+				}
 			}
-			else if (g_float_0 > 0.f)
+			else// 기존 맵 검게 지우기
 			{
-				float fRemap = Remap(g_float_0, float2(0.f, 0.7f), float2(0.f, 1.f));
-				Out.vColor.rgb = lerp(Out.vColor.rgb, float3(1.f, 0.2f, 0.1f), fRemap);
+				if (g_float_0 >= 1.f)
+					Out.vColor.rgb = 0.f;
+				else if (g_float_0 >= 0.7f)
+				{
+					float fRemap = Remap(g_float_0, float2(0.7f, 1.f), float2(0.f, 1.f));
+					Out.vColor.rgb = lerp(float3(1.f, 0.2f, 0.1f), (float3)0.f, fRemap);
+				}
+				else if (g_float_0 > 0.f)
+				{
+					float fRemap = Remap(g_float_0, float2(0.f, 0.7f), float2(0.f, 1.f));
+					Out.vColor.rgb = lerp(Out.vColor.rgb, float3(1.f, 0.2f, 0.1f), fRemap);
+				}
 			}
 		}
 		else if (g_int_0 == 1 && g_float_0 < 1.f)// 맵 다시 보이게 하기(기존 맵 복원 및 브레인 필드맵 보이기용)

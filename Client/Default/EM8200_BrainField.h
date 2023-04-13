@@ -63,6 +63,7 @@ private:
 
 	CSimpleTimeline m_CloseTimeline;
 	CDoOnce m_VisibleBrainFieldOnce;
+	class CEffectGroup* m_pBrainFieldFloor = nullptr;
 
 
 public:

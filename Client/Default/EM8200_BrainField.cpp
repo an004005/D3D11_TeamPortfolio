@@ -15,6 +15,7 @@
 #include "MapInstance_Object.h"
 #include "RedString.h"
 #include "CurveFloatMapImpl.h"
+#include "Player.h"
 #include "PostVFX_WhiteOut.h"
 
 
@@ -64,11 +65,27 @@ HRESULT CEM8200_BrainField::Initialize(void* pArg)
 		m_pBrainFieldMap = dynamic_cast<CScarletMap*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
 		m_pBrainFieldMap->SetVisible_MapObjects(false);
 		CMapInstance_Object::s_bPhysX = true;
+
+		for (auto pMapObj : m_pBrainFieldMap->GetMapObjects())
+		{
+			if (auto pInstanceMapObj = dynamic_cast<CMapInstance_Object*>(pMapObj))
+			{
+				for (auto pMtrl : pInstanceMapObj->Get_Model_Instancing()->GetMaterials())
+				{
+					if (pMtrl->GetParam().iPass == 6 || pMtrl->GetParam().iPass == 9)
+					{
+						pMtrl->GetParam().Float4s[0] = _float4(0.f, 0.f, 1.f, 0.f);
+					}
+				}
+			}
+		}
 	}
 	{
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
 		m_pBrainFieldRedString = dynamic_cast<CCombinedRedString*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
 		m_pBrainFieldRedString->SetVisible(false);
+		m_pBrainFieldRedString->SetPass(2); // blue pass
+		
 	}
 
 	m_CloseTimeline.SetCurve("SimpleIncrease_2xSlow");
@@ -133,7 +150,6 @@ void CEM8200_BrainField::Tick(_double TimeDelta)
 			m_pPostProcess->GetParam().Floats[0] = m_pBlackWhite_Trans->GetValue(fPlayRatio);
 			m_pWhiteOut->GetParam().Floats[0] = m_pWhiteOut_Trans->GetValue(fPlayRatio);
 		}
-		
 	}
 	else
 	{
