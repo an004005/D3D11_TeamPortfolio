@@ -94,11 +94,14 @@ void CCanvas_BossHpMove::SaveToJson(Json& json)
 void CCanvas_BossHpMove::LoadFromJson(const Json & json)
 {
 	CCanvas::LoadFromJson(json);
+
+	iEnemLevel = _float(json["Level"]);
+	m_eEnemyName = EEnemyName(json["Name"]);
 }
 
 void CCanvas_BossHpMove::Set_BossHp(const _float & fHp)
 {
-	m_pCanvas_BossHp->Set_BossHp();
+	m_pCanvas_BossHp->Set_NoMove();
 	
 	Find_ChildUI(L"Boss_Hp")->SetVisible(true);
 	Find_ChildUI(L"Boss_HPBack")->SetVisible(true);
@@ -126,10 +129,17 @@ void CCanvas_BossHpMove::Partner_Initialize()
 	m_pCanvas_BossHp = dynamic_cast<CCanvas_BossHp*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_BossHp", &json));
 	assert(m_pCanvas_BossHp != nullptr && "Failed to Clone : CCanvas_BossHp");
 
-	//_float fNameIndex = 0.0f;
-	//if(EEnemyName::EM0320 == m_eEnemyName) fNameIndex = 10.0f;
-
-	//m_pCanvas_BossHp->Set_Name(fNameIndex);
+	_float2 fIndex = { 0.0f, 0.0f };
+	if (EEnemyName::EM0800 == m_eEnemyName) {
+		if (10 == iEnemLevel) fIndex = { 0.0f,10.0f };
+		else if (18 == iEnemLevel) fIndex = { 1.0f, 10.0f };
+	}
+	else if (EEnemyName::EM0320 == m_eEnemyName) fIndex = { 0.0f, 4.0f };
+	else if (EEnemyName::EM1100 == m_eEnemyName) fIndex = { 0.0f, 12.0f };
+	else if (EEnemyName::EM1200 == m_eEnemyName) fIndex = { 0.0f, 11.0f };
+	else if (EEnemyName::EM8200 == m_eEnemyName) fIndex = { 0.0f, 13.0f };
+	
+	m_pCanvas_BossHp->Set_LevelName(fIndex.x, fIndex.y);
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));

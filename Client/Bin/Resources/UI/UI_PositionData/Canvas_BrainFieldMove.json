@@ -125,15 +125,15 @@
                 "Float4s": [],
                 "Float4x4s": [],
                 "Floats": [
-                    0.07000000029802322
+                    0.03
                 ],
                 "Ints": [
-                    10,
+                    3,
                     1
                 ],
-                "Pass": 9,
+                "Pass": 37,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Front_UI\\BrainFieldMove10_112,104.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Front_UI\\BrainFieldMove3_112,104.png\u0000"
                 ]
             },
             "SizeX": 112.0,

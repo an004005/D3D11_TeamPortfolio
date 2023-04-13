@@ -26,10 +26,6 @@ public:
 	void	Set_BossHp(const _float & fHp); // 0~1 사이로 계산된 값을 던지기! currenthp/maxhp
 	void	Set_BossShild(const _float & fShild);
 
-	void	Set_Name(const EEnemyName eEnemyName) {
-		m_eEnemyName = eEnemyName;
-	}
-
 private:
 	void	Partner_Initialize();
 
@@ -39,6 +35,7 @@ private:
 
 private:
 	_float m_fCurrentHp = { 0.0f };
+	_uint iEnemLevel = { 0 };
 	EEnemyName	m_eEnemyName = EEnemyName::ENEMY_NAME_END;
 
 public:

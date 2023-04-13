@@ -17,8 +17,8 @@ public:
 	virtual void	Tick(_double TimeDelta) override;
 
 public:
-	void	Set_BossHp();
-	void	Set_Name(const _float fName);
+	void	Set_NoMove();
+	void	Set_LevelName(const _float iLevel, const _float fName);
 
 public:
 	static CCanvas_BossHp* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

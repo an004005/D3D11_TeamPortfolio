@@ -37,9 +37,7 @@ void CCanvas_BrainFieldMove::Tick(_double TimeDelta)
 
 	_float fBrain = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain;
 	_float fMaxBrain = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain;
-	_float fRatio = 1.0f - (fBrain / fMaxBrain);
-
-	IM_LOG("%f, %f, %f", fBrain, fMaxBrain, fRatio);
+	_float fRatio = (fBrain / fMaxBrain);
 
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"BrainFieldGauge"))->Set_Floats0(fRatio);
 	dynamic_cast<CShaderUI*>(Find_ChildUI(L"BrainFieldGaugeB"))->Set_Floats0(fRatio);

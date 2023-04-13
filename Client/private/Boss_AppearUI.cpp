@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "..\public\Boss_AppearUI.h"
 #include "GameInstance.h"
-#include "UI_Manager.h"
 
 // g_vec2_0 의 x 값을 변경하여 텍스처를 돌려준다.
 // g_vec4_0 의 w 값을 변경하여 알파값을 변경한다.
@@ -39,8 +38,6 @@ void CBoss_AppearUI::Tick(_double TimeDelta)
 	if (false == m_bAppear)
 		return;
 
-	CUI_Manager::GetInstance()->Set_TempOff(true);
-
 	__super::Tick(TimeDelta);
 	m_Timeline.Tick(TimeDelta, m_tParams.Float4s[0].w);
 	IM_LOG("X %f", m_tParams.Float4s[0].w);
@@ -70,7 +67,6 @@ void CBoss_AppearUI::Tick(_double TimeDelta)
 			m_dNextTexture_TimeAcc = 0.0;
 			m_bVisible = false;
 			m_bAppear = false;
-			CUI_Manager::GetInstance()->Set_TempOff(false);
 		}
 
 		return;

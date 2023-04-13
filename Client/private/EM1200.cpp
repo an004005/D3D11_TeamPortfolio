@@ -42,7 +42,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = 39;
+		iEemeyLevel = 34;
 		m_iAtkDamage = 200;
 
 		m_eEnemyName = EEnemyName::EM1200;

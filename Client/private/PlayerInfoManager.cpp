@@ -34,7 +34,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
 	m_tPlayerStat.fDriveEnergy = 0.f;
-	m_tPlayerStat.fMaxDriveEnergy = 100.f;
+	m_tPlayerStat.fMaxDriveEnergy = 60.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
 	m_tPlayerStat.fMaxBrainFieldMaintain = 60.0f;

@@ -36,7 +36,6 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 	m_vMaxDestination = { 2.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
-	// Drive UI 의 경우 처음부터 모든 UI 를 보이지 않고 시작한다.	
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 	{
 		if ((*iter).first == L"Drive_Gauge" || 
@@ -56,10 +55,6 @@ void CCanvas_DriveMove::BeginTick()
 
 void CCanvas_DriveMove::Tick(_double TimeDelta)
 {
-	// 드라이브 눌렀을 때
-	Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
-
-
 	CCanvas::Tick(TimeDelta);
 
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임

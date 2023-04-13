@@ -51,7 +51,7 @@
             "PositionX": -200.0,
             "PositionY": -50.0,
             "Priority": 0,
-            "Prototype_GameObject": "Default_UI\u0000",
+            "Prototype_GameObject": "Shader_UI\u0000",
             "ScaleX": 0.5,
             "ScaleY": 0.5,
             "ShaderParams": {

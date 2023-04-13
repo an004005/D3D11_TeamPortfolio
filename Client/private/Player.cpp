@@ -75,6 +75,7 @@
 
 #include "UI_Manager.h"
 #include "Canvas_BrainField.h"
+#include "Canvas_DriveMove.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -1857,6 +1858,11 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_CLOSER")
 		.OnStart([&]()
 		{
+			// 드라이브모드 진입을 위해 카메라 당김
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+			dynamic_cast<CCanvas_DriveMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove"))->
+				Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
+
 			m_bDriveMode_Activate = true;
 			m_bZoomIsFinish = false;
 		})
@@ -1875,6 +1881,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_ANIMCAM_START")
 		.OnStart([&]()
 		{
+				// 번뜩
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1898,6 +1906,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_AWAY")
 		.OnStart([&]()
 		{
+				// 카메라 빠지면서 폭발
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1910,6 +1919,9 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		})
 		.OnExit([&]()
 		{
+				// 연출 끝
+				CUI_Manager::GetInstance()->Set_TempOff(true);
+
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })

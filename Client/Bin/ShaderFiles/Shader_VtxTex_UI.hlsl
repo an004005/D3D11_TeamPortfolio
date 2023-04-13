@@ -1011,6 +1011,15 @@ PS_OUT PS_FlipBook2(PS_IN In)
 	return Out;
 }
 
+// 끝가지 갔다가 왔다가 반복하는 
+PS_OUT PS_ReverseFlipBook2(PS_IN In)	// ->37
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, Get_ReverseFlipBookUV(In.vTexUV, g_Time, g_float_0, g_int_0, g_int_1));
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0 : 알파 블랜딩으로 그리기
@@ -1535,4 +1544,19 @@ technique11 DefaultTechnique
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_FlipBook2();
 	}
+
+	// 37 : 왔다 갔다 하는 플립북
+	pass ReverseFlipBook2
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_FlipBook();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ReverseFlipBook2();
+	}
+	
 }

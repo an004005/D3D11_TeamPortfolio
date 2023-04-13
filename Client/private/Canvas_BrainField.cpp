@@ -61,11 +61,10 @@ HRESULT CCanvas_BrainField::Render()
 		return E_FAIL;
 
 	_float fBrain = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain;
-	_float fMaxBrain = CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain;
 
-	_float2 vPosition = Find_ChildUI(L"BrainFieldBase")->GetScreenSpaceLeftTop();
 	_tchar szText[MAX_PATH] = TEXT("");
-	wsprintf(szText, TEXT("%d"), _int(fMaxBrain) - _int(fBrain));
+	wsprintf(szText, TEXT("%d"), _int(fBrain));
+	_float2 vPosition = Find_ChildUI(L"BrainFieldBase")->GetScreenSpaceLeftTop();
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(30.0f, 100.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"Sec", vPosition + _float2(58.0f, 103.0f), 0.f, {0.35f, 0.35f}, {1.0f, 0.99f, 0.87f, 1.0f});
 

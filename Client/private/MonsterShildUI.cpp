@@ -52,7 +52,7 @@ void CMonsterShildUI::BeginTick()
 	m_pGroup->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
 	m_pMonsterName->Start_AttachPivot(m_pOwner, EyesPivot, "Target", true, true);
 
-	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { _float(m_iMonsterLevel - 1), _float(m_eMonsterName) };
+	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { m_fMonsterLevel, m_fNameIndex };
 }
 
 void CMonsterShildUI::Tick(_double TimeDelta)
@@ -82,8 +82,100 @@ void CMonsterShildUI::Imgui_RenderProperty()
 
 void CMonsterShildUI::Set_MonsterInfo(const _int iLevel, const EEnemyName eName)
 {
-	m_iMonsterLevel = iLevel;
-	m_eMonsterName = eName;
+	switch (eName)
+	{
+	case EEnemyName::EM0110:
+	{
+		m_fNameIndex = 0.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0200:
+	{
+		m_fNameIndex = 1.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0210:
+	{
+		m_fNameIndex = 2.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0220:
+	{
+		m_fNameIndex = 3.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0320:
+	{
+		m_fNameIndex = 4.0f;
+		m_fMonsterLevel = 0.0f;
+	}
+	break;
+	case EEnemyName::EM0400:
+	{
+		m_fNameIndex = 5.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0650:
+	{
+		m_fNameIndex = 6.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0700:
+	{
+		m_fNameIndex = 7.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0750:
+	{
+		m_fNameIndex = 8.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM0800:
+	{
+		m_fNameIndex = 10.0f;
+		if (10 == iLevel) m_fMonsterLevel = 0.0f;
+		else if (18 == iLevel) m_fMonsterLevel = 1.0f;
+	}
+	break;
+	case EEnemyName::EM0900:
+	{
+		m_fNameIndex = 9.0f;
+		m_fMonsterLevel = iLevel - 1;
+	}
+	break;
+	case EEnemyName::EM1100:
+	{
+		m_fNameIndex = 12.0f;
+		m_fMonsterLevel = 0.0f;
+	}
+	break;
+	case EEnemyName::EM1200:
+	{
+		m_fNameIndex = 11.0f;
+		m_fMonsterLevel = 0.0f;
+	}
+	break;
+	case EEnemyName::EM8200:
+	{
+		m_fNameIndex = 13.0f;
+		m_fMonsterLevel = 0.0f;
+	}
+	break;
+	default:
+	{
+		m_fNameIndex = 0.0f;
+		m_fMonsterLevel = 0.0f;
+	}
+	break;
+	}
 }
 
 void CMonsterShildUI::SetShild(const _float & fHP, const _float & fShild)

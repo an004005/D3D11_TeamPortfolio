@@ -20,6 +20,8 @@
 #include "ImguiUtils.h"
 #include "GameManager.h"
 
+#include "PlayerInfoManager.h"
+
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {

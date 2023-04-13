@@ -42,7 +42,7 @@ void CEMUI::Create_UIInfo()
 
 	if (m_pOwner->HasCrushGauge())
 	{
-		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_MonsterShield")));
 		assert(m_pShieldUI != nullptr);
 
 		m_pShieldUI->Set_Owner(m_pOwner);
@@ -50,7 +50,7 @@ void CEMUI::Create_UIInfo()
 	}
 	else
 	{
-		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_MonsterHP")));
 		assert(m_pHPUI != nullptr);
 
 		m_pHPUI->Set_Owner(m_pOwner);
@@ -92,9 +92,10 @@ void CEMUI::Create_BossUI()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
 
-	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
+	json["Level"] = m_pOwner->GetEnemyLevel();
+	json["Name"] = m_pOwner->GetEnemyName();
+	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BossHpMove", &json));
 	assert(m_BossHp != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-	m_pOwner->GetEnemyName();
 }
 
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)

@@ -2,6 +2,8 @@
 #include "..\public\Canvas_BossHp.h"
 #include "GameInstance.h"
 
+#include "ShaderUI.h"
+
 CCanvas_BossHp::CCanvas_BossHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -37,15 +39,15 @@ void CCanvas_BossHp::Tick(_double TimeDelta)
 
 }
 
-void CCanvas_BossHp::Set_BossHp()
+void CCanvas_BossHp::Set_NoMove()
 {
 	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(true);
 	Find_ChildUI(L"Boss_Name")->SetVisible(true);
 }
 
-void CCanvas_BossHp::Set_Name(const _float fName)
+void CCanvas_BossHp::Set_LevelName(const _float iLevel, const _float fName)
 {
-	m_tParams.Float2s[0] = { 0.0f, fName };
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Name"))->Set_Float2s(_float2(iLevel, fName));
 }
 
 CCanvas_BossHp * CCanvas_BossHp::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
