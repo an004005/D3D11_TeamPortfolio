@@ -541,6 +541,9 @@
     <Filter Include="02.GameObjects\Item\Consumption_Item">
       <UniqueIdentifier>{2258b2b9-7b16-4f26-8c7a-6f9a626391ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\08.DownTown">
+      <UniqueIdentifier>{d6ec4ca8-4855-43ad-b4b8-5e713bfc6600}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1561,6 +1564,16 @@
     <ClInclude Include="..\public\StoryTrigger.h">
       <Filter>Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM8200_CopyRush.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EM8200_BrainField.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentEffect.h" />
+    <ClInclude Include="..\public\Level_DownTown.h">
+      <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2557,6 +2570,16 @@
     <ClCompile Include="..\private\VIBuffer_Invisible.cpp" />
     <ClCompile Include="..\private\StoryTrigger.cpp">
       <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_CopyRush.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EM8200_BrainField.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentEffect.cpp" />
+    <ClCompile Include="..\private\Level_DownTown.cpp">
+      <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

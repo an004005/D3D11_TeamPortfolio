@@ -6,7 +6,7 @@
 		],
 		"Pass": 1,
 		"Float4x4s": [],
-		"Floats": [0.5],
+		"Floats": [0.5, 0.0, 0.0],
 		"Textures": [
 			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_COL.png",
 			"../Bin/Resources/Meshes/Scarlet_Nexus/StaticModel/wp_500/Texture/T_wp0500_Sword_NML.png",
