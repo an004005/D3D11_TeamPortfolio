@@ -25,9 +25,6 @@ public:
 public:
 	void	Set_Render();
 
-private:
-	_float2 m_vFontPos = { 0.0f, 0.0f };
-
 public:
 	static CCanvas_SASInfoRight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

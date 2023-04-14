@@ -36,8 +36,9 @@ private:
 	_float m_fHpBack = { 1.0f };
 	_float m_fCurrentHpBack = { 1.0f };
 
-	_int						m_iMonsterLevel = { 0 };
 	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;
+	_float					m_fMonsterLevel = { 0.0f };
+	_float					m_fNameIndex = { 0.0f };
 
 	_float					m_fShild = { 0.0f };
 	_bool					m_bBroken = { false };

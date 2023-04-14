@@ -14,6 +14,8 @@ END
 
 BEGIN(Client)
 
+// 경견페리
+
 class CEM0320 : public CEnemy
 {
 	enum EAttackStateType
@@ -136,6 +138,11 @@ private:
 
 
 	_bool m_bIntro = false;
+	_bool m_bIntroCoolStart = false;
+	_double m_dIntroCool = 0.0;
+
+	_bool	m_bWeakTalk = { false };
+
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

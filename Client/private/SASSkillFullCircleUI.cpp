@@ -28,7 +28,7 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	// 1 ~ 6
+	// 1 ~ 7
 	static _uint iCount = 0;
 	++iCount;
 	m_iObjectNum = iCount;
@@ -181,6 +181,26 @@ void CSASSkillFullCircleUI::Object_Tick()
 		{
 			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_ELETRIC)].Energy;
 			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_ELETRIC)].MinEnergy;
+
+			if (fCurrentEnergy > fMinEnergy)
+			{
+				m_bVisible = true;
+				if (false == m_bOneGrow)
+				{
+					m_bOneGrow = true;
+					m_bGrow = true;
+				}
+			}
+			else
+			{
+				m_bVisible = false;
+				m_bOneGrow = false;
+			}
+		}
+		else if (7 == m_iObjectNum)
+		{
+			_float fCurrentEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_COPY)].Energy;
+			_float fMinEnergy = CPlayerInfoManager::GetInstance()->Get_PlayerStat().Sasese[_int(ESASType::SAS_COPY)].MinEnergy;
 
 			if (fCurrentEnergy > fMinEnergy)
 			{

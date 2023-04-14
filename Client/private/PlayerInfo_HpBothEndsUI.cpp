@@ -32,6 +32,8 @@ HRESULT CPlayerInfo_HpBothEndsUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
+	if (4 == iObjectCount) iObjectCount = 0;
+
 	return S_OK;
 }
 

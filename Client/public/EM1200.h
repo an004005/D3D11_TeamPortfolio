@@ -107,6 +107,12 @@ private:
 
 	_float4x4		pivot;
 
+	CDoOnce		m_bCableTalk;
+	CDoOnce		m_bFogTalk;
+
+	_bool	m_bWeakTalk = { false };
+
+
 	_bool			m_OnAnimCam = false;
 
 	_bool		m_bAlpha = { false };

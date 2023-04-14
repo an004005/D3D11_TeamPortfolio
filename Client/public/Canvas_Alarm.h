@@ -24,8 +24,7 @@ public:
 
 public:
 	// 다음 레벨로 넘어갈 때
-	void	Set_OpenNextRoomName(const _tchar * pNextRoomName);
-	void	Set_CloseNextRoomName();
+	void	Set_OpenNextRoomName(const wstring wsNextRoomName);
 
 	// 보스 등장할 때
 	void	Set_Appeart();

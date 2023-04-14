@@ -1,0 +1,23 @@
+{
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [
+			0
+		],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [
+			0.0,
+			0.0
+		],
+		"Textures": [
+			"../Bin/Resources/UI/WorldMap/T_Worldmap_ALB.png",
+			"",
+			""
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
+}

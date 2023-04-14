@@ -21,13 +21,13 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void   Set_NextRoolName(const _tchar * pNextRoomName) {
+	void   Set_NextRoolName(const wstring wsNextRoomName) {
 		m_bVisible = true;
-		m_pNextRoomName = pNextRoomName;
+		m_wsNextRoomName = wsNextRoomName;
 	}
 
 private:
-	const _tchar * m_pNextRoomName = {};
+	wstring m_wsNextRoomName = L"";
 
 public:
 	static CNextMapNameUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
