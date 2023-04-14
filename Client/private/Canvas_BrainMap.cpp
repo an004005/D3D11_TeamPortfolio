@@ -110,12 +110,12 @@ HRESULT CCanvas_BrainMap::Render()
 	if (false == m_bSkillAcquisition)
 	{
 		m_iPriority = m_iStartPriority;
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	}
 	else
 	{
 		m_iPriority = 20;
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SkillAcquisition"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("<%s>"), m_CurrentBrainInfo.szBrainName);
@@ -167,7 +167,7 @@ HRESULT CCanvas_BrainMap::Render()
 		{
 			// Icon ÀÇ BP
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[m_iCurrentIndex]->Get_BrainInfo().iBP)
-				vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+				vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 			else
 				vColor = { 0.488f, 0.427f, 0.384f, 1.0f };
 		}

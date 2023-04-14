@@ -85,7 +85,7 @@ HRESULT CCanvas_Main::Render()
 		return E_FAIL;
 
 	_float2 vFontSize = { 0.5f, 0.5f };
-	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// »ó´Ü
