@@ -1,0 +1,55 @@
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "DefaultY": 0.0,
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "MoveCurveName": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0
+        ],
+        "Ints": [],
+        "Pass": 64,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\TeamPortrait\\Team_Scarlet.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "TurnAngle": 0.0,
+    "TurnAxis": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "bBillBoard": false,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bTurn": false,
+    "bUseDepth": false,
+    "bUseMoveCurve": false
+}
