@@ -110,6 +110,8 @@ void CEM8200_Controller::BeginTick()
 
 void CEM8200_Controller::AI_Tick(_double TimeDelta)
 {
+	
+
 	Tick_TP_Cooltime(TimeDelta);
 	Tick_CoolTimeHelper(TimeDelta);
 

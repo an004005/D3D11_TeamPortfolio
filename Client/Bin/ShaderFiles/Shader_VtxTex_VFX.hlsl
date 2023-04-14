@@ -1605,7 +1605,7 @@ PS_OUT_Flag PS_TEAM_PIC(PS_IN In)
 
 	float4 Tex = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
 
-	if (Tex.r == 1.f)
+	if (Tex.r == 1.f && Tex.g == 0.f)
 		discard;
 
 	Out.vColor = CalcHDRColor(Tex, g_float_0);
@@ -2648,7 +2648,7 @@ technique11 DefaultTechnique
 	pass TeamPic
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetDepthStencilState(DS_Default, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();

@@ -1081,6 +1081,36 @@ PS_OUT PS_DEFAULT_MODEL(PS_IN In)
 	return Out;
 }
 
+
+PS_OUT PS_ENDING_LINE(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	// float4 OriginTex = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	//
+	// Out.vColor = CalcHDRColor(OriginTex, g_float_0);
+	//
+	// Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+
+
+	if (In.vTexUV.x < 0.3f || In.vTexUV.x > 0.6f)
+		discard;
+
+	float2 vUV = TilingAndOffset(rotateUV_Radian(In.vTexUV, g_float_0), g_vec2_0, float2(g_float_1 * g_Time, 0.f));
+	float4 vLineColor = g_tex_0.Sample(LinearSampler, vUV);
+	if (vLineColor.a < 0.01f)
+		discard;
+
+	Out.vColor = lerp(float4(1.0f, 0.f, 0.f, 0.f), 1.f, vLineColor.a * 0.05f);
+	Out.vColor.rgb = Out.vColor.rgb * 2.5f;
+	Out.vColor.a = vLineColor.a;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	return Out;
+}
+
+
 PS_OUT PS_DRIVEMODE_END_SPH(PS_IN_SOFT In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -2195,5 +2225,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ENV_CRUSH1_1();
+	}
+
+	//49
+	pass PicFrame
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ENDING_LINE();
 	}
 }

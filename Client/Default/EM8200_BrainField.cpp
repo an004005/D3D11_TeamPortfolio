@@ -150,6 +150,17 @@ void CEM8200_BrainField::Tick(_double TimeDelta)
 			m_pPostProcess->GetParam().Floats[0] = m_pBlackWhite_Trans->GetValue(fPlayRatio);
 			m_pWhiteOut->GetParam().Floats[0] = m_pWhiteOut_Trans->GetValue(fPlayRatio);
 		}
+		else
+		{
+			if (m_pWhiteOut->GetParam().Floats[0] > 0.f)
+			{
+				m_pWhiteOut->GetParam().Floats[0] -= TimeDelta * 3.f;
+			}
+			else
+			{
+				m_pWhiteOut->GetParam().Floats[0] = 0.f;
+			}
+		}
 	}
 	else
 	{

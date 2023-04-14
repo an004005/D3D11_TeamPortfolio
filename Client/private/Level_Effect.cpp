@@ -360,8 +360,8 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 		// m_pBrainFieldMap->SetVisible_MapObjects(false);
 	}
 	{
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
-		(CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
+		// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
+		// (CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
 		// m_pBrainFieldRedString->SetVisible(false);
 		// m_pBrainFieldRedString->SetPass(1);
 	}
