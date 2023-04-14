@@ -33,6 +33,8 @@ HRESULT CSASInfoLeftHpBackUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
+	if (6 == iObjectCount) iObjectCount = 0;
+
 	m_tParams.Floats[0] = 0.0f;
 
 	return S_OK;

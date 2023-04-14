@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "UI_Manager.h"
 #include "JsonStorage.h"
+#include "PlayerInfoManager.h"
 
 #include "Canvas_Quest.h"
 
@@ -215,6 +216,10 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 		tTalkInfo.wsName = { L"유이토" };
 		tTalkInfo.wsTalk0 = { L"아 그렇군요 좋은 정보 감사드려요. 겜마 선배." };
 		tTalkInfo.wsTalk1 = { L"" };
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
 	}
 	break;
 

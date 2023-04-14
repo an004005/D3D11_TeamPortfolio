@@ -1,1 +1,52 @@
-{"BillBoardType":0,"BufferProtoTag":"Prototype_Component_VIBuffer_Rect","Children":[[1.399999976158142,0.0,0.0,0.0,0.0,0.13544005155563354,0.0,0.0,0.0,0.0,1.0,0.0,0.0,-0.016139306128025055,0.0,1.0]],"ModelFolderDir":"","ModelProtoTag":"","ShaderParams":{"Float2s":[],"Float4s":[[0.6734285950660706,0.6565104722976685,0.5598655343055725,1.0]],"Float4x4s":[],"Floats":[1.0],"Ints":[],"Pass":11,"Textures":["..\\Bin\\Resources\\UI\\InGame\\Monster_Shield.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxTex_VFX","bBillBoard":true,"bDecal":false,"bModelSprite":false,"bNormal":false,"bUseDepth":false}
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.399999976158142,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.13544005155563354,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            -0.016139306128025055,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.6734285950660706,
+                0.6565104722976685,
+                0.5598655343055725,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            1.0
+        ],
+        "Ints": [],
+        "Pass": 11,
+        "Textures": [
+            "..\\Bin\\Resources\\UI\\InGame\\Monster_Shield.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "bBillBoard": true,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}

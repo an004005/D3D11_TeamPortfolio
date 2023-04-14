@@ -79,6 +79,7 @@ void CNextMapNameUI::Tick(_double TimeDelta)
 					LEVEL_DOWNTOWN_3,
 					CLevel_Loading_Simple::Create<CLevel_DownTown_Third>(m_pDevice, m_pContext));
 			}
+
 			CGameManager::GetInstance()->Set_Map(1);
 		}
 		else if (m_wsNextRoomName == L"Å°ÄíÄ¡¹Ù 3Ãþ")
