@@ -48,7 +48,7 @@ HRESULT CCanvas_WorldMap::Initialize(void* pArg)
 
 	arrMapChake.fill(false);
 	m_bVisible = true;
-	CloneBar();
+	m_wsName = L"대로";
 
 	return S_OK;
 }
@@ -202,6 +202,9 @@ void CCanvas_WorldMap::KeyInput()
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 			iter->second->SetVisible(m_bMapUI);
 
+		for (size_t i = 0; i < vecMapBar.size(); i++)
+			vecMapBar[i]->SetVisible(m_bMapUI);
+
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMapUI);
 	}
 }
@@ -217,45 +220,47 @@ void CCanvas_WorldMap::MapBar_Tick()
 		if (true == dynamic_cast<CCanvas_MapBar*>(vecMapBar[i])->Get_OnButton())
 		{
 			dynamic_cast<CCanvas_MapBar*>(vecMapBar[i])->Set_OnButton();
-			m_wsName = dynamic_cast<CCanvas_MapBar*>(vecMapBar[i])->Get_Name();
+			++m_iInputCount;
 
-			// 여기서 맵 이동하기
-			if (0 == i)
+			if (2 == m_iInputCount)
 			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_TUTORIAL,
-					CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
-			}
-			else if (1 == i)
-			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_CONSTRUCTIONSITE_3F,
-					CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
-			}
-			else if (2 == i)
-			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_CONSTRUCTIONSITE_2F,
-					CLevel_Loading_Simple::Create<CLevel_ConstructionSite2F>(m_pDevice, m_pContext));
+				m_iInputCount == 0;
 
-			}
-			else if (3 == i)
-			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_SUBWAY,
-					CLevel_Loading_Simple::Create<CLevel_Subway>(m_pDevice, m_pContext));
-			}
-			else if (4 == i)
-			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_NAOMIROOM,
-					CLevel_Loading_Simple::Create<CLevel_NaomiRoom>(m_pDevice, m_pContext));
-			}
-			else if (5 == i)
-			{
-				CGameInstance::GetInstance()->Open_Loading(
-					LEVEL_HOSPITAL_1F,
-					CLevel_Loading_Simple::Create<CLevel_Hospital_1F>(m_pDevice, m_pContext));
+				// 여기서 맵 이동하기
+				if (0 == i)
+				{
+					CGameInstance::GetInstance()->Open_Loading(
+						LEVEL_TUTORIAL,
+						CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
+				}
+				else if (1 == i)
+				{
+
+				}
+				else if (2 == i)
+				{
+					CGameInstance::GetInstance()->Open_Loading(
+						LEVEL_CONSTRUCTIONSITE_3F,
+						CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
+				}
+				else if (3 == i)
+				{
+					CGameInstance::GetInstance()->Open_Loading(
+						LEVEL_CONSTRUCTIONSITE_2F,
+						CLevel_Loading_Simple::Create<CLevel_ConstructionSite2F>(m_pDevice, m_pContext));
+				}
+				else if (4 == i)
+				{
+					CGameInstance::GetInstance()->Open_Loading(
+						LEVEL_SUBWAY,
+						CLevel_Loading_Simple::Create<CLevel_Subway>(m_pDevice, m_pContext));
+				}
+				else if (5 == i)
+				{
+					CGameInstance::GetInstance()->Open_Loading(
+						LEVEL_HOSPITAL_1F,
+						CLevel_Loading_Simple::Create<CLevel_Hospital_1F>(m_pDevice, m_pContext));
+				}
 			}
 		}
 		else
@@ -263,6 +268,16 @@ void CCanvas_WorldMap::MapBar_Tick()
 			dynamic_cast<CCanvas_MapBar*>(vecMapBar[i])->Set_OnAlpha();
 		}
 	}
+}
+
+void CCanvas_WorldMap::CurrentLevelName_Tick()
+{
+	if (LEVEL_NOW == LEVEL_TUTORIAL) m_wsName = L"대로";
+	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F) m_wsName = L"스오-류신구";
+	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F) m_wsName = L"키쿠치바 3층";
+	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F) m_wsName = L"키쿠치바 2층";
+	else if (LEVEL_NOW == LEVEL_SUBWAY) m_wsName = L"폐지하선로 스오 9호선";
+	else if (LEVEL_NOW == LEVEL_HOSPITAL_1F) m_wsName = L"토벌군병원";
 }
 
 CCanvas_WorldMap * CCanvas_WorldMap::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

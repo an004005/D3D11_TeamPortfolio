@@ -19,9 +19,6 @@ public:
 	virtual HRESULT Render() override;
 
 public:
-	wstring	Get_Name() {
-		return m_wsName;
-	}
 	void	Set_Name(const wstring wsName) {
 		m_wsName = wsName;
 	}

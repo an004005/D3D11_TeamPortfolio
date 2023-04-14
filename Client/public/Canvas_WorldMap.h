@@ -27,6 +27,7 @@ private:
 
 	void	KeyInput();
 	void	MapBar_Tick();
+	void	CurrentLevelName_Tick();
 
 private:
 	vector<class CCanvas_MapBar*> vecMapBar;
@@ -37,8 +38,9 @@ private:
 	_bool		m_bAlpha = { false };
 	_bool		m_bReverse = { false };
 
-	wstring	m_wsName = { L"" };
 	array<_bool, 6> arrMapChake;
+	wstring	m_wsName = { L"" };
+	_uint		m_iInputCount = { 0 };
 
 public:
 	static CCanvas_WorldMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
