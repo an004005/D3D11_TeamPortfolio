@@ -117,7 +117,7 @@ void CEnemy::BeginTick()
 void CEnemy::Tick(_double TimeDelta)
 {
 	CScarletCharacter::Tick(TimeDelta);
-	FindTarget();
+	FindTarget(TimeDelta);
 	Update_DeadDissolve(TimeDelta);
 
 	if(m_pEMUI != nullptr)
@@ -278,6 +278,9 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 	if (m_pEMUI != nullptr)
 		m_pEMUI->Create_DamageFont(tDamageParams);
 
+	if (dynamic_cast<CPlayer*>(tDamageParams.pCauser) != nullptr)
+		m_dCombetTime = 0.0;
+
 	ENEMY_DAMAGE_REPORT tReport;
 	tReport.pCauser = tDamageParams.pCauser;
 	tReport.pTaker = this;
@@ -353,6 +356,11 @@ void CEnemy::CreateSpawnEffect()
 		->Start_NoAttachPivot(this, DistortionPivotMatrix, false, false);
 }
 
+_bool CEnemy::InCombet_WithPlayer()
+{
+	return	m_bBoss || m_dCombetTime < 5.0;
+}
+
 
 _bool CEnemy::IsTargetFront(_float fAngle)
 {
@@ -400,8 +408,10 @@ void CEnemy::SetDead()
 	m_pRendererCom->SetFog(false);
 }
 
-void CEnemy::FindTarget()
+void CEnemy::FindTarget(_double TimeDelta)
 {
+	m_dCombetTime += TimeDelta;
+
 	if (m_bFindTestTarget)
 	{
 		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
@@ -412,12 +422,34 @@ void CEnemy::FindTarget()
 	}
 	else
 	{
-		// todo 임시 코드, AI추가되면 바꿔야됨
 		auto pPlayer = CGameInstance::GetInstance()->Find_ObjectByPredicator(LEVEL_NOW, [this](CGameObject* pObj)
 		{
-			return dynamic_cast<CPlayer*>(pObj) != nullptr;
+				return dynamic_cast<CPlayer*>(pObj) != nullptr;
 		}, PLATERTEST_LAYER_PLAYER);
+
 		m_pTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
+
+		if (InCombet_WithPlayer()) return;
+
+		CLayer* pAILayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_AI);
+		
+		if (pAILayer == nullptr) return;
+	
+		_vector vMyPosition = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		auto AIList = pAILayer->GetGameObjects();
+
+		_float fMinDist = XMVectorGetX(XMVector4LengthEst(vMyPosition - pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+		for (auto AI : AIList)
+		{
+			_float fAIDist = XMVectorGetX(XMVector4LengthEst(vMyPosition - AI->GetTransform()->Get_State(CTransform::STATE_TRANSLATION)));
+
+			if (fAIDist < fMinDist)
+			{
+				m_pTarget = dynamic_cast<CScarletCharacter*>(AI);
+				fMinDist = fAIDist;
+			}
+		}
 	}
 }
 
@@ -614,8 +646,9 @@ void CEnemy::CheckHP(DAMAGE_PARAM& tDamageParams)
 	if (m_bCrushStart == true) return;
 
 	_int iDamage = tDamageParams.iDamage;
-	// if (m_bHitWeak)
-	// 	iDamage *= 2;
+
+	 if (m_bHitWeak)
+	 	iDamage *= 1.2f;
 
 	m_iHP -= iDamage;
 	if (m_iHP < 0)

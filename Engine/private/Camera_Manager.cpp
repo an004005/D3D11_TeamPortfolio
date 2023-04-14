@@ -29,6 +29,18 @@ void CCamera_Manager::Tick()
 	{
 		CCamera* pMainCam = GetMainCam();
 		
+		if (m_fShakeTime > m_fCurShakeTime)
+		{
+			m_fCurShakeTime += (_float)TIME_DELTA;
+
+			const _float fX = CGameUtils::GetRandFloat(-1.f, 1.f) * m_fMagnitude;
+			const _float fY = CGameUtils::GetRandFloat(-1.f, 1.f) * m_fMagnitude;
+
+			const _matrix matLocal = XMMatrixTranslation(fX, fY, 0.f);
+			pMainCam->GetTransform()->Set_WorldMatrix(pMainCam->GetTransform()->Get_WorldMatrix() * matLocal);
+		}
+
+
 		CPipeLine* pPipeLine = CPipeLine::GetInstance();
 
 		pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, pMainCam->GetXMViewMatrix());
@@ -63,6 +75,8 @@ void CCamera_Manager::Tick()
 	// {
 	// 	m_vecCamera.clear();
 	// }
+
+
 }
 
 void CCamera_Manager::LoadCamAnims(const string& strDir)
@@ -301,6 +315,13 @@ void CCamera_Manager::SetCameraFov(_float fFov)
 		fFov = 60.f;
 
 	pMainCam->SetFOV(max(fFov, 1.f));
+}
+
+void CCamera_Manager::PlayShake(_float fDuration, _float fMagnitude)
+{
+	m_fCurShakeTime = 0.f;
+	m_fShakeTime = fDuration;
+	m_fMagnitude = fMagnitude;
 }
 
 CCamera* CCamera_Manager::FindCamera(const string& strCamTag)
