@@ -19,6 +19,7 @@
 #include "Level_Hospital_1F.h"
 #include "Level_FinalStage.h"
 #include "Level_ConstructionSite2F.h"
+#include "Level_DownTown.h"
 
 CImgui_LevelSwitcher::CImgui_LevelSwitcher(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImguiObject(pDevice, pContext)
@@ -135,6 +136,24 @@ void CImgui_LevelSwitcher::Imgui_RenderMenu()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_FINAL_STAGE,
 				CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_DownTown1"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_DOWNTOWN_1,
+				CLevel_Loading_Simple::Create<CLevel_DownTown>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_DownTown2"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_DOWNTOWN_2,
+				CLevel_Loading_Simple::Create<CLevel_DownTown_Second>(m_pDevice, m_pContext));
+		}
+		if (ImGui::MenuItem("Level_DownTown3"))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_DOWNTOWN_3,
+				CLevel_Loading_Simple::Create<CLevel_DownTown_Third>(m_pDevice, m_pContext));
 		}
 		ImGui::EndMenu();
 	}

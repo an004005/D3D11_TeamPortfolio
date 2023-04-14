@@ -740,7 +740,11 @@ void CPlayer::Tick(_double TimeDelta)
 		static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dynamic();
 	}
 
-	//m_pBattleChecker->Update_Tick(m_pTransformCom);
+	// m_pBattleChecker->Update_Tick(m_pTransformCom);
+
+
+	m_CopyStart.Tick(TimeDelta, fCopyDissolve);
+	m_CopyEnd.Tick(TimeDelta, fCopyDissolve);
 }
 
 void CPlayer::Late_Tick(_double TimeDelta)
@@ -750,6 +754,18 @@ void CPlayer::Late_Tick(_double TimeDelta)
 
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
+		// 0 번은 원본, 
+		for (int i = 1; i < m_vecWeapon.size(); ++i)
+		{
+			auto pWp = static_cast<CScarletWeapon*>(m_vecWeapon[i]);
+			for (auto pMtrl : pWp->GetModel()->GetMaterials())
+				pMtrl->GetParam().Floats[2] = fCopyDissolve;
+
+			for (auto pMtrl : m_vecSheath[i]->GetModel()->GetMaterials())
+				pMtrl->GetParam().Floats[2] = fCopyDissolve;
+		}
+		
+
 		for (auto& iter : m_vecWeapon)
 		{
 			iter->Late_Tick(TimeDelta);
@@ -847,8 +863,14 @@ HRESULT CPlayer::Render()
 
 	m_pModel->Render(m_pTransformCom);
 
+
 	if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
+		_float fOriginTeleportDissolve = m_pModel->GetMaterials().front()->GetParam().Floats[2];
+
+		for (auto pMtrl : m_pModel->GetMaterials())
+			pMtrl->GetParam().Floats[2] = fCopyDissolve;
+
 		_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float4 vRight = m_pTransformCom->Get_State(CTransform::STATE_RIGHT);
 		vRight.Normalize();
@@ -860,6 +882,9 @@ HRESULT CPlayer::Render()
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vRightPos);
 		m_pModel->Render(m_pTransformCom);
 		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
+
+		for (auto pMtrl : m_pModel->GetMaterials())
+			pMtrl->GetParam().Floats[2] = fOriginTeleportDissolve;
 	}
 
 	return S_OK;
@@ -1449,6 +1474,8 @@ void CPlayer::SasMgr()
 			{
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("SAS_COPY"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 				CPlayerInfoManager::GetInstance()->Set_Copy(true);
+
+				m_CopyStart.PlayFromStart();
 			}
 		}
 	}
@@ -1664,6 +1691,8 @@ void CPlayer::SasStateCheck()
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, TEXT("Sas_Dead_Light"), LAYER_PLAYEREFFECT)->Start_Attach(this, "Sheath");
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Dead_Particles"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
+
+			m_CopyEnd.PlayFromStart();
 		}
 
 		m_bSASSkillInput[6] = false;
@@ -2158,6 +2187,11 @@ HRESULT CPlayer::SetUp_Components(void * pArg)
 	m_pBrainField = dynamic_cast<CBrainField*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Prototype_GameObject_BrainField"));
 	Assert(m_pBrainField != nullptr);
 	m_pBrainField->SetTargetInfo(this, m_pTransformCom, m_pModel);
+
+	// copy 
+	m_CopyStart.SetCurve("Simple_Decrease_0.5x");
+	m_CopyEnd.SetCurve("Simple_Increase_0.5x");
+	// copy 
 
 	return S_OK;
 }

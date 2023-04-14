@@ -187,6 +187,20 @@ PS_OUT PS_BRAIN_FIELD_FLOOR(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_EM8200_FLOOR_2(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vViewDir = g_vCamPosition - In.vWorldPos;
+	float fFresnel = FresnelEffect(In.vNormal.xyz, vViewDir.xyz, 0.1f);
+
+	float4 vColor = lerp(float4(0.f, 0.f, 1.f, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
+	Out.vColor = CalcHDRColor(vColor, fFresnel * 2.5f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -215,5 +229,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_FLOOR();
+	}
+
+	///2 
+	pass EM8200_BrainFieldFloor
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_FLOOR_2();
 	}
 }

@@ -28,6 +28,7 @@ public:
 
 public:
 	void	Setup_BoneMatrix(CModel* pModel, _fmatrix Transform);
+	CModel* GetModel() { return m_pModel; }
 
 public:
 	void	Change_Sheath(WEAPONTYPE eType);

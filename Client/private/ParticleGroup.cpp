@@ -610,7 +610,12 @@ void CParticleGroup::LoadFromJson(const Json& json)
 		ObjectTag = iter["ObjectTag"];
 		FilePath = iter["ParticleDirectory"];
 
+#ifdef _DEBUG
 		Json Particle = CJsonStorage::GetInstance()->LoadJson_ForWork(FilePath);
+#else
+		Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson(FilePath);
+#endif
+
 		CParticleSystem* pParticleSystem; 
 		pParticleSystem = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW,TEXT("ProtoVFX_ParticleSystem"), &Particle));
 
