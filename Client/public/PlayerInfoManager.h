@@ -91,6 +91,8 @@ typedef struct tagHanabiStatus
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 
+	_bool bActivate = false;
+
 }	HANABI_STAT;
 
 typedef struct tagTsugumiStatus
@@ -104,6 +106,8 @@ typedef struct tagTsugumiStatus
 	_uint iSprbrPower = { 0 };
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
+
+	_bool bActivate = false;
 
 }	TSUGUMI_STAT;
 
@@ -227,6 +231,12 @@ public:	// Set
 	void			Set_SASMember(const SASMEET eSAS) { 
 		m_bSASMember[eSAS] = true; 
 	}
+
+public: // AI°ü·Ã
+	void			Hanabi_Active(_bool bActive)	{ m_tHanabiStat.bActivate = bActive; }
+	void			Tsugumi_Active(_bool bActive)	{ m_tTsugumiStat.bActivate = bActive; }
+	_bool			isHanabiActive() { return m_tHanabiStat.bActivate; }
+	_bool			isTsugumiActive() { return m_tTsugumiStat.bActivate; }
 
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);

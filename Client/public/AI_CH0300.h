@@ -63,9 +63,6 @@ private:
 	_float4		m_vPlayerPos = { 0.f, 0.f, 0.f, 1.f };
 
 private:
-	_float		m_fWeaponDissolve = 0.f;
-
-private:
 	wstring		m_ModelName;
 
 private:
@@ -82,10 +79,15 @@ private:
 	void		Collision_End();
 	void		Collision_Twist();
 	void		Twist_Particle();
+
+public:
+	void		WeaponDissolve(_bool bDissolve) { m_bWeaponOn = bDissolve; }
 	
 private:
 	HRESULT		Setup_Parts();
 	vector<CGameObject*>	m_vecWeapon;
+	_bool		m_bWeaponOn = false;
+	_float		m_fWeaponDissolve = 1.f;
 
 // 구조체 상태 반환
 private:

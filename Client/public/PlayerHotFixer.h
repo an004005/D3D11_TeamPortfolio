@@ -1,6 +1,8 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
+#include "HelperClasses.h"
+#include "Timeline.h"
 
 BEGIN(Client)
 
@@ -38,7 +40,25 @@ private:
 	_bool	m_bBrainMap_BF = false;
 
 private:
+	_float4x4 m_Pivot = XMMatrixIdentity();
+
+private:
 	CPlayer* m_pPlayer = nullptr;
+
+private:
+	CDoOnce	EffectTest_01;
+	CDoOnce	EffectTest_02;
+	CDoOnce	EffectTest_03;
+	CDoOnce	EffectTest_04;
+	CDoOnce	EffectTest_05;
+
+private:
+	CSimpleTimeline	m_ActionCamStart;
+	_float			m_fActionCamOut = 0.f;
+
+private:
+	_bool			m_bHanabiActive = false;
+	_bool			m_bTsugumiActive = false;
 
 public:
 	static CPlayerHotFixer* Create(CPlayer* pPlayer);

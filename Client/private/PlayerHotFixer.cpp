@@ -22,6 +22,8 @@
 #include "Sheath_Player.h"
 #include "Transform.h"
 #include "BaseAnimInstance.h"
+#include "ImguiUtils.h"
+#include "Camera_Player.h"
 
 CPlayerHotFixer::CPlayerHotFixer()
 {
@@ -33,6 +35,8 @@ HRESULT CPlayerHotFixer::Initialize(CPlayer* pPlayer)
 
 	m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
 
+	m_ActionCamStart.SetCurve("ActionCam_4to2");
+
 	return S_OK;
 }
 
@@ -40,6 +44,16 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
+		ImGui::Checkbox("Hanabi", &m_bHanabiActive);
+		ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
+		CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
+		CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
+
+		if (ImGui::Button("ActionCam_Escape"))
+		{
+			m_pPlayer->m_pCamSpot->Reset_CamMod();
+		}
+
 		if (ImGui::Button("BrainCrash_Recompile"))
 		{
 			BrainCrashStateMachine_ReCompoile();
@@ -95,27 +109,91 @@ void CPlayerHotFixer::Tick()
 			}
 		}
 
-		ImGui::Checkbox("ShakeSmall", &m_bShakeSmall);
-		ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
-		ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
+		//if (ImGui::Button("DirveModeEffectTest"))
+		//{
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_End_EF")->
+		//		Start_AttachPosition(m_pPlayer, m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+		//}
 
-		if (m_bShakeSmall)
-		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.01f);
-		}
-		else if (m_bShakeMiddle)
-		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.02f);
-		}
-		else if (m_bShakeHeavy)
-		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
-		}
+		//if (ImGui::CollapsingHeader("Pivot"))
+		//{
+		//	static GUIZMO_INFO tp1;
+		//	CImguiUtils::Render_Guizmo(&m_Pivot, tp1, true, true);
+		//}
 
-		if (ImGui::Button("ShakeTest"))
-		{
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f);
-		}
+		//if (ImGui::Button("BrainFieldRing"))
+		//{
+		//	/*list<CAnimation*> pAnim;
+		//	pAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
+		//	m_pPlayer->m_pASM->InputAnimSocket("Common_AnimSocket", pAnim);
+
+		//	EffectTest_01.Reset();
+		//	EffectTest_02.Reset();
+		//	EffectTest_03.Reset();
+		//	EffectTest_04.Reset();
+		//	EffectTest_05.Reset();*/
+
+		//	//BrainField_End_InCombat_Attach_Face
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_AttachPivot(m_pPlayer, m_Pivot, "Mask", true, true);
+
+		//	//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("BrainField_Sphere_Red_Text"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pPlayer, m_Pivot, "Waist", false, true);
+		//}
+
+		// 빨간 글씨 2개
+		//CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("BrainField_Sphere_Red_Text"), LAYER_PLAYEREFFECT)->Start_AttachPivot(m_pPlayer, m_Pivot, "Waist", false, true);
+
+		// 머리 케이블 파티클
+		//if (m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->GetPlayRatio() >= 0.f/* && EffectTest_01.IsNotDo()*/)
+		//{
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Cable_Connected_B")->Start_AttachPivot(m_pPlayer, m_Pivot, "BackHair", true, true);
+		//}
+
+		// 머리 케이블 스파크
+		//if (m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->GetPlayRatio() >= 0.f/* && EffectTest_01.IsNotDo()*/)
+		//{
+		// 0.3
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Cable_Connected_B")->Start_AttachPivot(m_pPlayer, m_Pivot, "BackHair", true, true);
+		//}
+
+		// 머리 케이블 기어
+		//if (m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start")->GetPlayRatio() >= 0.28f && EffectTest_01.IsNotDo())
+		//{
+		// x -90	0.25
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff01", true, true);
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff02", true, true);
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff03", true, true);
+		//}
+
+		// 머리 케이블 링
+		//if (m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start")->GetPlayRatio() >= 0.2f && EffectTest_02.IsNotDo())
+		//{
+		// x -90	0.25
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff01", true, true);
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff02", true, true);
+		//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "Eff03", true, true);
+		//}
+
+		//ImGui::Checkbox("ShakeSmall", &m_bShakeSmall);
+		//ImGui::Checkbox("ShakeMiddle", &m_bShakeMiddle);
+		//ImGui::Checkbox("ShakeHeavy", &m_bShakeHeavy);
+
+		//if (m_bShakeSmall)
+		//{
+		//	CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.01f);
+		//}
+		//else if (m_bShakeMiddle)
+		//{
+		//	CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.02f);
+		//}
+		//else if (m_bShakeHeavy)
+		//{
+		//	CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.03f);
+		//}
+
+		//if (ImGui::Button("ShakeTest"))
+		//{
+		//	CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f);
+		//}
 
 		if (ImGui::Button("DMG_Light"))
 		{
@@ -170,7 +248,7 @@ void CPlayerHotFixer::Tick()
 			m_pPlayer->m_pASM->ClearAnimSocket();
 		}
 
-		if (ImGui::Button("Add_Default"))
+		/*if (ImGui::Button("Add_Default"))
 		{
 			m_pPlayer->m_pModel->Set_AdditiveAnim("AS_ch0100_490_AL_damage_add");
 		}
@@ -198,7 +276,7 @@ void CPlayerHotFixer::Tick()
 				->Reset();
 			m_pPlayer->m_pModel->Find_Animation("AS_ch0100_492_AL_damage_down_B_add")
 				->Reset();
-		}
+		}*/
 
 		if (ImGui::Button("Fire"))
 			m_pPlayer->m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
@@ -228,10 +306,10 @@ void CPlayerHotFixer::Tick()
 		CPlayerInfoManager::GetInstance()->Set_BrainMap(EBRAINMAP::BRAINMAP_BRAINFIELD_HARDBODY, m_bBrainMap_BF);
 
 
-		if (ImGui::Button("PointLightTest"))
-		{
-			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f), 10.f, { 0.145098f, 0.01f, 0.2f, 1.f });
-		}
+		//if (ImGui::Button("PointLightTest"))
+		//{
+		//	CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 1.f, 0.f, 0.f), 10.f, { 0.145098f, 0.01f, 0.2f, 1.f });
+		//}
 
 		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
 
@@ -429,20 +507,34 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 		CFSMComponentBuilder().InitState("BRAINFIELD")
 
 		.AddState("BRAINFIELD")
-		.OnStart([&]() { m_pPlayer->m_bZoomIsFinish = false; })
-		.Tick([&](double fTimeDelta) {})
+		.OnStart([&]() 
+		{ 
+			m_pPlayer->m_bZoomIsFinish = false;
+			m_pPlayer->m_pASM->ClearAnimSocket("Common_AnimSocket");
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+			m_pPlayer->m_bBrainField_Prod = false;
+
+			if (m_pPlayer->m_bBrainField)
+			{
+				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+			}
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD to BRAINFIELD_START", "BRAINFIELD_START")
-			.Predicator([&]()->_bool { return (!m_pPlayer->m_bBrainField) && (m_pPlayer->m_pController->KeyDown(CController::B)); })
+			.Predicator([&]()->_bool { return (!m_pPlayer->m_bBrainField) && (m_pPlayer->m_bBrainFieldStart); })
 			.Priority(0)
 
 			.AddTransition("BRAINFIELD to BRAINFIELD_FINISH_BF", "BRAINFIELD_FINISH_BF")
-			.Predicator([&]()->_bool { return (m_pPlayer->m_bBrainField) && (m_pPlayer->m_pController->KeyDown(CController::B)); })
+			.Predicator([&]()->_bool { return (m_pPlayer->m_bBrainField) && (m_pPlayer->m_bBrainFieldStart || 0.f >= CPlayerInfoManager::GetInstance()->Get_PlayerStat().fBrainFieldMaintain); })
 			.Priority(0)
 
 		.AddState("BRAINFIELD_START")
 		.OnStart([&]() 
 		{
+			m_pPlayer->m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
 			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -453,8 +545,16 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 			}
 			m_pPlayer->SasStateCheck();
 			m_pPlayer->Visible_Check();
+
+			m_ActionCamStart.PlayFromStart();
 		})
-		.Tick([&](double fTimeDelta) {})
+		.Tick([&](double fTimeDelta) 
+		{
+			if(m_ActionCamStart.Tick(fTimeDelta, m_fActionCamOut))
+			{
+				static_cast<CCamera_Player*>(m_pPlayer->m_pPlayerCam)->Set_CamDistance(m_fActionCamOut);
+			}
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD_START to BRAINFIELD_CAM_CLOSER", "BRAINFIELD_CAM_CLOSER")
 			.Predicator([&]()->_bool { return (0.9f <= m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_start")->GetPlayRatio()); })
@@ -478,12 +578,24 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 				iter->SetVisible(false);
 
-			// 이거 키는거
-			m_pPlayer->m_pBrainField->OpenBrainField(); //(여기서 실행하면 됨)
+			m_pPlayer->m_pBrainField->OpenBrainField();
 
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainField_01");
+			m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, m_pPlayer->m_fCameraLerpTime_In, m_pPlayer->m_fCameraLerpTime_Out);
 			// m_pBrainField->CloseBrainField();  끄는거
 		})
-		.Tick([&](double fTimeDelta) {static_cast<CCamSpot*>(m_pPlayer->m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f); })
+		.Tick([&](double fTimeDelta) 
+		{
+			static_cast<CCamSpot*>(m_pPlayer->m_pCamSpot)->Cam_Away(fTimeDelta, 0.3f);
+
+			if (m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->GetPlayRatio() >= 0.8f && m_pPlayer->BF_Start.IsNotDo())
+			{
+				CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(70.f);
+				m_pPlayer->m_bBrainField = true;
+				CPlayerInfoManager::GetInstance()->Set_BrainField(m_pPlayer->m_bBrainField);
+			}
+
+		})
 		.OnExit([&]() {})
 			.AddTransition("BRAINFIELD_ACTIONCAM_01 to BRAINFIELD_ACTIONCAM_02", "BRAINFIELD_ACTIONCAM_02")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100")->IsFinished(); })
@@ -492,12 +604,28 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 		.AddState("BRAINFIELD_ACTIONCAM_02")
 		.OnStart([&]() 
 		{
+			m_pPlayer->BF_Start.Reset();
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100"));
 			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			//m_pPlayer->CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(1.f);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->SetRefloat();
+				}
+			}
+
+			static_cast<CCamera_Player*>(m_pPlayer->m_pPlayerCam)->Set_CamDistance(4.f);
 		})
 		.Tick([&](double fTimeDelta) {})
-		.OnExit([&]() { m_pPlayer->m_bBrainField = true; })
+		.OnExit([&]() 
+		{
+		})
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
 			.Priority(0)
@@ -505,12 +633,24 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 		.AddState("BRAINFIELD_FINISH_BF")
 		.OnStart([&]() 
 		{
+			m_pPlayer->m_bBrainField_Prod = true;
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
 			m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+
+			//m_pPlayer->CMap_KineticBatchPreset::GetInstance()->Set_RespawnTime(5.f);
 		})
-		.Tick([&](double fTimeDelta) {})
-		.OnExit([&]() {m_pPlayer->m_bBrainField = false; })
+		.Tick([&](double fTimeDelta) 
+		{
+			if (m_pPlayer->m_pASM->GetSocketAnimation("Common_AnimSocket") != m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"))
+			{
+				list<CAnimation*> TestAnim;
+				TestAnim.push_back(m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF"));
+				m_pPlayer->m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
+			}
+		})
+		.OnExit([&]() { m_pPlayer->m_bBrainField = false; })
 			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
 			.Priority(0)
@@ -526,6 +666,15 @@ void CPlayerHotFixer::BrainFieldStateMachine_ReCompile()
 
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 				iter->SetVisible(true);
+
+			// 브레인필드 키면 키네틱 오브젝트들 하늘로 떠오름
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapKineticObject")->GetGameObjects())
+			{
+				if (false == static_cast<CMapKinetic_Object*>(iter)->GetThrow() && true == static_cast<CMapKinetic_Object*>(iter)->Usable())
+				{
+					static_cast<CMapKinetic_Object*>(iter)->Set_Dynamic();
+				}
+			}
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() {})

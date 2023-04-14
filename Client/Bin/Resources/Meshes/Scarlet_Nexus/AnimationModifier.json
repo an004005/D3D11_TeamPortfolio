@@ -126,13 +126,67 @@
         "Duration": 346.0,
         "TickPerSecond": 24.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 11.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 66.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 114.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 125.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 138.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 160.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 166.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 180.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 186.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Explode",
+                "EventTime": 282.0
+            }
+        ]
     },
     "AS_BrainFieldOpen_c02_ch0100": {
         "Duration": 188.0,
         "TickPerSecond": 24.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "BrainField_MaskBright",
+                "EventTime": 110.0
+            }
+        ]
     },
     "AS_DriveModeOpen_ch0100_ch0100": {
         "Duration": 170.0,
@@ -1472,10 +1526,6 @@
                 "EventTime": 17.0
             },
             {
-                "EventName": "Collision_End",
-                "EventTime": 25.0
-            },
-            {
                 "EventName": "attack_nor_2",
                 "EventTime": 3.0
             },
@@ -1498,6 +1548,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 20.0
             }
         ]
     },
@@ -3543,7 +3597,12 @@
         "Duration": 160.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "DirveModeExplode",
+                "EventTime": 20.0
+            }
+        ]
     },
     "AS_ch0100_301_AL_capture_wait_loop": {
         "Duration": 120.0,
@@ -4733,7 +4792,7 @@
     },
     "AS_ch0100_BrainField_start": {
         "Duration": 150.0,
-        "TickPerSecond": 24.0,
+        "TickPerSecond": 50.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -4743,6 +4802,14 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "BrainField_Ring_Effect",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_Gear_Effect",
+                "EventTime": 45.0
             }
         ]
     },
