@@ -153,12 +153,13 @@ void CBrainField::Tick(_double TimeDelta)
 			if (m_MapPostProcessFloat0Reset.IsNotDo())
 			{
 				m_pMapPostProcess->GetParam().Floats[0] = 0.f;
+				m_pMapPostProcess->GetParam().Ints[0] = 1;
+				m_pBrainFieldRedString->SetVisible(true);
+
+				m_pSkyBox->GetParams().iPass = 1;
 			}
 
-			m_pMapPostProcess->GetParam().Ints[0] = 1;
-			m_pBrainFieldRedString->SetVisible(true);
 
-			m_pSkyBox->GetParams().iPass = 1;
 
 			_float fPlayRatio = m_pBrainFieldCables->GetPlayRatio();
 			m_pMask->GetParam().Floats[4] = m_pMaskEmissive_c2->GetValue(fPlayRatio);
