@@ -262,18 +262,18 @@ PS_OUT PS_RIMLIGHT_6(PS_IN In)
 
 	if (g_int_0 == 0)
 	{
-		vColor = COL_FIRE;
+		vColor = COL_FIRE_DEBUF;
 		fEmissive = 2.f;
 	}
 	else if (g_int_0 == 1)
 	{
-		vColor = COL_OIL;
-		fEmissive = 1.2f;
+		vColor = COL_OIL_DEBUF;
+		fEmissive = 1.8f;
 	}
 	else if (g_int_0 == 2)
 	{
 		vColor = COL_ELEC;
-		fEmissive = 3.f;
+		fEmissive = 2.f;
 	}
 	else
 	{

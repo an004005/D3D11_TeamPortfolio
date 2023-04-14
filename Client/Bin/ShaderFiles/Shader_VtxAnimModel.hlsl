@@ -170,10 +170,9 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 		{
 			float3 vNormal = Out.vNormal.xyz * 2.f - 1.f;
 			float4 vViewDir = g_vCamPosition - In.vWorldPos;
-			float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 2.5f);
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_FIRE , fFresnel);
-			if (fFresnel > 0.5f)
-				fEmissive = 2.f;
+			float fFresnel = FresnelEffect(vNormal.xyz, vViewDir.xyz, 1.f);
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_FIRE_DEBUF, fFresnel);
+			fEmissive = fFresnel * 3.f;
 		}
 		else if (iDebuffState == 2) // oil
 		{
@@ -187,7 +186,7 @@ PS_OUT PS_MAIN_DEFAULT(PS_IN In)
 			vWetNormal = lerp(vDefaultNormal, vWetNormal, vWaveTile.a);
 			Out.vNormal = vector(vWetNormal * 0.5f + 0.5f, 0.f);
 
-			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_OIL, vWaveTile.a);
+			Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, COL_OIL_DEBUF, vWaveTile.a);
 			fEmissive = (vWaveTile.a * 0.5f);
 		}
 	}

@@ -35,7 +35,7 @@ HRESULT CEM0900::Initialize(void * pArg)
 		m_iMaxHP = LEVEL_NOW * (250 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.6f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
 		iEemeyLevel = ((LEVEL_NOW - 20) * 4) + (CMathUtils::RandomUInt(3) + 1);
@@ -181,19 +181,21 @@ void CEM0900::SetUpFSM()
 			{
 				m_fGravity = 20.f;
 			})
-			/*.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
-				.Predicator([this] { return m_bCrushStart; })*/
+			.AddTransition("Idle to BrainCrushStart", "BrainCrushStart")
+				.Predicator([this] { return m_bCrushStart; })
+
 			.AddTransition("Idle to Death" , "Death")
 				.Predicator([this] { return m_bDead; })
 
 			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this]	{ return m_bDestroyArmor; })
+				.Predicator([this] { return
+					m_bDestroyArmor
+					||m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
-				.Predicator([this]
-				{
-					return m_eCurAttackType == EAttackType::ATK_HEAVY;
-				})
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
 
 
 			.AddTransition("Idle to 4Attack", "4Attack")
@@ -212,29 +214,36 @@ void CEM0900::SetUpFSM()
 			{
 				Play_LightHitAnim();
 			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					Play_LightHitAnim();
+				}
+			})
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_END);
 				})
-
-		.AddState("Death")
-			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_424_AL_dead_down");
-			})
-
-
-///////////////////////////////////////////////////////////////////////////////////////////
 
 		.AddState("Hit_Heavy")
 			.OnStart([this]
 			{
-				Play_HeavyHitAnim();
+				Play_MidHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
-			{		
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+				{
+					Play_MidHitAnim();
+				}
 				_float fPower;
 				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
 				{
@@ -246,15 +255,24 @@ void CEM0900::SetUpFSM()
 			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY;
 				})
+
+		.AddState("Death")
+			.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_424_AL_dead_down");
+			})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 		.AddState("BrainCrushStart")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody",  "AS_em1100_485_AL_BCchance_start");
+				m_pASM->InputAnimSocketOne("FullBody",  "AS_em0900_485_AL_BCchance_start");
 			})
 			.AddTransition("BrainCrushStart to BrainCrushLoop", "BrainCrushLoop")
 				.Predicator([this]
@@ -265,8 +283,8 @@ void CEM0900::SetUpFSM()
 		.AddState("BrainCrushLoop")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_486_AL_BCchance_loop");
-				m_pModelCom->Find_Animation("AS_em1100_486_AL_BCchance_loop")->SetLooping(true);
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_486_AL_BCchance_loop");
+				m_pModelCom->Find_Animation("AS_em0900_486_AL_BCchance_loop")->SetLooping(true);
 
 				//브레인 생성
 				m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
@@ -294,15 +312,15 @@ void CEM0900::SetUpFSM()
 		.AddState("BrainCrushLoopDead")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em1100_487_AL_BCchance_end");
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_487_AL_BCchance_end");
 				m_pBrain->SetDelete();
 				SetDead();
 			})
 		
 		.AddState("BrainCrushEnd")
 			.OnStart([this]
-			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em1100m_em1100");
+			{ //TODO : 브레인크러쉬 공용 모션으로 바꾸기
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_487_AL_BCchance_end");
 				m_pBrain->BeginBC();
 			})
 			.Tick([this](_double)
@@ -350,13 +368,27 @@ void CEM0900::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_207_AL_atk_a7");
-					
+				m_bAttack = false;
+				m_dLoopTick = 0.5;
+
 			})
-			.Tick([this](_double)
+			.Tick([this](_double TimeDelta)
 			{
 				SocketLocalMove(m_pASM);
 				if (m_bAttack)
+				{
 					Spin_SweepSphere();
+
+					m_dLoopTick += TimeDelta;
+					if (m_dLoopTick > 0.3)
+					{
+						m_dLoopTick = 0.0;
+						_matrix PivotMatrix = XMMatrixIdentity();
+						PivotMatrix = XMMatrixScaling(2.6f,2.f, 2.6f);
+						CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em0320_Spin_Attack")->Start_AttachPivot(this, PivotMatrix, "Target", true, false, false);
+					}
+				}
+					
 					
 			})
 			.AddTransition("Spin to Idle", "Idle")
@@ -470,7 +502,7 @@ void CEM0900::SetUpFSM()
 void CEM0900::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_iArmorHp = m_iMaxHP * 0.2;
+	m_iArmorHp = m_iMaxHP * 0.3f;
 }
 
 void CEM0900::Tick(_double TimeDelta)
@@ -623,7 +655,7 @@ void CEM0900::Play_LightHitAnim()
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0900_402_AL_damage_l_B");
 }
 
-void CEM0900::Play_HeavyHitAnim()
+void CEM0900::Play_MidHitAnim()
 {
 	switch (m_eHitFrom)
 	{
@@ -657,38 +689,6 @@ void CEM0900::HeavyAttackPushStart()
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		m_vPushVelocity = XMVector3TransformNormal(m_vPushVelocity, XMMatrixRotationY(fYaw));
 	}
-}
-
-void CEM0900::Create_Bullet()
-{
-	DAMAGE_PARAM eDamageParam;
-
-	//TODO : 상태이상 정리되면 감전상태로 변경
-
-	eDamageParam.eAttackType = EAttackType::ATK_MIDDLE;
-	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
-	eDamageParam.iDamage = 100;
-
-	_matrix BoneMtx = m_pModelCom->GetBoneMatrix("Shell1") * m_pTransformCom->Get_WorldMatrix();
-	_vector vPrePos = BoneMtx.r[3];
-
-	CBulletBuilder()
-		.CreateBullet()
-			.Set_Owner(this)
-			.Set_Target(m_pTarget)
-			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
-			.Set_BulletEffPivot(pivot)
-			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
-			.Set_ShootSpeed(8.f)
-			.Set_Life(7.f)
-			.Set_DamageParam(eDamageParam)
-			.Set_DeadBulletEffect({ L"em1100_Elec_Bullet_Dead" })
-			.Set_DeadBulletParticle(L"em1100_Elec_Bullet_Dead_Particle")
-			.Set_Position(vPrePos)
-			.Set_Radius(1.2f)
-		.Build();
-
-
 }
 
 void CEM0900::HitWeakProcess(_double TimeDelta)
@@ -782,9 +782,9 @@ _bool CEM0900::CanMove4BC(_float fMinDist)
 
 _bool CEM0900::PriorityCondition()
 {
-	return m_bDead || m_bDestroyArmor;
+	return m_bDead || m_bDestroyArmor || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 }
-
+ 
 
 void CEM0900::FourAttack_Overlap(_bool Final)
 {

@@ -43,7 +43,6 @@ void CCamera::Tick(_double TimeDelta)
  // 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransformCom->Get_WorldMatrix_Inverse());
 	// 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(XMConvertToRadians(m_fFOV), m_fWidth / m_fHeight, m_fNear, m_fFar));
 	// }
-
 }
 
 void CCamera::Imgui_RenderProperty()
@@ -140,6 +139,7 @@ _matrix CCamera::GetXMViewMatrix()
 {
 	return XMMatrixInverse(nullptr, GetXMWorldMatrix());
 }
+
 
 void CCamera::Free()
 {

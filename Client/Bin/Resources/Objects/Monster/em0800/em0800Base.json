@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":100.0,"height":1.0,"maxJumpHeight":3.0,"pushPower":100.0,"radius":1.0,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"","Prototype_GameObject":"Monster_em800\u0000","RigidBody":{"ColliderType":7,"Density":10.0,"OriginTransform":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0],"ShapeType":0,"bKinematic":false,"bTrigger":false},"Transform":{"WorldMatrix":[0.786716639995575,-0.0,0.6173139810562134,0.0,0.0,1.0,0.0,0.0,-0.6173091530799866,0.0,0.7867105007171631,0.0,7.313738822937012,0.1999969780445099,-19.191883087158203,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 100.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 400.0,
+        "radius": 1.0,
+        "slopeLimitDegree": 10.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "Monster_em800\u0000",
+    "RigidBody": {
+        "ColliderType": 7,
+        "Density": 10.0,
+        "OriginTransform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "ShapeType": 0,
+        "bKinematic": false,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            0.786716639995575,
+            -0.0,
+            0.6173139810562134,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            -0.6173091530799866,
+            0.0,
+            0.7867105007171631,
+            0.0,
+            7.313738822937012,
+            0.1999969780445099,
+            -19.191883087158203,
+            1.0
+        ]
+    }
+}

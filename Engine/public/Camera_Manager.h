@@ -48,6 +48,7 @@ public:
 	void	ActionCamTickByPlayTime(_float fRatio);
 	void	ReleaseCameraFovCurve();
 	void	SetCameraFov(_float fFov);
+	void PlayShake(_float fDuration, _float fMagnitude);
 
 private:
 	CCurveFloatImpl* m_pFovCurve = nullptr;
@@ -70,8 +71,10 @@ private:	// 액션캠 관련 변수
 	string			m_szActionAnimName = "";
 
 private:
-	// unordered_map<string, >
-
+	//Shake
+	_float	m_fShakeTime = 0.f;
+	_float	m_fCurShakeTime = 0.f;
+	_float	m_fMagnitude = 0.f;
 public:
 	virtual void Free() override;
 	

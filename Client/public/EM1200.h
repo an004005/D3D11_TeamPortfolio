@@ -26,7 +26,7 @@ public:
 	virtual void SetUpAnimationEvent() override;
 	void SetUpMainFSM();
 	void SetUpIntro();
-	void SetUpChange();
+	void SetUpChangeFSM();
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -48,13 +48,18 @@ public:
 	_bool IsPlayingSocket() const;
 	class CEM1200_AnimInstance* GetASM() { return m_pASM; }
 	CModel* Get_Model() { return m_pModelCom; }
-
+	_bool PriorityCondition();
+	
 public:
 	void Play_LightHitAnim();
-	//void Play_MidHitAnim();
+	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
 	void FogControl(_double TimeDelta);
+	void PlayAnimCam_PhaseChange();
+
+	//사용전 m_bAlpha = true, m_pShaderUI->SetVisible(true) 셋팅 해줘야함
+	void GetDark(_double TimeDelta);
 public:
 	//공격
 	void Fall_Overlap();
@@ -69,6 +74,7 @@ private:
 	class CEM1200_AnimInstance*		m_pASM = nullptr;
 	CMaterial* m_pWeak = nullptr;
 	CAnimCam* m_pAnimCam = nullptr;
+	class CShaderUI* m_pShaderUI = { nullptr };
 
 private:
 	_float3						m_vMoveAxis;
@@ -102,6 +108,12 @@ private:
 	_float4x4		pivot;
 
 	_bool			m_OnAnimCam = false;
+
+	_bool		m_bAlpha = { false };
+	_bool		m_bReverse = { false };
+
+	_int		m_iUseCound = 0;
+	_bool	m_bGetBright = false;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
