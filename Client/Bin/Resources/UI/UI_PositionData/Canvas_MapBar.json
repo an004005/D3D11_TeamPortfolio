@@ -1,11 +1,106 @@
 {
     "ChildrenUI": [
+                {
+            "ChildTag": "BaseBar\u0000",
+            "ObjectTag": "BaseBar",
+            "Pivot": 8,
+            "PositionX": 300.0,
+            "PositionY": 250.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\WorldMap\\Bar.png\u0000"
+                ]
+            },
+            "SizeX": 429.0,
+            "SizeY": 38.0,
+            "Transform": {
+                "WorldMatrix": [
+                    429.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    45.60000228881836,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -514.0,
+                    269.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+             {
+            "ChildTag": "PickBar\u0000",
+            "ObjectTag": "PickBar",
+            "Pivot": 8,
+            "PositionX": 300.0,
+            "PositionY": 250.0,
+            "Priority": 2,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.2000000476837158,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\WorldMap\\BarB.png\u0000"
+                ]
+            },
+            "SizeX": 429.0,
+            "SizeY": 38.0,
+            "Transform": {
+                "WorldMatrix": [
+                    429.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    45.60000228881836,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -514.0,
+                    269.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        }
     ],
     "ObjectTag": "Canvas_MapBar",
     "Pivot": 0,
     "PositionX": 0.0,
     "PositionY": 0.0,
-    "Priority": 0,
+    "Priority": 3,
     "Prototype_GameObject": "Canvas_MapBar\u0000",
     "ScaleX": 0.5,
     "ScaleY": 0.5,

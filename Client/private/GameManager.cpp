@@ -52,6 +52,9 @@ HRESULT CGameManager::Initialize()
 	m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
 	assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
 
+	arrMap.fill(false);
+	arrMap[0] = true;
+
 	return S_OK;
 }
 

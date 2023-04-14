@@ -23,11 +23,22 @@ public:
 	virtual void	LoadFromJson(const Json& json) override;
 
 private:
+	void	CloneBar();
+
 	void	KeyInput();
+	void	MapBar_Tick();
 
 private:
-	class CCanvas_MapBar* m_pCanvasMapBar = { nullptr };
+	vector<class CCanvas_MapBar*> vecMapBar;
 	_bool	m_bMapUI = { false };
+
+	class CShaderUI* m_pShaderUI = { nullptr };
+	_bool		m_bOpen = { false };
+	_bool		m_bAlpha = { false };
+	_bool		m_bReverse = { false };
+
+	wstring	m_wsName = { L"" };
+	array<_bool, 6> arrMapChake;
 
 public:
 	static CCanvas_WorldMap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
