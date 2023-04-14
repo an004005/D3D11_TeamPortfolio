@@ -538,6 +538,9 @@
     <Filter Include="02.GameObjects\Item\Consumption_Item">
       <UniqueIdentifier>{2258b2b9-7b16-4f26-8c7a-6f9a626391ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GamePlay\08.DownTown">
+      <UniqueIdentifier>{d6ec4ca8-4855-43ad-b4b8-5e713bfc6600}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\WorldMap">
       <UniqueIdentifier>{6203072a-9451-4ae2-af0f-ea36161466dd}</UniqueIdentifier>
     </Filter>
@@ -1574,6 +1577,9 @@
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
     <ClInclude Include="EnvironmentEffect.h" />
+    <ClInclude Include="..\public\Level_DownTown.h">
+      <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\Canvas_WorldMap.h">
       <Filter>02.GameObjects\UI\WorldMap</Filter>
     </ClInclude>
@@ -2590,6 +2596,9 @@
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
     <ClCompile Include="EnvironmentEffect.cpp" />
+    <ClCompile Include="..\private\Level_DownTown.cpp">
+      <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Canvas_WorldMap.cpp">
       <Filter>02.GameObjects\UI\WorldMap</Filter>
     </ClCompile>
