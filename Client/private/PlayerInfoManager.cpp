@@ -32,9 +32,12 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
 	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
+	m_tPlayerStat.m_fWeaponDamage = 0.f;
+	m_tPlayerStat.m_fSasDamageRate = 1.f;
+	m_tPlayerStat.m_fFinalAttackDamage = (m_tPlayerStat.m_fBaseAttackDamage + m_tPlayerStat.m_fWeaponDamage) * m_tPlayerStat.m_fSasDamageRate;
 
 	m_tPlayerStat.fDriveEnergy = 0.f;
-	m_tPlayerStat.fMaxDriveEnergy = 100.f;
+	m_tPlayerStat.fMaxDriveEnergy = 30.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
 	m_tPlayerStat.fMaxBrainFieldMaintain = 60.0f;
@@ -67,6 +70,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tHanabiStat.iSprbrPower = 276;
 	m_tHanabiStat.iAttack = 50;
 	m_tHanabiStat.iDefense = 20;
+	m_tHanabiStat.bActivate = true;
 
 	m_tTsugumiStat.iHP = 1300;
 	m_tTsugumiStat.iMaxHP = 1300;
@@ -77,6 +81,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tTsugumiStat.iSprbrPower = 325;
 	m_tTsugumiStat.iAttack = 60;
 	m_tTsugumiStat.iDefense = 10;
+	m_tTsugumiStat.bActivate = true;
 
 #pragma endregion	멤버 기본 스탯 초기화
 
@@ -156,6 +161,9 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 {
 	// 사용이 불가능한 객체를 바로 null로 채워주기 위해 매 틱 작동한다.
 	// 플레이어에서 값을 사용할 것이므로 플레이어의 가장 첫 틱에서 동작하게 하자
+
+	// 공격력 갱신
+	m_tPlayerStat.m_fFinalAttackDamage = (m_tPlayerStat.m_fBaseAttackDamage + m_tPlayerStat.m_fWeaponDamage) * m_tPlayerStat.m_fSasDamageRate;
 
 	if (nullptr == m_pKineticObject) m_pKineticObject = nullptr;
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) m_pKineticObject = nullptr;
@@ -314,7 +322,7 @@ void CPlayerInfoManager::Change_DriveEnergy(CHANGETYPE eType, _float ChangeDrive
 		m_tPlayerStat.fDriveEnergy -= ChangeDrive;
 	}
 
-	if (m_tPlayerStat.fDriveEnergy > m_tPlayerStat.fMaxDriveEnergy)	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.m_iMaxKineticEnergy;
+	if (m_tPlayerStat.fDriveEnergy > m_tPlayerStat.fMaxDriveEnergy)	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.fMaxDriveEnergy;
 	if (m_tPlayerStat.fDriveEnergy < 0)								m_tPlayerStat.fDriveEnergy = 0;
 }
 
@@ -503,11 +511,11 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tPlayerStat.iLevel;
-		m_tPlayerStat.iMaxExp += 100;
+		m_tPlayerStat.iMaxExp += 400;
 		m_tPlayerStat.iExp = 0;
 		m_tPlayerStat.m_iMaxHP += 50;
 		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
-		m_tPlayerStat.m_fBaseAttackDamage += static_cast<_float>(m_tPlayerStat.iLevel);
+		m_tPlayerStat.m_fBaseAttackDamage += 20.f;/*static_cast<_float>(m_tPlayerStat.iLevel);*/
 		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;
 
 		m_tPlayerStat.iExp = iOverExp;
@@ -673,15 +681,21 @@ void CPlayerInfoManager::SAS_Checker()
 		}
 	}
 
-	m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_NOT;
-
-	const auto FireCheck = find(m_PlayerSasTypeList.begin(), m_PlayerSasTypeList.end(), ESASType::SAS_FIRE);
-	if (FireCheck != m_PlayerSasTypeList.end())
+	if (false == Get_isSasUsing(ESASType::SAS_FIRE) && false == Get_isSasUsing(ESASType::SAS_ELETRIC))
+	{
+		m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_NOT;
+		m_tPlayerStat.m_fSasDamageRate = 1.f;
+	}
+	else if (true == Get_isSasUsing(ESASType::SAS_FIRE) && false == Get_isSasUsing(ESASType::SAS_ELETRIC))
+	{
 		m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_FIRE;
-
-	const auto ElecCheck = find(m_PlayerSasTypeList.begin(), m_PlayerSasTypeList.end(), ESASType::SAS_ELETRIC);
-	if (ElecCheck != m_PlayerSasTypeList.end())
+		m_tPlayerStat.m_fSasDamageRate = 1.2f;
+	}
+	else if (false == Get_isSasUsing(ESASType::SAS_FIRE) && true == Get_isSasUsing(ESASType::SAS_ELETRIC))
+	{
 		m_tPlayerStat.m_eAttack_SAS_Type = ESASType::SAS_ELETRIC;
+		m_tPlayerStat.m_fSasDamageRate = 0.8f;
+	}
 }
 
 void CPlayerInfoManager::Free()

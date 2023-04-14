@@ -413,7 +413,8 @@ void CEM0700::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_487_AL_BCchance_end");
-				m_pBrain->SetDelete();
+				if (nullptr != m_pBrain)
+					m_pBrain->SetDelete();
 				SetDead();
 			})
 		

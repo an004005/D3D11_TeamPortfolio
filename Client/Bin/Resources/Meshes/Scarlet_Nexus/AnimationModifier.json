@@ -2115,7 +2115,16 @@
         "Duration": 45.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_210_AL_atk_charge_cancel": {
         "Duration": 73.0,
@@ -2400,6 +2409,14 @@
             {
                 "EventName": "Elec_Attack_Dash_End_Particle",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Bright_On",
+                "EventTime": 1.0
+            },
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 15.0
             }
         ]
     },

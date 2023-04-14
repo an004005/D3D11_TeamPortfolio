@@ -29,6 +29,9 @@ public:
 	void		ReleaseFire();
 
 public:
+	void		FireEffect();
+
+public:
 	void		SetDissolve(_float fDissolve);
 
 private:

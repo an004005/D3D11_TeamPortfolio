@@ -44,6 +44,27 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
+		m_pPlayer->m_pTrainStateMachine_Left->Imgui_RenderProperty();
+		m_pPlayer->m_pTelephonePoleStateMachine_Left->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainCrashStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pHBeamStateMachine_Left->Imgui_RenderProperty();
+		m_pPlayer->m_pTeleportStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pDropObjectStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pTankLorryStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pIronBarsStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pContainerStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pDriveModeProductionStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainFieldAttackStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainFieldKineticStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainFieldKineticComboStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pBrainFieldFallStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pKineticComboStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pKineticStataMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pHitStateMachine->Imgui_RenderProperty();
+		m_pPlayer->m_pJustDodgeStateMachine->Imgui_RenderProperty();
+
+
 		ImGui::Checkbox("Hanabi", &m_bHanabiActive);
 		ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
 		CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
