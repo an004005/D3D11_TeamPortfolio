@@ -28,7 +28,7 @@ static const float EPSILON = 1e-6f;
 
 #define SHADER_CABLE_STRIPE 15.f
 
-#define SHADER_BRAINFIELD_EFFECT 15.f
+#define SHADER_BRAINFIELD_EFFECT 16.f
 
 
 #define COL_WHITE float3(1.f, 1.f, 1.f)
