@@ -24,7 +24,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 m_bPlayerSpawn = false;
+	 // m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
