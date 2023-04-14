@@ -1573,12 +1573,19 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
 			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
 
-			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+			// 다 찍는데 206 필요 (새로 찍어야 하는 BP 는 25 필요)
+			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가 5, 5
 			{
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy += 50;
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
 				dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
 			}
+			else if (iIndex == 35)	// 공중 추가 공격 5 
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_KINETIC_COMBO_4] = true;
+			else if (iIndex == 36)	// 추가 공격 확장 2 6 
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_KINETIC_COMBO_AIR] = true;
+			else if (iIndex == 53) // 데미지 경감 4
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_BRAINFIELD_HARDBODY] = true;
 
 			// 레벨에 따른 아이콘 구매할 수 있는 정도
 			for (_int j = 0; j < 3; ++j)

@@ -61,6 +61,7 @@ HRESULT CGameManager::Initialize()
 void CGameManager::Tick(_double TimeDelta)
 {
 
+
 }
 
 void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)

@@ -44,7 +44,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.iLevel = 1;
 	m_tPlayerStat.iSprbrPower = 110;
 	m_tPlayerStat.iDefense = 15;
-	m_tPlayerStat.iBP = 50;
+	m_tPlayerStat.iBP = 181;		// 다 찍는데 206 필요 (새로 찍어야 하는 BP 는 25 필요)
 	m_tPlayerStat.iCoin = 5000;
 
 	m_tPlayerStat.bCopy = false;

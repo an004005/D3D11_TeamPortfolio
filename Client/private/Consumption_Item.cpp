@@ -100,7 +100,7 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
 
             if (iter != vecItemInfo.end())
             {
-                if (11 >= (*iter).second.iCount + 1)
+                if (10 >= (*iter).second.iCount + 1)
                     CGameManager::GetInstance()->Set_AddlItem(m_strName);
             }
         }

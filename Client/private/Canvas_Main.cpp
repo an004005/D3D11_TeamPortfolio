@@ -114,7 +114,7 @@ HRESULT CCanvas_Main::Render()
 	_tchar szText[MAX_PATH] = TEXT("");
 	PLAYER_STAT tPlayerStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iBP);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1270.0f, 34.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1260.0f, 34.0f), 0.f, vFontSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1215.0f, 34.0f), 0.f, vFontSize, vColor);
 
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iCoin);
