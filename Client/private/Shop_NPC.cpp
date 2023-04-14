@@ -78,7 +78,7 @@ void CShop_NPC::Tick(_double TimeDelta)
 
 			m_pShopEffect = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Z_Shop", PLAYERTEST_LAYER_FRONTUI);
 			_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-			m_pShopEffect->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 1.5f, vPos.z, 1.0));
+			m_pShopEffect->Start_AttachOnlyPos(XMVectorSet(vPos.x, vPos.y + 2.3f, vPos.z, 1.0));
 		}
 
 		if (CGameInstance::GetInstance()->KeyDown(DIK_Z))
@@ -92,15 +92,9 @@ void CShop_NPC::Tick(_double TimeDelta)
 
 			if (true == m_iTalkCheck)
 			{
-				m_pShopEffect->SetDelete();
-				m_pShopEffect = nullptr;
 				m_iTalkCheck = false;
-				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
-			}
-
-			if (nullptr == m_pShopEffect)
-			{
 				m_iEffectCheck = false;
+				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
 			}
 		}
 
@@ -111,6 +105,8 @@ void CShop_NPC::Tick(_double TimeDelta)
 				m_iTalkCheck = true;
 				m_pCanvas_MainTalk->SetDelete();
 				m_pCanvas_MainTalk = nullptr;
+				m_pShopEffect->SetDelete();
+				m_pShopEffect = nullptr;
 				dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Set_ShopUI();
 			}
 		}

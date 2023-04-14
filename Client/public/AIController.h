@@ -90,6 +90,7 @@ public:
 	DISTANCE CurrentDistance() const { return m_eDistance; }
 	EHandleInput GetAIInput() const { return m_eInput; }
 	void SetActive(_bool bActive) { m_bActive = bActive; }
+	void SetDetectTarget(_bool bDetected) { m_bDetectTarget = bDetected; }
 
 protected:
 	class CScarletCharacter* m_pTarget = nullptr;

@@ -31,6 +31,7 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     // Kinetic Object Batch & Item
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Item_Batch.json");
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Special_2F.json");
     
     // Monster Trigger(with Invisible Wall)
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster1stWave.json");
@@ -44,7 +45,9 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     
     // Red String Batch
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_1.json");
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_2.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_3.json");
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_4.json");
 
     // Boss Area Kinetic Object Preset(Recycle)
     Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_Construction2FBossRoom.json");

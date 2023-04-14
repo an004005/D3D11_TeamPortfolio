@@ -1576,7 +1576,7 @@ PS_OUT_Flag PS_CABLE_CONNECTED(PS_IN In)
 	if (Out.vColor.a <= 0.1f)
 		discard;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(SHADER_BRAINFIELD_EFFECT, 0.f, 0.f, 0.f);
 
 	return Out;
 }

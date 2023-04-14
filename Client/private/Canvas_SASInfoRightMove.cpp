@@ -54,14 +54,17 @@ void CCanvas_SASInfoRightMove::BeginTick()
 void CCanvas_SASInfoRightMove::Tick(_double TimeDelta)
 {
 	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
-	if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI)) return;
-
 	if (false == m_bMember)
 	{
-		m_bMember = true;
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI) && false == m_bTempOff)
+		{
+			m_bMember = true;
 
-		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(true);
+			for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+				iter->second->SetVisible(true);
+
+			dynamic_cast<CCanvas_SASInfoRight*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoRight"))->Set_Render();
+		}
 	}
 
 	CCanvas::Tick(TimeDelta);
@@ -108,8 +111,6 @@ void CCanvas_SASInfoRightMove::SASRightHp_Tick()
 	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iHP);
 	_float fMaxHP = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_HanabiStat().iMaxHP);
 	m_fHPRatio = fHp / fMaxHP;
-
-	dynamic_cast<CCanvas_SASInfoRight*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoRight"))->Set_Render();
 
 	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp0"))->Set_PlayerHp(m_fHPRatio);
 	dynamic_cast<CSASInfoRightHpUI*>(Find_ChildUI(L"SASInfoRight_Hp1"))->Set_PlayerHp(m_fHPRatio);

@@ -68,9 +68,6 @@ void CUI_Manager::Set_TempOff(const _bool bOff)
 
 	for (map<wstring, CCanvas*>::iterator iter = m_mapCanvass.begin(); iter != m_mapCanvass.end(); ++iter)
 		iter->second->TempOff(bOff);
-
-	// 객체 내 에서 따로 UI를 보관하기 때문에
-	dynamic_cast<CCanvas_Acquisition*>(Find_Canvas(L"Canvas_Acquisition"))->Set_Visible();
 }
 
 void CUI_Manager::Clear()

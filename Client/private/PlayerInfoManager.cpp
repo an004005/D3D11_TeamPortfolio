@@ -34,7 +34,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
 
 	m_tPlayerStat.fDriveEnergy = 0.f;
-	m_tPlayerStat.fMaxDriveEnergy = 100.f;
+	m_tPlayerStat.fMaxDriveEnergy = 60.f;
 
 	m_tPlayerStat.fBrainFieldMaintain = 0.f;
 	m_tPlayerStat.fMaxBrainFieldMaintain = 60.0f;
@@ -552,12 +552,6 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 
 		m_tTsugumiStat.iExp = iOverExp;
 	}
-}
-
-void CPlayerInfoManager::Set_StartBrainField()
-{
-	m_tPlayerStat.bStartBrainField = true;
-	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.fMaxDriveEnergy;
 }
 
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)

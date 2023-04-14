@@ -33,6 +33,8 @@ HRESULT CPlayerInfo_HpBackUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 	
+	if (6 == iObjectCount) iObjectCount = 0;
+
 	return S_OK;
 }
 

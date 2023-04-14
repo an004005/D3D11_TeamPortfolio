@@ -29,13 +29,9 @@ public:
 	_float	Get_CurrentDriveGauge() {
 		return m_fCurrentDriveGauge;
 	}
-	void	Set_CurrentDriveGauge() {
-		m_fCurrentDriveGauge = 1.0f;
-	}
 
 	void	Set_DriveGauge(const _float & fGauge) {
 		m_fDriveGauge = fGauge;
-		m_tParams.Floats[0] = 1.0f;
 	}
 
 private:

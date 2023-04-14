@@ -27,11 +27,16 @@ public:
 	void	Set_BossShild(const _float & fShild);
 
 private:
+	void	Partner_Initialize();
+
+private:
 	class CCanvas_BossHp* m_pCanvas_BossHp = { nullptr };
 	class CCanvas_Alarm* m_pUI_Alarm = { nullptr };
 
 private:
 	_float m_fCurrentHp = { 0.0f };
+	_uint iEnemLevel = { 0 };
+	EEnemyName	m_eEnemyName = EEnemyName::ENEMY_NAME_END;
 
 public:
 	static CCanvas_BossHpMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
