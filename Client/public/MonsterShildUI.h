@@ -25,6 +25,8 @@ public:
 
 	void	Broken_Tick(const _double & TimeDelta);		// UITODO : 크러시 게이지가 다 깍이면 호출해 주기!!
 
+	void SetPivotBoneName(const string& BoneName) { m_strPivotBoneName = BoneName; }
+
 private:
 	void HpBack_Tick(const _double & TimeDelta);
 
@@ -40,6 +42,8 @@ private:
 	_float					m_fShild = { 0.0f };
 	_bool					m_bBroken = { false };
 	_double				m_dBroken_TimeAcc = { 0.0 };
+
+	string m_strPivotBoneName = "Target";
 
 public:
 	static CMonsterShildUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
