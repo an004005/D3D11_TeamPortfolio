@@ -455,7 +455,11 @@ void CEM0210::SetUpFSM()
 			.Tick([this](_double TimeDelta)
 			{
 					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
+					if(m_pBrain == nullptr)
+						m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
+					else
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 					m_BCLoopTime += TimeDelta;
 			})
 

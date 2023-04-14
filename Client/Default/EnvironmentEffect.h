@@ -12,6 +12,14 @@ class CEnvironmentEffect : public CGameObject
 		Env_Crush_1_2,
 		Env_Spark_Particle_10Sec,
 		Boss_WaterFall,
+		EndingCredit_Inbok,
+		EndingCredit_Jihoon,
+		EndingCredit_Jongwook,
+		EndingCredit_Junghwan,
+		EndingCredit_Kibum,
+		EndingCredit_Suhyun,
+		EndingCredit_Team,
+		EndingCredit_Pic_RedRect,
 		ENVEFFECT_END
 	};
 private:

@@ -15,15 +15,10 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void	Tick(_double TimeDelta) override;
-	virtual void	Late_Tick(_double TimeDelta) override;
-	virtual HRESULT Render() override;
-
-	virtual void	Imgui_RenderProperty() override;
-	virtual void	SaveToJson(Json& json) override;
-	virtual void	LoadFromJson(const Json& json) override;
 
 public:
-	void	Set_BossHp();
+	void	Set_NoMove();
+	void	Set_LevelName(const _float iLevel, const _float fName);
 
 public:
 	static CCanvas_BossHp* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

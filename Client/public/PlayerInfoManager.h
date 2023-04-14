@@ -45,10 +45,8 @@ typedef struct tagPlayerStatus
 	_uint iBP = { 0 };
 	_uint iCoin = { 0 };
 
-
 	_bool bAttackEnable = false;
 
-	
 	_float fDriveEnergy = { 0 };
 	_float fMaxDriveEnergy = { 0 };
 
@@ -63,7 +61,6 @@ typedef struct tagPlayerStatus
 	_bool bBattle = false;
 	_bool bDriveMode = false;
 	_bool bBrainField = false;
-	_bool bStartBrainField = false;
 
 	_bool bCopy = false;
 
@@ -236,7 +233,6 @@ public:	// Set
 	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 
 	void			Set_Exp(const _uint iExp);
-	void			Set_StartBrainField();
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 
@@ -284,8 +280,8 @@ private:
 	_float			m_fCamDistance = 4.f;
 
 private:
-	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
+	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

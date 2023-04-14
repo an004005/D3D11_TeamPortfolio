@@ -2,6 +2,8 @@
 #include "..\public\Canvas_BossHp.h"
 #include "GameInstance.h"
 
+#include "ShaderUI.h"
+
 CCanvas_BossHp::CCanvas_BossHp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -37,40 +39,15 @@ void CCanvas_BossHp::Tick(_double TimeDelta)
 
 }
 
-void CCanvas_BossHp::Late_Tick(_double TimeDelta)
-{
-	CCanvas::Late_Tick(TimeDelta);
-
-}
-
-HRESULT CCanvas_BossHp::Render()
-{
-	if (FAILED(CUI::Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-void CCanvas_BossHp::Imgui_RenderProperty()
-{
-	CCanvas::Imgui_RenderProperty();
-
-}
-
-void CCanvas_BossHp::SaveToJson(Json& json)
-{
-	CCanvas::SaveToJson(json);
-}
-
-void CCanvas_BossHp::LoadFromJson(const Json & json)
-{
-	CCanvas::LoadFromJson(json);
-}
-
-void CCanvas_BossHp::Set_BossHp()
+void CCanvas_BossHp::Set_NoMove()
 {
 	Find_ChildUI(L"Boss_HpBackGround")->SetVisible(true);
 	Find_ChildUI(L"Boss_Name")->SetVisible(true);
+}
+
+void CCanvas_BossHp::Set_LevelName(const _float iLevel, const _float fName)
+{
+	dynamic_cast<CShaderUI*>(Find_ChildUI(L"Boss_Name"))->Set_Float2s(_float2(iLevel, fName));
 }
 
 CCanvas_BossHp * CCanvas_BossHp::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

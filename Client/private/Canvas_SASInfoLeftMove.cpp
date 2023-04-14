@@ -50,13 +50,15 @@ void CCanvas_SASInfoLeftMove::Tick(_double TimeDelta)
 	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
 	if (false == m_bMember)
 	{
-		if (false == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI)) 
-			return;
-		
-		m_bMember = true;
+		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) && false == m_bTempOff)
+		{
+			m_bMember = true;
 
-		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-			iter->second->SetVisible(true);
+			for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
+				iter->second->SetVisible(true);
+
+			dynamic_cast<CCanvas_SASInfoLeft*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))->Set_Render();
+		}
 	}
 
 	CCanvas::Tick(TimeDelta);
@@ -103,8 +105,6 @@ void CCanvas_SASInfoLeftMove::SASRightHp_Tick()
 	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iHP);
 	_float fMaxHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iMaxHP);
 	m_fHPRatio = fHp / fMaxHp;
-
-	dynamic_cast<CCanvas_SASInfoLeft*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))->Set_Render();
 
 	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp0"))->Set_PlayerHp(m_fHPRatio);
 	dynamic_cast<CSASInfoLeftHpUI*>(Find_ChildUI(L"SASInfoLeft_Hp1"))->Set_PlayerHp(m_fHPRatio);

@@ -562,12 +562,6 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 	}
 }
 
-void CPlayerInfoManager::Set_StartBrainField()
-{
-	m_tPlayerStat.bStartBrainField = true;
-	m_tPlayerStat.fDriveEnergy = m_tPlayerStat.fMaxDriveEnergy;
-}
-
 HRESULT CPlayerInfoManager::Set_CamSpot(CGameObject * pCamSpot)
 {
 	m_pCamSpot = pCamSpot;

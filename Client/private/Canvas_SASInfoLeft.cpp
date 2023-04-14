@@ -103,15 +103,11 @@ void CCanvas_SASInfoLeft::LoadFromJson(const Json & json)
 }
 
 void CCanvas_SASInfoLeft::Set_Render()
-{
-	if (true == m_bVisible)
-		return;
-
+{	
 	m_bVisible = true;
-	
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(true);
-
 }
 
 CCanvas_SASInfoLeft * CCanvas_SASInfoLeft::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
