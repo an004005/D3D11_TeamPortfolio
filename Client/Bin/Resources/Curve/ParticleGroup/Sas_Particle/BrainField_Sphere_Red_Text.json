@@ -1,0 +1,1 @@
+{"LifeTime":10.0,"ObjectTag":"","Particles":[{"ObjectTag":"BrainField_Sphere_Red_Text","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/BrainField_Particle/BrainField_Sphere_Red_Text.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
