@@ -20,6 +20,8 @@
 #include "Canvas_BossHpMove.h"
 #include "ImguiUtils.h"
 #include "PlayerInfoManager.h"
+#include "UI_Manager.h"
+#include "Camera_Manager.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -39,7 +41,7 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = LEVEL_NOW * 500;
+		m_iMaxHP =  20000;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
@@ -50,6 +52,7 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 		m_eEnemyName = EEnemyName::EM0320;
 		m_bHasCrushGauge = false;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -75,13 +78,13 @@ void CEM0320::SetUpComponents(void* pArg)
 
 	
 	m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("EnemyAnimCamera"));
-	Safe_AddRef(m_pAnimCam);
-
+	
 	if (m_pAnimCam == nullptr)
 	{
 		m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("EnemyAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
-		Safe_AddRef(m_pAnimCam);
 	}
+
+	Safe_AddRef(m_pAnimCam);
 
 
 	Json BossHeadJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/Boss1_en320/Boss1_Head.json");
@@ -240,6 +243,23 @@ void CEM0320::SetUpAnimationEvent()
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320DeadFlower")
 				->Start_NoAttach(this, false);
 		});
+
+	///////////////////AnimCam
+
+	m_pAnimCam->AddEvent("em320IntroEnd", [this]
+	{
+		auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro2");
+		m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+	});
+
+	m_pAnimCam->AddEvent("em320Intro2End", [this]
+	{
+		SetUpMainFSM();
+		m_pController->SetActive(true);
+		m_pEMUI->Create_BossUI();
+		CUI_Manager::GetInstance()->Set_TempOff(false);
+	});
+	
 }
 
 void CEM0320::SetUpMainFSM()
@@ -272,6 +292,10 @@ void CEM0320::SetUpMainFSM()
 				.Predicator([this]{ return m_eInput == CController::G; })
 			.AddTransition("Idle to Down", "Down")
 				.Predicator([this]{ return m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+			.AddTransition("Idle to Hit_Light", "Hit_Light")
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
 
 		.AddState("Slap")
 			.OnStart([this]
@@ -291,7 +315,7 @@ void CEM0320::SetUpMainFSM()
 			.AddTransition("Slap to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -305,7 +329,7 @@ void CEM0320::SetUpMainFSM()
 			.AddTransition("WaterBall to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -323,7 +347,7 @@ void CEM0320::SetUpMainFSM()
 			.AddTransition("SpinAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 
@@ -356,8 +380,7 @@ void CEM0320::SetUpMainFSM()
 			.AddTransition("JumpAtk to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+						return PriorityCondition();
 				})
 		.AddState("Jitabata")
 			.OnStart([this]
@@ -383,7 +406,7 @@ void CEM0320::SetUpMainFSM()
 			.AddTransition("Jitabata to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
+					return PriorityCondition()
 					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END
 					|| m_pASM->isSocketEmpty("FullBody");
 				})
@@ -432,6 +455,28 @@ void CEM0320::SetUpMainFSM()
 					return m_bDead || m_pASM->isSocketEmpty("FullBody");
 				})
 
+		.AddState("Hit_Light")
+			.OnStart([this]
+			{
+				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return PriorityCondition()
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_END);
+				})
 
 		.AddState("Death")
 			.OnStart([this]
@@ -447,6 +492,10 @@ void CEM0320::SetUpMainFSM()
 
 void CEM0320::SetUpIntroFSM()
 {
+	CUI_Manager::GetInstance()->Set_TempOff(true);
+
+	m_pController->SetActive(false);
+
 	m_pFSM = CFSMComponentBuilder()
 		.InitState("Idle")
 		.AddState("Idle")
@@ -459,7 +508,7 @@ void CEM0320::SetUpIntroFSM()
 			{
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro");
 				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
-				m_pController->SetActive(false);
+				
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_204_AL_atk_a3_start");
 				m_pModelCom->Find_Animation("AS_em0300_204_AL_atk_a3_start")->SetPlayRatio(0.3);
 				m_bIntro = true;
@@ -481,18 +530,12 @@ void CEM0320::SetUpIntroFSM()
 		.AddState("JumpEnd")
 			.OnStart([this]
 			{
+				CGameInstance::GetInstance()->PlayShake(0.8f, 0.5f);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_207_AL_atk_a3_end");
-			})
-			.OnExit([this]		
-			{
-					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro2");
-					m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
-					m_bIntroCoolStart = true;
-					m_dIntroCool = 0.0;
+
 			})
 			.AddTransition("JumpEnd to Idle", "Idle")
 				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.95f); })
-
 
 		.Build();
 }
@@ -568,7 +611,6 @@ void CEM0320::Tick(_double TimeDelta)
 		m_pWaterMtrl->GetParam().Floats[1] = 1.f;
 	}
 
-	UpdateCoolTimes(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -891,6 +933,29 @@ void CEM0320::FireWaterBall()
 	}
 }
 
+void CEM0320::Play_LightHitAnim()
+{
+	switch (m_eHitFrom)
+	{
+	case EBaseAxis::NORTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0300_401_AL_damage_l_F");
+		break;
+	case EBaseAxis::EAST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0300_404_AL_damage_l_R");
+		break;
+	case EBaseAxis::SOUTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0300_402_AL_damage_l_B");
+		break;
+	case EBaseAxis::WEST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0300_403_AL_damage_l_L");
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH;
+	default:
+		NODEFAULT;
+	}
+}
+
 
 void CEM0320::SmokeEffectCreate()
 {
@@ -934,20 +999,9 @@ void CEM0320::CreateWeakExplosionEffect()
 	}
 }
 
-void CEM0320::UpdateCoolTimes(_double TimeDelta)
+_bool CEM0320::PriorityCondition()
 {
-	if (m_bIntroCoolStart == true)
-	{
-		m_dIntroCool += TimeDelta;
-
-		if (m_dIntroCool > 5.0)
-		{
-			m_bIntroCoolStart = false;
-			SetUpMainFSM();
-			m_pController->SetActive(true);
-			m_pEMUI->Create_BossUI();
-		}
-	}
+	return m_bDead || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 }
 CEM0320* CEM0320::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

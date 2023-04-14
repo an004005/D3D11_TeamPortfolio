@@ -65,7 +65,7 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
 			tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 			tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-			tParam.iDamage = 500;
+			tParam.iDamage = 1000;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			Container_Input_Damage(tParam);
@@ -185,7 +185,7 @@ void CSpecial_Container::Container_ChangeIndex(_uint iIndex)
 	tParam.eAttackType = EAttackType::ATK_SPECIAL_LOOP;
 	tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 	tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-	tParam.iDamage = 300;
+	tParam.iDamage = 600;
 	tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 	Container_Input_Damage(tParam);
@@ -285,15 +285,13 @@ void CSpecial_Container::Container_Press_Maintain(_float4 vTargetPos, _double Ti
 
 void CSpecial_Container::Container_Press_Finish()
 {
+	if (m_bDeadCheck) return;
+
 	if (m_pCollider->IsTrigger())
 	{
 		m_pCollider->Set_Trigger(false);
 		//m_pCollider->UpdateChange();
 		m_bCollision = false;
-	}
-	else
-	{
-		return;
 	}
 
 	m_pCollider->AddVelocity({ 0.f, -50.f, 0.f });

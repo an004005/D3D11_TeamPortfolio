@@ -220,7 +220,7 @@ void CCamSpot::MouseMove(_double TimeDelta)
 	if (m_vMouseMovement.x)
 	{
 		_matrix matRotation = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f),
-			XMConvertToRadians(90.f) * m_fSensitivity * (_float)TimeDelta * m_vMouseMovement.x);
+			XMConvertToRadians(90.f) * m_fSensitivity * g_fTimeDelta * m_vMouseMovement.x);
 		vLook = XMVector3TransformNormal(vLook, matRotation);
 		m_pTransformCom->Set_State(CTransform::STATE_LOOK, vLook);
 	}

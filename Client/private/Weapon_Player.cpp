@@ -97,14 +97,17 @@ void CWeapon_Player::Tick(_double TimeDelta)
 		{
 			case ESASType::SAS_NOT:
 				m_pModel->FindMaterial(strMtrlName.c_str())->GetParam().Ints[0] = 1;
+				SetLight({ 0.2f, 0.01f, 0.5f, 1.f });
 				break;
 
 			case ESASType::SAS_FIRE:
 				m_pModel->FindMaterial(strMtrlName.c_str())->GetParam().Ints[0] = 2;
+				SetLight({ 0.239f, 0.035f, 0.033f, 1.f });
 				break;
 
 			case ESASType::SAS_ELETRIC:
 				m_pModel->FindMaterial(strMtrlName.c_str())->GetParam().Ints[0] = 3;
+				SetLight({ 0.9686f, 1.f, 0.07451f, 1.f });
 				break;
 
 			default:
@@ -168,6 +171,17 @@ void CWeapon_Player::Change_Weapon(WEAPONTYPE eType)
 	CPlayerInfoManager::GetInstance()->Set_PlayerWeapon(static_cast<_uint>(m_eType));
 
 	m_pModel = m_pModelComs[eType];
+}
+
+void CWeapon_Player::SetLight(_float4 vColor)
+{
+	_float4 WeaponPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (m_pTransformCom->Get_State(CTransform::STATE_LOOK) * m_fAdaptLength);
+	WeaponPos.w = 1.f;
+	_float4 WeaponLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+	WeaponLook.Normalize();
+	WeaponLook.w = 0.f;
+
+	CGameInstance::GetInstance()->AddLifeCapsuleLight(0.1f, WeaponPos + WeaponLook, WeaponPos - WeaponLook, 2.f, vColor/*{ 0.545098f, 0.1f, 0.6f, 1.f }*/);
 }
 
 HRESULT CWeapon_Player::SetUp_Components()

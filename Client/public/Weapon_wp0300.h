@@ -28,6 +28,9 @@ public:
 	void		SetFire();
 	void		ReleaseFire();
 
+public:
+	void		SetDissolve(_float fDissolve);
+
 private:
 	CParticleGroup* m_pParticle = nullptr;
 

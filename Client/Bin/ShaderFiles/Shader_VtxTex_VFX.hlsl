@@ -2634,7 +2634,7 @@ technique11 DefaultTechnique
 	pass CableConnected
 	{
 		SetRasterizerState(RS_NonCulling);
-		SetDepthStencilState(DS_Default, 0);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
 		VertexShader = compile vs_5_0 VS_MAIN();

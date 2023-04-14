@@ -50,6 +50,7 @@ HRESULT CEM0800::Initialize(void * pArg)
 
 		m_eEnemyName = EEnemyName::EM0800;
 		m_bHasCrushGauge = true;
+		m_bBoss = true;
 	}
 
 
@@ -214,8 +215,12 @@ void CEM0800::SetUpFSM()
 
 			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+
+			.AddTransition("Idle to Hit_Light", "Hit_Light")
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
 		
 			.AddTransition("Idle to Bite", "Bite")
 				.Predicator([this] { return m_eInput == CController::B; })
@@ -228,8 +233,31 @@ void CEM0800::SetUpFSM()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+		.AddState("Hit_Light")
+			.OnStart([this]
+			{
+				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_END);
+				})
+
 		.AddState("Hit_Heavy")
-				.OnStart([this]
+			.OnStart([this]
 			{
 				Play_MidHitAnim();
 				HeavyAttackPushStart();
@@ -238,14 +266,10 @@ void CEM0800::SetUpFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				SocketLocalMove(m_pASM);
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
-					HeavyAttackPushStart();
 					Play_MidHitAnim();
 				}
-
 				_float fPower;
 				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
 				{
@@ -254,17 +278,15 @@ void CEM0800::SetUpFSM()
 					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
 			})
-			.OnExit([this]
-			{
-				m_pASM->ClearSocketAnim("FullBody", 0.f);
-			})
 			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
-						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP;
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY;
 				})
+
 		.AddState("Death")
 				.OnStart([this]
 				{

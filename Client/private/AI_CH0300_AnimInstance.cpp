@@ -134,6 +134,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 			.StartEvent([&]() 
 			{ 
 				SpairAnimationManager(true);
+				static_cast<CAI_CH0300*>(m_pTargetObject)->WeaponDissolve(true);
 			})
 				.AddTransition("TRANS_BATTLE to HIT", "HIT")
 				.Predicator([&]()->_bool {return m_bHit; })
@@ -149,6 +150,7 @@ HRESULT CAI_CH0300_AnimInstance::Initialize(CModel* pModel, CGameObject* pGameOb
 			.StartEvent([&]() 
 			{ 
 				SpairAnimationManager(false);
+				static_cast<CAI_CH0300*>(m_pTargetObject)->WeaponDissolve(false);
 			})
 				.AddTransition("TRANS_NEUTRAL to HIT", "HIT")
 				.Predicator([&]()->_bool {return m_bHit; })

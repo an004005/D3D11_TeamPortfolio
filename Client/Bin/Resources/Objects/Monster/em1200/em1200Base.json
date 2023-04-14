@@ -1,1 +1,60 @@
-{"ControlledRigidBody":{"ColliderType":1,"contactOffset":0.10000000149011612,"density":100.0,"height":1.0,"maxJumpHeight":3.0,"pushPower":200.0,"radius":3.0,"slopeLimitDegree":45.0,"stepOffset":0.10000000149011612},"ObjectTag":"","Prototype_GameObject":"Monster_em1200\u0000","RigidBody":{"ColliderType":8,"Density":10.0,"OriginTransform":[3.0,0.0,0.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,1.0,0.0,0.18045759201049805,1.0,0.32481902837753296,1.0],"ShapeType":1,"bKinematic":true,"bTrigger":false},"Transform":{"WorldMatrix":[-0.7623968720436096,-1.3875057902623666e-06,-0.6471097469329834,0.0,-6.422341130019049e-07,1.0,-1.3875057902623666e-06,0.0,0.6471097469329834,-6.422341130019049e-07,-0.7623968720436096,0.0,5.482555389404297,0.13394144177436829,-1.0132806301116943,1.0]}}
+{
+    "ControlledRigidBody": {
+        "ColliderType": 1,
+        "contactOffset": 0.10000000149011612,
+        "density": 100.0,
+        "height": 1.0,
+        "maxJumpHeight": 3.0,
+        "pushPower": 400.0,
+        "radius": 3.0,
+        "slopeLimitDegree": 10.0,
+        "stepOffset": 0.10000000149011612
+    },
+    "ObjectTag": "",
+    "Prototype_GameObject": "Monster_em1200\u0000",
+    "RigidBody": {
+        "ColliderType": 8,
+        "Density": 10.0,
+        "OriginTransform": [
+            3.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.18045759201049805,
+            1.0,
+            0.32481902837753296,
+            1.0
+        ],
+        "ShapeType": 1,
+        "bKinematic": true,
+        "bTrigger": false
+    },
+    "Transform": {
+        "WorldMatrix": [
+            -0.7623968720436096,
+            -1.3875057902623666e-06,
+            -0.6471097469329834,
+            0.0,
+            -6.422341130019049e-07,
+            1.0,
+            -1.3875057902623666e-06,
+            0.0,
+            0.6471097469329834,
+            -6.422341130019049e-07,
+            -0.7623968720436096,
+            0.0,
+            5.482555389404297,
+            0.13394144177436829,
+            -1.0132806301116943,
+            1.0
+        ]
+    }
+}

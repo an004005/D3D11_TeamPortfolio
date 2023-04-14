@@ -45,6 +45,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 
 		m_iAtkDamage = 50;
 		iEemeyLevel = 2;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
