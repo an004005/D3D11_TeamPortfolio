@@ -1599,6 +1599,24 @@ PS_OUT_Flag PS_SAS_DEAD_LIGHT(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_TEAM_PIC(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+
+	if (Tex.r == 1.f && Tex.g == 0.f)
+		discard;
+
+	Out.vColor = CalcHDRColor(Tex, g_float_0);
+
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
+
 PS_OUT_Flag PS_MASK_TEX_DISTORTION_CHARGE(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -2624,5 +2642,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_CABLE_CONNECTED();
+	}
+
+	//64
+	pass TeamPic
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TEAM_PIC();
 	}
 }
