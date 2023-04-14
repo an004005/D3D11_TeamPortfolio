@@ -40,7 +40,7 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iMaxHP = LEVEL_NOW * (150 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.5f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.6f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
 		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);

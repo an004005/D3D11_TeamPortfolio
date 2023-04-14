@@ -909,6 +909,11 @@ CCamAnimation* CGameInstance::GetCamAnim(const string& strName)
 	return m_pCamera_Manager->GetCamAnim(strName);
 }
 
+void CGameInstance::PlayShake(_float fDuration, _float fMagnitude)
+{
+	return m_pCamera_Manager->PlayShake(fDuration, fMagnitude);
+}
+
 void CGameInstance::ResetTimeRatio()
 {
 	m_pGameTime_Manager->ResetTimeRatio();

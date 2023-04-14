@@ -50,7 +50,7 @@ private:
 	void Play_MidHitAnim();
 	void	HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
-
+	_bool PriorityCondition();
 private:
 	//충돌 관련 함수 정의
 	void Rush_Overlap();

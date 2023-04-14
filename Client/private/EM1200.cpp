@@ -13,7 +13,7 @@
 #include "PlayerInfoManager.h"
 #include "HelperClasses.h"
 #include "ShaderUI.h"
-
+#include "UI_Manager.h"
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -35,7 +35,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = LEVEL_NOW * 500;
+		m_iMaxHP = 25000;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
@@ -276,13 +276,10 @@ void CEM1200::SetUpAnimationEvent()
 		SetUpMainFSM();
 		m_pEMUI->Create_BossUI();
 		m_OnAnimCam = false;
+
+		CUI_Manager::GetInstance()->Set_TempOff(false);
 	});
 
-	m_pAnimCam->AddEvent("em1200ChangeEnd", [this]
-	{
-			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change2");
-			m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);	
-	});
 
 	m_pAnimCam->AddEvent("em1200Change2End", [this]
 	{
@@ -290,9 +287,8 @@ void CEM1200::SetUpAnimationEvent()
 			SetUpMainFSM();
 			m_pEMUI->Create_UIInfo();
 			m_OnAnimCam = false;
+			CUI_Manager::GetInstance()->Set_TempOff(false);
 	});
-
-	
 }
 
 void CEM1200::SetUpMainFSM()
@@ -321,17 +317,18 @@ void CEM1200::SetUpMainFSM()
 			.AddTransition("Idle to Death", "Death")
 				.Predicator([this] { return m_bDead; })
 			.AddTransition("Idle to Down", "Down")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END
-					|| m_eInput == CController::EHandleInput::CTRL; })
+				.Predicator([this] { return /*m_eCurAttackType == EAttackType::ATK_SPECIAL_END*/
+					m_eInput == CController::EHandleInput::CTRL; })
 
-	/*		.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
+			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
 				.Predicator([this] { return
-					(m_eCurAttackType == EAttackType::ATK_HEAVY
-					&& m_bChangePhase); })*/
+					(m_eCurAttackType == EAttackType::ATK_SPECIAL_END
+					&& m_bChangePhase); })
 
-			//.AddTransition("Idle to Hit_Light", "Hit_Light")
-			//	.Predicator([this] { return
-			//		m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP; })
+			.AddTransition("Idle to Hit_Light", "Hit_Light")
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
 
 
 			.AddTransition("Idle to Fall", "Fall")
@@ -432,7 +429,8 @@ void CEM1200::SetUpMainFSM()
 			})
 			.Tick([this](_double)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP)
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY)
 				{
 					Play_LightHitAnim();
 				}
@@ -443,6 +441,7 @@ void CEM1200::SetUpMainFSM()
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
 						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
 							&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
@@ -454,7 +453,8 @@ void CEM1200::SetUpMainFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if(m_eCurAttackType == EAttackType::ATK_HEAVY)
+				if(m_eCurAttackType == EAttackType::ATK_SPECIAL_END
+					&& m_bChangePhase)
 				{
 					Play_MidHitAnim();
 				}
@@ -473,7 +473,7 @@ void CEM1200::SetUpMainFSM()
 					return m_bDead
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
 						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
-						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY;
 				})
 
 		.AddState("Death")
@@ -948,27 +948,78 @@ void CEM1200::SetUpIntro()
 {
 	m_pController->SetActive(false);
 	m_OnAnimCam = true;
-	//m_pASM->AttachAnimSocketMany("FullBody", { "AS_m02c00920c01_em1200", "AS_m02c00920c02_em1200"});
 
 	m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_165_AL_waver_motif1");
 	m_pModelCom->Find_Animation("AS_em1200_165_AL_waver_motif1")->SetLooping(true);
 
 	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Intro");
 	m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+
+	CUI_Manager::GetInstance()->Set_TempOff(true);
 }
 
-void CEM1200::SetUpChange()
+void CEM1200::SetUpChangeFSM()
 {
 	CEnemy::SetUpFSM();
 
 	m_OnAnimCam = true;
 	m_pController->SetActive(false);
 	m_pEMUI->Delete_UIInfo();
+	CUI_Manager::GetInstance()->Set_TempOff(true);
+	m_pFSM = CFSMComponentBuilder()
+		.InitState("Idle")
+		.AddState("Idle")
+			.OnStart([this]
+			{
+				m_fGravity = 20.f;
+			})
+			.AddTransition("Idle to Dark", "Dark")
+				.Predicator([this] { return m_OnAnimCam && m_bAlpha == false; })
+			
+		.AddState("Dark")
+			.OnStart([this]
+			{
+				m_bAlpha = true;
+				m_pShaderUI->SetVisible(true);
+			})
+			.Tick([this](_double TimeDelta)
+			{
+					GetDark(TimeDelta);
+			})
+			.AddTransition("Dark to Change1", "Change1")
+				.Predicator([this] { return m_bAlpha == false; })
 
-	m_pASM->AttachAnimSocketMany("FullBody", { "AS_m02c00920c01_em1200" , "AS_m02c00920c02_em1200"});
+		.AddState("Change1")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody",  "AS_m02c00920c01_em1200");
 
-	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change");
-	m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change");
+				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+
+			})
+			.AddTransition("Change1 to Change2", "Change2")
+				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.99f); })
+
+		.AddState("Change2")
+			.OnStart([this]
+			{
+				m_pASM->AttachAnimSocketOne("FullBody", "AS_m02c00920c02_em1200");
+
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change2");
+				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+
+			})
+			.OnExit([this]
+			{
+					m_bAlpha = true;
+					m_pShaderUI->SetVisible(true);
+			})
+			.AddTransition("Change2 to Idle", "Idle")
+				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.99f); })
+
+		.Build();
+
 }
 
 void CEM1200::BeginTick()
@@ -1249,22 +1300,14 @@ void CEM1200::PlayAnimCam_PhaseChange()
 	{
 		m_bSetUpChange.IsNotDo([this]
 		{
-				m_bAlpha = true;
-				m_pShaderUI->SetVisible(true);
+			SetUpChangeFSM();
 		});
 	}
+}
 
-	if(m_iUseCound++ == 0 && m_bGetBright)
-	{
-		SetUpChange();
-	}
-	else if (m_iUseCound == 1 && m_bGetBright)
-	{
-
-	}
-
-	if (false == m_bAlpha)
-		return;
+void CEM1200::GetDark(_double TimeDelta)
+{
+	if (m_bAlpha == false) return; 
 
 	m_pShaderUI->Set_Size({ _float(g_iWinSizeX), _float(g_iWinSizeY) });
 	_float fAlpha = m_pShaderUI->Get_Float4s_W();
@@ -1277,14 +1320,13 @@ void CEM1200::PlayAnimCam_PhaseChange()
 		m_bReverse = false;
 		m_bAlpha = false;
 		m_pShaderUI->SetVisible(false);
-		m_bGetBright = true;
 	}
 
 	_float fSpeed = 0.3f;
 	if (m_bReverse == false)
-		fAlpha += _float(TIME_DELTA) * fSpeed;
+		fAlpha += _float(TimeDelta) * fSpeed;
 	else
-		fAlpha -= _float(TIME_DELTA) * fSpeed;
+		fAlpha -= _float(TimeDelta) * fSpeed;
 	m_pShaderUI->Set_Float4s_W(fAlpha);
 }
 

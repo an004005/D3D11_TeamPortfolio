@@ -34,7 +34,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = LEVEL_NOW * 500;
+		m_iMaxHP = 30000;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
@@ -1056,7 +1056,7 @@ void CEM1100::WaterLoop_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.8f), EAttackType::ATK_END);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.3f), EAttackType::ATK_END);
 	}
 }
 

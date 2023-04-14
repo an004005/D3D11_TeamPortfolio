@@ -26,7 +26,7 @@ public:
 	virtual void SetUpAnimationEvent() override;
 	void SetUpMainFSM();
 	void SetUpIntro();
-	void SetUpChange();
+	void SetUpChangeFSM();
 
 	virtual void BeginTick() override;
 	virtual void Tick(_double TimeDelta) override;
@@ -49,7 +49,7 @@ public:
 	class CEM1200_AnimInstance* GetASM() { return m_pASM; }
 	CModel* Get_Model() { return m_pModelCom; }
 	_bool PriorityCondition();
-
+	
 public:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
@@ -57,6 +57,9 @@ public:
 	void HitWeakProcess(_double TimeDelta);
 	void FogControl(_double TimeDelta);
 	void PlayAnimCam_PhaseChange();
+
+	//사용전 m_bAlpha = true, m_pShaderUI->SetVisible(true) 셋팅 해줘야함
+	void GetDark(_double TimeDelta);
 public:
 	//공격
 	void Fall_Overlap();

@@ -36,7 +36,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
 		//5000
-		m_iMaxHP = LEVEL_NOW * (250  + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP = LEVEL_NOW * (300  + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10;
@@ -238,9 +238,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Idle to Down", "Down")
 				.Predicator([this] { return m_bDestroyArmor; })
 			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this] { return
-					m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
-
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
 			.AddTransition("Idle to Hit_Light", "Hit_Light")
 				.Predicator([this] { return
 					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
@@ -323,10 +321,10 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Hit_Light to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead
+					return PriorityCondition()
 						|| m_pASM->isSocketPassby("FullBody", 0.95f)
 						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
-							&& m_eCurAttackType == EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
 							&& m_eCurAttackType != EAttackType::ATK_END);
 				})
 
@@ -389,7 +387,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_turn to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//장판
 		.AddState("Attack_c1")
@@ -416,7 +414,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_c1 to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//돌진
 		.AddState("Attack_b2_Start")
@@ -443,7 +441,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Start to Attack_b2_Loop", "Attack_b2_Loop")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_b2_Loop")
@@ -465,7 +463,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Loop to Attack_b2_Stop", "Attack_b2_Stop")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || !m_bRush;
+					return PriorityCondition() || !m_bRush;
 				})
 
 		.AddState("Attack_b2_Stop")
@@ -485,7 +483,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Stop to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -750,6 +748,11 @@ void CEM0110::HitWeakProcess(_double TimeDelta)
 		}
 	}
 	
+}
+
+_bool CEM0110::PriorityCondition()
+{
+	return m_bDead || m_bDestroyArmor || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 }
 
 
