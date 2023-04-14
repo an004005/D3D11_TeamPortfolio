@@ -192,6 +192,130 @@
             {
                 "EventName": "BrainField_RedTextParticle_Explode",
                 "EventTime": 282.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 11.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 114.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 125.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 138.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 160.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 166.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 180.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 186.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 11.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 114.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 125.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 138.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 160.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 166.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 180.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 186.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 110.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 130.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 170.0
             }
         ]
     },
