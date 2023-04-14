@@ -238,11 +238,6 @@ void CEM0320::SetUpAnimationEvent()
 		FireWaterBall();
 	});
 
-	m_pModelCom->Add_EventCaller("DeadFlower", [this]
-		{
-			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320DeadFlower")
-				->Start_NoAttach(this, false);
-		});
 
 	///////////////////AnimCam
 
@@ -257,9 +252,7 @@ void CEM0320::SetUpAnimationEvent()
 		SetUpMainFSM();
 		m_pController->SetActive(true);
 		m_pEMUI->Create_BossUI();
-		CUI_Manager::GetInstance()->Set_TempOff(false);
 	});
-	
 }
 
 void CEM0320::SetUpMainFSM()
@@ -481,12 +474,27 @@ void CEM0320::SetUpMainFSM()
 		.AddState("Death")
 			.OnStart([this]
 			{
+				CUI_Manager::GetInstance()->Set_TempOff(true);
 				Reset();
+				m_pController->SetActive(false);
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0300_411_AL_WT_break");
+				Safe_Release(m_pEMUI);
 			})
+			.Tick([this](_double TimeDelta)
+			{
+					if(m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break")->GetPlayTime() >= 68.f)
+						m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break")->SetTickPerSec(0.5f);
+						
+					if(m_bEnding == false && m_pModelCom->Find_Animation("AS_em0300_411_AL_WT_break")->GetPlayTime() > 69.f)
+					{
+						m_DeathTimeline.PlayFromStart();
 
+						CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0320DeadFlower")
+							->Start_NoAttach(this, false);
 
-
+						m_bEnding = true;
+					}
+			})
 		.Build();
 }
 
@@ -611,6 +619,11 @@ void CEM0320::Tick(_double TimeDelta)
 		m_pWaterMtrl->GetParam().Floats[1] = 1.f;
 	}
 
+	//if (m_pAnimCam != nullptr)
+	//{
+	//	if (m_pAnimCam->IsFinished())
+	//		
+	//}
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -841,9 +854,23 @@ _bool CEM0320::IsWeak(CRigidBody* pHitPart)
 
 void CEM0320::CheckHP(DAMAGE_PARAM& tDamageParams)
 {
+	if (m_bCrushStart == true) return;
+
+
 	if (m_bHitWeak)
 		tDamageParams.iDamage =(_uint)(1.5f * (_float)tDamageParams.iDamage);
-	CEnemy::CheckHP(tDamageParams);
+	
+	_int iDamage = tDamageParams.iDamage;
+
+	if (m_bHitWeak)
+		iDamage *= 1.2f;
+
+	m_iHP -= iDamage;
+	if (m_iHP < 0)
+	{
+		m_bDead = true;
+		m_iHP = 0;
+	}
 }
 
 void CEM0320::FireWaterBall()
@@ -1029,6 +1056,8 @@ CGameObject* CEM0320::Clone(void* pArg)
 
 void CEM0320::Free()
 {
+	CUI_Manager::GetInstance()->Set_TempOff(false);
+
 	CEnemy::Free();
 
 	Safe_Release(m_pASM);

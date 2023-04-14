@@ -20,10 +20,10 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	HRESULT	Render() override;
-	virtual void Imgui_RenderProperty() override;
 	virtual HRESULT Render_ShadowDepth() override;
 
 public:
+	void InitBC();
 	void BeginBC();
 	void EndBC();
 

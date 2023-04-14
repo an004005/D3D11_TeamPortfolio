@@ -65,7 +65,6 @@ public:
 
 	_bool IsCanSpecial() const { return m_bCanSpecial; }
 
-protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) override;
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
 	void FireWaterBall();
@@ -136,6 +135,7 @@ private:
 
 
 	_bool m_bIntro = false;
+	_bool	m_bEnding = false;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

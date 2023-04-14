@@ -864,7 +864,7 @@ void CEM1100::Create_Bullet()
 			.Set_Owner(this)
 			.Set_Target(m_pTarget)
 			.Set_InitBulletEffect({ L"em1100_Elec_Bullet_Loop" })
-			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle")
+			.Set_InitBulletParticle(L"em1100_Elec_Bullet_Particle", true)
 			.Set_ShootSpeed(10.f)
 			.Set_Life(5.f)
 			.Set_DamageParam(eDamageParam)
@@ -1094,7 +1094,7 @@ void CEM1100::Adjust_MoveAxis(_double TimeDelta)
 		//뛸때는 방향을 보면서 뛰어야하고 걸을때는 안보고 걸어야 함
 		if (m_bRun)
 		{
-			fMoveSpeed = 8.f;
+			fMoveSpeed = 10.f;
 			const _float fYaw = m_pTransformCom->GetYaw_Radian();
 			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
 		}
