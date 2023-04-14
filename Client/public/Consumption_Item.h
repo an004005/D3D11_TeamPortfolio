@@ -17,6 +17,8 @@ public:
 	enum ACHIEVETYPE { AC_KKB, AC_OSH, AC_JIB, AC_JJH, AC_PJW, AC_AJH, AC_END };
 	enum TYPEINFO { TYPE_USE, TYPE_ACHIEVE, TYPE_END };
 
+	enum MODELTYPE { MODEL_ITEM, MODEL_FLOWER, MODEL_END };
+
 private:
 	CConsumption_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CConsumption_Item(const CConsumption_Item& rhs);
@@ -68,6 +70,11 @@ private:
 
 	// 근본적으로 이 아이템은 일단 무엇인가?
 	TYPEINFO			m_eTypeInfo = TYPE_USE;
+
+	// FlowerTest
+	vector<CModel*>		m_vecModelType;
+	MODELTYPE			m_eModelType = MODEL_ITEM;
+	_bool				m_bItemModel = false;
 
 public:
 	static CConsumption_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

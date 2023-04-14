@@ -1,1 +1,1029 @@
-{"BatchObjs":[{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999992251396179,8.185097249224782e-05,0.0012562457704916596,0.0,-8.201463788282126e-05,1.0,0.00013023380597587675,0.0,-0.0012562350602820516,-0.00013033674622420222,0.9999992251396179,0.0,-160.296142578125,22.307397842407227,4.986914157867432,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999352753162384,0.03571666404604912,-0.004287165589630604,0.0,-0.035845715552568436,0.9987367391586304,-0.03521395102143288,0.0,0.003024025121703744,0.03534483537077904,0.9993706345558167,0.0,-154.4734344482422,22.344045639038086,-6.86344051361084,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999998927116394,7.505903340643272e-05,0.0014849914005026221,0.0,-7.524449756601825e-05,1.0,0.0001248370681423694,0.0,-0.001484982087276876,-0.00012494868133217096,0.999998927116394,0.0,-160.0859832763672,22.30769157409668,-14.587567329406738,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_Pallet_1_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999900221824646,-6.904832616783096e-08,-0.014125194400548935,0.0,6.563098509104748e-08,1.0,-2.423954867936118e-07,0.0,0.014125194400548935,2.41444269022395e-07,0.999900221824646,0.0,-159.7712860107422,21.94938850402832,-3.8585221767425537,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[3.2819807529449463e-06,-1.0,5.602836608886719e-06,0.0,-0.968341588973999,-4.585832357406616e-06,-0.24962890148162842,0.0,0.24962890148162842,-4.604458808898926e-06,-0.968341588973999,0.0,-153.49526977539063,22.210866928100586,7.689547538757324,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.04788702726364136,0.00012665987014770508,-0.9988527297973633,0.0,0.9988527297973633,0.00012421607971191406,0.04788702726364136,0.0,0.00013014674186706543,-0.9999999403953552,-0.00012058019638061523,0.0,-94.68218994140625,33.964778900146484,-24.710636138916016,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[-0.9907543659210205,4.540001827990636e-05,-0.13566917181015015,0.0,1.984819937206339e-05,1.0,0.00018969182565342635,0.0,0.13566917181015015,0.0001852451969170943,-0.9907543659210205,0.0,-87.97528076171875,34.26638412475586,-36.148162841796875,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box03.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9799894690513611,-0.052657902240753174,0.19195768237113953,0.0,0.05374696105718613,0.9985544681549072,-0.00046715838834643364,0.0,-0.19165560603141785,0.010774951428174973,0.9814030528068542,0.0,-98.82745361328125,34.605438232421875,-45.924251556396484,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999663233757019,-0.007452864665538073,-0.0034368049819022417,0.0,0.0073943049646914005,0.9998323917388916,-0.016748005524277687,0.0,0.0035610494669526815,0.016722029075026512,0.999853789806366,0.0,-97.46463775634766,34.06404113769531,-43.92914581298828,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.997913122177124,0.0031391275115311146,-0.06449435651302338,0.0,-0.003066503442823887,0.9999945163726807,0.0012250141007825732,0.0,0.06449784338474274,-0.0010246854508295655,0.9979172945022583,0.0,-91.31195831298828,34.06986999511719,-18.78335952758789,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999896883964539,-0.00013295341341290623,0.004542191047221422,0.0,0.00013154676707927138,0.9999999403953552,0.00030997899011708796,0.0,-0.004542232025414705,-0.000309378287056461,0.9999896287918091,0.0,-27.009258270263672,45.68657684326172,-53.13309860229492,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999952495098114,-0.0003015162074007094,0.00973990373313427,0.0,0.00029549439204856753,0.9999997615814209,0.0006196952890604734,0.0,-0.009740088135004044,-0.0006167878163978457,0.9999523758888245,0.0,-27.410253524780273,45.68672561645508,-52.18246841430664,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999643564224243,3.037319766008295e-05,-0.008444538339972496,0.0,2.1100158846820705e-06,0.9999926090240479,0.003846618812531233,0.0,0.008444592356681824,-0.003846499603241682,0.9999569654464722,0.0,-26.442384719848633,45.21932601928711,-48.12907791137695,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999839663505554,3.9971306250663474e-05,-0.005663860123604536,0.0,-3.982885755249299e-05,1.0,2.5263079805881716e-05,0.0,0.005663861054927111,-2.503708856238518e-05,0.9999839663505554,0.0,-26.303115844726563,45.218772888183594,-47.43431091308594,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Bench.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[-0.9993987083435059,-0.0007968496647663414,-0.03467244282364845,0.0,-0.0007988494471646845,0.9999997019767761,4.382397310109809e-05,0.0,0.03467239812016487,7.149566954467446e-05,-0.9993990063667297,0.0,-27.25989532470703,45.54224395751953,-42.16565704345703,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_Ladder_01b.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.7956184148788452,-2.647759538376704e-05,0.6057981252670288,0.0,-8.915254147723317e-05,1.0,0.0001607945014256984,0.0,-0.6057981252670288,-0.00018193951109424233,0.7956184148788452,0.0,-27.582599639892578,46.300697326660156,-35.93144226074219,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_Pallet_1_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999766945838928,-3.0379185773199424e-05,-0.006831538863480091,0.0,3.528568413457833e-05,0.9999997615814209,0.000718093360774219,0.0,0.006831515580415726,-0.0007183176930993795,0.9999764561653137,0.0,-22.06447982788086,45.24800109863281,-28.988269805908203,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999972581863403,0.0009684508549980819,-0.002124454127624631,0.0,-0.0009583357605151832,0.9999881982803345,0.004757153335958719,0.0,0.002129036234691739,-0.004755104426294565,0.9999864101409912,0.0,-21.72813606262207,46.00544738769531,-28.540088653564453,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999582171440125,-0.00012993872223887593,0.009144348092377186,0.0,0.00012714751937892288,0.9999999403953552,0.0003058192669413984,0.0,-0.00914438720792532,-0.0003046438214369118,0.9999581575393677,0.0,-20.23212242126465,45.68657302856445,-27.243083953857422,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999979138374329,6.630837015109137e-05,0.0020299770403653383,0.0,-6.644993118243292e-05,1.0,6.966839282540604e-05,0.0,-0.0020299723837524652,-6.980314356042072e-05,0.9999979138374329,0.0,-7.166233062744141,45.8036994934082,-26.127172470092773,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999645948410034,2.4683231458766386e-05,-0.008418194949626923,0.0,-7.201968401204795e-05,0.9999842047691345,-0.005622854456305504,0.0,0.008417923003435135,0.005623261444270611,0.9999487996101379,0.0,2.578200340270996,45.219642639160156,-24.86214828491211,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.3891567885875702,-0.09137821942567825,-0.9166280627250671,0.0,0.018836118280887604,0.9956490397453308,-0.09125886857509613,0.0,0.9209789633750916,0.018248300999403,0.38918477296829224,0.0,2.603060245513916,45.379554748535156,-26.04163932800293,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999796152114868,9.736036008689553e-05,0.006388143636286259,0.0,-9.834325464908034e-05,1.0,0.00015354920469690114,0.0,-0.006388128735125065,-0.00015417429676745087,0.9999796152114868,0.0,7.868693828582764,45.605690002441406,-23.13238525390625,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box03.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999967217445374,8.813499880488962e-05,-0.0025517712347209454,0.0,-8.784247620496899e-05,1.0,0.00011474925122456625,0.0,0.002551781479269266,-0.00011452472972450778,0.9999967217445374,0.0,15.682868957519531,46.108577728271484,-26.483253479003906,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999990463256836,-5.64586707696435e-06,-0.0013824678026139736,0.0,5.590694399870699e-06,1.0,-3.9912938518682495e-05,0.0,0.0013824680354446173,3.990516779595055e-05,0.9999990463256836,0.0,17.48431396484375,45.60822677612305,-28.021831512451172,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_A_1x2x1_Open.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[-0.9999980926513672,-0.00016875458823051304,-0.001975726569071412,0.0,0.00016876267909538,-1.0,-3.927189936803188e-06,0.0,-0.0019757261034101248,-4.2606116039678454e-06,0.9999980330467224,0.0,23.54345703125,45.485233306884766,-32.9036750793457,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999871850013733,-0.00016382985631935298,0.005062065087258816,0.0,0.00016176275676116347,0.9999999403953552,0.0004087556153535843,0.0,-0.0050621312111616135,-0.0004079315112903714,0.9999871253967285,0.0,25.219192504882813,45.686614990234375,-43.86838150024414,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.8480372428894043,-3.674626350402832e-05,0.5299366116523743,0.0,0.529936671257019,0.00015047192573547363,-0.8480371832847595,0.0,-4.857778549194336e-05,0.9999999403953552,0.0001470819115638733,0.0,24.276708602905273,45.50210952758789,-45.58332824707031,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/coilWire.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999989926815033,4.605595313478261e-05,-0.004490110091865063,0.0,-4.595133214024827e-05,1.0,2.3403614250128157e-05,0.0,0.004490111023187637,-2.3197053451440297e-05,0.999989926815033,0.0,-11.608436584472656,46.11783218383789,-24.18547248840332,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/coilWire.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999966561794281,-1.0457821190357208e-05,-0.008181516081094742,0.0,-0.008181516081094742,-6.737966032233089e-06,-0.9999665021896362,0.0,1.0402407497167587e-05,1.0,-6.823300282121636e-06,0.0,24.725675582885742,45.78712463378906,-63.5766487121582,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999955296516418,-0.0009174026781693101,0.0028544021770358086,0.0,0.0009265118278563023,0.9999944567680359,-0.0031915828585624695,0.0,-0.002851458266377449,0.003194213379174471,0.9999908208847046,0.0,22.244117736816406,45.21787643432617,-67.17035675048828,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[-0.2158372402191162,-0.13785511255264282,0.9666489362716675,0.0,-0.9762445092201233,0.011206448078155518,-0.21638169884681702,0.0,0.01899668574333191,-0.9903889894485474,-0.1369989514350891,0.0,21.068336486816406,45.467281341552734,-66.89328002929688,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Bench.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.88237065076828,0.0004966844571754336,-0.47055476903915405,0.0,-0.00040036137215793133,0.9999998807907104,0.0003047833452001214,0.0,0.4705548882484436,-8.053991768974811e-05,0.8823707699775696,0.0,24.069169998168945,45.54214096069336,-73.3712158203125,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_Ladder_01b.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[6.020069122314453e-06,-1.0000001192092896,-1.0694435331970453e-05,0.0,0.9999996423721313,6.020069122314453e-06,-0.0009256522171199322,0.0,0.000925652333535254,-1.068876008503139e-05,0.9999995231628418,0.0,5.896296977996826,45.54084777832031,-72.57476043701172,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999649524688721,-1.680113564361818e-05,-0.008375393226742744,0.0,1.6327616322087124e-05,1.0,-5.660549140884541e-05,0.0,0.008375395089387894,5.646675344905816e-05,0.9999649524688721,0.0,-2.324665069580078,45.21881866455078,-68.78309631347656,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.999962568283081,6.764932913938537e-05,-0.008654657751321793,0.0,-6.716035568388179e-05,1.0,5.678908928530291e-05,0.0,0.008654661476612091,-5.6205710279755294e-05,0.999962568283081,0.0,-3.1633291244506836,45.21873474121094,-69.13150024414063,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999920725822449,-0.00022824185725767165,0.003987334202975035,0.0,0.0002278779720654711,1.0,9.171103010885417e-05,0.0,-0.003987354692071676,-9.08016663743183e-05,0.9999920725822449,0.0,-9.470523834228516,45.60581970214844,-71.59325408935547,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999791383743286,9.905617480399087e-05,0.006456454284489155,0.0,-0.00010006580123445019,1.0,0.00015605179942213,0.0,-0.006456438452005386,-0.00015669461572542787,0.9999791383743286,0.0,-10.577300071716309,45.605690002441406,-70.90360260009766,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[-0.8172336220741272,5.513429641723633e-06,-0.5763065218925476,0.0,0.5763065814971924,3.343820571899414e-05,-0.8172336220741272,0.0,1.4781951904296875e-05,-1.0,-3.0517578125e-05,0.0,-14.568967819213867,45.588016510009766,-72.16175079345703,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9999894499778748,-0.0001734429970383644,0.004588006064295769,0.0,0.00017169213970191777,0.9999999403953552,0.0003820061101578176,0.0,-0.0045880721881985664,-0.0003812143695540726,0.99998939037323,0.0,-20.22044563293457,45.68661117553711,-70.08927917480469,1.0]},{"Preset":{"JsonPath":"../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json","Layer":"Layer_MapKineticObject","ProtoTag":"Prototype_GameObject_MapKinetic_Object"},"WorldMatrix":[0.9998742341995239,-2.0660583686549217e-05,-0.015861088410019875,0.0,2.648138251970522e-05,0.9999999403953552,0.0003667761047836393,0.0,0.015861080959439278,-0.0003671499725896865,0.9998741745948792,0.0,-20.71063995361328,45.68659210205078,-68.27658081054688,1.0]}]}
+{
+    "BatchObjs": [
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999992251396179,
+                8.185097249224782e-05,
+                0.0012562457704916596,
+                0.0,
+                -8.201463788282126e-05,
+                1.0,
+                0.00013023380597587675,
+                0.0,
+                -0.0012562350602820516,
+                -0.00013033674622420222,
+                0.9999992251396179,
+                0.0,
+                -160.296142578125,
+                22.307397842407227,
+                4.986914157867432,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999352753162384,
+                0.03571666404604912,
+                -0.004287165589630604,
+                0.0,
+                -0.035845715552568436,
+                0.9987367391586304,
+                -0.03521395102143288,
+                0.0,
+                0.003024025121703744,
+                0.03534483537077904,
+                0.9993706345558167,
+                0.0,
+                -154.4734344482422,
+                22.344045639038086,
+                -6.86344051361084,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999998927116394,
+                7.505903340643272e-05,
+                0.0014849914005026221,
+                0.0,
+                -7.524449756601825e-05,
+                1.0,
+                0.0001248370681423694,
+                0.0,
+                -0.001484982087276876,
+                -0.00012494868133217096,
+                0.999998927116394,
+                0.0,
+                -160.0859832763672,
+                22.30769157409668,
+                -14.587567329406738,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_Pallet_1_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999900221824646,
+                -6.904832616783096e-08,
+                -0.014125194400548935,
+                0.0,
+                6.563098509104748e-08,
+                1.0,
+                -2.423954867936118e-07,
+                0.0,
+                0.014125194400548935,
+                2.41444269022395e-07,
+                0.999900221824646,
+                0.0,
+                -159.7712860107422,
+                21.94938850402832,
+                -3.8585221767425537,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                3.2819807529449463e-06,
+                -1.0,
+                5.602836608886719e-06,
+                0.0,
+                -0.968341588973999,
+                -4.585832357406616e-06,
+                -0.24962890148162842,
+                0.0,
+                0.24962890148162842,
+                -4.604458808898926e-06,
+                -0.968341588973999,
+                0.0,
+                -153.49526977539063,
+                22.210866928100586,
+                7.689547538757324,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.04788702726364136,
+                0.00012665987014770508,
+                -0.9988527297973633,
+                0.0,
+                0.9988527297973633,
+                0.00012421607971191406,
+                0.04788702726364136,
+                0.0,
+                0.00013014674186706543,
+                -0.9999999403953552,
+                -0.00012058019638061523,
+                0.0,
+                -94.68218994140625,
+                33.964778900146484,
+                -24.710636138916016,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                -0.9907543659210205,
+                4.540001827990636e-05,
+                -0.13566917181015015,
+                0.0,
+                1.984819937206339e-05,
+                1.0,
+                0.00018969182565342635,
+                0.0,
+                0.13566917181015015,
+                0.0001852451969170943,
+                -0.9907543659210205,
+                0.0,
+                -87.97528076171875,
+                34.26638412475586,
+                -36.148162841796875,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box03.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9799894690513611,
+                -0.052657902240753174,
+                0.19195768237113953,
+                0.0,
+                0.05374696105718613,
+                0.9985544681549072,
+                -0.00046715838834643364,
+                0.0,
+                -0.19165560603141785,
+                0.010774951428174973,
+                0.9814030528068542,
+                0.0,
+                -98.82745361328125,
+                34.605438232421875,
+                -45.924251556396484,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999663233757019,
+                -0.007452864665538073,
+                -0.0034368049819022417,
+                0.0,
+                0.0073943049646914005,
+                0.9998323917388916,
+                -0.016748005524277687,
+                0.0,
+                0.0035610494669526815,
+                0.016722029075026512,
+                0.999853789806366,
+                0.0,
+                -97.46463775634766,
+                34.06404113769531,
+                -43.92914581298828,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.997913122177124,
+                0.0031391275115311146,
+                -0.06449435651302338,
+                0.0,
+                -0.003066503442823887,
+                0.9999945163726807,
+                0.0012250141007825732,
+                0.0,
+                0.06449784338474274,
+                -0.0010246854508295655,
+                0.9979172945022583,
+                0.0,
+                -91.31195831298828,
+                34.06986999511719,
+                -18.78335952758789,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999896883964539,
+                -0.00013295341341290623,
+                0.004542191047221422,
+                0.0,
+                0.00013154676707927138,
+                0.9999999403953552,
+                0.00030997899011708796,
+                0.0,
+                -0.004542232025414705,
+                -0.000309378287056461,
+                0.9999896287918091,
+                0.0,
+                -27.009258270263672,
+                45.68657684326172,
+                -53.13309860229492,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999952495098114,
+                -0.0003015162074007094,
+                0.00973990373313427,
+                0.0,
+                0.00029549439204856753,
+                0.9999997615814209,
+                0.0006196952890604734,
+                0.0,
+                -0.009740088135004044,
+                -0.0006167878163978457,
+                0.9999523758888245,
+                0.0,
+                -27.410253524780273,
+                45.68672561645508,
+                -52.18246841430664,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999643564224243,
+                3.037319766008295e-05,
+                -0.008444538339972496,
+                0.0,
+                2.1100158846820705e-06,
+                0.9999926090240479,
+                0.003846618812531233,
+                0.0,
+                0.008444592356681824,
+                -0.003846499603241682,
+                0.9999569654464722,
+                0.0,
+                -26.442384719848633,
+                45.21932601928711,
+                -48.12907791137695,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999839663505554,
+                3.9971306250663474e-05,
+                -0.005663860123604536,
+                0.0,
+                -3.982885755249299e-05,
+                1.0,
+                2.5263079805881716e-05,
+                0.0,
+                0.005663861054927111,
+                -2.503708856238518e-05,
+                0.9999839663505554,
+                0.0,
+                -26.303115844726563,
+                45.218772888183594,
+                -47.43431091308594,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                -0.9993987083435059,
+                -0.0007968496647663414,
+                -0.03467244282364845,
+                0.0,
+                -0.0007988494471646845,
+                0.9999997019767761,
+                4.382397310109809e-05,
+                0.0,
+                0.03467239812016487,
+                7.149566954467446e-05,
+                -0.9993990063667297,
+                0.0,
+                -27.25989532470703,
+                45.54224395751953,
+                -42.16565704345703,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_Ladder_01b.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.7956184148788452,
+                -2.647759538376704e-05,
+                0.6057981252670288,
+                0.0,
+                -8.915254147723317e-05,
+                1.0,
+                0.0001607945014256984,
+                0.0,
+                -0.6057981252670288,
+                -0.00018193951109424233,
+                0.7956184148788452,
+                0.0,
+                -27.582599639892578,
+                46.300697326660156,
+                -35.93144226074219,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_Pallet_1_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999766945838928,
+                -3.0379185773199424e-05,
+                -0.006831538863480091,
+                0.0,
+                3.528568413457833e-05,
+                0.9999997615814209,
+                0.000718093360774219,
+                0.0,
+                0.006831515580415726,
+                -0.0007183176930993795,
+                0.9999764561653137,
+                0.0,
+                -22.06447982788086,
+                45.24800109863281,
+                -28.988269805908203,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999972581863403,
+                0.0009684508549980819,
+                -0.002124454127624631,
+                0.0,
+                -0.0009583357605151832,
+                0.9999881982803345,
+                0.004757153335958719,
+                0.0,
+                0.002129036234691739,
+                -0.004755104426294565,
+                0.9999864101409912,
+                0.0,
+                -21.72813606262207,
+                46.00544738769531,
+                -28.540088653564453,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999582171440125,
+                -0.00012993872223887593,
+                0.009144348092377186,
+                0.0,
+                0.00012714751937892288,
+                0.9999999403953552,
+                0.0003058192669413984,
+                0.0,
+                -0.00914438720792532,
+                -0.0003046438214369118,
+                0.9999581575393677,
+                0.0,
+                -20.23212242126465,
+                45.68657302856445,
+                -27.243083953857422,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999979138374329,
+                6.630837015109137e-05,
+                0.0020299770403653383,
+                0.0,
+                -6.644993118243292e-05,
+                1.0,
+                6.966839282540604e-05,
+                0.0,
+                -0.0020299723837524652,
+                -6.980314356042072e-05,
+                0.9999979138374329,
+                0.0,
+                -7.166233062744141,
+                45.8036994934082,
+                -26.127172470092773,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999645948410034,
+                2.4683231458766386e-05,
+                -0.008418194949626923,
+                0.0,
+                -7.201968401204795e-05,
+                0.9999842047691345,
+                -0.005622854456305504,
+                0.0,
+                0.008417923003435135,
+                0.005623261444270611,
+                0.9999487996101379,
+                0.0,
+                2.578200340270996,
+                45.219642639160156,
+                -24.86214828491211,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.3891567885875702,
+                -0.09137821942567825,
+                -0.9166280627250671,
+                0.0,
+                0.018836118280887604,
+                0.9956490397453308,
+                -0.09125886857509613,
+                0.0,
+                0.9209789633750916,
+                0.018248300999403,
+                0.38918477296829224,
+                0.0,
+                2.603060245513916,
+                45.379554748535156,
+                -26.04163932800293,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999796152114868,
+                9.736036008689553e-05,
+                0.006388143636286259,
+                0.0,
+                -9.834325464908034e-05,
+                1.0,
+                0.00015354920469690114,
+                0.0,
+                -0.006388128735125065,
+                -0.00015417429676745087,
+                0.9999796152114868,
+                0.0,
+                7.868693828582764,
+                45.605690002441406,
+                -23.13238525390625,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box03.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999967217445374,
+                8.813499880488962e-05,
+                -0.0025517712347209454,
+                0.0,
+                -8.784247620496899e-05,
+                1.0,
+                0.00011474925122456625,
+                0.0,
+                0.002551781479269266,
+                -0.00011452472972450778,
+                0.9999967217445374,
+                0.0,
+                15.682868957519531,
+                46.108577728271484,
+                -26.483253479003906,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box02.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999990463256836,
+                -5.64586707696435e-06,
+                -0.0013824678026139736,
+                0.0,
+                5.590694399870699e-06,
+                1.0,
+                -3.9912938518682495e-05,
+                0.0,
+                0.0013824680354446173,
+                3.990516779595055e-05,
+                0.9999990463256836,
+                0.0,
+                17.48431396484375,
+                45.60822677612305,
+                -28.021831512451172,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Crate_Storage_A_1x2x1_Open.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                -0.9999980926513672,
+                -0.00016875458823051304,
+                -0.001975726569071412,
+                0.0,
+                0.00016876267909538,
+                -1.0,
+                -3.927189936803188e-06,
+                0.0,
+                -0.0019757261034101248,
+                -4.2606116039678454e-06,
+                0.9999980330467224,
+                0.0,
+                23.54345703125,
+                45.485233306884766,
+                -32.9036750793457,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999871850013733,
+                -0.00016382985631935298,
+                0.005062065087258816,
+                0.0,
+                0.00016176275676116347,
+                0.9999999403953552,
+                0.0004087556153535843,
+                0.0,
+                -0.0050621312111616135,
+                -0.0004079315112903714,
+                0.9999871253967285,
+                0.0,
+                25.219192504882813,
+                45.686614990234375,
+                -43.86838150024414,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.8480372428894043,
+                -3.674626350402832e-05,
+                0.5299366116523743,
+                0.0,
+                0.529936671257019,
+                0.00015047192573547363,
+                -0.8480371832847595,
+                0.0,
+                -4.857778549194336e-05,
+                0.9999999403953552,
+                0.0001470819115638733,
+                0.0,
+                24.276708602905273,
+                45.50210952758789,
+                -45.58332824707031,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/coilWire.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999989926815033,
+                4.605595313478261e-05,
+                -0.004490110091865063,
+                0.0,
+                -4.595133214024827e-05,
+                1.0,
+                2.3403614250128157e-05,
+                0.0,
+                0.004490111023187637,
+                -2.3197053451440297e-05,
+                0.999989926815033,
+                0.0,
+                -11.608436584472656,
+                46.11783218383789,
+                -24.18547248840332,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/coilWire.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999966561794281,
+                -1.0457821190357208e-05,
+                -0.008181516081094742,
+                0.0,
+                -0.008181516081094742,
+                -6.737966032233089e-06,
+                -0.9999665021896362,
+                0.0,
+                1.0402407497167587e-05,
+                1.0,
+                -6.823300282121636e-06,
+                0.0,
+                24.725675582885742,
+                45.78712463378906,
+                -63.5766487121582,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999955296516418,
+                -0.0009174026781693101,
+                0.0028544021770358086,
+                0.0,
+                0.0009265118278563023,
+                0.9999944567680359,
+                -0.0031915828585624695,
+                0.0,
+                -0.002851458266377449,
+                0.003194213379174471,
+                0.9999908208847046,
+                0.0,
+                22.244117736816406,
+                45.21787643432617,
+                -67.17035675048828,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                -0.2158372402191162,
+                -0.13785511255264282,
+                0.9666489362716675,
+                0.0,
+                -0.9762445092201233,
+                0.011206448078155518,
+                -0.21638169884681702,
+                0.0,
+                0.01899668574333191,
+                -0.9903889894485474,
+                -0.1369989514350891,
+                0.0,
+                21.068336486816406,
+                45.467281341552734,
+                -66.89328002929688,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Bench.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.88237065076828,
+                0.0004966844571754336,
+                -0.47055476903915405,
+                0.0,
+                -0.00040036137215793133,
+                0.9999998807907104,
+                0.0003047833452001214,
+                0.0,
+                0.4705548882484436,
+                -8.053991768974811e-05,
+                0.8823707699775696,
+                0.0,
+                24.069169998168945,
+                45.54214096069336,
+                -73.3712158203125,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_Ladder_01b.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                6.020069122314453e-06,
+                -1.0000001192092896,
+                -1.0694435331970453e-05,
+                0.0,
+                0.9999996423721313,
+                6.020069122314453e-06,
+                -0.0009256522171199322,
+                0.0,
+                0.000925652333535254,
+                -1.068876008503139e-05,
+                0.9999995231628418,
+                0.0,
+                5.896296977996826,
+                45.54084777832031,
+                -72.57476043701172,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999649524688721,
+                -1.680113564361818e-05,
+                -0.008375393226742744,
+                0.0,
+                1.6327616322087124e-05,
+                1.0,
+                -5.660549140884541e-05,
+                0.0,
+                0.008375395089387894,
+                5.646675344905816e-05,
+                0.9999649524688721,
+                0.0,
+                -2.324665069580078,
+                45.21881866455078,
+                -68.78309631347656,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/HBeamTest.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.999962568283081,
+                6.764932913938537e-05,
+                -0.008654657751321793,
+                0.0,
+                -6.716035568388179e-05,
+                1.0,
+                5.678908928530291e-05,
+                0.0,
+                0.008654661476612091,
+                -5.6205710279755294e-05,
+                0.999962568283081,
+                0.0,
+                -3.1633291244506836,
+                45.21873474121094,
+                -69.13150024414063,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999920725822449,
+                -0.00022824185725767165,
+                0.003987334202975035,
+                0.0,
+                0.0002278779720654711,
+                1.0,
+                9.171103010885417e-05,
+                0.0,
+                -0.003987354692071676,
+                -9.08016663743183e-05,
+                0.9999920725822449,
+                0.0,
+                -9.470523834228516,
+                45.60581970214844,
+                -71.59325408935547,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/pr_Box01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999791383743286,
+                9.905617480399087e-05,
+                0.006456454284489155,
+                0.0,
+                -0.00010006580123445019,
+                1.0,
+                0.00015605179942213,
+                0.0,
+                -0.006456438452005386,
+                -0.00015669461572542787,
+                0.9999791383743286,
+                0.0,
+                -10.577300071716309,
+                45.605690002441406,
+                -70.90360260009766,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/SM_dumpster_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                -0.8172336220741272,
+                5.513429641723633e-06,
+                -0.5763065218925476,
+                0.0,
+                0.5763065814971924,
+                3.343820571899414e-05,
+                -0.8172336220741272,
+                0.0,
+                1.4781951904296875e-05,
+                -1.0,
+                -3.0517578125e-05,
+                0.0,
+                -14.568967819213867,
+                45.588016510009766,
+                -72.16175079345703,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9999894499778748,
+                -0.0001734429970383644,
+                0.004588006064295769,
+                0.0,
+                0.00017169213970191777,
+                0.9999999403953552,
+                0.0003820061101578176,
+                0.0,
+                -0.0045880721881985664,
+                -0.0003812143695540726,
+                0.99998939037323,
+                0.0,
+                -20.22044563293457,
+                45.68661117553711,
+                -70.08927917480469,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/Map/KineticPreset/Barrel_01.json",
+                "Layer": "Layer_MapKineticObject",
+                "ProtoTag": "Prototype_GameObject_MapKinetic_Object"
+            },
+            "WorldMatrix": [
+                0.9998742341995239,
+                -2.0660583686549217e-05,
+                -0.015861088410019875,
+                0.0,
+                2.648138251970522e-05,
+                0.9999999403953552,
+                0.0003667761047836393,
+                0.0,
+                0.015861080959439278,
+                -0.0003671499725896865,
+                0.9998741745948792,
+                0.0,
+                -20.71063995361328,
+                45.68659210205078,
+                -68.27658081054688,
+                1.0
+            ]
+        }
+    ]
+}
