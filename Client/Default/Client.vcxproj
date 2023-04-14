@@ -318,6 +318,7 @@
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\Level_ConstructionSite2F.h" />
+    <ClInclude Include="..\public\Level_DownTown.h" />
     <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
@@ -666,6 +667,7 @@
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
     <ClCompile Include="..\private\Level_ConstructionSite2F.cpp" />
+    <ClCompile Include="..\private\Level_DownTown.cpp" />
     <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
