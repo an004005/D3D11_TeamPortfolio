@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../public/EM8200.h"
 
+#include <Camera_Manager.h>
 #include <GameUtils.h>
 #include <PhysX_Manager.h>
 
@@ -238,6 +239,12 @@ void CEM8200::CheckHP(DAMAGE_PARAM& tDamageParams)
 void CEM8200::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	m_pModelCom->Add_EventCaller("Connected_Cable", [this]
+		{
+			m_pGameInstance->PlayShake(0.2f, 0.02);
+			CVFX_Manager::GetInstance()->GetParticle(PS_SAS, TEXT("Connected_Particles_Karen"))->Start_Attach(this, "Neck", false, true);
+		});
 
 	m_pModelCom->Add_EventCaller("KneeKick_A1_Start", [this]
 		{
@@ -1907,7 +1914,8 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
 
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Start");
-			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
 
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 			m_pController->ClearCommands();
@@ -1926,7 +1934,9 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_trans");
 
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Trans");
-			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
+			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
+			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
+
 		})
 		.Tick([this](_double TimeDelta)
 		{
@@ -1936,7 +1946,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 		.AddTransition("BrainFieldStart to InCombatIdle", "ImCombatIdle")
 		.Predicator([this]
 			{
-				return m_pASM->isSocketEmpty("FullBody");
+				return m_pASM->isSocketPassby("FullBody", 0.9f);
 			})
 
 		.AddState("ImCombatIdle")

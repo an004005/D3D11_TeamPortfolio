@@ -8297,7 +8297,7 @@
     },
     "AS_em8200_104_Up_trans_neutral": {
         "Duration": 120.0,
-        "TickPerSecond": 50.0,
+        "TickPerSecond": 24.0,
         "bLooping": false,
         "vecEvent": []
     },
@@ -8866,6 +8866,17 @@
             {
                 "EventName": "BrainField_Start_Gear",
                 "EventTime": 52.0
+            }
+        ]
+    },
+    "AS_em8200_BrainField_trans": {
+        "Duration": 120.0,
+        "TickPerSecond": 24.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "Connected_Cable",
+                "EventTime": 15.0
             }
         ]
     },

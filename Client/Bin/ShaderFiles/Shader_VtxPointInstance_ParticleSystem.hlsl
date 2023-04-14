@@ -918,7 +918,10 @@ PS_OUT_FLAG PS_SAS_LINE_TRAIL(PS_IN In)
 
 	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
 
-	// Out.vFlag  = float4()
+	Out.vFlag = float4(0.f, 0.f, SHADER_BRAINFIELD_EFFECT, 0.f);
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
 
 	return Out;
 }

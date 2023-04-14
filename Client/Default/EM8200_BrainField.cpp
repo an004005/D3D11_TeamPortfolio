@@ -184,6 +184,8 @@ HRESULT CEM8200_BrainField::Render()
 void CEM8200_BrainField::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();
+	m_pCables->Imgui_RenderProperty();
+	m_pCables->Imgui_RenderComponentProperties();
 }
 
 void CEM8200_BrainField::SetTargetInfo(CGameObject* pTarget, CTransform* pTargetTransform, CModel* pTargetModel)
