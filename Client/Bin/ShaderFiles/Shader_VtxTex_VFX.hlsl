@@ -34,6 +34,7 @@ struct PS_IN
 	float4		vWorldPos : TEXCOORD1;
 };
 
+
 struct PS_IN_SOFT
 {
 	float4		vPosition : SV_POSITION;
@@ -89,6 +90,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	return Out;
 }
+
 
 
 PS_OUT PS_DRIVEMOD_GLOW(PS_IN In)
@@ -352,6 +354,128 @@ PS_OUT_Flag PS_MAIN_Flag(PS_IN In)
 	return Out;
 }
 
+PS_OUT_Flag PS_BRAIN_FIELD_START_A(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Default_A = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color_A = g_vec4_0;
+	float4 Blend_A = Default_A * Color_A * 2.0f;
+	float4 Final_A = saturate(Blend_A);
+
+	float4 Default_B = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color_B = g_vec4_1;
+	float4 Blend_B = Default_B * Color_B * 2.0f;
+	float4 Final_B = saturate(Blend_B);
+
+
+
+	float4 BaseColor = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	float4 BlendBase = BaseColor * Color_B * 2.0f;
+	float4 FinalBase = saturate(BlendBase);
+
+	Out.vColor = CalcHDRColor(saturate(FinalBase + (Final_A * g_float_0) + (Final_B * g_float_1)), g_float_2);
+	Out.vColor.a = saturate(((Default_A.r * g_float_3) + (Default_B.r * g_float_4) + (BaseColor.r * g_float_5)) * g_float_6);
+	
+	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	Out.vFlag = float4(0.0f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.001f)
+		discard;
+
+	if(g_float_6 <= 0.f)
+		discard;
+	
+	
+
+	return Out;
+}
+
+PS_OUT_Flag PS_BRAIN_FIELD_START_B(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Default_A = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color_A = g_vec4_0;
+	float4 Blend_A = Default_A * Color_A * 2.0f;
+	float4 Final_A = saturate(Blend_A);
+
+	// float4 Default_B = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	// float4 Color_B = g_vec4_1;
+	// float4 Blend_B = Default_B * Color_B * 2.0f;
+	// float4 Final_B = saturate(Blend_B);
+
+
+	//
+	// float4 BaseColor = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	// float4 BlendBase = BaseColor * Color_B * 2.0f;
+	// float4 FinalBase = saturate(BlendBase);
+
+	Out.vColor = CalcHDRColor(Final_A, g_float_0);
+	Out.vColor.a = saturate((Default_A.r * g_float_1) * g_float_2);
+
+	// Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+	Out.vFlag = float4(0.0f, 0.f, 0.f, 0.f);
+
+	if (Out.vColor.a <= 0.001f)
+		discard;
+
+	if (g_float_2 <= 0.f)
+		discard;
+
+	return Out;
+}
+
+
+PS_OUT_Flag PS_DRIVEMODE_END(PS_IN_SOFT In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = White.r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a *= g_float_2;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	//soft effect 
+	float2		vTexUV;
+
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector		vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+
+	float		fOldViewZ = vDepthDesc.y * g_Far;
+	float		fViewZ = In.vProjPos.w;
+
+	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ)));
+
+	return Out;
+}
+
+PS_OUT_Flag PS_DRIVEMODE_END_CIR(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = White.r;
+
+	Out.vColor = CalcHDRColor(Final, g_float_1);
+	Out.vColor.a *= g_float_2;
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 PS_OUT_Flag EXPLODE_DEFAULT_RECT(PS_IN In)
 {
 	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
@@ -552,6 +676,46 @@ PS_OUT_Flag PS_SPECIAL_G_LARGE_HIT(PS_IN In)
 
 	if (g_float_3 <= 0.f)
 		discard;
+
+
+
+	return Out;
+}
+
+PS_OUT_Flag PS_EM8200_STAMP_IMPACT(PS_IN_SOFT In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 White = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV);
+	float4 Color = g_vec4_0;
+	float4 Blend = White * Color * 2.0f;
+	float4 Final = saturate(Blend);
+	Final.a = Mask * g_float_0;
+
+	float4 AddTex = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	AddTex = CalcHDRColor(AddTex, g_float_1);
+	float4 AddColor = saturate(Final + AddTex);
+	Out.vColor = CalcHDRColor(AddColor, g_float_2);
+	Out.vColor.a = saturate(Final.a * (AddTex.r * g_float_5)) * g_float_3;
+
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, AddTex.r * g_float_4);
+
+	if (g_float_3 <= 0.f)
+		discard;
+
+	//soft effect 
+	float2		vTexUV;
+
+	vTexUV.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+	vTexUV.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+	vector		vDepthDesc = g_DepthTex.Sample(LinearSampler, vTexUV);
+
+	float		fOldViewZ = vDepthDesc.y * g_Far;
+	float		fViewZ = In.vProjPos.w;
+
+	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ)));
 
 	return Out;
 }
@@ -849,7 +1013,7 @@ PS_OUT_Flag PS_EM0220_EXPLODE_SOFT(PS_IN_SOFT In)
 	float		fOldViewZ = vDepthDesc.y * g_Far;
 	float		fViewZ = In.vProjPos.w;
 
-	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ) * 2.5f));
+	Out.vColor.a = saturate(Out.vColor.a * (saturate(fOldViewZ - fViewZ)));
 
 	return Out;
 }
@@ -1381,15 +1545,42 @@ PS_OUT_Flag PS_USE_SAS_GEAR_TEX(PS_IN In)
 	float4 FinalColor = saturate(BlendColor);
 	
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
-	Out.vColor.a *= g_float_1;
+	Out.vColor.a = defaultColor.r * g_float_1;
 
 	if (g_float_1 <= 0.f)
+		discard;
+
+	if (Out.vColor.a <= 0.1f)
 		discard;
 
 	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
 
 	return Out;
 }
+
+PS_OUT_Flag PS_CABLE_CONNECTED(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 defaultColor = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+	float4 OriginColor = g_vec4_0;
+	float4 BlendColor = defaultColor * OriginColor * 2.0f;
+	float4 FinalColor = saturate(BlendColor);
+
+	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
+	Out.vColor.a = defaultColor.r * g_float_1;
+
+	if (g_float_1 <= 0.f)
+		discard;
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 
 PS_OUT_Flag PS_SAS_DEAD_LIGHT(PS_IN In)
 {
@@ -2348,5 +2539,90 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM0220_EXPLODE_SOFT();
+	}
+
+	//58
+	pass EM8200_StampImpact
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SOFT();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_EM8200_STAMP_IMPACT();
+	}
+
+
+	//59
+	pass DriveMode_End
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN_SOFT();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMODE_END();
+	}
+
+	//60
+	pass DriveMode_End_Cir
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_DRIVEMODE_END_CIR();
+	}
+
+	//61
+	pass BrainFieldStart_A
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_START_A();
+	}
+
+	//62
+	pass BrainFieldStart_B
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BRAIN_FIELD_START_B();
+	}
+
+	//63
+	pass CableConnected
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_CABLE_CONNECTED();
 	}
 }

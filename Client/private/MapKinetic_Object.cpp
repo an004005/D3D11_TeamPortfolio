@@ -83,7 +83,7 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 						->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
-					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.15f, 0.1f);
 					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 					ReleaseParticle();
@@ -146,7 +146,9 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 						}
 					}
 
-					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.15f, 0.1f);
+					//CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
+
 					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 					ReleaseParticle();
@@ -173,7 +175,8 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 					CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, TEXT("Kinetic_Object_Dead_Particle"))
 						->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f));
 
-					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.3f);
+					CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.15f, 0.1f);
+					//CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 					ReleaseParticle();
@@ -608,7 +611,10 @@ void CMapKinetic_Object::SetParticle()
 void CMapKinetic_Object::ReleaseParticle()
 {
 	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pParticle))
+	{
 		m_pParticle->Delete_Particles();
+		m_pParticle = nullptr;
+	}
 }
 
 void CMapKinetic_Object::CreateLargeParticle()

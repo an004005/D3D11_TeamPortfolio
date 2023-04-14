@@ -57,13 +57,16 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
+			if (m_bDecompose)
+				return;
+
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 			tParam.eAttackSAS = ESASType::SAS_END;
 			tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
 			tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 			tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-			tParam.iDamage = 1000;
+			tParam.iDamage = 3000;
 			tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 			static_cast<CEnemy*>(pMonster)->TakeDamage(tParam);

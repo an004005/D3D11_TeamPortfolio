@@ -4,6 +4,7 @@
 #include "Shader_InGame.h"
 
 Texture2D g_WaveTile;
+Texture2D g_scl_noise_030;
 
 struct VS_IN
 {
@@ -107,10 +108,19 @@ float4 NormalPacking(PS_IN In)
 
 // g_int_0 : 칼 색 플래그
 // g_float_0 : 앰비언트 비율
+// g_float_1 : 아직 사용하지 않음
+// g_float_2 : 텔레포트 디솔브
 // g_vec4_0 : 아웃라인 색(rbg) 및 두께(a)
 PS_OUT PS_TOON_DEFAULT(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+
+	float fTeleportDissolve = g_float_2;
+	if (fTeleportDissolve > 0.f)
+	{
+		if (saturate(g_scl_noise_030.Sample(LinearSampler, In.vTexUV * 2.f).g + 0.2f) <= fTeleportDissolve)
+			discard;
+	}
 
 	float flags = SHADER_TOON;
 	int iColorFlag = g_int_0;
@@ -125,7 +135,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 	else if (iColorFlag == 2) // 불
 	{
 		flags = SHADER_NONE_SHADE;
-		Out.vDiffuse = float4(COL_FIRE, 1.f);
+		Out.vDiffuse = float4(COL_FIRE_DEBUF, 1.f);
 		fEmissive = 4.f;
 	}
 	else if (iColorFlag == 3) // 전기
@@ -153,7 +163,7 @@ PS_OUT PS_TOON_DEFAULT(PS_IN In)
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, fEmissive, flags);
 	Out.vOutline = g_vec4_0;
-	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, 0.f);
+	Out.vFlag = float4(0.f, SHADER_POST_TOON, SHADER_TOON_GRAY_INGNORE, fTeleportDissolve);
 
 	return Out;
 }

@@ -4,6 +4,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Shader.h"
+#include "Timeline.h"
 
 BEGIN(Engine)
 class CShader;
@@ -58,6 +59,8 @@ public:
 
 	//For_Curve
 public:
+	_bool	Check_UseMoveCurve() { return m_bUseMoveCurve; }
+
 	void Tick_Scale_All(_float fValue);
 	void Tick_Scale_Y(_float fValue);
 	void Tick_Scale_X(_float fValue);
@@ -79,6 +82,8 @@ public:
 
 	void SetRenderGroup(CRenderer::RENDERGROUP eRenderGroup) { m_eRenderGroup = eRenderGroup; }
 
+
+	void Play_MoveCurve();
 public:
 	void		Check_ModelSprite();
 private:
@@ -105,6 +110,15 @@ private:
 
 	CRenderer::RENDERGROUP m_eRenderGroup = CRenderer::RENDER_ALPHABLEND;
 
+
+private:
+	_bool	m_bUseMoveCurve = false;
+	CSimpleTimeline m_MoveTimeline;
+	_float	m_fMoveRange = 0.5f;
+
+	_float3 m_fTurnAxis = { 0.f,0.f,0.f };
+	_float  m_fTurnAngle = 0.f;
+	_bool	m_bTurn = false;
 private:
 	// For Mesh Sprite
 	vector<string> m_vecModelDir;
@@ -115,6 +129,7 @@ private:
 private:
 	_float4			m_vOriginColor = _float4::Zero;
 	_bool			m_bNormal = false;
+	_float			m_fDefaultY = 0.f;
 public:
 	static CEffectSystem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void*);

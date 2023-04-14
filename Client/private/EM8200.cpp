@@ -17,6 +17,8 @@
 #include "EMCable.h"
 #include "MapKinetic_Object.h"
 #include "PlayerInfoManager.h"
+#include "EM8200_CopyRush.h"
+#include "EM8200_BrainField.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -55,6 +57,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
 	Safe_AddRef(m_pKarenMaskEf);
 
+	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
 
 	return S_OK;
 }
@@ -85,6 +88,15 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	m_CaptureStart.SetCurve("Simple_Increase_0.2x");
 	m_CaptureEnd.SetCurve("Simple_Decrease_0.2x");
+
+	m_pLeftCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
+	m_pRightCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
+
+	m_pBrainField = dynamic_cast<CEM8200_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_BrainField"));
+	m_pBrainField->SetTargetInfo(this, m_pTransformCom, m_pModelCom);
+
+	_double TickPerSec = m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->GetTickPerSec();
+	m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->SetTickPerSec(TickPerSec * 2.0);
 }
 
 void CEM8200::Detected_Attack()
@@ -386,12 +398,28 @@ void CEM8200::SetUpAnimationEvent()
 		if(CPlayerInfoManager::GetInstance()->Get_Air() == false)
 			Melee_Overlap("Reference", 50, 10.f, EAttackType::ATK_TO_AIR);
 		    m_bMeleeCollStart = false;
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Stamp_Impact"))->Start_Attach(this, "LeftToeBase", false, true);
+			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+
+		});
+
+	m_pModelCom->Add_EventCaller("Stamp_Start", [this]
+		{
+			// 발찍기 전 최고높이로 들어올린
+			_matrix Pivot = XMMatrixRotationX(XMConvertToRadians(180.f));
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Stamp"))->Start_AttachPivot(this , Pivot, "LeftToeBase", true, true, true);
+
 		});
 
 	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
 		{
 			// 번쩍 이펙트
 			CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
+
+			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Seethrough"))->Start_Attach(this, "RightWeapon", false, true);
+			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+
 		});
 }
 
@@ -413,6 +441,7 @@ void CEM8200::SetUpFSM()
 	AddState_Counter(Builder);
 	AddState_CaptureKinetic(Builder);
 	AddState_Damaged(Builder);
+	AddState_BrainField(Builder);
 
 	m_pFSM = Builder.Build();
 }
@@ -427,6 +456,8 @@ void CEM8200::BeginTick()
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	m_CounterEFCoolTimeHelper.Tick(TimeDelta);
 
 	m_pFSM->Tick(TimeDelta);
 
@@ -540,6 +571,9 @@ void CEM8200::Tick(_double TimeDelta)
 
 	m_bSecondPhase = true;
 
+	m_pLeftCopy->Tick(TimeDelta);
+	m_pRightCopy->Tick(TimeDelta);
+
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -547,12 +581,17 @@ void CEM8200::Tick(_double TimeDelta)
 void CEM8200::Late_Tick(_double TimeDelta)
 {
 	CScarletCharacter::Late_Tick(TimeDelta);
+	m_pLeftCopy->Late_Tick(TimeDelta);
+	m_pRightCopy->Late_Tick(TimeDelta);
 
 	if (m_bVisible)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
 	}
+
+	m_pBrainField->Tick(TimeDelta);
+	m_pBrainField->Late_Tick(TimeDelta);
 }
 
 void CEM8200::AfterPhysX()
@@ -609,6 +648,16 @@ void CEM8200::Imgui_RenderProperty()
 
 		Safe_Release(pComponent);
 	}
+
+	if (ImGui::CollapsingHeader("BrainField"))
+	{
+		m_pBrainField->Imgui_RenderProperty();
+		m_pBrainField->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::Button("CloseBrainField"))
+	{
+		m_pBrainField->CloseBrainField();
+	}
 }
 
 void CEM8200::SetUpUI()
@@ -644,6 +693,12 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 		})
 	.AddTransition("Idle to Death", "Death")
 			.Predicator([this] {return m_bDead; })
+
+	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
+		.Predicator([this]
+		{
+			return CGameInstance::GetInstance()->KeyDown(DIK_P);
+		})
 
 	.AddTransition("Idle to Hit_Mid", "Hit_Mid_Heavy")
 		.Predicator([this]
@@ -1504,6 +1559,13 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_TPEnd.PlayFromStart();
+				_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				_vector vRight = WorldMatrix.r[0];
+
+				WorldMatrix.r[3] += vRight * 3.f;
+				m_pLeftCopy->StartRush(this, m_pTarget, WorldMatrix, 50);
+				WorldMatrix.r[3] -= vRight * 6.f;
+				m_pRightCopy->StartRush(this, m_pTarget, WorldMatrix, 50);
 
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_221_AL_atk_copy_start");
 			})
@@ -1678,7 +1740,16 @@ void CEM8200::AddState_Counter(CFSMComponentBuilder& Builder)
 					if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.4f, 0.2f) && m_SetTPOnce.IsNotDo())
 					{
 						m_CounterStart.PlayFromStart();
+						CGameInstance::GetInstance()->AddLifePointLight(2.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 10.f, _float4(1.f, 1.f, 1.f, 1.f));
 					}
+
+					if (CMathUtils::FloatCmp(m_pASM->GetSocketAnimation("FullBody")->GetPlayRatio(), 0.6f, 0.4f) && m_CounterEFCoolTimeHelper.Use())
+					{
+						CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Counter_Start"))->Start_Attach(this, "Reference", false, true);
+					}
+
+
+			
 			})
 		.OnExit([this]
 			{
@@ -1797,6 +1868,38 @@ void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
 
 	;
 
+}
+
+void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
+{
+
+	Builder
+	.AddState("BrainFieldStart")
+		.OnStart([this]
+		{
+			m_pBrainField->OpenBrainField();
+			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
+		})
+		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketEmpty("FullBody");
+			})
+	.AddState("BrainFieldTrans")
+		.OnStart([this]
+		{
+			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_trans");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+			SocketLocalMove(m_pASM);
+		})
+		.AddTransition("BrainFieldStart to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketEmpty("FullBody");
+				})
+	;
 }
 
 
@@ -1971,5 +2074,10 @@ void CEM8200::Free()
 		m_pKarenMaskEf->SetDelete();
 
 	Safe_Release(m_pKarenMaskEf);
-	
+
+	Safe_Release(m_pLeftCopy);
+	Safe_Release(m_pRightCopy);
+
+	Safe_Release(m_pBrainField);
+
 }

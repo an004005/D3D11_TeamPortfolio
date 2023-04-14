@@ -577,6 +577,40 @@ void CEffectGroup::Call_Event()
 				_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(180.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f));
 				CVFX_Manager::GetInstance()->GetParticle(PS_HIT, s2ws(eventName))->Start_NoAttachPivot(m_pFirst_EffectSystem, MatParticle, true, true);
 			}
+
+			else if (eventName.find("Sas") != string::npos)
+			{
+				CVFX_Manager::GetInstance()->GetParticle(PS_SAS, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
+			}
+			else if (eventName.find("Light") != string::npos)
+			{
+				CGameInstance::GetInstance()->AddLifePointLight(2.f, m_vEFGroupPos, 20.f, _float4(0.4, 0.f, 1.f, 1.f));
+			}
+			else if (eventName.find("First_PlayFromStart") != string::npos)
+			{
+				if(m_pFirst_EffectSystem != nullptr && m_pFirst_EffectSystem->IsDeleted() == false)	
+					m_pFirst_EffectSystem->Play_MoveCurve();
+			}
+			else if (eventName.find("Second_PlayFromStart") != string::npos)
+			{
+				if (m_pSecond_EffectSystem != nullptr && m_pSecond_EffectSystem->IsDeleted() == false)
+					m_pSecond_EffectSystem->Play_MoveCurve();
+			}
+			else if (eventName.find("Third_PlayFromStart") != string::npos)
+			{
+				if (m_pThird_EffectSystem != nullptr && m_pThird_EffectSystem->IsDeleted() == false)
+					m_pThird_EffectSystem->Play_MoveCurve();
+			}
+			else if (eventName.find("Fourth_PlayFromStart") != string::npos)
+			{
+				if (m_pFourth_EffectSystem != nullptr && m_pFourth_EffectSystem->IsDeleted() == false)
+					m_pFourth_EffectSystem->Play_MoveCurve();
+			}
+			else if (eventName.find("Fifth_PlayFromStart") != string::npos)
+			{
+				if (m_pFifth_EffectSystem != nullptr && m_pFifth_EffectSystem->IsDeleted() == false)
+					m_pFifth_EffectSystem->Play_MoveCurve();
+			}
 			else
 			{
 				CVFX_Manager::GetInstance()->GetParticle(PS_MONSTER, s2ws(eventName))->Start_NoOwnerOnlyPos(m_vEFGroupPos);
@@ -709,6 +743,24 @@ void CEffectGroup::Imgui_RenderProperty()
 	CGameObject::Imgui_RenderProperty();
 
 	Load_EffectSystem();
+
+	if(ImGui::Button("CurveStart_All_Sys"))
+	{
+		if (m_pFirst_EffectSystem != nullptr && m_pFirst_EffectSystem->Check_UseMoveCurve() == true &&  m_pFirst_EffectSystem->IsDeleted() == false)
+			m_pFirst_EffectSystem->Play_MoveCurve();
+
+		if (m_pSecond_EffectSystem != nullptr && m_pSecond_EffectSystem->Check_UseMoveCurve() == true && m_pSecond_EffectSystem->IsDeleted() == false)
+			m_pSecond_EffectSystem->Play_MoveCurve();
+
+		if (m_pThird_EffectSystem != nullptr && m_pThird_EffectSystem->Check_UseMoveCurve() == true && m_pThird_EffectSystem->IsDeleted() == false)
+			m_pThird_EffectSystem->Play_MoveCurve();
+
+		if (m_pFourth_EffectSystem != nullptr && m_pFourth_EffectSystem->Check_UseMoveCurve() == true && m_pFourth_EffectSystem->IsDeleted() == false)
+			m_pFourth_EffectSystem->Play_MoveCurve();
+
+		if (m_pFifth_EffectSystem != nullptr && m_pFifth_EffectSystem->Check_UseMoveCurve() == true && m_pFifth_EffectSystem->IsDeleted() == false)
+			m_pFifth_EffectSystem->Play_MoveCurve();
+	}
 
 	ImGui::Separator();
 

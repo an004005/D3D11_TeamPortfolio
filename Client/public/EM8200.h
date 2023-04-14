@@ -58,6 +58,7 @@ protected:
 	void				AddState_Seethrough(CFSMComponentBuilder& Builder);
 	void				AddState_Counter(CFSMComponentBuilder& Builder);
 	void				AddState_CaptureKinetic(CFSMComponentBuilder& Builder);
+	void				AddState_BrainField(CFSMComponentBuilder& Builder);
 
 
 
@@ -140,6 +141,8 @@ private:
 
 	CDoOnce m_SecondPhase;
 
+	CCoolTimeHelper m_CounterEFCoolTimeHelper;
+
 	_bool	m_bMeleeCollStart = false; 
 	_bool	m_bRangeCollStart = false;
 
@@ -172,6 +175,12 @@ private:
 
 	CSimpleTimeline			m_CaptureStart;
 	CSimpleTimeline			m_CaptureEnd;
+
+	class CEM8200_CopyRush* m_pLeftCopy = nullptr;
+	class CEM8200_CopyRush* m_pRightCopy = nullptr;
+
+	class CEM8200_BrainField* m_pBrainField = nullptr;
+
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

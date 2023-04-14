@@ -1,1 +1,53 @@
-{"BillBoardType":0,"BufferProtoTag":"Prototype_Component_VIBuffer_Rect","Children":[[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]],"ModelFolderDir":"","ModelProtoTag":"","ShaderParams":{"Float2s":[],"Float4s":[[0.526259183883667,0.028970293700695038,0.019209451973438263,1.0]],"Float4x4s":[],"Floats":[5.0,0.36899998784065247],"Ints":[],"Pass":28,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ch0000_Wire_COL.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ch0000_Wire_COL.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxTex_VFX","bBillBoard":false,"bDecal":false,"bModelSprite":false,"bNormal":false,"bUseDepth":false}
+{
+    "BillBoardType": 0,
+    "BufferProtoTag": "Prototype_Component_VIBuffer_Rect",
+    "Children": [
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    ],
+    "ModelFolderDir": "",
+    "ModelProtoTag": "",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.526259183883667,
+                0.028970293700695038,
+                0.019209451973438263,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [
+            5.0,
+            0.36899998784065247
+        ],
+        "Ints": [],
+        "Pass": 28,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_sym_005.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxTex_VFX",
+    "bBillBoard": false,
+    "bDecal": false,
+    "bModelSprite": false,
+    "bNormal": false,
+    "bUseDepth": false
+}

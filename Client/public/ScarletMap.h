@@ -27,6 +27,8 @@ public:
 	static _bool s_bMapEditor;
 
 	void SetVisible_MapObjects(_bool bVisible);
+	void SetPos_MapObjects(_float4 vPos);
+	vector<class CMapObject*>& GetMapObjects() { return m_pMapObjects; }
 	
 private:
 	HRESULT SetUp_Components();   

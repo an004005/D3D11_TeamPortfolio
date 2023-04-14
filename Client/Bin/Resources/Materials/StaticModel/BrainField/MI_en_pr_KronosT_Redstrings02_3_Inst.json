@@ -8,7 +8,7 @@
 				3.0
 			]
 		],
-		"Ints": [],
+		"Ints": [0],
 		"Pass": 6,
 		"Float4x4s": [],
 		"Floats": [
@@ -18,7 +18,7 @@
 		"Textures": [
 			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_RedStrings03.dds"
 		],
-		"Float4s": []
+		"Float4s": [[1.0, 0.0, 0.0, 0.0]]
 	},
 	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
 	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",

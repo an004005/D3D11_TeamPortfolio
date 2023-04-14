@@ -363,7 +363,7 @@ void CSpecial_HBeam_Bundle::HBeam_Collision()
 					tParam.eAttackType = EAttackType::ATK_SPECIAL_LOOP;
 					tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 					tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-					tParam.iDamage = 100;
+					tParam.iDamage = 50;
 
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					pMonster->TakeDamage(tParam);
@@ -402,7 +402,7 @@ void CSpecial_HBeam_Bundle::HBeam_Explosion()
 				tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-				tParam.iDamage = 500;
+				tParam.iDamage = 250;
 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				pMonster->TakeDamage(tParam);
