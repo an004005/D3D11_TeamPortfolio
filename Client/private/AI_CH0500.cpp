@@ -97,6 +97,9 @@ void CAI_CH0500::Tick(_double TimeDelta)
 {
 	m_fTimeDelta = TimeDelta;
 
+	if (false == CPlayerInfoManager::GetInstance()->isTsugumiActive())
+		return;
+
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
 
@@ -118,6 +121,9 @@ void CAI_CH0500::Tick(_double TimeDelta)
 
 void CAI_CH0500::Late_Tick(_double TimeDelta)
 {
+	if (false == CPlayerInfoManager::GetInstance()->isTsugumiActive())
+		return;
+
 	__super::Late_Tick(TimeDelta);
 
 	for (auto& iter : m_vecWeapon)
@@ -132,6 +138,16 @@ void CAI_CH0500::Late_Tick(_double TimeDelta)
 
 void CAI_CH0500::AfterPhysX()
 {
+	if (false == CPlayerInfoManager::GetInstance()->isTsugumiActive())
+	{
+		m_pCollider->SetActive(false);
+		return;
+	}
+	else
+	{
+		m_pCollider->SetActive(true);
+	}
+
 	__super::AfterPhysX();
 
 	for (auto& iter : m_vecWeapon)

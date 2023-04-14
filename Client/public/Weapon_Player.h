@@ -34,6 +34,9 @@ public:
 	void	Set_Coltype(ECOPYCOLTYPE eColType) { m_eColtype = eColType; }
 
 private:
+	void	SetLight(_float4 vColor);
+
+private:
 	WEAPONTYPE	m_eType = WP_END;
 	ECOPYCOLTYPE	m_eColtype = ECOPYCOLTYPE::COPYCOL_END;
 

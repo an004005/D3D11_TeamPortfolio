@@ -41,6 +41,10 @@ public:
 	_float	Get_Magnification() { return m_fDistanceMagnification; }
 	void	Set_Magnification(_float fMag) { m_fDistanceMagnification = fMag; }
 
+public:
+	_float Get_CamDistance() { return m_fCamDistance; }
+	_float& Set_CamDistance(_float fDistanceOut);
+
 private:
 	HRESULT SetUp_Components();
 
