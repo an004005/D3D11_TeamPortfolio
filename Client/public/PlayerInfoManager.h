@@ -212,6 +212,9 @@ public:	// Set
 	void			Set_BrainMap(EBRAINMAP eType, _bool bAble) { m_tPlayerStat.bBrainMap[eType] = bAble; }
 	_bool			Get_BrainMap(EBRAINMAP eType) { return m_tPlayerStat.bBrainMap[eType]; }
 
+	void			SetPlayerCamDistance(_float fCamDistance) { m_fCamDistance = fCamDistance; }
+	_float			GetPlayerCamDistance() { return m_fCamDistance; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -270,6 +273,7 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+	_float			m_fCamDistance = 4.f;
 
 private:
 	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };

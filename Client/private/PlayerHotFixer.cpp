@@ -54,6 +54,12 @@ void CPlayerHotFixer::Tick()
 			m_pPlayer->m_pCamSpot->Reset_CamMod();
 		}
 
+		ImGui::SliderFloat("CamDistance", &m_fCamDistance, 1.f, 10.f);
+		if (1.f <= m_fCamDistance && 10.f >= m_fCamDistance)
+		{
+			CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(m_fCamDistance);
+		}
+
 		if (ImGui::Button("BrainCrash_Recompile"))
 		{
 			BrainCrashStateMachine_ReCompoile();

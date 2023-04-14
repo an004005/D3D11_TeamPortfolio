@@ -57,6 +57,9 @@ private:
 	_float			m_fActionCamOut = 0.f;
 
 private:
+	_float			m_fCamDistance = 4.f;
+
+private:
 	_bool			m_bHanabiActive = false;
 	_bool			m_bTsugumiActive = false;
 

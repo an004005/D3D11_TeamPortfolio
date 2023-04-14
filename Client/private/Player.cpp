@@ -255,7 +255,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 
 	m_strWeaponAttachBone = "RightWeapon";
 
-	m_BrainFieldStart.SetCurve("ActionCam_4to2");
+	m_BrainFieldStart.SetCurve("BrainField_InputCam");
 
 	return S_OK;
 }
@@ -1989,12 +1989,14 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			Visible_Check();
 
 			m_BrainFieldStart.PlayFromStart();
+
+			m_BefCamDistance = CPlayerInfoManager::GetInstance()->GetPlayerCamDistance();
 		})
 		.Tick([&](double fTimeDelta) 
 		{
 			if (m_BrainFieldStart.Tick(fTimeDelta, m_fBrainFieldStartTime))
 			{
-				static_cast<CCamera_Player*>(m_pPlayerCam)->Set_CamDistance(m_fBrainFieldStartTime);
+				CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(m_fBrainFieldStartTime * m_BefCamDistance);
 			}
 		})
 		.OnExit([&]() {})
@@ -2072,7 +2074,7 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				}
 			}
 
-			static_cast<CCamera_Player*>(m_pPlayerCam)->Set_CamDistance(4.f);
+			CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(m_BefCamDistance);
 		})
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
@@ -2400,8 +2402,8 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	});
 
 	m_pModel->Add_EventCaller("BrainField_MaskBright", [&]() {
-		_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(0.f, 0.04f, 0.f);
-		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_AttachPivot(this, EffectMatrix, "Mask", true, true);
+		//_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(0.f, 0.04f, 0.f);
+		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_AttachPivot(this, EffectMatrix, "Mask", true, true);
 	});
 
 
@@ -6166,9 +6168,11 @@ HRESULT CPlayer::SetUp_ProductionEvent()
 
 void CPlayer::Production_Tick(_double TimeDelta)
 {
+	// 연출, 카메라 관련 틱
+
 	DriveMaskDissolve(TimeDelta);
 
-	//CamZoom(TimeDelta);
+	CamDistanceCheck();
 }
 
 void CPlayer::DriveMaskDissolve(_double TimeDelta)
@@ -10613,6 +10617,11 @@ void CPlayer::SmoothTurn_Attack(_double TimeDelta)
 	Vector4 vTarget = vPlayerPos + vCamLook;
 
 	m_pTransformCom->LookAt_Smooth(vTarget, TimeDelta * 0.1f);
+}
+
+void CPlayer::CamDistanceCheck()
+{
+	static_cast<CCamera_Player*>(m_pPlayerCam)->Set_CamDistance(CPlayerInfoManager::GetInstance()->GetPlayerCamDistance());
 }
 
 void CPlayer::BehaviorCheck(_double TimeDelta)
