@@ -232,6 +232,14 @@ void CCanvas_Quest::Success_Tick()
 			}
 		}
 	}
+	else if (2 == m_iQuestIndex)
+	{
+
+	}
+	else if (3 == m_iQuestIndex)
+	{
+		CGameObject::SetDelete();
+	}
 }
 
 CCanvas_Quest* CCanvas_Quest::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
