@@ -156,29 +156,29 @@ void CEMUI::Update_NoticeNeon()
 {
 	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon->SetDelete();
-		Safe_Release(m_pNoticNeon);
-		m_pNoticNeon = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
 	}
 
 	switch (m_pOwner->GetDeBuffType())
 	{
 	case Client::EDeBuffType::DEBUFF_FIRE:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_OIL:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
@@ -187,10 +187,10 @@ void CEMUI::Update_NoticeNeon()
 		break;
 	}
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
-		Safe_AddRef(m_pNoticNeon);
+		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		Safe_AddRef(m_pNoticeNeon);
 	}
 
 }
@@ -234,11 +234,11 @@ void CEMUI::Free()
 		m_pCGEffect = nullptr;
 	}
 
-	if (m_pNoticNeon != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon->SetDelete();
-		Safe_Release(m_pNoticNeon);
-		m_pNoticNeon = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
 		
 	}
 }

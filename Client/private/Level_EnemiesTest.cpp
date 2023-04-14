@@ -23,7 +23,7 @@
 #include "GameManager.h"
 #include "Imgui_CamAnimEditor.h"
 
-#define ADD_PLAYER
+//#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em1200"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -189,7 +189,7 @@ HRESULT CLevel_EnemiesTest::Ready_Layer_BackGround(const wstring & pLayerTag)
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/tests.json");
 
 
-	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_Gift", TEXT("Prototype_EMGift")));
+	FAILED_CHECK(pGameInstance->Clone_GameObject(LEVEL_NOW, L"Layer_tt", TEXT("Prototype_EMBrain")));
 
 	return S_OK;
 }

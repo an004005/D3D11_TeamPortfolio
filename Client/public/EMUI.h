@@ -31,7 +31,7 @@ private:
 	class CCanvas_BossHpMove* m_BossHp = nullptr;
 	class CEffectGroup* m_pCGEffect = nullptr;
 
-	class CEffectGroup*	 m_pNoticNeon = nullptr;
+	class CEffectGroup*	 m_pNoticeNeon = nullptr;
 	
 public:
 	static CEMUI* Create(class CEnemy* pEnemy);

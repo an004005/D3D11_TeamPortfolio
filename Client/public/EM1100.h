@@ -5,6 +5,7 @@
 BEGIN(Engine)
 class CRigidBody;
 class CMaterial;
+class CAnimCam;
 END
 
 BEGIN(Client)
@@ -68,6 +69,7 @@ private:
 	class CEMBrain*					m_pBrain = nullptr;
 	CMaterial* m_pWeak = nullptr;
 	class CEffectGroup* m_pRushEffect = nullptr;
+	CAnimCam* m_pAnimCam = nullptr;
 private:
 	_float3						 m_vMoveAxis;
 	EBaseAxis				m_eMoveAxis = EBaseAxis::AXIS_END;

@@ -75,6 +75,8 @@ private:
 	void JitabataSmokeEffect();
 	void CreateWeakExplosionEffect();
 
+	//사용전 m_bAlpha = true, m_pShaderUI->SetVisible(true) 셋팅 해줘야함
+	void GetDark(_double TimeDelta);
 private:
 	_bool PriorityCondition();
 
@@ -82,6 +84,7 @@ private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
 	class CEM0320_Controller*		m_pController = nullptr;
 	CAnimCam* m_pAnimCam = nullptr;
+	class CShaderUI* m_pShaderUI = { nullptr };
 
 	class CRigidBody* m_pWeak = nullptr;
 
@@ -90,6 +93,8 @@ private:
 	class CRigidBody* m_pLeftArm = nullptr;
 	class CRigidBody* m_pRightArm = nullptr;
 	CRigidBody* m_pRange = nullptr;
+
+private:
 	_float fangle = 10.f;
 	//
 	_float3 m_vMoveAxis;
@@ -136,6 +141,9 @@ private:
 
 	_bool m_bIntro = false;
 	_bool	m_bEnding = false;
+
+	_bool		m_bAlpha = { false };
+	_bool		m_bReverse = { false };
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

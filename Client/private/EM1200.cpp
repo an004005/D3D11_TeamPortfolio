@@ -63,6 +63,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
 	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
 	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
+
 	return S_OK;
 }
 

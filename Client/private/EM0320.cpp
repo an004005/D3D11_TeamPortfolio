@@ -22,6 +22,8 @@
 #include "PlayerInfoManager.h"
 #include "UI_Manager.h"
 #include "Camera_Manager.h"
+#include "ShaderUI.h"
+#include "UI_Manager.h"
 
 CEM0320::CEM0320(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -40,7 +42,7 @@ HRESULT CEM0320::Initialize(void* pArg)
 	pArg = &em0320_json;
 
 	// 초기값 지정. LEVEL_NOW 에 따라
-	{
+	{ 
 		m_iMaxHP =  20000;
 		m_iHP = m_iMaxHP;
 
@@ -62,6 +64,12 @@ HRESULT CEM0320::Initialize(void* pArg)
 	m_eEnemyName = EEnemyName::EM0320;
 	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(100.f));
+
+
+	//shaderUI
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
+	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
 
 	return S_OK;
 }
@@ -252,6 +260,7 @@ void CEM0320::SetUpAnimationEvent()
 		SetUpMainFSM();
 		m_pController->SetActive(true);
 		m_pEMUI->Create_BossUI();
+		CUI_Manager::GetInstance()->Set_TempOff(false);
 	});
 }
 
@@ -474,6 +483,19 @@ void CEM0320::SetUpMainFSM()
 		.AddState("Death")
 			.OnStart([this]
 			{
+				m_bAlpha = true;
+				m_pShaderUI->SetVisible(true);
+			})
+			.Tick([this](_double TimeDelta)
+			{
+				GetDark(TimeDelta);
+			})
+			.AddTransition("Death to RealDeath", "RealDeath")
+				.Predicator([this] { return m_bAlpha == false; })
+
+	.AddState("RealDeath")
+		.OnStart([this]
+			{
 				CUI_Manager::GetInstance()->Set_TempOff(true);
 				Reset();
 				m_pController->SetActive(false);
@@ -495,12 +517,12 @@ void CEM0320::SetUpMainFSM()
 						m_bEnding = true;
 					}
 			})
+
 		.Build();
 }
 
 void CEM0320::SetUpIntroFSM()
 {
-	CUI_Manager::GetInstance()->Set_TempOff(true);
 
 	m_pController->SetActive(false);
 
@@ -514,6 +536,8 @@ void CEM0320::SetUpIntroFSM()
 		.AddState("JumpAtk")
 			.OnStart([this]
 			{
+				CUI_Manager::GetInstance()->Set_TempOff(true);
+
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro");
 				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 				
@@ -1026,6 +1050,30 @@ void CEM0320::CreateWeakExplosionEffect()
 	}
 }
 
+void CEM0320::GetDark(_double TimeDelta)
+{
+	if (m_bAlpha == false) return;
+
+	m_pShaderUI->Set_Size({ _float(g_iWinSizeX), _float(g_iWinSizeY) });
+	_float fAlpha = m_pShaderUI->Get_Float4s_W();
+	if (m_bReverse == false && fAlpha >= 0.5f)
+	{
+		m_bReverse = true;
+	}
+	else if (m_bReverse == true && fAlpha <= 0.0f)
+	{
+		m_bReverse = false;
+		m_bAlpha = false;
+		m_pShaderUI->SetVisible(false);
+	}
+
+	if (m_bReverse == false)
+		fAlpha += _float(TimeDelta) * 1.2f;
+	else
+		fAlpha -= _float(TimeDelta) * 0.3f;
+	m_pShaderUI->Set_Float4s_W(fAlpha);
+}
+
 _bool CEM0320::PriorityCondition()
 {
 	return m_bDead || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
@@ -1068,9 +1116,5 @@ void CEM0320::Free()
 	Safe_Release(m_pRightArm);
 	Safe_Release(m_pRange);
 	Safe_Release(m_pAnimCam);
-	//for. BossUI 
-	// 안녕하세요. 옥수현 입니다. 여기 걸리셨다구요? 
-	// 보스를 다 잡고난 후에는 문제 없는 코드지만 보스를 잡기전 중간에 삭제 하실 경우에 객체 원본에서 Free() 가 돌고 난 후 여기 걸리신 것 입니다.
-	//if (m_pUI_BossHP != nullptr)
-	//	m_pUI_BossHP->SetDelete();
+
 }
