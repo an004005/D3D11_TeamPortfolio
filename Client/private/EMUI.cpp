@@ -47,6 +47,7 @@ void CEMUI::Create_UIInfo()
 
 		m_pShieldUI->Set_Owner(m_pOwner);
 		m_pShieldUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
+		m_pShieldUI->SetPivotBoneName(m_strShieldUIPivotBoneName);
 	}
 	else
 	{
@@ -146,7 +147,7 @@ void CEMUI::Create_CGUI()
 {
 //	_float4x4	pivot = XMMatrixIdentity();
 	m_pCGEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"G_Monster");
-	m_pCGEffect->Start_Attach(m_pOwner,  "Weak01", true, true);
+	m_pCGEffect->Start_Attach(m_pOwner,  m_strWeakBoneName, true, true);
 	Safe_AddRef(m_pCGEffect);
 }
 
