@@ -182,6 +182,7 @@ public: /* for CameraManager*/
 	void ReleaseCameraFovCurve();
 	void SetCameraFov(_float fFov);
 	class CCamAnimation* GetCamAnim(const string& strName);
+	void PlayShake(_float fDuration, _float fMagnitude);
 
 public:/*for GameTimeManager */
 	void ResetTimeRatio();

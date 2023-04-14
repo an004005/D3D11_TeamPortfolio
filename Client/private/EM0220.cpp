@@ -40,7 +40,7 @@ HRESULT CEM0220::Initialize(void * pArg)
 		m_iMaxHP = LEVEL_NOW * (150 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.5f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.6f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
 		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
@@ -253,13 +253,13 @@ void CEM0220::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0220_111_AL_to_guard");
-				m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(10.f);
+				m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(3.f);
 				m_Unbeatable = false;
 				m_SoundStore.PlaySound("wood_move_down", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
-					if (!m_Unbeatable && m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->GetPlayTime() >= 3.f)
+					if (!m_Unbeatable && m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->GetPlayTime() >= 1.5f)
 					{
 						m_pModelCom->Find_Animation("AS_em0220_111_AL_to_guard")->SetTickPerSec(80.f);
 						m_Unbeatable = true;

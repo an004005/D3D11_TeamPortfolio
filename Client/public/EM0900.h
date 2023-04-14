@@ -43,9 +43,8 @@ public:
 	_bool IsPlayingSocket() const;
 
 	void Play_LightHitAnim();
-	void Play_HeavyHitAnim();
+	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
-	void Create_Bullet();
 	void HitWeakProcess(_double TimeDelta);
 	_bool CanMove4BC(_float fMinDist);
 	_bool PriorityCondition();
@@ -74,6 +73,7 @@ private:
 	_bool		m_bAttack = false;
 	_double	m_dLoopTick = 0.0;
 	EDeBuffType m_ePreGiftType = EDeBuffType::DEBUFF_OIL;
+
 
 	//Weak
 	_int			m_iArmorHp = 0;
