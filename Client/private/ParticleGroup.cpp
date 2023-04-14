@@ -286,7 +286,9 @@ void CParticleGroup::Start_AttachSpecificPos(CGameObject* pOwner, _float4 vPosit
 
 void CParticleGroup::Start_NoOwnerOnlyPos(_float4 vPositon)
 {
-	_matrix SocketMatrix = XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
+	_float3 Scale = m_pTransformCom->Get_Scaled();
+
+	_matrix SocketMatrix = XMMatrixScaling(Scale.x, Scale.y, Scale.z) * XMMatrixTranslation(vPositon.x, vPositon.y, vPositon.z);
 
 	Set_Transform(SocketMatrix);
 
@@ -608,7 +610,12 @@ void CParticleGroup::LoadFromJson(const Json& json)
 		ObjectTag = iter["ObjectTag"];
 		FilePath = iter["ParticleDirectory"];
 
+#ifdef _DEBUG
 		Json Particle = CJsonStorage::GetInstance()->LoadJson_ForWork(FilePath);
+#else
+		Json Particle = CJsonStorage::GetInstance()->FindOrLoadJson(FilePath);
+#endif
+
 		CParticleSystem* pParticleSystem; 
 		pParticleSystem = dynamic_cast<CParticleSystem*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW,TEXT("ProtoVFX_ParticleSystem"), &Particle));
 

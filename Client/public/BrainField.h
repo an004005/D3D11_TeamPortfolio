@@ -58,6 +58,7 @@ public:
 
 	class CEffectGroup* m_pBrainFieldFloor = nullptr;
 	CDoOnce m_FloorEffectOnce;
+	CDoOnce m_DefaultMapDeActiveOnce;
 
 	_bool m_bOpen = false;
 
@@ -67,6 +68,7 @@ public:
 	CCurveFloatImpl* m_pMaskEmissive_c1 = nullptr;
 	CCurveFloatImpl* m_pMaskNoise_c1 = nullptr;
 	CCurveFloatImpl* m_pMapDisappear_c1 = nullptr;
+	CCurveFloatImpl* m_pMapBlink_c1 = nullptr;
 
 	CDoOnce m_MapPostProcessFloat0Reset;
 	CCurveFloatImpl* m_pMaskEmissive_c2 = nullptr;

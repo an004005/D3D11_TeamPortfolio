@@ -392,7 +392,9 @@ void CEM0700::SetUpFSM()
 			.Tick([this](_double TimeDelta)
 			{
 					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+					if (nullptr != m_pBrain)
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
 					m_BCLoopTime += TimeDelta;
 			})
 

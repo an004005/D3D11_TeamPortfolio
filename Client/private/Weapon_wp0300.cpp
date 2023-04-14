@@ -7,6 +7,7 @@
 #include "PhysX_Manager.h"
 #include "Material.h"
 #include "Enemy.h"
+#include "Model.h"
 
 CWeapon_wp0300::CWeapon_wp0300(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CScarletWeapon(pDevice, pContext)
@@ -124,6 +125,14 @@ void CWeapon_wp0300::SetFire()
 
 void CWeapon_wp0300::ReleaseFire()
 {
+}
+
+void CWeapon_wp0300::SetDissolve(_float fDissolve)
+{
+	for (auto& iter : m_pModel->GetMaterials())
+	{
+		iter->GetParam().Floats[1] = fDissolve;
+	}
 }
 
 HRESULT CWeapon_wp0300::SetUp_Components()

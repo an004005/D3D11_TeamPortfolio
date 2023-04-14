@@ -306,6 +306,7 @@
     <ClInclude Include="..\public\EM8200.h" />
     <ClInclude Include="..\public\EM8200_AnimInstance.h" />
     <ClInclude Include="..\public\EM8200_Controller.h" />
+    <ClInclude Include="..\public\EM8200_CopyRush.h" />
     <ClInclude Include="..\public\EMBrain.h" />
     <ClInclude Include="..\public\EMCable.h" />
     <ClInclude Include="..\public\EMGift.h" />
@@ -317,6 +318,7 @@
     <ClInclude Include="..\public\InvisibleWall.h" />
     <ClInclude Include="..\public\Item_LightUI.h" />
     <ClInclude Include="..\public\Level_ConstructionSite2F.h" />
+    <ClInclude Include="..\public\Level_DownTown.h" />
     <ClInclude Include="..\public\Level_FinalStage.h" />
     <ClInclude Include="..\public\Level_Hospital_1F.h" />
     <ClInclude Include="..\public\Level_NaomiRoom.h" />
@@ -519,6 +521,8 @@
     <ClInclude Include="..\public\Weapon_wp0300.h" />
     <ClInclude Include="..\public\Weapon_wp0500.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="EM8200_BrainField.h" />
+    <ClInclude Include="EnvironmentEffect.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -651,6 +655,7 @@
     <ClCompile Include="..\private\EM8200.cpp" />
     <ClCompile Include="..\private\EM8200_AnimInstance.cpp" />
     <ClCompile Include="..\private\EM8200_Controller.cpp" />
+    <ClCompile Include="..\private\EM8200_CopyRush.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />
     <ClCompile Include="..\private\EMCable.cpp" />
     <ClCompile Include="..\private\EMGift.cpp" />
@@ -662,6 +667,7 @@
     <ClCompile Include="..\private\InvisibleWall.cpp" />
     <ClCompile Include="..\private\Item_LightUI.cpp" />
     <ClCompile Include="..\private\Level_ConstructionSite2F.cpp" />
+    <ClCompile Include="..\private\Level_DownTown.cpp" />
     <ClCompile Include="..\private\Level_FinalStage.cpp" />
     <ClCompile Include="..\private\Level_Hospital_1F.cpp" />
     <ClCompile Include="..\private\Level_NaomiRoom.cpp" />
@@ -864,6 +870,8 @@
     <ClCompile Include="..\private\Weapon_wp0300.cpp" />
     <ClCompile Include="..\private\Weapon_wp0500.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="EM8200_BrainField.cpp" />
+    <ClCompile Include="EnvironmentEffect.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

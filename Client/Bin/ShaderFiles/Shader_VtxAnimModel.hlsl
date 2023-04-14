@@ -555,12 +555,12 @@ PS_OUT PS_em1100_Weak_12(PS_IN In)
 	
 		float4 vWeak = g_Weak01.Sample(LinearSampler, In.vTexUV * 20.f);
 		Out.vDiffuse.xyz += vWeak.rgb;
-		Out.vDepth.z = time + vWeak.a * 3.f;
+		Out.vDepth.z = time + vWeak.a * 4.f;
 	
 		float fHit = g_float_1;
 		if (fHit > 0.f)
 		{
-			Out.vDepth.z += g_vec2_0.y * fHit + 1.f;
+			Out.vDepth.z += g_vec2_0.y * fHit + 2.f;
 		}
 		Out.vDepth.w = SHADER_NONE_SHADE;
 		Out.vFlag = float4(0.f, SHADER_POST_ENEMY, SHADER_MONSTER_WEAK, 0.f);	

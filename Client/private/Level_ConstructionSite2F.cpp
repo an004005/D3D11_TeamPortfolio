@@ -17,7 +17,7 @@ CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D
 
 HRESULT CLevel_ConstructionSite2F::Initialize()
 {
-    //m_bPlayerSpawn = false;
+   // m_bPlayerSpawn = false;
 
     m_strLevelName = L"ConstructionSite2F";
     //m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite2F_ShadowCam.json"; // 아직 없음
@@ -25,8 +25,8 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
     if (FAILED(__super::Initialize()))
         return E_FAIL;
-    /*if (FAILED(Ready_Layer_AI(LAYER_AI)))
-        return E_FAIL;*/
+    if (FAILED(Ready_Layer_AI(LAYER_AI)))
+        return E_FAIL;
 
     // Kinetic Object Batch & Item
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
@@ -38,6 +38,13 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster3rdWave.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster4thWaveBoss.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/ConstructionSite2F.json");
+
+    // Test Code AchieveItem Test
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/AchieveTest.json");
+    
+    // Red String Batch
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_1.json");
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_3.json");
 
     // Boss Area Kinetic Object Preset(Recycle)
     Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_Construction2FBossRoom.json");

@@ -16,6 +16,7 @@
 #include "GameUtils.h"
 #include "RedString.h"
 #include "VFX_Manager.h"
+#include "MapInstance_Object.h"
 
 /**********************
  * CBrainField
@@ -61,14 +62,17 @@ HRESULT CBrainField::Initialize(void* pArg)
 	m_pMaskEmissive_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MaskEmissive");
 	m_pMaskNoise_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MaskNoise");
 	m_pMapDisappear_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_MapDisappear");
+	m_pMapBlink_c1 = CCurveManager::GetInstance()->GetCurve("BrainField_c1_BrainFieldBuildBlink");
 
 	m_pMaskEmissive_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MaskEmissive");
 	m_pMapAppear_c2 = CCurveManager::GetInstance()->GetCurve("BrainField_c2_MapAppear");
 
 	{
+		CMapInstance_Object::s_bPhysX = false;
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
 		m_pBrainFieldMap = dynamic_cast<CScarletMap*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
 		m_pBrainFieldMap->SetVisible_MapObjects(false);
+		CMapInstance_Object::s_bPhysX = true;
 	}
 	{
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
@@ -77,7 +81,13 @@ HRESULT CBrainField::Initialize(void* pArg)
 		m_pBrainFieldRedString->SetPass(1);
 	}
 
-	m_CloseTimeline.SetCurve("Simple_Increase");
+	if (LEVEL_NOW == LEVEL_HOSPITAL_1F)
+	{
+		m_pBrainFieldRedString->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4{74.4f, 0.f, 13.06f, 1.f});
+		m_pBrainFieldMap->SetPos_MapObjects(_float4{74.4f, 0.f, 13.06f, 1.f});
+	}
+
+	m_CloseTimeline.SetCurve("SimpleIncrease_2xSlow");
 	m_CloseTimeline.SetFinishFunction([this]
 	{
 		m_pMapPostProcess->SetVisible(false);
@@ -87,7 +97,7 @@ HRESULT CBrainField::Initialize(void* pArg)
 }
 
 void CBrainField::BeginTick()
-{\
+{
 	CGameObject::BeginTick();
 	m_pBrainFieldCables->BeginTick();
 	m_pChromaticAberration->BeginTick();
@@ -130,6 +140,12 @@ void CBrainField::Tick(_double TimeDelta)
 			m_pChromaticAberration->GetParam().Floats[0] = m_pChromaticAberration_c1->GetValue(fPlayRatio);
 
 			m_pMapPostProcess->GetParam().Floats[0] = m_pMapDisappear_c1->GetValue(fPlayRatio);
+			m_pMapPostProcess->GetParam().Floats[2] = m_pMapBlink_c1->GetValue(fPlayRatio);
+			if (m_pMapPostProcess->GetParam().Floats[0] > 0.99 && m_DefaultMapDeActiveOnce.IsNotDo())
+			{
+				m_pDefaultMap->SetVisible_MapObjects(false);
+				m_pBrainFieldMap->SetVisible_MapObjects(true);
+			}
 
 		}
 		else if (strcmp(m_pBrainFieldCables->GetStateName(), "BrainFieldOpen_c02") == 0)
@@ -140,10 +156,8 @@ void CBrainField::Tick(_double TimeDelta)
 			}
 
 			m_pMapPostProcess->GetParam().Ints[0] = 1;
-
-			m_pDefaultMap->SetVisible_MapObjects(false);
-			m_pBrainFieldMap->SetVisible_MapObjects(true);
 			m_pBrainFieldRedString->SetVisible(true);
+
 			m_pSkyBox->GetParams().iPass = 1;
 
 			_float fPlayRatio = m_pBrainFieldCables->GetPlayRatio();
@@ -219,6 +233,7 @@ void CBrainField::OpenBrainField()
 {
 	m_MapPostProcessFloat0Reset.Reset();
 	m_FloorEffectOnce.Reset();
+	m_DefaultMapDeActiveOnce.Reset();
 	m_pBrainFieldCables->Activate(true);
 	m_bOpen = true;
 	m_pSkyBox->GetParams().iPass = 2;
@@ -366,6 +381,7 @@ HRESULT CPostVFX_MapPostProcess::Initialize(void* pArg)
 	FAILED_CHECK(CPostProcess::Initialize(pArg));
 	m_iPriority = 0;
 	m_tParam.iPass = 14;
+	m_tParam.Floats.push_back(0.f);
 	m_tParam.Floats.push_back(0.f);
 	m_tParam.Floats.push_back(0.f);
 	m_tParam.Ints.push_back(0);
@@ -554,8 +570,6 @@ HRESULT CBrainFieldCables::Render()
 
 void CBrainFieldCables::Imgui_RenderProperty()
 {
-	CGameObject::Imgui_RenderProperty();
-
 	CGameObject::Imgui_RenderProperty();
 
 	if (ImGui::CollapsingHeader("Pivot Bone"))

@@ -79,10 +79,15 @@ private:
 	void		Collision_End();
 	void		Collision_Twist();
 	void		Twist_Particle();
+
+public:
+	void		WeaponDissolve(_bool bDissolve) { m_bWeaponOn = bDissolve; }
 	
 private:
 	HRESULT		Setup_Parts();
 	vector<CGameObject*>	m_vecWeapon;
+	_bool		m_bWeaponOn = false;
+	_float		m_fWeaponDissolve = 1.f;
 
 // 구조체 상태 반환
 private:

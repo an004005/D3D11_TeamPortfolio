@@ -389,6 +389,11 @@
             "Layer": "Layer_NPC",
             "JsonPath": "",
             "ProtoTag": "Shop_NPC"
+        },
+        {
+            "Layer": "Layer_MapDecorate",
+            "JsonPath": "",
+            "ProtoTag": "Prototype_EnvironmentEffect"
         }
     ]
 }
