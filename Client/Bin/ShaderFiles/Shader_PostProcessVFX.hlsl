@@ -614,7 +614,7 @@ PS_OUT PS_BRAINFIELD_MAP_14(PS_IN In)
 	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.a = 1.f;
 
-	if (vFlag.x == SHADER_BRAINFIELD_EFFECT)
+	if (vFlag.x == SHADER_BRAINFIELD_EFFECT || vFlag.z == SHADER_BRAINFIELD_EFFECT)
 		return Out;
 
 	if (vFlag.y == SHADER_POST_OBJECTS || vFlagNonAlpha.y == SHADER_POST_OBJECTS || fViewZ >= g_Far)

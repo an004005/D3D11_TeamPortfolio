@@ -899,7 +899,7 @@ PS_OUT_FLAG PS_BRAINFIELD_PARTICLE_TEXT(PS_IN In)
 	if (Out.vColor.a < 0.01f)
 		discard;
 
-	Out.vFlag = float4(SHADER_BRAINFIELD_EFFECT, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_BRAINFIELD_EFFECT, 0.f);
 
 	return Out;
 }
