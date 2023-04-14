@@ -88,6 +88,8 @@ typedef struct tagHanabiStatus
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 
+	_bool bActivate = false;
+
 }	HANABI_STAT;
 
 typedef struct tagTsugumiStatus
@@ -101,6 +103,8 @@ typedef struct tagTsugumiStatus
 	_uint iSprbrPower = { 0 };
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
+
+	_bool bActivate = false;
 
 }	TSUGUMI_STAT;
 
@@ -205,6 +209,9 @@ public:	// Set
 	void			Set_BrainMap(EBRAINMAP eType, _bool bAble) { m_tPlayerStat.bBrainMap[eType] = bAble; }
 	_bool			Get_BrainMap(EBRAINMAP eType) { return m_tPlayerStat.bBrainMap[eType]; }
 
+	void			SetPlayerCamDistance(_float fCamDistance) { m_fCamDistance = fCamDistance; }
+	_float			GetPlayerCamDistance() { return m_fCamDistance; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -223,6 +230,12 @@ public:	// Set
 	void			Set_SASMember(const SASMEET eSAS) { 
 		m_bSASMember[eSAS] = true; 
 	}
+
+public: // AI°ü·Ã
+	void			Hanabi_Active(_bool bActive)	{ m_tHanabiStat.bActivate = bActive; }
+	void			Tsugumi_Active(_bool bActive)	{ m_tTsugumiStat.bActivate = bActive; }
+	_bool			isHanabiActive() { return m_tHanabiStat.bActivate; }
+	_bool			isTsugumiActive() { return m_tTsugumiStat.bActivate; }
 
 public:
 	HRESULT			Set_CamSpot(CGameObject* pCamSpot);
@@ -256,6 +269,7 @@ private:
 
 private:
 	_float			m_fBaseAttackDamage;
+	_float			m_fCamDistance = 4.f;
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };

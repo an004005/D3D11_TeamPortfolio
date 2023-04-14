@@ -190,6 +190,13 @@ void CCamera_Player::Attach_Target(_fmatrix AttachMatrix)
 	m_pTransformCom->Set_WorldMatrix(AttachMatrix);
 }
 
+_float& CCamera_Player::Set_CamDistance(_float fDistanceOut)
+{
+	m_fCamDistance = fDistanceOut;
+
+	return m_fCamDistance;
+}
+
 HRESULT CCamera_Player::SetUp_Components()
 {
 	return S_OK;

@@ -72,7 +72,7 @@ protected:
 
 	void CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam, _float fRad = 1.f, _uint eColTypes = CTB_STATIC || CTB_PLAYER || CTB_MONSTER || CTB_MONSTER_PART || CTB_PSYCHICK_OBJ);
 
-	virtual void CheckHitTarget(CGameObject* pTarget, CComponent* pHitBox, DAMAGE_PARAM mParam);
+	virtual void CheckHitTarget(class CScarletCharacter* pTarget, CComponent* pHitBox, DAMAGE_PARAM mParam);
 
 protected:
 	void ClearDamagedTarget();

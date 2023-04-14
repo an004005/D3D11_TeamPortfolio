@@ -196,7 +196,7 @@ void CSpecial_TankLorry_Trailer::Exploision()
 				tParam.eAttackType = EAttackType::ATK_SPECIAL_END;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_FIRE;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_DEFAULT;
-				tParam.iDamage = 9999;
+				tParam.iDamage = 3200;
 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				pMonster->TakeDamage(tParam);

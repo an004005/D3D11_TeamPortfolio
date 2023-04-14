@@ -1,0 +1,154 @@
+{
+    "BatchObjs": [
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TelephonePole.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_TelephonePole"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -33.94190216064453,
+                0.08725297451019287,
+                -67.26811981201172,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TelephonePole.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_TelephonePole"
+            },
+            "WorldMatrix": [
+                0.9669573307037354,
+                0.254934698343277,
+                0.0,
+                0.0,
+                -0.254934698343277,
+                0.9669573307037354,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -37.71974563598633,
+                0.1462831199169159,
+                -89.44865417480469,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_TelephonePole.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_TelephonePole"
+            },
+            "WorldMatrix": [
+                0.24590741097927094,
+                -0.2656646966934204,
+                0.932173490524292,
+                0.0,
+                0.2359887659549713,
+                0.9491742253303528,
+                0.20825597643852234,
+                0.0,
+                -0.9401260018348694,
+                0.1687716543674469,
+                0.2961043417453766,
+                0.0,
+                -90.38855743408203,
+                9.171977996826172,
+                -127.12732696533203,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_HBeam_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_HBeam_Bundle"
+            },
+            "WorldMatrix": [
+                0.9827033877372742,
+                6.725094135617837e-05,
+                0.1851864606142044,
+                0.0,
+                0.00011876556527568027,
+                0.9999995231628418,
+                -0.0009933891706168652,
+                0.0,
+                -0.18518643081188202,
+                0.0009982006158679724,
+                0.982702910900116,
+                0.0,
+                -98.39646911621094,
+                19.395254135131836,
+                -200.44265747070313,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_HBeam_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_HBeam_Bundle"
+            },
+            "WorldMatrix": [
+                0.9826475381851196,
+                -1.4706461115565617e-06,
+                0.18548259139060974,
+                0.0,
+                1.0128735084435903e-05,
+                1.0,
+                -4.573113619699143e-05,
+                0.0,
+                -0.18548259139060974,
+                4.681629434344359e-05,
+                0.9826475381851196,
+                0.0,
+                -110.97869110107422,
+                19.39461898803711,
+                -190.36758422851563,
+                1.0
+            ]
+        },
+        {
+            "Preset": {
+                "JsonPath": "../Bin/Resources/Objects/KineticSpecial_HBeam_Bundle.json",
+                "Layer": "Layer_Kinetic",
+                "ProtoTag": "Prototype_GameObject_Special_HBeam_Bundle"
+            },
+            "WorldMatrix": [
+                0.9828581213951111,
+                -0.00018158827151637524,
+                0.18436340987682343,
+                0.0,
+                0.00023057020734995604,
+                0.9999999403953552,
+                -0.00024424336152151227,
+                0.0,
+                -0.18436333537101746,
+                0.0002825652773026377,
+                0.9828580021858215,
+                0.0,
+                -88.7256088256836,
+                19.394487380981445,
+                -186.3560791015625,
+                1.0
+            ]
+        }
+    ]
+}

@@ -37,7 +37,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
 		//5000
-		m_iMaxHP = LEVEL_NOW * (250  + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP = LEVEL_NOW * (300  + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10;
@@ -48,6 +48,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 
 		m_eEnemyName = EEnemyName::EM0110;
 		m_bHasCrushGauge = true;
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -238,7 +239,12 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Idle to Down", "Down")
 				.Predicator([this] { return m_bDestroyArmor; })
 			.AddTransition("Idle to Hit_Heavy", "Hit_Heavy")
-				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_HEAVY; })
+				.Predicator([this] { return m_eCurAttackType == EAttackType::ATK_SPECIAL_END; })
+			.AddTransition("Idle to Hit_Light", "Hit_Light")
+				.Predicator([this] { return
+					m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+					|| m_eCurAttackType == EAttackType::ATK_HEAVY; })
+
 
 			.AddTransition("Idle to Attack_turn", "Attack_turn")
 				.Predicator([this] { return m_eInput == CController::R; })
@@ -299,24 +305,45 @@ void CEM0110::SetUpFSM()
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+
+		.AddState("Hit_Light")
+			.OnStart([this]
+			{
+				Play_LightHitAnim();
+			})
+			.Tick([this](_double)
+			{
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY)
+				{
+					Play_LightHitAnim();
+				}
+			})
+			.AddTransition("Hit_Light to Idle", "Idle")
+				.Predicator([this]
+				{
+					return PriorityCondition()
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| (m_eCurAttackType != EAttackType::ATK_SPECIAL_LOOP
+							&& m_eCurAttackType != EAttackType::ATK_HEAVY
+							&& m_eCurAttackType != EAttackType::ATK_END);
+				})
+
 		.AddState("Hit_Heavy")
 			.OnStart([this]
 			{
-				Play_HeavyHitAnim();
+				Play_MidHitAnim();
 				HeavyAttackPushStart();
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_eCurAttackType == EAttackType::ATK_HEAVY)
+				if (m_eCurAttackType == EAttackType::ATK_SPECIAL_END)
 				{
-					HeavyAttackPushStart();
-					Play_HeavyHitAnim();
+					Play_MidHitAnim();
 				}
-
 				_float fPower;
 				if (m_HeavyAttackPushTimeline.Tick(TimeDelta, fPower))
-				{
-					_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
+				{						_float3 vVelocity = { m_vPushVelocity.x, m_vPushVelocity.y, m_vPushVelocity.z };
 					m_pTransformCom->MoveVelocity(TimeDelta, vVelocity * fPower);
 					//m_pTransformCom->MoveVelocity(TimeDelta, m_vPushVelocity * fPower);
 				}
@@ -324,8 +351,12 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
+						|| m_eCurAttackType == EAttackType::ATK_HEAVY;
 				})
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -357,7 +388,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_turn to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//장판
 		.AddState("Attack_c1")
@@ -384,7 +415,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_c1 to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 		//돌진
 		.AddState("Attack_b2_Start")
@@ -411,7 +442,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Start to Attack_b2_Loop", "Attack_b2_Loop")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_b2_Loop")
@@ -433,7 +464,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Loop to Attack_b2_Stop", "Attack_b2_Stop")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || !m_bRush;
+					return PriorityCondition() || !m_bRush;
 				})
 
 		.AddState("Attack_b2_Stop")
@@ -453,7 +484,7 @@ void CEM0110::SetUpFSM()
 			.AddTransition("Attack_b2_Stop to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_bDestroyArmor || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -463,7 +494,7 @@ void CEM0110::SetUpFSM()
 void CEM0110::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_iArmorHp = m_iMaxHP * 0.1;
+	m_iArmorHp = m_iMaxHP * 0.3f;
 
 	//Create BugParticle
 	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
@@ -631,13 +662,35 @@ void CEM0110::Adjust_MoveAxis(_double TimeDelta)
 
 }
 
-
-void CEM0110::Play_HeavyHitAnim()
+void CEM0110::Play_LightHitAnim()
 {
 	if (m_eSimpleHitFrom == ESimpleAxis::NORTH)
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_451_AL_damage_l_F02");
 	else
 		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_452_AL_damage_l_B02");
+}
+
+void CEM0110::Play_MidHitAnim()
+{
+	switch (m_eHitFrom)
+	{
+	case EBaseAxis::NORTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_411_AL_damage_m_F01");
+		break;
+	case EBaseAxis::EAST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_414_AL_damage_m_R01");
+		break;
+	case EBaseAxis::SOUTH:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_412_AL_damage_m_B01");
+		break;
+	case EBaseAxis::WEST:
+		m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_413_AL_damage_m_L01");
+		break;
+	case EBaseAxis::AXIS_END:
+		FALLTHROUGH;
+	default:
+		NODEFAULT;
+	}
 }
 
 void CEM0110::HeavyAttackPushStart()
@@ -707,6 +760,11 @@ void CEM0110::HitWeakProcess(_double TimeDelta)
 		}
 	}
 	
+}
+
+_bool CEM0110::PriorityCondition()
+{
+	return m_bDead || m_bDestroyArmor || m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
 }
 
 
@@ -806,7 +864,7 @@ void CEM0110::Kick_SweepSphere()
 			{
 				DAMAGE_PARAM tDamageParams;
 				tDamageParams.iDamage = m_iAtkDamage * 1.3f;
-				tDamageParams.eAttackType = EAttackType::ATK_TO_AIR;
+				tDamageParams.eAttackType = EAttackType::ATK_HEAVY;
 				tDamageParams.eDeBuff = EDeBuffType::DEBUFF_END;
 				tDamageParams.pCauser = this;
 				tDamageParams.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);

@@ -6,8 +6,7 @@
 
 #include "ScarletCharacter.h"
 #include "Player.h"
-#include "Monster.h"
-
+#include "Enemy.h"
 CBullet::CBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -231,24 +230,22 @@ void CBullet::CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam,
 	m_BeforePos = vPos;
 }
 
-void CBullet::CheckHitTarget(CGameObject * pTarget, CComponent * pHitBox, DAMAGE_PARAM mParam)
+void CBullet::CheckHitTarget(CScarletCharacter * pTarget, CComponent * pHitBox, DAMAGE_PARAM mParam)
 {	
-	 if (auto pPlayer = dynamic_cast<CPlayer*>(pTarget))
+	if (dynamic_cast<CEnemy*>(pTarget) != nullptr) return;
+
+	if (CheckDamagedTarget(pTarget))
 	{
-		if (CheckDamagedTarget(pPlayer))
-		{
-			mParam.pContactComponent = pHitBox;
+		mParam.pContactComponent = pHitBox;
 
-			auto pHitTarget = dynamic_cast<CScarletCharacter*>(pPlayer);
-			pHitTarget->TakeDamage(mParam);
+		pTarget->TakeDamage(mParam);
+		m_bHitCheck = true;
 
-			m_bHitCheck = true;
+		ClearDamagedTarget();
+	}
+	else
+		m_bHitCheck = false;
 
-			ClearDamagedTarget();
-		}
-		else
-			m_bHitCheck = false;
-	}	
 }
 
 CBullet* CBullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

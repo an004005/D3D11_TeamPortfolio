@@ -98,6 +98,9 @@ void CAI_CH0300::Tick(_double TimeDelta)
 {
 	m_fTimeDelta = TimeDelta;
 
+	if (false == CPlayerInfoManager::GetInstance()->isHanabiActive())
+		return;
+
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
 
@@ -110,6 +113,17 @@ void CAI_CH0300::Tick(_double TimeDelta)
 
 	for (auto& iter : m_vecWeapon)
 	{
+		if (m_bWeaponOn && 1.f > m_fWeaponDissolve)
+		{
+			m_fWeaponDissolve = min(1.f, m_fWeaponDissolve + (_float)TimeDelta);
+			static_cast<CWeapon_wp0300*>(iter)->SetDissolve(m_fWeaponDissolve);
+		}
+		else if (!m_bWeaponOn && 0.f < m_fWeaponDissolve)
+		{
+			m_fWeaponDissolve = max(0.f, m_fWeaponDissolve - (_float)TimeDelta);
+			static_cast<CWeapon_wp0300*>(iter)->SetDissolve(m_fWeaponDissolve);
+		}
+
 		iter->Tick(TimeDelta);
 		{
 			_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART));
@@ -119,6 +133,9 @@ void CAI_CH0300::Tick(_double TimeDelta)
 
 void CAI_CH0300::Late_Tick(_double TimeDelta)
 {
+	if (false == CPlayerInfoManager::GetInstance()->isHanabiActive())
+		return;
+
 	__super::Late_Tick(TimeDelta);
 
 	for (auto& iter : m_vecWeapon)
@@ -133,6 +150,16 @@ void CAI_CH0300::Late_Tick(_double TimeDelta)
 
 void CAI_CH0300::AfterPhysX()
 {
+	if (false == CPlayerInfoManager::GetInstance()->isHanabiActive())
+	{
+		m_pCollider->SetActive(false);
+		return;
+	}
+	else
+	{
+		m_pCollider->SetActive(true);
+	}
+
 	__super::AfterPhysX();
 
 	for (auto& iter : m_vecWeapon)

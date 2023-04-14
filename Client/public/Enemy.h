@@ -92,7 +92,7 @@ protected:
 	// 몬스터가 죽으면 실행해야할 코드들 넣기
 	virtual void SetDead();
 
-	virtual void FindTarget();
+	virtual void FindTarget(_double TimeDelta);
 	virtual void Update_DeadDissolve(_double TimeDelta);
 
 	virtual void Update_DeBuff(_double TimeDelta) override;
@@ -116,7 +116,7 @@ protected:
 
 private:
 	void CreateSpawnEffect();
-
+	_bool	InCombet_WithPlayer();
 protected:
 	static vector<wstring>			s_vecDefaultBlood;
 	static vector<wstring>			s_vecFireBlood;
@@ -163,6 +163,7 @@ protected:
 	_uint	iEemeyLevel = { 0 };
 	EEnemyName m_eEnemyName = { EEnemyName::ENEMY_NAME_END };
 
+	_bool		m_bBoss = false;
 	// 
 	EAttackType m_eCurAttackType = EAttackType::ATK_END; // 현 프레임에서 받은 공격 타입
 	EBaseAxis m_eHitFrom = EBaseAxis::AXIS_END;
@@ -183,8 +184,8 @@ protected:
 	_float4x4 m_SpawnEffectPivot;
 	_float m_fSpawnDistortionDistancePivot = 0.f;
 
-private:
-		_int KBSound = 0;
+	//플레이어와 전투중인지 확인
+	_double	m_dCombetTime = 0.0;
 public:
 	virtual void Free() override;
 };
