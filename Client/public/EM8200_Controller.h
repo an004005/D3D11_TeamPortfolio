@@ -40,6 +40,8 @@ private:
 	void Tick_TP_Cooltime(_double TimeDelta);
 	void Tick_CoolTimeHelper(_double TimeDelta);
 
+
+	void	Check_SecondPhase();
 public:
 	void CalcTeleport_Dir();
 

@@ -195,6 +195,7 @@ PS_OUT_NORM PS_KAREN_MASK_ALL(PS_IN_NORM In)
 	{
 		if (Out.vColor.r > 0.3f)
 		{
+			Out.vColor.rgb = float3(0.134f, 0.1f, 0.42f);
 			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
 		}
 		else

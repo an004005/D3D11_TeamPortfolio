@@ -34,7 +34,7 @@ public:
 	virtual void		Imgui_RenderProperty() override;
 	virtual void		SetUpUI() override;
 
-	
+	void				Set_StoryEnd() { m_bStoryEnd = true; }
 
 public:
 	_bool				IsMove() const { return m_vMoveAxis != _float3::Zero; }
@@ -63,6 +63,7 @@ protected:
 	void				AddState_BrainField(CFSMComponentBuilder& Builder);
 	void				AddState_BrainCrush(CFSMComponentBuilder& Builder);
 
+	void				AddState_Intro(CFSMComponentBuilder& Builder);
 
 
 
@@ -93,6 +94,8 @@ private:
 	void Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType);
 	void Range_Overlap(_float4 vPos, _uint iDamage, _float fRad, EAttackType eAtkType);
 
+	_bool Check_PlayerDetected();
+	_bool Check_StoryEnd();
 private:
 	class CEM8200_Controller* m_pController = nullptr;
 	class CEM8200_AnimInstance* m_pASM = nullptr;
@@ -100,7 +103,9 @@ private:
 	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
-
+	_bool			m_bStoryEnd;
+	CDoOnce			m_bStoryModeStart;
+	
 private:
 	CModel* m_pKineticModel = nullptr;
 	CGameObject* m_pKineticObject = nullptr;
@@ -186,6 +191,8 @@ private:
 
 	CSimpleTimeline			m_CaptureStart;
 	CSimpleTimeline			m_CaptureEnd;
+
+	CSimpleTimeline			m_KarenMaskStart;
 
 	class CEM8200_CopyRush* m_pLeftCopy = nullptr;
 	class CEM8200_CopyRush* m_pRightCopy = nullptr;

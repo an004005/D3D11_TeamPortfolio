@@ -26,7 +26,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 // m_bPlayerSpawn = false;
+	 m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
@@ -75,6 +75,10 @@ HRESULT CLevel_FinalStage::Initialize()
 	/////////////////////////////////
 	// 투명 벽 생성 코드 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/InvisibleWall_NotVisible.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/WaterFall.json");
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/PlayerStartPos.json");
+
 	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapDecorate")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == L"Prototype_InvisibleWall")
@@ -93,6 +97,7 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
+	CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
 	return S_OK;
 }
 
