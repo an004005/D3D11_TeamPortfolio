@@ -10,10 +10,13 @@
 #include "MathUtils.h"
 #include "Material.h"
 #include "EMCable.h"
-#include "PlayerInfoManager.h"
+
+#include "GameManager.h"
 #include "HelperClasses.h"
 #include "ShaderUI.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
+
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -41,7 +44,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = 39;
+		iEemeyLevel = 34;
 		m_iAtkDamage = 200;
 
 		m_eEnemyName = EEnemyName::EM1200;
@@ -862,6 +865,11 @@ void CEM1200::SetUpMainFSM()
 			.AddState("Cable_Start")
 				.OnStart([this]
 				{
+						m_bCableTalk.IsNotDo([]
+							{
+								CGameManager::GetInstance()->Set_LeftTalk(88);
+							});
+
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_217_AL_atk_a5_motif2_start");
 					m_SoundStore.PlaySound("crawl_attack_tenta", m_pTransformCom);
 
@@ -1151,7 +1159,18 @@ void CEM1200::Imgui_RenderProperty()
 
 _bool CEM1200::IsWeak(CRigidBody* pHitPart)
 {
-	return 	pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(91);
+		}
+	}
+
+	return bisweak;
 }
 
 _float4 CEM1200::GetKineticTargetPos()
@@ -1289,7 +1308,14 @@ void CEM1200::FogControl(_double TimeDelta)
 		_float fMaxFogDensity = 0.8f;
 		_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
 		if (FogGlobalDensity >= fMaxFogDensity)
+		{
 			m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+
+			m_bFogTalk.IsNotDo([]
+				{
+					CGameManager::GetInstance()->Set_LeftTalk(89);
+				});
+		}
 	}
 }
 

@@ -614,6 +614,9 @@ PS_OUT PS_BRAINFIELD_MAP_14(PS_IN In)
 	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
 	Out.vColor.a = 1.f;
 
+	if (vFlag.x == SHADER_BRAINFIELD_EFFECT)
+		return Out;
+
 	if (vFlag.y == SHADER_POST_OBJECTS || vFlagNonAlpha.y == SHADER_POST_OBJECTS || fViewZ >= g_Far)
 	{
 		if (g_int_0 == 0) 
@@ -717,7 +720,7 @@ PS_OUT PS_EM8200_BRAINFIELD_MAP_15(PS_IN In)
 	{
 		if (g_float_0 >= 1.f) // 흑백
 		{
-			if (vFlagNonAlpha.z == SHADER_TOON_GRAY_INGNORE)
+			if (vFlagNonAlpha.z == SHADER_TOON_GRAY_INGNORE || vFlag.z == SHADER_BRAINFIELD_EFFECT)
 				Out.vColor.rgb = 1.f;
 			else
 				Out.vColor.rgb = 0.f;

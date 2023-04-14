@@ -16,6 +16,8 @@
 #include "Map_KineticBatchPreset.h"
 #include "GameManager.h"
 #include "InvisibleWall.h"
+#include "Imgui_CameraManager.h"
+#include "Imgui_CamAnimEditor.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -24,7 +26,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 m_bPlayerSpawn = false;
+	 // m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
@@ -61,6 +63,8 @@ HRESULT CLevel_FinalStage::Initialize()
 	}
 
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CamAnimEditor::Create(m_pDevice, m_pContext));
 
 	//CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
 	//{

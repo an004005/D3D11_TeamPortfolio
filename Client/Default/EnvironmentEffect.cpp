@@ -28,7 +28,19 @@ void CEnvironmentEffect::Imgui_RenderProperty()
 	CGameObject::Imgui_RenderProperty();
 
     static array<const char*, ENVEFFECT_END> EnvEffectTypeNames{
-        "Env_Crush_1_1", "Env_Crush_1_2", "Env_Spark_Particle_10Sec", "Boss_WaterFall"
+        "Env_Crush_1_1", 
+		"Env_Crush_1_2", 
+		"Env_Spark_Particle_10Sec", 
+		"Boss_WaterFall",
+		"EndingCredit_Inbok",
+		"EndingCredit_Jihoon",
+		"EndingCredit_Jongwook",
+		"EndingCredit_Junghwan",
+		"EndingCredit_Kibum",
+		"EndingCredit_Suhyun",
+		"EndingCredit_Team",
+		"EndingCredit_Pic_RedRect"
+
     };
     if (ImGui::BeginCombo("Env Effect Seletor", EnvEffectTypeNames[m_eType]))
     {
@@ -81,6 +93,46 @@ void CEnvironmentEffect::SpawnEffect()
 		break;
 	case Boss_WaterFall:
 		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Boss_WaterFall");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Inbok:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Inbok");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Jihoon:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Jihoon");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Jongwook:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Jongwook");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Junghwan:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Junghwan");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Kibum:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Kibum");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Suhyun:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Suhyun");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Team:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Team");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Pic_RedRect:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Pic_RedRect");
 		m_pEffectGroup->Start_NoAttach(this, true);
 		Safe_AddRef(m_pEffectGroup);
 		break;

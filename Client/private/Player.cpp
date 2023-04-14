@@ -79,6 +79,10 @@
 #include "Map_KineticBatchPreset.h"
 #include "Timeline.h"
 
+#include "UI_Manager.h"
+#include "Canvas_BrainField.h"
+#include "Canvas_DriveMove.h"
+
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -1879,6 +1883,11 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_CLOSER")
 		.OnStart([&]()
 		{
+			// 드라이브모드 진입을 위해 카메라 당김
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+			dynamic_cast<CCanvas_DriveMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove"))->
+				Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
+
 			m_bDriveMode_Activate = true;
 			m_bZoomIsFinish = false;
 		})
@@ -1897,6 +1906,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_ANIMCAM_START")
 		.OnStart([&]()
 		{
+				// 번뜩
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1920,6 +1931,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_AWAY")
 		.OnStart([&]()
 		{
+				// 카메라 빠지면서 폭발
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1933,6 +1945,10 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.OnExit([&]()
 		{
 			DriveModeExplode.Reset();
+			
+			// 연출 끝
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -1976,6 +1992,9 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.OnStart([&]() 
 		{
 			m_bBrainField_Prod = true;
+
+			// 브레인필드 연출 시작
+			CUI_Manager::GetInstance()->Set_TempOff(true);
 
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
@@ -2079,6 +2098,20 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
 		{
+			// 브레인 필드가 시작되는 부분
+			if (nullptr == m_pCanvas_BrainField)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainField.json");
+				m_pCanvas_BrainField = dynamic_cast<CCanvas_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BrainField", &json));
+				assert(m_pCanvas_BrainField != nullptr && "Failed to Clone : CCanvas_BrainField");
+			}
+
+			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(true);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(true);
+
+			CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(60.f);
+			m_bBrainField = true;
 		})
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
@@ -2104,7 +2137,19 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
 			}
 		})
-		.OnExit([&]() { m_bBrainField = false; })
+
+		.OnExit([&]() 
+		{ 
+			m_bBrainField = false;
+			// 브레인 필드가 꺼지는 부분
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCanvas_BrainField))
+			{
+				m_pCanvas_BrainField->SetDelete();
+			}
+
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(false);
+		})
 			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
 			.Priority(0)

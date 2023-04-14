@@ -171,14 +171,15 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkill.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkill", &json));		// 움직이지 않은 UI
-
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SASSkillMove.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_SASSkillMove", &json));	// 움직이는 UI	
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Main.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Main", &json));
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Shop.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Shop", &json));
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_WorldMap.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_WorldMap", &json));
 
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));

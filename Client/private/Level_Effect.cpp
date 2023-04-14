@@ -42,6 +42,8 @@
 #include "GravikenisisGUI.h"
 #include "GravikenisisMouseUI.h"
 #include "Imgui_Batch.h"
+#include "RedString.h"
+#include "ScarletMap.h"
 // ~ 옥수현의 흔적
 
 CLevel_Effect::CLevel_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -351,6 +353,18 @@ HRESULT CLevel_Effect::Ready_Layer_Map(const _tchar * pLayerTag)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/TestMap.json");
 
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");
+		(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_MAP, TEXT("Prototype_GameObject_ScarletMap"), &json));
+		// m_pBrainFieldMap->SetVisible_MapObjects(false);
+	}
+	{
+		// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Restrings/BranFieldStrings/FloorCombined.json");
+		// (CGameInstance::GetInstance()->Clone_GameObject_Get(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json));
+		// m_pBrainFieldRedString->SetVisible(false);
+		// m_pBrainFieldRedString->SetPass(1);
+	}
 	return S_OK;
 }
 

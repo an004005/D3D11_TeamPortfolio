@@ -880,9 +880,9 @@ PS_OUT PS_MAIN_PLAYER_TEXT_PARTICLE(PS_IN In)
 	return Out;
 }
 
-PS_OUT PS_BRAINFIELD_PARTICLE_TEXT(PS_IN In)
+PS_OUT_FLAG PS_BRAINFIELD_PARTICLE_TEXT(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0;
+	PS_OUT_FLAG			Out = (PS_OUT_FLAG)0;
 
 	float2 MixUV = Get_FlipBookUV(In.vTexUV, In.CurLife, g_float_1, 4, 4);
 
@@ -899,12 +899,14 @@ PS_OUT PS_BRAINFIELD_PARTICLE_TEXT(PS_IN In)
 	if (Out.vColor.a < 0.01f)
 		discard;
 
+	Out.vFlag = float4(SHADER_BRAINFIELD_EFFECT, 0.f, 0.f, 0.f);
+
 	return Out;
 }
 
-PS_OUT PS_SAS_LINE_TRAIL(PS_IN In)
+PS_OUT_FLAG PS_SAS_LINE_TRAIL(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0;
+	PS_OUT_FLAG			Out = (PS_OUT_FLAG)0;
 
 	float2 MixUV = Get_FlipBookUV(In.vTexUV, In.CurLife, 0.05, 4, 4);
 
@@ -917,6 +919,11 @@ PS_OUT PS_SAS_LINE_TRAIL(PS_IN In)
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 
 	Out.vColor.a = saturate(MixColor.r * In.RamainLifeRatio);
+
+	Out.vFlag = float4(0.f, 0.f, SHADER_BRAINFIELD_EFFECT, 0.f);
+
+	if (Out.vColor.a <= 0.1f)
+		discard;
 
 	return Out;
 }

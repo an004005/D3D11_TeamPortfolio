@@ -3,10 +3,14 @@
 #include "GameInstance.h"
 #include "JsonStorage.h"
 #include "UI_Manager.h"
+#include "GameManager.h"
 
 #include "DefaultUI.h"
 #include "ShaderUI.h"
 #include "GameManager_Tutorial.h"
+
+#include "Level_Loading_Simple.h"
+#include "Level_ConstructionSite3F.h"
 
 CCanvas_Quest::CCanvas_Quest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -31,8 +35,6 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
 
-	CUI_Manager::GetInstance()->Add_Canvas(L"CCanvas_Quest", this);
-	
 	m_fBackGround_StartPos = Find_ChildUI(L"BackGround")->Get_Position();
 	Find_ChildUI(L"BackGround")->Set_Position(_float2(-500.0f, m_fBackGround_StartPos.y));
 
@@ -196,12 +198,40 @@ void CCanvas_Quest::Success(const _double& TimeDelta)
 
 void CCanvas_Quest::Success_Tick()
 {
+	// 퀘스트 성공 조건.
 	if (0 == m_iQuestIndex)
 	{
 		if (10 == dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Get_MonstaerDeadCount())
 		{
 			Set_SuccessQuest();
 			dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Set_MonsterDeadCount();
+
+			CGameManager::GetInstance()->Set_LeftTalk(13);
+			CGameManager::GetInstance()->Set_LeftTalk(14);
+			CGameManager::GetInstance()->Set_SuccessQuest(500);
+		}
+	}
+	else if (1 == m_iQuestIndex)
+	{
+		// 여기서는 추가로 플레이어 이동까지 한다.
+		if (3.0 < m_d3FMapMove_TimaAcc)
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_CONSTRUCTIONSITE_3F,
+				CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
+
+			CGameManager::GetInstance()->Set_Map(2);
+		}
+		else
+			m_d3FMapMove_TimaAcc += TIME_DELTA;
+
+		// 케스트 성공 조건 : 기름 보스를 잡으면 된다.
+		if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
+		{
+			if (dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Get_EM0320Dead())
+			{
+				Set_SuccessQuest();
+			}
 		}
 	}
 }
