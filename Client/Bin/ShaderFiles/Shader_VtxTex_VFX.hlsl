@@ -49,6 +49,12 @@ struct PS_OUT
 
 };
 
+struct PS_OUT_FLAG
+{
+	float4		vColor : SV_TARGET0;
+	float4		vFlag : SV_TARGET1;
+};
+
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -93,9 +99,9 @@ PS_OUT PS_MAIN(PS_IN In)
 
 
 
-PS_OUT PS_DRIVEMOD_GLOW(PS_IN In)
+PS_OUT_FLAG PS_DRIVEMOD_GLOW(PS_IN In)
 {
-	PS_OUT			Out = (PS_OUT)0;
+	PS_OUT_FLAG			Out = (PS_OUT_FLAG)0;
 	float4 Default = g_tex_0.Sample(LinearSampler, In.vTexUV);
 	float Mask = g_tex_1.Sample(LinearSampler, In.vTexUV).r;
 	float4 Color = g_vec4_0;
@@ -110,10 +116,14 @@ PS_OUT PS_DRIVEMOD_GLOW(PS_IN In)
 	Mask5 = Mask5 * Mask6;
 	Final.a = (Mask * g_float_0) + (Mask1 * g_float_1) + (Mask2 * g_float_2) + (Mask3 * g_float_3) + (Mask4 * g_float_4) + (Mask5 * g_float_5);
 
+	Out.vFlag = float4(0.f, 0.f, SHADER_BRAINFIELD_EFFECT, 0.f);
 
 	Out.vColor = CalcHDRColor(Final, g_float_6);
 
 	Out.vColor.a *= g_float_7;
+
+	if (Out.vColor.a < 0.01f)
+		discard;
 
 	return Out;
 }
@@ -1346,7 +1356,7 @@ PS_OUT_Flag PS_MASK_TEX_DISTORTION(PS_IN In)
 	Out.vColor = CalcHDRColor(FinalColor, g_float_0);
 	
 	// Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, Mask);
-	Out.vFlag = float4(SHADER_DISTORTION, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(SHADER_DISTORTION, 0.f, SHADER_BRAINFIELD_EFFECT, 0.f);
 
 	return Out;
 }
@@ -1576,7 +1586,7 @@ PS_OUT_Flag PS_CABLE_CONNECTED(PS_IN In)
 	if (Out.vColor.a <= 0.1f)
 		discard;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(SHADER_BRAINFIELD_EFFECT, 0.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -1598,6 +1608,24 @@ PS_OUT_Flag PS_SAS_DEAD_LIGHT(PS_IN In)
 
 	return Out;
 }
+
+PS_OUT_Flag PS_TEAM_PIC(PS_IN In)
+{
+	PS_OUT_Flag			Out = (PS_OUT_Flag)0;
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, float2(In.vTexUV.x, In.vTexUV.y));
+
+	if (Tex.r == 1.f && Tex.g == 0.f)
+		discard;
+
+	Out.vColor = CalcHDRColor(Tex, g_float_0);
+
+
+	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+
+	return Out;
+}
+
 
 PS_OUT_Flag PS_MASK_TEX_DISTORTION_CHARGE(PS_IN In)
 {
@@ -2377,7 +2405,7 @@ technique11 DefaultTechnique
 	//46
 	pass DriveMode_Glow
 	{
-		SetRasterizerState(RS_Default);
+		SetRasterizerState(RS_NonCulling);
 		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
 		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 
@@ -2624,5 +2652,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_CABLE_CONNECTED();
+	}
+
+	//64
+	pass TeamPic
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_TEAM_PIC();
 	}
 }

@@ -24,6 +24,9 @@ public:
 	void Create_CGUI();
 	void Update_NoticeNeon();
 
+	void SetWeakBoneName(const string& strWeakBoneName) {m_strWeakBoneName = strWeakBoneName; }
+	void SetShieldUIPivotBoneName(const string& BoneName) {m_strShieldUIPivotBoneName = BoneName; }
+
 private:
 	class CEnemy* m_pOwner = nullptr;
 	class CMonsterShildUI* m_pShieldUI = nullptr;
@@ -32,6 +35,9 @@ private:
 	class CEffectGroup* m_pCGEffect = nullptr;
 
 	class CEffectGroup*	 m_pNoticeNeon = nullptr;
+	string m_strWeakBoneName = "Weak01";
+	string m_strShieldUIPivotBoneName = "Target";
+
 	
 public:
 	static CEMUI* Create(class CEnemy* pEnemy);

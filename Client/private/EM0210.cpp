@@ -39,7 +39,7 @@ HRESULT CEM0210::Initialize(void * pArg)
 	{
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 		
-		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP = LEVEL_NOW* (40 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
@@ -457,7 +457,11 @@ void CEM0210::SetUpFSM()
 			.Tick([this](_double TimeDelta)
 			{
 					_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
-					m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
+					if(m_pBrain == nullptr)
+						m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
+					else
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 					m_BCLoopTime += TimeDelta;
 			})
 

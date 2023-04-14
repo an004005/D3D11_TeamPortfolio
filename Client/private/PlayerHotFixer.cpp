@@ -44,10 +44,36 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
+		//m_pPlayer->m_pTrainStateMachine_Left->Imgui_RenderProperty();
+		//m_pPlayer->m_pTelephonePoleStateMachine_Left->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainCrashStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pHBeamStateMachine_Left->Imgui_RenderProperty();
+		//m_pPlayer->m_pTeleportStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pDropObjectStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pTankLorryStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pIronBarsStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pContainerStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pDriveModeProductionStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainFieldAttackStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainFieldKineticStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainFieldKineticComboStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pBrainFieldFallStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pKineticComboStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pKineticStataMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pHitStateMachine->Imgui_RenderProperty();
+		//m_pPlayer->m_pJustDodgeStateMachine->Imgui_RenderProperty();
+
+
 		ImGui::Checkbox("Hanabi", &m_bHanabiActive);
 		ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
 		CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
 		CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
+
+		if (ImGui::Button("MaskEffect"))
+		{
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_Attach(m_pPlayer, "Mask", true);
+		}
 
 		if (ImGui::Button("ActionCam_Escape"))
 		{
@@ -345,13 +371,24 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			m_pPlayer->m_pASM->SetCurState("IDLE");
 			m_pPlayer->SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 		})
+			.AddTransition("BRAINCRASH_NOUSE to BRAINCRASH_EM8200_CUTSCENE", "BRAINCRASH_EM8200_CUTSCENE")
+			.Predicator([&]()->_bool 
+			{ 
+				//Monster_em8200
+
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
+				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetPrototypeTag() != L"Monster_em8200") return false;
+				return m_pPlayer->m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
+			})
+			.Priority(0)
+
 			.AddTransition("BRAINCRASH_NOUSE to BRAINCRASH_CUTSCENE", "BRAINCRASH_CUTSCENE")
 			.Predicator([&]()->_bool 
 			{ 
-				//if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
-				return m_pPlayer->m_bBrainCrashInput/* && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC()*/;
+				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
+				return m_pPlayer->m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
 			})
-			.Priority(0)
+			.Priority(1)
 
 		.AddState("BRAINCRASH_CUTSCENE")
 		.OnStart([&]()
@@ -365,7 +402,6 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		})
 		.OnExit([&]()
 		{
-				//static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 		})
 		.AddTransition("BRAINCRASH_CUTSCENE to BRAINCRASH_ACTIVATE", "BRAINCRASH_ACTIVATE")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
@@ -378,8 +414,6 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 
 			if (pTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
-				// 타겟 종류에 따라 애니메이션과 연출 캠을 재생시키도록 한다
-
 				_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				_float fDistance = vDistance.Length();
@@ -393,9 +427,10 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 					{
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+						//m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
-						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						_vector vPlayerPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
 						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
 					}
@@ -414,7 +449,7 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 					if (5.f >= fDistance)
 					{
 						_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
-						_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+						_vector vPlayerPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(BC_Pos);
 						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
 					}
@@ -431,7 +466,7 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 					static_cast<CEM0800*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
 					_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.5f);
-					_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vPlayerPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
 					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
 				}
@@ -443,54 +478,15 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 
 					_vector BC_Pos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.f);
 					BC_Pos += (XMVector3Normalize(m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_RIGHT)) * 3.f);
-					_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+					_vector vPlayerPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
 					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
 				}
 			}
-			else
-			{
-				//static_cast<CEM0210*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
-
-				/*auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
-				m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
-				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);*/
-
-				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em1100);
-			}
 		})
 		.Tick([&](double fTimeDelta)
 		{
-			string szCurAnimName = m_pPlayer->m_pASM->GetSocketAnimation("BrainCrash_AnimSocket")->GetName();
-			_float4 vLocal = m_pPlayer->m_pModel->GetLocalMove(m_pPlayer->m_pTransformCom->Get_WorldMatrix(), szCurAnimName);
 
-			// 해당 부분도 타겟 종류에 따라 로컬무브를 다르게 적용시킨다.
-			CAnimation* pAnimation = m_pPlayer->m_pModel->Find_Animation("AS_BC_em0200m_ch0100");
-			_float fRatio = pAnimation->GetPlayRatio();
-
-			m_pPlayer->m_pTransformCom->LocalMove({ vLocal.x, vLocal.y, vLocal.z });
-
-			//if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetPrototypeTag() == L"Monster_em800")
-			//{
-			
-			//}
-
-			/*if (fRatio >= 0.285f && fRatio <= 0.3714f)
-			{
-				m_pPlayer->m_pTransformCom->LocalMove(vLocal, 2.f);
-			}
-			else
-			{*/
-				//m_pPlayer->m_pTransformCom->LocalMove(vLocal);
-			//}
-
-			// em0110 전용
-			/*_float4 vMinusCheck = m_pPlayer->m_pModel->Find_Animation("AS_BC_em0100m_ch0100")->GetLocalMove();
-
-			if (vMinusCheck.z > 0.f) 
-				vLocal.y *= -1.f;
-
-			m_pPlayer->m_pTransformCom->LocalMove({vLocal.x, vLocal.y, vLocal.z});*/
 		})
 		.OnExit([&]()
 		{
@@ -499,6 +495,92 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 			.Priority(0)
+
+		// 카렌 전용 브레인크러시
+		.AddState("BRAINCRASH_EM8200_CUTSCENE")
+		.OnStart([&]()
+		{
+			m_pPlayer->m_bBrainCrash = true;
+			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+
+		})
+		.OnExit([&]()
+		{
+		})
+		.AddTransition("BRAINCRASH_EM8200_CUTSCENE to BRAINCRASH_EM8200_SCENE01", "BRAINCRASH_EM8200_SCENE01")
+		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Priority(0)
+
+		.AddState("BRAINCRASH_EM8200_SCENE01")
+		.OnStart([&]()
+		{
+			m_pPlayer->m_bBrainCrash = true;
+			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+
+		})
+		.OnExit([&]()
+		{
+		})
+		.AddTransition("BRAINCRASH_EM8200_SCENE01 to BRAINCRASH_EM8200_SCENE02", "BRAINCRASH_EM8200_SCENE02")
+		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Priority(0)
+
+		.AddState("BRAINCRASH_EM8200_SCENE02")
+		.OnStart([&]()
+		{
+			m_pPlayer->m_bBrainCrash = true;
+			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+
+		})
+		.OnExit([&]()
+		{
+		})
+		.AddTransition("BRAINCRASH_EM8200_SCENE02 to BRAINCRASH_EM8200_SCENE03", "BRAINCRASH_EM8200_SCENE03")
+		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Priority(0)
+
+		.AddState("BRAINCRASH_EM8200_SCENE03")
+		.OnStart([&]()
+		{
+			m_pPlayer->m_bBrainCrash = true;
+			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+
+		})
+		.OnExit([&]()
+		{
+		})
+		.AddTransition("BRAINCRASH_EM8200_SCENE03 to BRAINCRASH_EM8200_SCENE04", "BRAINCRASH_EM8200_SCENE04")
+		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Priority(0)
+
+		.AddState("BRAINCRASH_EM8200_SCENE04")
+		.OnStart([&]()
+		{
+			m_pPlayer->m_bBrainCrash = true;
+			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+		})
+		.Tick([&](double fTimeDelta) 
+		{
+
+		})
+		.OnExit([&]()
+		{
+		})
+		.AddTransition("BRAINCRASH_EM8200_SCENE04 to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
+		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Priority(0)
 
 		.Build();
 

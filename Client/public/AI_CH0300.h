@@ -52,6 +52,7 @@ private:
 
 private:
 	_double	m_fTimeDelta = 0.f;
+	_double m_fEffectTime = 0.f;
 
 private:
 	CRenderer*	m_pRenderer = nullptr;

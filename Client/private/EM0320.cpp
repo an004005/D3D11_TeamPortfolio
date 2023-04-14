@@ -17,8 +17,9 @@
 #include "BulletBuilder.h"
 #include "VFX_Manager.h"
 
-#include "Canvas_BossHpMove.h"
 #include "ImguiUtils.h"
+#include "GameManager.h"
+
 #include "PlayerInfoManager.h"
 #include "UI_Manager.h"
 #include "Camera_Manager.h"
@@ -873,7 +874,18 @@ void CEM0320::DeBuff_Oil()
 
 _bool CEM0320::IsWeak(CRigidBody* pHitPart)
 {
-	return pHitPart == m_pWeak;
+	_bool bisweak =  pHitPart == m_pWeak;
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(93);
+		}
+	}
+
+	return bisweak;
 }
 
 void CEM0320::CheckHP(DAMAGE_PARAM& tDamageParams)

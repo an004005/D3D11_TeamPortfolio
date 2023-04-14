@@ -35,8 +35,9 @@ private:
 	_float		m_fHpBack = { 1.0f };
 	_float		m_fCurrentHpBack = { 1.0f };
 
-	_int		m_iMonsterLevel = { 0 };
 	EEnemyName		m_eMonsterName = EEnemyName::ENEMY_NAME_END;
+	_float					m_fMonsterLevel = { 0.0f };
+	_float					m_fNameIndex = { 0.0f };
 
 public:
 	static CMonsterHpUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

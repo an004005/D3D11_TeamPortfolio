@@ -25,7 +25,7 @@ public:
 	virtual void   Tick(_double TimeDelta) override;
 
 public:
-	void	Add_Talk(const _int iIndex, const _bool bDead = false, const _int iQuest = -1);
+	void	Add_Talk(const _int iIndex, const _int iQuest = -1);
 
 private:
 	void	Show_Talk();
@@ -36,7 +36,6 @@ private:
 	_bool		m_bRunning = { false };
 	_double	m_dTalk_TimeAcc = { 3.0 };
 
-	_bool		m_bDead = { false };
 	_int		m_iQuestNum = { -1 };
 
 public:

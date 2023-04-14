@@ -502,8 +502,37 @@ PS_OUT PS_SAS_CABLE_9(PS_IN In)
 	}
 	else if (g_int_0 == 2)
 	{
-		Out.vDiffuse.rgb = lerp(Out.vDiffuse.rgb, float3(1.f, 1.f, 0.f), 0.6f);
-		fEmissive = 2.f;
+		if (g_int_1 == 1)
+		{
+			if (In.vTexUV.x >= 0.95f)
+			{
+				Out.vDiffuse.rgb = g_vec4_1;
+				fEmissive = 5.f * In.vTexUV.y;
+			}
+			else if (In.vTexUV.x < 0.95f && In.vTexUV.x >= 0.5f)
+			{
+				if (In.vTexUV.y <= 0.4f)
+				{
+					Out.vDiffuse.rgb = g_vec4_1;
+					fEmissive = 8.f * In.vTexUV.x;
+				}
+				else
+				{
+					Out.vDiffuse.rgb = g_vec4_1;
+					fEmissive = 8.f * In.vTexUV.y;
+				}
+			}
+			else
+			{
+				Out.vDiffuse.rgb = g_vec4_1;
+				fEmissive = 8.f;
+			}
+		}
+		else
+		{
+			Out.vDiffuse.rgb = g_vec4_1;
+			fEmissive = 8.f * In.vTexUV.y;
+		}
 	}
 
 

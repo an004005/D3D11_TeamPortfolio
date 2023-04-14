@@ -1,0 +1,18 @@
+{
+	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
+	"ShaderParams": {
+		"Float2s": [],
+		"Ints": [],
+		"Pass": 1,
+		"Float4x4s": [],
+		"Floats": [],
+		"Textures": [
+			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/Tex_Rose_Flower_D_2.dds",
+			"",
+			""			
+		],
+		"Float4s": []
+	},
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
+	"InstancingPass": 1
+}

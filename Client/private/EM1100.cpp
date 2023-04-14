@@ -15,6 +15,7 @@
 #include "AnimCam.h"
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
+#include "GameManager.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -811,7 +812,18 @@ void CEM1100::Imgui_RenderProperty()
 
 _bool CEM1100::IsWeak(CRigidBody* pHitPart)
 {
-	return 	pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(90);
+		}
+	}
+
+	return bisweak;
 }
 
 _float4 CEM1100::GetKineticTargetPos()

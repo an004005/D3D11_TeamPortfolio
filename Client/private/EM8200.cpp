@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../public/EM8200.h"
 
+#include <Camera_Manager.h>
 #include <GameUtils.h>
 #include <PhysX_Manager.h>
 
@@ -37,15 +38,15 @@ HRESULT CEM8200::Initialize(void* pArg)
 	pArg = &em0200_json;
 
 	{
-		m_iMaxHP = 100000;
-		m_iHP = 100000; // ¡Ú
-		m_iCrushGauge = 50000;
-		m_iMaxCrushGauge = 50000;
-		m_bHasCrushGauge = false;
+		m_iMaxHP = 30000;
+		m_iHP = 30000; // ¡Ú
+		m_iMaxCrushGauge = m_iMaxHP * 1.1f;
+		m_iCrushGauge = m_iMaxCrushGauge;
+		m_bHasCrushGauge = true;
 
 		m_iAtkDamage = 50;
-		iEemeyLevel = 2;
 		m_bBoss = true;
+		iEemeyLevel = 42;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -59,6 +60,12 @@ HRESULT CEM8200::Initialize(void* pArg)
 	Safe_AddRef(m_pKarenMaskEf);
 
 	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
+
+	m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("KarenAnimCamaera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+	Safe_AddRef(m_pKaren_AnimCam);
+
+	m_pEMUI->SetWeakBoneName("Spine1");
+
 
 	return S_OK;
 }
@@ -75,6 +82,8 @@ void CEM8200::SetUpComponents(void* pArg)
 	m_Components.emplace(L"Controller", m_pController);
 	Safe_AddRef(m_pController);
 	m_pController->SetOwner(this);
+
+	m_pController->SetDetectTarget(true); // ´«±ò ½ºÅµ
 
 	// ASM
 	m_pASM = CEM8200_AnimInstance::Create(m_pModelCom, this);
@@ -235,6 +244,12 @@ void CEM8200::CheckHP(DAMAGE_PARAM& tDamageParams)
 void CEM8200::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	m_pModelCom->Add_EventCaller("Connected_Cable", [this]
+		{
+			m_pGameInstance->PlayShake(0.2f, 0.02);
+			CVFX_Manager::GetInstance()->GetParticle(PS_SAS, TEXT("Connected_Particles_Karen"))->Start_Attach(this, "Neck", false, true);
+		});
 
 	m_pModelCom->Add_EventCaller("KneeKick_A1_Start", [this]
 		{
@@ -422,6 +437,28 @@ void CEM8200::SetUpAnimationEvent()
 			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
 
 		});
+
+
+	m_pModelCom->Add_EventCaller("BrainField_Start_Ring", [this]
+		{
+			_matrix EffectMatrix = XMMatrixScaling(0.25f, 0.25f, 0.25f) * XMMatrixRotationX(-90.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(this, EffectMatrix, "Eff01", true, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(this, EffectMatrix, "Eff02", true, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(this, EffectMatrix, "Eff03", true, true);
+
+		});
+
+
+	m_pModelCom->Add_EventCaller("BrainField_Start_Gear", [this]
+		{
+			_matrix EffectMatrix = XMMatrixScaling(0.25f, 0.25f, 0.25f) * XMMatrixRotationX(-90.f);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(this, EffectMatrix, "Eff01", true, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(this, EffectMatrix, "Eff02", true, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(this, EffectMatrix, "Eff03", true, true);
+
+		});
+
+
 }
 
 void CEM8200::SetUpFSM()
@@ -443,6 +480,7 @@ void CEM8200::SetUpFSM()
 	AddState_CaptureKinetic(Builder);
 	AddState_Damaged(Builder);
 	AddState_BrainField(Builder);
+	AddState_BrainCrush(Builder);
 
 	m_pFSM = Builder.Build();
 }
@@ -457,6 +495,13 @@ void CEM8200::BeginTick()
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	if (m_bCrushStart && m_BrainCrushOnce.IsNotDo())
+	{
+		m_pFSM->SetState("Idle");
+		m_pController->SetActive(false);
+		m_pASM->ClearSocketAnim("FullBody");
+	}
 
 	m_CounterEFCoolTimeHelper.Tick(TimeDelta);
 
@@ -664,6 +709,7 @@ void CEM8200::Imgui_RenderProperty()
 void CEM8200::SetUpUI()
 {
 	__super::SetUpUI();
+	m_pEMUI->SetShieldUIPivotBoneName("Spine1");
 }
 
 _bool CEM8200::IsPlayingSocket() const
@@ -691,6 +737,11 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 			{
 				pMtrl->GetParam().Floats[2] = 0;
 			}
+		})
+	.AddTransition("Idle to BrainCrushReady", "BrainCrushReady")
+		.Predicator([this]
+		{
+			return m_bCrushStart;
 		})
 	.AddTransition("Idle to Death", "Death")
 			.Predicator([this] {return m_bDead; })
@@ -1637,7 +1688,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 				{
 					_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 					
-					m_pTransformCom->LocalMove(vLook, 0.3f);
+					m_pTransformCom->LocalMove(vLook, 0.5f);
 				}
 			Melee_Overlap("Reference", 50.f, 2.f, EAttackType::ATK_HEAVY);
 
@@ -1666,7 +1717,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 				if (m_bRushStart == true)
 				{
 					_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-					m_pTransformCom->LocalMove(vLook, 0.3f);
+					m_pTransformCom->LocalMove(vLook, 0.5f);
 				}
 
 				Melee_Overlap("Reference", 50.f, 2.f, EAttackType::ATK_HEAVY);
@@ -1873,13 +1924,22 @@ void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
 
 void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 {
-
 	Builder
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
 			m_pBrainField->OpenBrainField();
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Start");
+			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
+
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+			m_pController->ClearCommands();
+			m_pController->SetActive(false);
+
+
 		})
 		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
 			.Predicator([this]
@@ -1890,17 +1950,108 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 		{
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_trans");
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Trans");
+			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
+			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
+
 		})
 		.Tick([this](_double TimeDelta)
 		{
 			SocketLocalMove(m_pASM);
 		})
-		.AddTransition("BrainFieldStart to Idle", "Idle")
+
+		.AddTransition("BrainFieldStart to InCombatIdle", "ImCombatIdle")
+		.Predicator([this]
+			{
+				return m_pASM->isSocketPassby("FullBody", 0.9f);
+			})
+
+		.AddState("ImCombatIdle")
+		.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_004_Up_trans_battle");
+			})
+		.Tick([this](_double TimeDelta)
+			{
+				SocketLocalMove(m_pASM);
+			})
+
+	.OnExit([this]
+	{
+			m_pController->SetActive(true);
+	})
+		.AddTransition("ImCombatIdle to Idle", "Idle")
 			.Predicator([this]
 				{
 					return m_pASM->isSocketEmpty("FullBody");
 				})
 	;
+}
+
+void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
+{
+	Builder
+	.AddState("BrainCrushReady")
+		.OnStart([this]
+		{
+			m_pBrainField->CloseBrainField();
+			m_pASM->InputAnimSocketOne("FullBody",  "AS_em8300_485_AL_BCchance_start");
+		})
+		.AddTransition("BrainCrushReady to BrainCrushReadyLoop", "BrainCrushReadyLoop")
+			.Predicator([this]
+			{
+				return m_bBrainCrush || m_pASM->isSocketPassby("FullBody", 0.95f);
+			})
+
+	.AddState("BrainCrushReadyLoop")
+		.OnStart([this]
+		{
+			m_pASM->InputAnimSocketOne("FullBody", "AS_em8300_486_AL_BCchance_loop");
+			m_pModelCom->Find_Animation("AS_em8300_486_AL_BCchance_loop")->SetLooping(true);
+		})
+		.AddTransition("BrainCrushReadyLoop to BrainCrushStart_1", "BrainCrushStart_1")
+			.Predicator([this]
+				{
+					return	m_bBrainCrush;
+				})
+
+
+	.AddState("BrainCrushStart_1")
+		.OnStart([this]
+		{
+			if (m_pTarget)
+				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+		})
+		.AddTransition("BrainCrushStart_1 to BrainCrushStart_2", "BrainCrushStart_2")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketEmpty("FullBody");
+			})
+
+	.AddState("BrainCrushStart_2")
+		.OnStart([this]
+		{
+			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+		})
+		.AddTransition("BrainCrushStart_2 to BrainCrushStart_3", "BrainCrushStart_3")
+			.Predicator([this]
+			{
+				return m_pASM->isSocketEmpty("FullBody");
+			})
+
+	.AddState("BrainCrushStart_3")
+		.OnStart([this]
+		{
+			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetDuration(100000.0);
+			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
+		})
+
+	
+
+	;
+
 }
 
 
@@ -2063,6 +2214,7 @@ void CEM8200::Free()
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
 	Safe_Release(m_pKineticModel);
+	Safe_Release(m_pKaren_AnimCam);
 
 	if (m_pDashEF != nullptr)
 	{
