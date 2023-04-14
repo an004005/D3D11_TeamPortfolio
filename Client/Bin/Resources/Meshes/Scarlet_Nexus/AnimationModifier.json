@@ -95,6 +95,24 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_BC_em8220_2_c02_ch0100": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em8220_2_c03_ch0100": {
+        "Duration": 116.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em8220_2_c08_ch0100": {
+        "Duration": 137.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_BC_em_common_ch0100_end": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
