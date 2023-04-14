@@ -219,8 +219,6 @@ void CCanvas_Quest::Success_Tick()
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_CONSTRUCTIONSITE_3F,
 				CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(2);
 		}
 		else
 			m_d3FMapMove_TimaAcc += TIME_DELTA;

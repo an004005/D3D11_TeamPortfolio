@@ -40,7 +40,7 @@ void CCanvas_MainTalk::Tick(_double TimeDelta)
 	if (m_bRunning == false) return;
 	CCanvas::Tick(TimeDelta);
 
-	CUI_Manager::GetInstance()->Set_TempOff(true);
+	if(0.0 == m_dTalk_TimeAcc) CUI_Manager::GetInstance()->Set_TempOff(true);
 
 	// 0 : 시간 되면 넘기기
 	m_dTalk_TimeAcc += TimeDelta;

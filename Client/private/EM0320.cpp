@@ -493,7 +493,7 @@ void CEM0320::SetUpMainFSM()
 
 void CEM0320::SetUpIntroFSM()
 {
-	CUI_Manager::GetInstance()->Set_TempOff(true);
+	
 
 	m_pController->SetActive(false);
 
@@ -507,6 +507,8 @@ void CEM0320::SetUpIntroFSM()
 		.AddState("JumpAtk")
 			.OnStart([this]
 			{
+				CUI_Manager::GetInstance()->Set_TempOff(true);
+
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em320Intro");
 				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 				
