@@ -180,7 +180,6 @@ void CCanvas_Shop::KeyInput()
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
 
 		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
-
 	}
 }
 

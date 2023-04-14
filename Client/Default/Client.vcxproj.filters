@@ -1592,6 +1592,9 @@
     <ClInclude Include="..\public\Canvas_BrainFieldMove.h">
       <Filter>02.GameObjects\UI\Front\BrainField</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Alarm_Trigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2610,6 +2613,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BrainFieldMove.cpp">
       <Filter>02.GameObjects\UI\Front\BrainField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Alarm_Trigger.cpp">
+      <Filter>Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

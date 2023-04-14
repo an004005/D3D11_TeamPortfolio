@@ -258,8 +258,8 @@ private:
 	_float			m_fBaseAttackDamage;
 
 private:
-	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
-	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
+	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

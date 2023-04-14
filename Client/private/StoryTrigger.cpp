@@ -70,9 +70,13 @@ void CStoryTrigger::TriggerInEvent(CGameObject* pObject)
 	{
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
 		auto pTips = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+		assert(pTips != nullptr && "Failed to Cloned : CCanvas_MainTalk");
 
 		for (size_t i = 0; i < m_vecTalkIndex.size(); i++)
-			pTips->Add_Talk(static_cast<size_t>(m_vecTalkIndex[i]));
+		{
+			if (m_vecTalkIndex.size() - 1) pTips->Add_Talk(m_vecTalkIndex[i], m_iQuest); // 마지막 Talk 에 Quest 넣기
+			else											pTips->Add_Talk(m_vecTalkIndex[i]);
+		}
 	}
 
 	SetDelete();

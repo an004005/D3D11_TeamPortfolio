@@ -185,6 +185,7 @@
     <ClInclude Include="..\public\AI_CH0300_AnimInstance.h" />
     <ClInclude Include="..\public\AI_CH0500.h" />
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h" />
+    <ClInclude Include="..\public\Alarm_Trigger.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -539,6 +540,7 @@
     <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp" />
     <ClCompile Include="..\private\AI_CH0500.cpp" />
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp" />
+    <ClCompile Include="..\private\Alarm_Trigger.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

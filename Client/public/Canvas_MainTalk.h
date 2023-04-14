@@ -29,7 +29,7 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	Add_Talk(const size_t iIndex);
+	void	Add_Talk(const _int iIndex, const _int iQuest = -1);
 
 	_bool Get_End() {
 		return m_bVisible;
@@ -46,6 +46,8 @@ private:
 
 	_bool		m_bNextTalk = { false };
 	_double	m_dTalk_TimeAcc = { 0.0 };
+
+	_int			m_iQuestNum = { -1 };
 
 public:
 	static CCanvas_MainTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -597,6 +597,11 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		m_iCrushGauge -= iDamage*1.2;
 		if (m_iCrushGauge < 0)
 		{
+			//브레인크러쉬 터져서 임시로 해둠 나중에 꼭 삭제!!!!
+			SetDead();
+			return;
+
+
 			if (m_bCrushStart == false)
 				m_pEMUI->Create_CGUI();
 		

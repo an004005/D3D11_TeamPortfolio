@@ -34,7 +34,6 @@ HRESULT CCanvas_BossHpMove::Initialize(void* pArg)
 
 	m_fCurrentHp = 1.0f;
 
-	CUI_Manager::GetInstance()->Add_MoveCanvas(L"Canvas_BossHpMove", this);
 	m_vMaxDestination = { 0.0f, -5.0f };
 	CCanvas::UIMove_FSM();
 

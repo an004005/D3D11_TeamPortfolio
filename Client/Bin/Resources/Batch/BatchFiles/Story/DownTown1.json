@@ -1,0 +1,333 @@
+{
+    "BatchObjs": [
+        {
+            "JsonData": {
+                "ObjectTag": "Left_0",
+                "Prototype_GameObject": "Prototype_StoryTrigger\u0000",
+                "QuestIndex": -1,
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        10.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        10.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "Talk": false,
+                "TalkIndex": [
+                    15,
+                    16
+                ],
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -157.76956176757813,
+                        1.1999841928482056,
+                        -3.959547996520996,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_StoryTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -157.76956176757813,
+                1.1999841928482056,
+                -3.959547996520996,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Main_0",
+                "Prototype_GameObject": "Prototype_StoryTrigger\u0000",
+                "QuestIndex": -1,
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        10.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        10.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        10.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "Talk": true,
+                "TalkIndex": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11
+                ],
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -58.251991271972656,
+                        1.1999975442886353,
+                        -18.85730743408203,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_StoryTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -58.251991271972656,
+                1.1999975442886353,
+                -18.85730743408203,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Left_1",
+                "Prototype_GameObject": "Prototype_StoryTrigger\u0000",
+                "QuestIndex": -1,
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        15.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        7.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        7.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "Talk": false,
+                "TalkIndex": [
+                    23
+                ],
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -64.88530731201172,
+                        1.1999980211257935,
+                        0.8657753467559814,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_StoryTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -64.88530731201172,
+                1.1999980211257935,
+                0.8657753467559814,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Left_2",
+                "Prototype_GameObject": "Prototype_StoryTrigger\u0000",
+                "QuestIndex": 1,
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        100.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        20.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "Talk": false,
+                "TalkIndex": [
+                    4,
+                    5,
+                    6
+                ],
+                "Transform": {
+                    "WorldMatrix": [
+                        0.7770481705665588,
+                        0.0,
+                        -0.6294404864311218,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.6294404864311218,
+                        0.0,
+                        0.7770481705665588,
+                        0.0,
+                        -6.530971527099609,
+                        1.2000051736831665,
+                        16.45072364807129,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_StoryTrigger"
+            },
+            "WorldMatrix": [
+                0.7770481705665588,
+                0.0,
+                -0.6294404864311218,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.6294404864311218,
+                0.0,
+                0.7770481705665588,
+                0.0,
+                -6.530971527099609,
+                1.2000051736831665,
+                16.45072364807129,
+                1.0
+            ]
+        }
+    ]
+}

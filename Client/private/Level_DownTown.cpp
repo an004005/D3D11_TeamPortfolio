@@ -2,6 +2,7 @@
 #include "Level_DownTown.h"
 
 #include "GameManager.h"
+#include "Imgui_Batch.h"
 
 /*********************
  * CLevel_DownTown
@@ -24,6 +25,8 @@ HRESULT CLevel_DownTown::Initialize()
 		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown1.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
 
 	return S_OK;
 }

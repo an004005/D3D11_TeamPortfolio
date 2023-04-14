@@ -6,6 +6,7 @@
 #include "GameManager.h"
 #include "Level_Loading_Simple.h"
 #include "Level_Tutorial.h"
+#include "Level_DownTown.h"
 #include "Level_ConstructionSite3F.h"
 #include "Level_ConstructionSite2F.h"
 #include "Level_Subway.h"
@@ -38,6 +39,8 @@ HRESULT CCanvas_WorldMap::Initialize(void* pArg)
 {
 	if (FAILED(CCanvas::Initialize(pArg)))
 		return E_FAIL;
+
+	CUI_Manager::GetInstance()->Add_WindowCanvas(L"CCanvas_WorldMap", this);
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
@@ -235,7 +238,24 @@ void CCanvas_WorldMap::MapBar_Tick()
 				}
 				else if (1 == i)
 				{
-
+					if (LEVEL_NOW == LEVEL_TUTORIAL)
+					{
+						CGameInstance::GetInstance()->Open_Loading(
+							LEVEL_DOWNTOWN_1,
+							CLevel_Loading_Simple::Create<CLevel_DownTown>(m_pDevice, m_pContext));
+					}
+					else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
+					{
+						CGameInstance::GetInstance()->Open_Loading(
+							LEVEL_DOWNTOWN_2,
+							CLevel_Loading_Simple::Create<CLevel_DownTown_Second>(m_pDevice, m_pContext));
+					}
+					else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
+					{
+						CGameInstance::GetInstance()->Open_Loading(
+							LEVEL_DOWNTOWN_3,
+							CLevel_Loading_Simple::Create<CLevel_DownTown_Third>(m_pDevice, m_pContext));
+					}
 				}
 				else if (2 == i)
 				{
@@ -273,7 +293,7 @@ void CCanvas_WorldMap::MapBar_Tick()
 void CCanvas_WorldMap::CurrentLevelName_Tick()
 {
 	if (LEVEL_NOW == LEVEL_TUTORIAL) m_wsName = L"대로";
-	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F) m_wsName = L"스오-류신구";
+	else if (LEVEL_NOW == LEVEL_DOWNTOWN_1 || LEVEL_NOW == LEVEL_DOWNTOWN_2 || 	LEVEL_NOW == LEVEL_DOWNTOWN_3) m_wsName = L"스오-류신구";
 	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F) m_wsName = L"키쿠치바 3층";
 	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F) m_wsName = L"키쿠치바 2층";
 	else if (LEVEL_NOW == LEVEL_SUBWAY) m_wsName = L"폐지하선로 스오 9호선";

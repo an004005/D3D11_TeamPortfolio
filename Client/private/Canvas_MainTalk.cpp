@@ -2,6 +2,9 @@
 #include "..\public\Canvas_MainTalk.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
+#include "JsonStorage.h"
+
+#include "Canvas_Quest.h"
 
 CCanvas_MainTalk::CCanvas_MainTalk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
@@ -79,6 +82,17 @@ void CCanvas_MainTalk::Show_Talk()
 {
 	if (m_qCurrentTalk.empty())
 	{
+		// 퀘스트 있는 경우
+		if (-1 != m_iQuestNum)
+		{
+			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+			CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+			assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+			pCanvas_Quest->Add_Quest(m_iQuestNum);
+
+			m_iQuestNum = -1;
+		}
+
 		CUI_Manager::GetInstance()->Set_TempOff(false);
 		Find_ChildUI(L"TalkName")->SetVisible(false);
 		Find_ChildUI(L"Talk_BackGround")->SetVisible(false);
@@ -98,8 +112,10 @@ void CCanvas_MainTalk::Show_Talk()
 	Find_ChildUI(L"Talk_BackGround")->SetVisible(true);
 }
 
-void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
+void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 {
+	m_iQuestNum = iQuest;
+
 	MAINTALKINFO	tTalkInfo;
 
 	switch (iIndex)
@@ -125,7 +141,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	case 2:
 	{
 		tTalkInfo.wsName = { L"유이토" };
-		tTalkInfo.wsTalk0 = { L"응 하나비 너는  괜찮아?" };
+		tTalkInfo.wsTalk0 = { L"응! 하나비 너는  괜찮아?" };
 		tTalkInfo.wsTalk1 = { L"" };
 	}
 	break;
@@ -190,7 +206,7 @@ void CCanvas_MainTalk::Add_Talk(const size_t iIndex)
 	{
 		tTalkInfo.wsName = { L"겜마" };
 		tTalkInfo.wsTalk0 = { L"맞아 유이토 상점인 사토리 씨께서는" };
-		tTalkInfo.wsTalk1 = { L"우리가 괴이랑 싸울 때 필요한 아이템들을 사거나 판매를 하고 계셔." };
+		tTalkInfo.wsTalk1 = { L"우리가 괴이랑 싸울 때 필요한 아이템들을 사거나 판매를 하시지." };
 	}
 	break;
 
