@@ -7786,6 +7786,24 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_em0900_485_AL_BCchance_start": {
+        "Duration": 72.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_486_AL_BCchance_loop": {
+        "Duration": 120.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_em0900_487_AL_BCchance_end": {
+        "Duration": 70.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_em1100_106_AL_walk_loop": {
         "Duration": 120.0,
         "TickPerSecond": 24.0,

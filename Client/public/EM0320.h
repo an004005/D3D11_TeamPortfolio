@@ -40,7 +40,6 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
-	// virtual void SetUp_UI() override;
 	
 	virtual void Imgui_RenderProperty() override;
 
@@ -70,7 +69,7 @@ protected:
 	virtual _bool IsWeak(CRigidBody* pHitPart) override;
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
 	void FireWaterBall();
-
+	void Play_LightHitAnim();
 //	virtual void SetActive() override;
 private:
 	void SmokeEffectCreate();
@@ -78,7 +77,7 @@ private:
 	void CreateWeakExplosionEffect();
 
 private:
-	void UpdateCoolTimes(_double TimeDelta);
+	_bool PriorityCondition();
 
 private:
 	class CEM320_AnimInstance* m_pASM = nullptr;
@@ -137,8 +136,6 @@ private:
 
 
 	_bool m_bIntro = false;
-	_bool m_bIntroCoolStart = false;
-	_double m_dIntroCool = 0.0;
 public:
 	static CEM0320* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

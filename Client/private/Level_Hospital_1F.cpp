@@ -26,8 +26,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;*/
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/BossBatch.json");
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/MonsterBatch_Test.json"); 기존 몬스터 배치 테스트
@@ -50,15 +50,18 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/Hospital1F/Normal_Kinetic_2F_BossRoom.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 
-	// 1F
+	// 1F 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Normal_Kinetic_1F.json");
+
+	// 1F 문어잡을 때쯤 물체 없어서 프레셋
+	Json gardenJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/Hospital1F/Kinetic_Normal_1F_garden.json");
+	CMap_KineticBatchPreset::GetInstance()->Initialize(gardenJson);
 	
 	// 1F Monster
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Monster_Batch_1F_1stT.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Monster_Batch_1F_Garden.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Monster_Batch_1F_Trap.json");
 	
-
 	// Teleport_Wall
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Teleport_Wall_BatchTest.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Teleport_Wall_Batch.json");

@@ -10,6 +10,7 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 
+
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel_StageDefault(pDevice, pContext)
 {
@@ -17,7 +18,7 @@ CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D
 
 HRESULT CLevel_ConstructionSite3F::Initialize()
 {
-	 //m_bPlayerSpawn = false;6
+	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"ConstructionSite3F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
@@ -36,6 +37,11 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Item_Batch.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_Construction.json");
  	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/ConstructionSite3F.json");
+
+	// Red String Batch 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_1.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_2.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_3.json");
 
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_BossRoom .json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);

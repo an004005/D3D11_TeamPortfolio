@@ -44,6 +44,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bHasCrushGauge = true;
 
 		m_iAtkDamage = 50;
+		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
 
