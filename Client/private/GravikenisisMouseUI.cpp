@@ -64,8 +64,9 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	
  	CGameObject* pKineticObject = CPlayerInfoManager::GetInstance()->Get_KineticObject();
+
 	_float fRatio = CPlayerInfoManager::GetInstance()->Get_KineticCharge();
-	if (pKineticObject == nullptr || 1.0f <= fRatio)
+	if (pKineticObject == nullptr || 1.0f <= fRatio || (false == CGameInstance::GetInstance()->Check_ObjectAlive(pKineticObject)))
 	{
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pAppealCircle->Set_GroupVisible(false);

@@ -373,8 +373,6 @@ CGameObject* CPostVFX_ChromaticAberration::Clone(void* pArg)
 void CPostVFX_ChromaticAberration::Free()
 {
 	CPostProcess::Free();
-	for (auto pTex : m_tParam.Textures)
-		Safe_Release(pTex.first);
 }
 
 /***********************************

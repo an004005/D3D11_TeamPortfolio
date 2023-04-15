@@ -244,11 +244,6 @@ void CCamSpot::Switch_CamMod()
 		m_eCamMod = MOD_ATTACH;
 		m_fLerpTime = 0.f;
 	}
-	else if (MOD_ATTACH == m_eCamMod)
-	{
-		m_eCamMod = MOD_SYNC;
-		m_fLerpTime = 0.f;
-	}
 }
 
 void CCamSpot::Reset_CamMod()
