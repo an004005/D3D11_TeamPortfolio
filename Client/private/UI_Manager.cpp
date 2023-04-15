@@ -132,6 +132,7 @@ void CUI_Manager::Tick(_double TimeDelta)
 
 void CUI_Manager::PlaySound(const string& SoundName)
 {
+	m_SoundStore.StopAll();
 	m_SoundStore.PlaySound(SoundName);
 }
 

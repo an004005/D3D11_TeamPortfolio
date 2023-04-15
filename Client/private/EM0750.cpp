@@ -31,13 +31,13 @@ HRESULT CEM0750::Initialize(void * pArg)
 	{
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
-		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP = LEVEL_NOW * (50 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		iEemeyLevel = (iBaseLevel * 2.5) + CMathUtils::RandomUInt(3) + 1;
 		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
 
 		m_eEnemyName = EEnemyName::EM0750;
@@ -270,7 +270,6 @@ void CEM0750::SetUpFSM()
 			})
 			.Tick([this](_double)
 			{
-				m_vMoveAxis = _float3::Zero;
 				m_bHitAir = true;
 			})
 			.OnExit([this]
@@ -289,10 +288,6 @@ void CEM0750::SetUpFSM()
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0700_480_AL_down_shock");
 				m_pModelCom->Find_Animation("AS_em0700_480_AL_down_shock")->SetLooping(true);
 				m_fGravity = 20.f;
-			})
-			.Tick([this](_double)
-			{
-				m_vMoveAxis = _float3::Zero;
 			})
 			.AddTransition("Shock to Getup", "Getup")
 				.Predicator([this]
@@ -451,7 +446,7 @@ void CEM0750::Tick(_double TimeDelta)
 
 	const _float fMoveSpeed = 2.f;
 
-	if (m_vMoveAxis.LengthSquared() > 0.f)
+	if (m_bDown == false && m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		_float3 vVelocity;

@@ -7,7 +7,7 @@
         "maxJumpHeight": 3.0,
         "pushPower": 400.0,
         "radius": 2.0,
-        "slopeLimitDegree": 10.0,
+        "slopeLimitDegree": 3.0,
         "stepOffset": 0.10000000149011612
     },
     "ObjectTag": "",

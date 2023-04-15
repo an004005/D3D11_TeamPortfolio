@@ -29,7 +29,7 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	m_BGM.CloneSound("Ambient_Bridge");
 	m_BGM.CloneSound("Attention Please");
 	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
-	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss
 	m_BGM.CloneSound("em0320BGM");
@@ -69,7 +69,7 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 {
 	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound("The OSF -Advance");
+		m_BGM.PlaySound(m_MainSound);
 
 	if (m_bMiddleBGM == false)
 	{
@@ -106,13 +106,13 @@ void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 		}
 	}
 
-	if (m_bBossBGM == false)
+	if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
 	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		for (auto pObj : pMonsterLayer->GetGameObjects())
 		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
+			if (auto pBoss = dynamic_cast<CEM0320*>(pObj))
 			{
-				if (auto pBoss = dynamic_cast<CEM0320*>(pObj))
+				if (m_bBossBGM == false)
 				{
 					m_BGM.StopAllLoop();
 					m_bBossBGM = true;
@@ -120,8 +120,19 @@ void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 					break;
 				}
 			}
-		}
+			else
+			{
+				if (m_bBossBGM == true)
+				{
+					m_BGM.StopAllLoop();
+					m_bBossBGM = false;
+					m_BGM.PlaySound(m_MainSound);
+					break;
+				}
+			}		
+		}	
 	}
+	
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 

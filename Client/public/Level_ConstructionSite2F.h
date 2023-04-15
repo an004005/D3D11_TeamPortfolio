@@ -24,6 +24,7 @@ private:
 	_bool m_bMiddleBGM = false;
 	CDoOnce m_BGMChange;
 
+	string m_MainSound = "The OSF -Advance";
 public:
 	static CLevel_ConstructionSite2F* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	void Free() override;

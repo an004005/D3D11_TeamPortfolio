@@ -60,6 +60,20 @@ void CLayer::AfterPhysX()
 		pGameObject->AfterPhysX();
 }
 
+CGameObject* CLayer::Pop_InLayer(CGameObject* pGameObject)
+{
+	if (pGameObject == nullptr) return nullptr;
+
+	auto& Objiter = find_if(m_GameObjects.begin(), m_GameObjects.end(), [&](CGameObject* pObj) {
+		return pObj == pGameObject;	});
+
+	if (Objiter == m_GameObjects.end()) return nullptr;
+
+	CGameObject* pObj = *Objiter;
+	m_GameObjects.erase(Objiter);
+
+	return pObj;
+}
 
 HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 {

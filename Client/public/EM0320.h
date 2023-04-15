@@ -114,7 +114,7 @@ private:
 	_bool m_bCanSpecial = false;
 	//
 
-	CController::EHandleInput m_eInput;
+	CController::EHandleInput m_eInput = CController::EHandleInput::HANDLE_END;
 
 	_float4 m_vSweepPrePos;
 	EAttackStateType m_eEnemyAttackType = EAttackStateType::STATE_END;
