@@ -1107,7 +1107,7 @@ PS_OUT PS_ENDING_LINE(PS_IN In)
 	Out.vColor.rgb = Out.vColor.rgb * 2.5f;
 	Out.vColor.a = vLineColor.a;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
 	return Out;
 }
 

@@ -74,7 +74,23 @@ HRESULT CLevel_StageDefault::Initialize()
 	if (m_bPlayerSpawn)
 		CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
 
+	m_SetMainCamOnce.Reset();
+
 	return S_OK;
+}
+
+void CLevel_StageDefault::Tick(_double TimeDelta)
+{
+	CLevel::Tick(TimeDelta);
+
+	if (auto pLoadingCam = CGameInstance::GetInstance()->FindCamera("LoadingCam"))
+	{
+		if (pLoadingCam == CGameInstance::GetInstance()->GetMainCam())
+		{
+			if (m_bPlayerSpawn)
+				CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
+		}
+	}
 }
 
 HRESULT CLevel_StageDefault::Render()

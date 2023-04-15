@@ -127,7 +127,7 @@ void CLevel_Subway::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Subway * CLevel_Subway::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
