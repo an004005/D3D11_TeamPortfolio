@@ -115,6 +115,7 @@ void CMainApp::Tick(_double TimeDelta)
 	m_pGameInstance->Tick_Engine(TimeDelta);
 	if (CGameManager::GetInstance())
 		CGameManager::GetInstance()->Tick(TimeDelta);
+	CUI_Manager::GetInstance()->Tick(TimeDelta);
  }
 
 HRESULT CMainApp::Render()

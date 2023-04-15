@@ -88,6 +88,7 @@ protected:
 private:
 	void Play_MidHitAnim();
 	void Play_HeavyHitAnim();
+	void TP_Start();
 
 
 private:

@@ -87,6 +87,9 @@ void CBullet::Tick(_double TimeDelta)
 
 		if(m_bUseSound)
 			m_SoundStore.PlaySound("tree_attack_elecball_hit", m_pTransformCom);
+
+		if (m_HitSoundTag.empty() == false)
+			m_SoundStore.PlaySound(m_HitSoundTag);
 	}
 }
 
@@ -164,6 +167,23 @@ void CBullet::Create_DeadParticle()
 	if (m_pDeadParticle == L"") return;
 
 	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, m_pDeadParticle)->Start_NoAttach(this, false);
+}
+
+void CBullet::Set_LoopSound(const string& SoundTag)
+{
+	m_LoopSoundTag = SoundTag;
+	if (m_LoopSoundTag.empty() == false)
+	{
+		m_SoundStore.CloneSound(m_LoopSoundTag);
+		m_SoundStore.PlaySound(m_LoopSoundTag);	
+	}
+}
+
+void CBullet::Set_HitSound(const string& SoundTag)
+{
+	m_HitSoundTag = SoundTag;
+	if (m_HitSoundTag.empty() == false)
+		m_SoundStore.CloneSound(m_HitSoundTag);
 }
 
 _bool CBullet::CheckDamagedTarget(CGameObject * pTarget)

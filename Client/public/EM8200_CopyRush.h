@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Enemy_AnimInstance.h"
 #include "Timeline.h"
+#include "SoundStore.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -61,6 +62,8 @@ private:
 
 	_double m_DefaultTicPerSec = 0.0;
 	set<CScarletCharacter*> m_DamagedTargetList;
+
+	CSoundStore m_SoundStore;
 	
 public:
 public:

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\UI_Manager.h"
+
+#include <GameUtils.h>
+
 #include "Canvas.h"
 
 #include "Canvas_Acquisition.h"
@@ -32,7 +35,9 @@ CUI_Manager::CUI_Manager()
 	//m_SoundStore.CloneSound("UIClick2");	// 불가능한 클릭
 	//m_SoundStore.CloneSound("UIClick2");	// 레벨 업 할 때
 	//m_SoundStore.CloneSound("UIClick2");	// 장비 장착할 때
-
+#ifndef _DEBUG
+	CGameUtils::HideCursor();
+#endif
 }
 
 CCanvas * CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)
@@ -106,6 +111,24 @@ void CUI_Manager::Clear()
 	m_mapCanvass.clear();
 	m_mapMoveCanvass.clear();
 	m_mapWindowCanvass.clear();
+}
+
+void CUI_Manager::Tick(_double TimeDelta)
+{
+	
+	if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
+	{
+		if (m_bMouseActive)
+		{
+			m_bMouseActive = false;
+			CGameUtils::HideCursor();
+		}
+		else
+		{
+			m_bMouseActive = true;
+			CGameUtils::ShowCursor();
+		}
+	}
 }
 
 void CUI_Manager::PlaySound(const string& SoundName)
