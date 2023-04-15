@@ -144,7 +144,7 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 					{
 						_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
 						
-						m_pTransformCom->LocalMove(vLook, 0.3f);
+						m_pTransformCom->LocalMove(vLook, 0.5f);
 					}
 					HitOverlap();
 
@@ -165,7 +165,7 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 					if (m_bRushStart == true)
 					{
 						_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
-						m_pTransformCom->LocalMove(vLook, 0.3f);
+						m_pTransformCom->LocalMove(vLook, 0.5f);
 					}
 					HitOverlap();
 			})

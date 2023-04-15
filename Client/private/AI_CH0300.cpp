@@ -166,6 +166,14 @@ void CAI_CH0300::AfterPhysX()
 	{
 		static_cast<CScarletWeapon*>(iter)->Setup_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 		static_cast<CScarletWeapon*>(iter)->Trail_Tick(m_fTimeDelta);
+
+		m_fEffectTime += m_fTimeDelta;
+
+		if (m_fEffectTime >= 0.2f && m_bAttackEnable)
+		{
+			static_cast<CWeapon_wp0300*>(iter)->FireEffect();
+			m_fEffectTime = 0.f;
+		}
 	}
 
 	MovePerSecondCheck();
@@ -196,6 +204,7 @@ void CAI_CH0300::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Hit_EF_TEX")->Start_Attach(this, "Waist", true);
 	CPlayerInfoManager::GetInstance()->Change_HanabiHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
@@ -377,7 +386,7 @@ HRESULT CAI_CH0300::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -386,7 +395,7 @@ HRESULT CAI_CH0300::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -395,7 +404,7 @@ HRESULT CAI_CH0300::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -404,7 +413,7 @@ HRESULT CAI_CH0300::SetUp_AttackDesc()
 		m_AttackDesc.eAttackSAS = ESASType::SAS_FIRE;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
 		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f);
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -665,10 +674,10 @@ void CAI_CH0300::Collision_Twist()
 				DAMAGE_PARAM tParam;
 				ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));
 				tParam.eAttackSAS = ESASType::SAS_FIRE;
-				tParam.eAttackType = EAttackType::ATK_HEAVY;
+				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
-				tParam.iDamage = 100;
+				tParam.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f);
 
 				tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				pMonster->TakeDamage(tParam);

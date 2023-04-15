@@ -77,14 +77,17 @@ void CWeapon_Player::Tick(_double TimeDelta)
 	{
 		case WP_0106:
 			strMtrlName = L"MI_wp0106_SWORD";
+			CPlayerInfoManager::GetInstance()->SetWeaponDamage(0.f);
 			break;
 
 		case WP_0126:
 			strMtrlName = L"MI_wp0126_SWORD";
+			CPlayerInfoManager::GetInstance()->SetWeaponDamage(25.f);
 			break;
 
 		case WP_0190:
 			strMtrlName = L"MI_wp0190_SWORD";
+			CPlayerInfoManager::GetInstance()->SetWeaponDamage(50.f);
 			break;
 
 		default:

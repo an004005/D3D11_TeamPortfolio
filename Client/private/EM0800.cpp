@@ -568,7 +568,7 @@ void CEM0800::AfterPhysX()
 
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 	GetRigidBody("Range")->Update_Tick(WorldMatrix);
-	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Eff02") * WorldMatrix);
+	GetRigidBody("Trunk")->Update_Tick(m_pModelCom->GetBoneMatrix("Weapon") * WorldMatrix);
 	GetRigidBody("Weak_LeftArm")->Update_Tick(m_pModelCom->GetBoneMatrix("LeftForeArm") * WorldMatrix);
 	GetRigidBody("Weak_RightArm")->Update_Tick(m_pModelCom->GetBoneMatrix("RightForeArm") * WorldMatrix);
 }

@@ -75,7 +75,7 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 				{
 					DAMAGE_PARAM tParam;
 					tParam.eAttackType = EAttackType::ATK_HEAVY;
-					tParam.iDamage = 200;
+					tParam.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 5.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 					pMonster->TakeDamage(tParam);
@@ -120,7 +120,7 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 					else
 						tParam.eAttackType = EAttackType::ATK_TO_AIR;
 
-					tParam.iDamage = 200;
+					tParam.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 3.f);
 					tParam.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 					pMonster->TakeDamage(tParam);

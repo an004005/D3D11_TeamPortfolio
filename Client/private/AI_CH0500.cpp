@@ -184,6 +184,7 @@ void CAI_CH0500::TakeDamage(DAMAGE_PARAM tDamageParams)
 	m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 	m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
+	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Hit_EF_TEX")->Start_Attach(this, "Waist", true);
 	CPlayerInfoManager::GetInstance()->Change_TsugumiHP(CHANGE_DECREASE, tDamageParams.iDamage);
 
 	if (tDamageParams.eAttackType == EAttackType::ATK_HEAVY || tDamageParams.eAttackType == EAttackType::ATK_TO_AIR)
@@ -668,7 +669,7 @@ void CAI_CH0500::Shoot()
 				tParam.eAttackType = EAttackType::ATK_LIGHT;
 				tParam.eDeBuff = EDeBuffType::DEBUFF_END;
 				tParam.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
-				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.5f;
+				tParam.iDamage = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 0.1f;
 				tParam.vHitFrom = GetColliderPosition();
 				tParam.vHitPosition = { pHit.position.x, pHit.position.y, pHit.position.z, 1.f };
 				tParam.vSlashVector = static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_SlashVector();
