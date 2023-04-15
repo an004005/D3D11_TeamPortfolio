@@ -73,6 +73,8 @@ HRESULT CLevel_DownTown_Second::Initialize()
 		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown2.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
 
 	return S_OK;
 }
@@ -118,6 +120,8 @@ HRESULT CLevel_DownTown_Third::Initialize()
 		return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown3.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
 
 	return S_OK;
 }

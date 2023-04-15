@@ -30,7 +30,7 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
-	void	Add_Quest(const _int iIndex);
+	void	Add_Quest(const _int iIndex, const _bool bRender = true);
 	void	Set_SuccessQuest() {
 		m_bVisible = true;
 		m_fQuestMove = true;

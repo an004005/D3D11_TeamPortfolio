@@ -111,6 +111,14 @@ void CShop_NPC::Tick(_double TimeDelta)
 			}
 		}
 	}
+	else
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pShopEffect))
+		{
+			m_iEffectCheck = false;
+			m_pShopEffect->SetDelete();
+		}
+	}
 }
 
 void CShop_NPC::Late_Tick(_double TimeDelta)
@@ -256,7 +264,7 @@ _bool CShop_NPC::DistanceCheck()
 
 	_float fDistance = XMVectorGetX(XMVector3LengthEst(vDir));
 
-	if (fDistance <= 2.f)
+	if (fDistance <= 4.f)
 		return true;
 
 	else return false;

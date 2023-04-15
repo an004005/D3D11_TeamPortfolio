@@ -33,7 +33,7 @@ HRESULT CHPlossUI::Initialize(void * pArg)
 
 void CHPlossUI::Tick(_double TimeDelta)
 {
-	_uint iMinHP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP * 0.2;
+	_uint iMinHP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP * 0.3;
 	if (iMinHP >= CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP)	m_bVisible = true;
 	else	m_bVisible = false;
 

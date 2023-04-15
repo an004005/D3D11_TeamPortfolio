@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Base.h"
 #include "Canvas.h"
+#include "SoundStore.h"
 
 class CUI_Manager final : public CBase
 {
@@ -31,10 +32,15 @@ public:
 
 	void Clear();
 
+public:
+	void	PlaySound(const string& SoundName);
+
 private:
 	map<wstring, CCanvas*> m_mapMoveCanvass;	
 	map<wstring, CCanvas*> m_mapCanvass;
 	map<wstring, CCanvas*> m_mapWindowCanvass;
+
+	CSoundStore m_SoundStore;
 
 public:
 	virtual void Free() override;

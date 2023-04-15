@@ -70,7 +70,7 @@ HRESULT CCanvas_MainItem::Render()
 		return E_FAIL;
 
 	_float2 vFontSize = { 0.45f, 0.45f };
-	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// ------- 메뉴
@@ -78,30 +78,30 @@ HRESULT CCanvas_MainItem::Render()
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuAll"))->Get_OnAlpha())
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"모두", vPosition + _float2(78.0f, 7.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->GetScreenSpaceLeftTop();
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuBattle"))->Get_OnAlpha())
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(55.0f, 8.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->GetScreenSpaceLeftTop();
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Get_OnAlpha())
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"무기", vPosition + _float2(79.0f, 8.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->GetScreenSpaceLeftTop();
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuEtc"))->Get_OnAlpha())
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	pGameInstance->Render_Font(L"Pretendard32", L"기타", vPosition + _float2(79.0f, 8.0f), 0.f, vFontSize, vColor);
-	vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	// ------- 아이템 상세 설명
 
 	// 아이템 이름
@@ -130,10 +130,10 @@ HRESULT CCanvas_MainItem::Render()
 		if (ItemInfo[i].second.iCount == ItemInfo[i].second.iMaxCount)
 			vColor = { 1.0f, 0.458f, 0.38f, 1.0f };
 		else
-			vColor = { 0.752f, 0.752f, 0.596f, 1.0f }; 
+			vColor = { 1.0f, 0.99f, 0.87f, 1.0f }; 
 		wsprintf(szText, TEXT("%d"), ItemInfo[i].second.iCount);
 		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(632.0f, 77.0f), 0.f, vFontSize, vColor);
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 		wsprintf(szText, TEXT("/ %d"), ItemInfo[i].second.iMaxCount);
 		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(662.0f, 77.0f), 0.f, vFontSize, vColor);
 	}

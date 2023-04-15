@@ -54,8 +54,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
         },
         {
             "Name" : "crawl_attack_tenta_up",
@@ -63,8 +63,8 @@
             "2DSound" : false,
             "Volume" : 0.5,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
         },        
         {
             "Name" : "crawl_fx_death",
@@ -80,6 +80,26 @@
             "Name" : "crawl_move_groggy",
             "SoundFiles" : [
                 "Monsters/em1200/crawl_move_groggy.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "crawl_move_rush_ground",
+            "SoundFiles" : [
+                "Monsters/em1200/crawl_move_rush_ground.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "crawl_move_rush_voice",
+            "SoundFiles" : [
+                "Monsters/em1200/crawl_move_rush_voice.wav"],
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,

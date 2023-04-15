@@ -10,6 +10,9 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 
+#include "EM0110.h"
+#include "BronJon.h"
+
 CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel_StageDefault(pDevice, pContext)
 {
@@ -23,6 +26,14 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     //m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite2F_ShadowCam.json"; // 아직 없음
     m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_ConstructionSite2F.json";
 
+	m_BGM.CloneSound("Ambient_Bridge");
+	m_BGM.CloneSound("Attention Please");
+	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
+	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	//Boss
+	m_BGM.CloneSound("em0110BGM");
+
     if (FAILED(__super::Initialize()))
         return E_FAIL;
     if (FAILED(Ready_Layer_AI(LAYER_AI)))
@@ -32,7 +43,8 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Item_Batch.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Special_2F.json");
-    
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Flower.json");
+
     // Monster Trigger(with Invisible Wall)
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster1stWave.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster2ndWave_Fix.json");
@@ -61,7 +73,64 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
 void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("The OSF -Advance");
+
+	if (m_bMiddleBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bMiddleBGM = true;
+					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					break;
+				}
+			}
+			if (m_BGMChange.IsNotDo())
+			{
+				m_BGM.StopAllLoop();
+				m_BGM.PlaySound("A Sedated Heart");
+			}
+		}
+	}
+
+	if (m_bBossBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CEM0110*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bBossBGM = true;
+					m_BGM.PlaySound("em0110BGM");
+					break;
+				}
+			}
+		}
+	}
+
+
     CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+	CLevel::Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite2F* CLevel_ConstructionSite2F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

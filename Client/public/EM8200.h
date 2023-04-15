@@ -34,7 +34,7 @@ public:
 	virtual void		Imgui_RenderProperty() override;
 	virtual void		SetUpUI() override;
 
-	
+	void				Set_StoryEnd() { m_bStoryEnd = true; }
 
 public:
 	_bool				IsMove() const { return m_vMoveAxis != _float3::Zero; }
@@ -44,6 +44,7 @@ public:
 	_bool				IsRun() const { return m_bRun; }
 	_bool				Check_SecondPhase() { return m_bSecondPhase; }
 
+	void				Clear_Socket();
 	void				Set_KineticObject(CGameObject* pObject);
 	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
@@ -63,6 +64,7 @@ protected:
 	void				AddState_BrainField(CFSMComponentBuilder& Builder);
 	void				AddState_BrainCrush(CFSMComponentBuilder& Builder);
 
+	void				AddState_Intro(CFSMComponentBuilder& Builder);
 
 
 
@@ -93,6 +95,9 @@ private:
 	void Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType);
 	void Range_Overlap(_float4 vPos, _uint iDamage, _float fRad, EAttackType eAtkType);
 
+	_bool Check_PlayerDetected();
+	_bool Check_PlayerDetected_Near();
+	_bool Check_StoryEnd();
 private:
 	class CEM8200_Controller* m_pController = nullptr;
 	class CEM8200_AnimInstance* m_pASM = nullptr;
@@ -100,7 +105,9 @@ private:
 	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
-
+	_bool			m_bStoryEnd = false;
+	CDoOnce			m_bStoryModeStart;
+	
 private:
 	CModel* m_pKineticModel = nullptr;
 	CGameObject* m_pKineticObject = nullptr;
@@ -145,6 +152,7 @@ private:
 	CDoOnce m_SetTPOnce;
 
 	CDoOnce m_SecondPhase;
+	CDoOnce m_DetectedOnce;
 
 	CCoolTimeHelper m_CounterEFCoolTimeHelper;
 
@@ -187,6 +195,8 @@ private:
 	CSimpleTimeline			m_CaptureStart;
 	CSimpleTimeline			m_CaptureEnd;
 
+	CSimpleTimeline			m_KarenMaskStart;
+
 	class CEM8200_CopyRush* m_pLeftCopy = nullptr;
 	class CEM8200_CopyRush* m_pRightCopy = nullptr;
 
@@ -199,6 +209,8 @@ private:
 	CCurveFloatImpl* m_pBrainCrushChromaticAberration = nullptr;
 	CCurveFloatImpl* m_pBrainCrushChromaticAberrationCrash = nullptr;
 	class CPostVFX_ChromaticAberration* m_pChromaticAberration = nullptr;
+
+	class CCanvas_MainTalk* m_pCanvas_MainTalk = nullptr;
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
