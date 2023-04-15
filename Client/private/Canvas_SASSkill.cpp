@@ -115,6 +115,7 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		CGameInstance::GetInstance()->KeyDown(DIK_3) ||
 		CGameInstance::GetInstance()->KeyDown(DIK_4))
 	{
+		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = false;
 		InputData();
 	}
@@ -123,12 +124,14 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		CGameInstance::GetInstance()->KeyDown(DIK_6) ||
 		CGameInstance::GetInstance()->KeyDown(DIK_7))
 	{
+		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = true;
 		InputData();
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
+		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = !m_bChangeX;
 		InputData();
 	}
@@ -192,6 +195,9 @@ void CCanvas_SASSkill::FullCircle()
 
 void CCanvas_SASSkill::InputAlt()
 {
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LALT))
+		CUI_Manager::GetInstance()->PlaySound("Alt");
+
 	if (CGameInstance::GetInstance()->KeyPressing(DIK_LALT))
 	{
 		Find_ChildUI(L"SASSkill_AltText0")->SetVisible(false);
@@ -219,6 +225,9 @@ void CCanvas_SASSkill::InputAlt()
 
 void CCanvas_SASSkill::InputCtrl()
 {
+	if (CGameInstance::GetInstance()->KeyDown(DIK_LCONTROL))
+		CUI_Manager::GetInstance()->PlaySound("Ctrl");
+
 	if (CGameInstance::GetInstance()->KeyPressing(DIK_LCONTROL))
 	{
 		Find_ChildUI(L"SASSkill_CtrlText0")->SetVisible(false);

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Client_Defines.h"
 #include "HelperClasses.h"
+#include "SoundStore.h"
 
 BEGIN(Engine)
 class CRigidBody;
@@ -114,6 +115,9 @@ protected:
 	vector<CModel*>			m_pModelComs;
 	vector<wstring>			m_pModelTags;
 	CRigidBody*				m_pCollider = nullptr;
+
+protected:
+	CSoundStore m_SoundStore; 
 
 protected:
 	_float4x4				m_LocalMatrix;

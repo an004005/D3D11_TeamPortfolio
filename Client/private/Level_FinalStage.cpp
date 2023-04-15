@@ -126,6 +126,7 @@ HRESULT CLevel_FinalStage::Ready_Lights()
 
 void CLevel_FinalStage::Tick(_double TimeDelta)
 {
+	__super::Tick(TimeDelta);
 	// CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
 	

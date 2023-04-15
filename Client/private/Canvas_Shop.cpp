@@ -139,6 +139,9 @@ void CCanvas_Shop::KeyInput()
 
 	if (true == m_bOpenShop)
 	{
+		if (false == m_bShopUI)	CUI_Manager::GetInstance()->PlaySound("MainIn");
+		else									CUI_Manager::GetInstance()->PlaySound("MainOut");
+
 		m_bOpenShop = false;
 		m_bAlpha = true;
 		m_pShaderUI->SetVisible(true);

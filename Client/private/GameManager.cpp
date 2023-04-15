@@ -109,19 +109,6 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 	{
 		m_pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
 
-		//if (false == m_bEM0320Dead)
-		//{
-		//	if (tReport.eName == EEnemyName::EM0320)
-		//	{
-		//		// 공사장에서 경견페리 죽었을 때
-		//		m_bEM0320Dead = true;
-		//		
-		//		CGameManager::GetInstance()->Set_LeftTalk(7);
-		//		CGameManager::GetInstance()->Set_LeftTalk(8);
-		//		CGameManager::GetInstance()->Set_LeftTalk(9);
-		//	}
-		//}
-
 		if (false == m_bEM1200Dead)
 		{
 			if (tReport.eName == EEnemyName::EM1100)
@@ -133,6 +120,18 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 				CGameManager::GetInstance()->Set_LeftTalk(35);
 				CGameManager::GetInstance()->Set_LeftTalk(36);
 				CGameManager::GetInstance()->Set_LeftTalk(37);
+			}
+		}
+
+		if (false == m_bEM0110Dead)
+		{
+			if (tReport.eName == EEnemyName::EM0110)
+			{
+				// 말잡고 나서
+				m_bEM0110Dead = true;
+
+				CGameManager::GetInstance()->Set_LeftTalk(107);
+				CGameManager::GetInstance()->Set_LeftTalk(108);
 			}
 		}
 	}

@@ -49,6 +49,9 @@ HRESULT CLevel_NaomiRoom::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/RedString_1.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/RedString_2.json");
 
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Achieve_Batch.json");
+
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Kinetic_Normal.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 
@@ -116,7 +119,7 @@ void CLevel_NaomiRoom::Tick(_double TimeDelta)
 
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_NaomiRoom * CLevel_NaomiRoom::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

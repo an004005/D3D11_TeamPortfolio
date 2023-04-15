@@ -23,7 +23,7 @@ HRESULT CLevel_Subway::Initialize()
 	//m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Subway";
-	m_strShadowCamJsonPath.clear();
+	m_strShadowCamJsonPath.clear();   
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Subway.json";
 
 	m_BGM.CloneSound("Ambient_Bridge");
@@ -54,11 +54,15 @@ HRESULT CLevel_Subway::Initialize()
 	// Item Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Item_Batch.json");
 
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Achieve_Batch.json");
+
 	// RedString Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/RedStringBatch.json");
 
 	// UI Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Subway.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Subway.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
@@ -124,7 +128,7 @@ void CLevel_Subway::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Subway * CLevel_Subway::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

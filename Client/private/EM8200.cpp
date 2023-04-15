@@ -50,7 +50,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_iMaxHP = 30000;
 		m_iHP = 30000; // ¡Ú
 		m_iMaxCrushGauge = m_iMaxHP * 1.1f;
-		m_iCrushGauge = m_iMaxCrushGauge;
+		m_iCrushGauge = 100; // m_iMaxCrushGauge;
 		m_bHasCrushGauge = true;
 
 		m_iAtkDamage = 50;
@@ -503,7 +503,7 @@ void CEM8200::SetUpAnimationEvent()
 
 		});
 
-
+	m_pModelCom->Add_EventCaller("BrainCrash_Slow", [&]() { CGameInstance::GetInstance()->SetTimeRatioCurve("BrainCrash_Slow"); });
 }
 
 void CEM8200::SetUpFSM()
@@ -2193,7 +2193,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		.AddTransition("BrainCrushStart_1 to BrainCrushStart_2", "BrainCrushStart_2")
 			.Predicator([this]
 			{
-				return m_pASM->isSocketEmpty("FullBody");
+				return m_bBrainCrashCommand;
 			})
 
 	.AddState("BrainCrushStart_2")
@@ -2201,6 +2201,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			m_pBrainCrushCables->Activate(true);
 			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c03_em8200");
+			m_bBrainCrashCommand = false;
 		})
 		.Tick([this](_double TimeDelta)
 		{
@@ -2209,7 +2210,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		.AddTransition("BrainCrushStart_2 to BrainCrushStart_3", "BrainCrushStart_3")
 			.Predicator([this]
 			{
-				return m_pASM->isSocketEmpty("FullBody");
+				return m_bBrainCrashCommand;
 			})
 
 	.AddState("BrainCrushStart_3")
@@ -2217,6 +2218,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetStay(true);
 			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
+			m_bBrainCrashCommand = false;
 		})
 		.Tick([this](_double TimeDelta)
 		{

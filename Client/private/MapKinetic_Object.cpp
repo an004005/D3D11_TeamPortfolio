@@ -511,6 +511,16 @@ void CMapKinetic_Object::Boss_Throw(_float4 vTargetPos)
 	m_fDeadTimer = 0;
 }
 
+void CMapKinetic_Object::Set_Dead()
+{
+	m_bThrow = true;
+	m_bUsable = false;
+	m_bSwing = false;
+	m_bCounter = false;
+	m_bHit = true;
+	m_fDeadTimer = 0.f;
+}
+
 void CMapKinetic_Object::OutlineMaker()
 {
 	if (m_bOutline != m_bBeforeOutline)

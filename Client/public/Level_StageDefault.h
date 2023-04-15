@@ -1,6 +1,7 @@
 #pragma once
 #include "Level.h"
 #include "Client_Defines.h"
+#include "HelperClasses.h"
 
 BEGIN(Client)
 
@@ -12,6 +13,7 @@ protected:
 
 public:
 	HRESULT Initialize() override;
+	virtual void Tick(_double TimeDelta) override;
 	HRESULT Render() override;
 
 protected:
@@ -31,6 +33,8 @@ protected:
 	string m_strMapJsonPath;
 
 	_bool m_bPlayerSpawn = true;
+
+	CDoOnce m_SetMainCamOnce;
 };
 
 END

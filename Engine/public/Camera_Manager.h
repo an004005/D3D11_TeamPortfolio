@@ -23,6 +23,7 @@ public:
 	void AddCamAnim(class CCamAnimation* pCamAnim);
 
 	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson);
+	void DeleteCamera(const string& strCamTag);
 
 	void SetMainCamera(const string& strCamTag);
 	void SetMainCamera(CCamera* pCamera);
