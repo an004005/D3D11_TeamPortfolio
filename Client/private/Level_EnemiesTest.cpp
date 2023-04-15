@@ -23,7 +23,7 @@
 #include "GameManager.h"
 #include "Imgui_CamAnimEditor.h"
 
-#define ADD_PLAYER
+//#define ADD_PLAYER
 //#define ADD_PREVIEW "Prototype_Model_em1200"
 
 CLevel_EnemiesTest::CLevel_EnemiesTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

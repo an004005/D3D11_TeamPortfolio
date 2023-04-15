@@ -37,6 +37,7 @@ public:
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual _float4 GetKineticTargetPos() override;
 	virtual _bool Exclude();
+	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
 public:
 	_bool	IsChangePhase() const { return m_bChangePhase; }
 public:

@@ -37,10 +37,10 @@ HRESULT CEM0900::Initialize(void * pArg)
 		m_iMaxHP = LEVEL_NOW * (250 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iMaxCrushGauge = m_iMaxHP * 0.9f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = ((LEVEL_NOW - 20) * 4) + (CMathUtils::RandomUInt(3) + 1);
+		iEemeyLevel = (max(0, (LEVEL_NOW - 20)) * 2.5) + CMathUtils::RandomUInt(3) + 1;
 		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
 
 		m_eEnemyName = EEnemyName::EM0900;
@@ -619,7 +619,10 @@ void CEM0900::CheckHP(DAMAGE_PARAM& tDamageParams)
 		m_SoundStore.PlaySound("Metal_Sound_Effect", m_pTransformCom);
 		//hp가 0보다 작아지면 아머 삭제. 
 		if (m_iArmorHp <= 0)
+		{
+			m_iArmorHp = 0;
 			m_bDestroyArmor = true;
+		}
 	}
 	else
 		__super::CheckHP(tDamageParams);
