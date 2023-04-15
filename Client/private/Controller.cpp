@@ -2,6 +2,7 @@
 #include "..\public\Controller.h"
 #include "GameInstance.h"
 #include "GameUtils.h"
+#include "UI_Manager.h"
 
 CController::CController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -33,20 +34,33 @@ void CController::Tick(_double TimeDelta)
 	m_vMoveAxis = _float3::Zero;
 
 	// 임시
-	if (pGameInstance->KeyDown(DIK_T))
+	// if (pGameInstance->KeyDown(DIK_T))
+	// {
+	// 	m_bCursorLock = !m_bCursorLock;
+	// 	if (m_bCursorLock)
+	// 	{
+	// 		CGameUtils::ShowCursor();
+	// 		m_bInputLock = true;
+	// 	}
+	// 	else
+	// 	{
+	// 		CGameUtils::HideCursor();
+	// 		m_bInputLock = false;
+	// 	}
+	// }
+	// UI매지너로 기능 옮김
+
+	if (CUI_Manager::GetInstance()->IsMouseActive())
 	{
-		m_bCursorLock = !m_bCursorLock;
-		if (m_bCursorLock)
-		{
-			CGameUtils::ShowCursor();
-			m_bInputLock = true;
-		}
-		else
-		{
-			CGameUtils::HideCursor();
-			m_bInputLock = false;
-		}
+		m_bCursorLock = true;
+		m_bInputLock = true;
 	}
+	else
+	{
+		m_bCursorLock = false;
+		m_bInputLock = false;
+	}
+
 
 	if (m_bInputLock)
 	{

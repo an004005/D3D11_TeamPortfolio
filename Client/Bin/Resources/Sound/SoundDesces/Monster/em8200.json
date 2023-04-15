@@ -1,0 +1,122 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "karen_attack_elecball_hit",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_elecball_hit.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "karen_attack_elecball_ins",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_elecball_ins.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "karen_attack_elecball_loop",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_elecball_loop.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "karen_attack_elecball_shot",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_elecball_shot.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_attack_kick1",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_kick1.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "karen_attack_kick2",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_kick2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "karen_attack_spike",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_spike.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_attack_stomp",
+            "SoundFiles" : ["Monsters/em8200/karen_attack_stomp.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_fx_brainfield",
+            "SoundFiles" : ["Monsters/em8200/karen_fx_brainfield.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_fx_dash",
+            "SoundFiles" : ["Monsters/em8200/karen_fx_dash.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_fx_kinecounter",
+            "SoundFiles" : ["Monsters/em8200/karen_fx_kinecounter.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_fx_tele",
+            "SoundFiles" : ["Monsters/em8200/karen_fx_tele.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "karen_fx_thunder",
+            "SoundFiles" : ["Monsters/em8200/karen_fx_thunder.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
+        }
+    ]
+}

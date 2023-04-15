@@ -26,8 +26,8 @@ void CCamAnimSequencer::CustomDrawCompact(int index, ImDrawList* draw_list, cons
 			float fCurFrameCnt = (float)Sec2Frame(itr->EventTime); // sec to frame
 			float r = (fCurFrameCnt - m_iFrameMin) / float(m_iFrameMax - m_iFrameMin);
 			float x = ImLerp(rc.Min.x, rc.Max.x, r);
-			ImVec2 pta(x - 3.f, rc.Min.y + 11.5f - 6);
-			ImVec2 ptb(x + 3.f, rc.Min.y + 11.5f + 6);
+			ImVec2 pta(x - 6.f, rc.Min.y + 11.5f - 6);
+			ImVec2 ptb(x + 6.f, rc.Min.y + 11.5f + 6);
 			ImRect rect = ImRect(pta, ptb);
 
 			if (rect.Contains(ImGui::GetMousePos()))
@@ -71,8 +71,8 @@ void CCamAnimSequencer::CustomDrawCompact(int index, ImDrawList* draw_list, cons
 			float fCurFrameCnt = (_float)Sec2Frame(itr->Time); // sec to frame
 			float r = (fCurFrameCnt - m_iFrameMin) / float(m_iFrameMax - m_iFrameMin);
 			float x = ImLerp(rc.Min.x, rc.Max.x, r);
-			ImVec2 pta(x - 3.f, rc.Min.y + 11.5f - 6);
-			ImVec2 ptb(x + 3.f, rc.Min.y + 11.5f + 6);
+			ImVec2 pta(x - 6.f, rc.Min.y + 11.5f - 6);
+			ImVec2 ptb(x + 6.f, rc.Min.y + 11.5f + 6);
 			ImRect rect = ImRect(pta, ptb);
 			draw_list->AddRectFilled(pta, ptb, 0xAAA00000);
 
@@ -112,8 +112,8 @@ void CCamAnimSequencer::CustomDrawCompact(int index, ImDrawList* draw_list, cons
 			float fCurFrameCnt = (_float)Sec2Frame(itr->Time);
 			float r = (fCurFrameCnt - m_iFrameMin) / float(m_iFrameMax - m_iFrameMin);
 			float x = ImLerp(rc.Min.x, rc.Max.x, r);
-			ImVec2 pta(x - 3.f, rc.Min.y + 11.5f - 6);
-			ImVec2 ptb(x + 3.f, rc.Min.y + 11.5f + 6);
+			ImVec2 pta(x - 6.f, rc.Min.y + 11.5f - 6);
+			ImVec2 ptb(x + 6.f, rc.Min.y + 11.5f + 6);
 			ImRect rect = ImRect(pta, ptb);
 
 			draw_list->AddRectFilled(pta, ptb, 0xAAA00000);

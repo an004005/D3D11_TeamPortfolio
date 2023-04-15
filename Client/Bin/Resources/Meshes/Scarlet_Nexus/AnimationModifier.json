@@ -8712,7 +8712,16 @@
         "Duration": 80.0,
         "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_walk",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "move_walk",
+                "EventTime": 40.0
+            }
+        ]
     },
     "AS_em8200_106_AL_run": {
         "Duration": 30.0,
