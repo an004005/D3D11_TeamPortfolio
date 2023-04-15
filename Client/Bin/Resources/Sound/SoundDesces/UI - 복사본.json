@@ -78,5 +78,181 @@
             "MinDistance": 2.0,
             "MaxDistance": 30.0
         },
+        {
+            "Name": "ItemUse",
+            "SoundFiles": [
+                "UI/UI_item_use.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "MainIn",
+            "SoundFiles": [
+                "UI/UI_menu_in_1.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "MainOut",
+            "SoundFiles": [
+                "UI/UI_menu_out.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "MonsterAlert",
+            "SoundFiles": [
+                "UI/UI_monster_alert.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "PopupClose",
+            "SoundFiles": [
+                "UI/UI_popup_close.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "PopupOn",
+            "SoundFiles": [
+                "UI/UI_popup_on.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Alt",
+            "SoundFiles": [
+                "UI/UI_SAS_alt.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Ctrl",
+            "SoundFiles": [
+                "UI/UI_SAS_ctr.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "X",
+            "SoundFiles": [
+                "UI/UI_SAS_x.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Mouseover",
+            "SoundFiles": [
+                "UI/UI_stat_mouseover.1.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "TABLarge",
+            "SoundFiles": [
+                "UI/UI_tab_large.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "TABSmall",
+            "SoundFiles": [
+                "UI/UI_tab_small.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "TIP",
+            "SoundFiles": [
+                "UI/UI_tip_popup.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Unable",
+            "SoundFiles": [
+                "UI/UI_unable.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Upgrade",
+            "SoundFiles": [
+                "UI/UI_upgrade_charge.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "Weapon",
+            "SoundFiles": [
+                "UI/UI_weapon_equip.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        }
     ]
 }

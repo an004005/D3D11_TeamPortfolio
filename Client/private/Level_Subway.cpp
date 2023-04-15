@@ -59,6 +59,7 @@ HRESULT CLevel_Subway::Initialize()
 
 	// UI Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Subway.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Subway.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 

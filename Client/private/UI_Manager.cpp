@@ -9,37 +9,34 @@ IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
 {
-	//m_SoundStore.CloneSound("UIClick");		// 메인에서 클릭할 때
-	//m_SoundStore.CloneSound("UIClick2");	// 불가능한 클릭
-	//m_SoundStore.CloneSound("UIClick2");	// 파티 클릭 할 때
-	//m_SoundStore.CloneSound("UIClick2");	// 상태이상 소리 긴 것
-	//m_SoundStore.CloneSound("UIClick2");	// 상태이상 소리 짧은 것
-	//m_SoundStore.CloneSound("UIClick2");	// 아이템 넘길 때
-	//m_SoundStore.CloneSound("UIClick2");	// 아이템 사용 불가
-	//m_SoundStore.CloneSound("UIClick2");	// 아이템 사용
-	//m_SoundStore.CloneSound("UIClick2");	// 메인 들어갈 때
-	//m_SoundStore.CloneSound("UIClick2");	// 메인 나갈 때
-	//m_SoundStore.CloneSound("UIClick2");	// 몬스터 경고 (몬스터 발견 했을 때?)
-	//m_SoundStore.CloneSound("UIClick2");	// 안내창 뜰 때
-	//m_SoundStore.CloneSound("UIClick2");	// 안내칭 끌 때
-	//m_SoundStore.CloneSound("UIClick2");	// art
-	//m_SoundStore.CloneSound("UIClick2");	// ctrl
-	//m_SoundStore.CloneSound("UIClick2");	// x
-	//m_SoundStore.CloneSound("UIClick2");	// 마우스 클릭?
-	//m_SoundStore.CloneSound("UIClick2");	// 튜토리얼 켤 때
-	//m_SoundStore.CloneSound("UIClick2");	// 튜토리얼 끌 때
-	//m_SoundStore.CloneSound("UIClick2");	// Tip 뜰 때
-	//m_SoundStore.CloneSound("UIClick2");	// 불가능한 클릭
-	//m_SoundStore.CloneSound("UIClick2");	// 레벨 업 할 때
-	//m_SoundStore.CloneSound("UIClick2");	// 장비 장착할 때
-
+	m_SoundStore.CloneSound("MainClick");		// 메인에서 클릭할 때
+	m_SoundStore.CloneSound("UnableClick");	// 불가능한 클릭
+	m_SoundStore.CloneSound("PartyClick");	// 파티 클릭 할 때
+	m_SoundStore.CloneSound("DangerLong");	// 상태이상 소리 긴 것
+	m_SoundStore.CloneSound("DangerShort");	// 상태이상 소리 짧은 것
+	m_SoundStore.CloneSound("ItemSwitch");	// 아이템 넘길 때
+	m_SoundStore.CloneSound("ItemUnable");	// 아이템 사용 불가
+	m_SoundStore.CloneSound("ItemUse");	// 아이템 사용
+	m_SoundStore.CloneSound("MainIn");	// 메인 들어갈 때
+	m_SoundStore.CloneSound("MainOut");	// 메인 나갈 때
+	m_SoundStore.CloneSound("MonsterAlert");	// 몬스터 경고 (몬스터 발견 했을 때?)
+	m_SoundStore.CloneSound("PopupClose");	// 안내창 뜰 때
+	m_SoundStore.CloneSound("PopupOn");	// 안내칭 끌 때
+	m_SoundStore.CloneSound("Alt");	// art
+	m_SoundStore.CloneSound("Ctrl");	// ctrl
+	m_SoundStore.CloneSound("X");	// x
+	m_SoundStore.CloneSound("Mouseover");	// 마우스 클릭?
+	m_SoundStore.CloneSound("TABLarge");	// 튜토리얼 켤 때
+	m_SoundStore.CloneSound("TABSmall");	// 튜토리얼 끌 때
+	m_SoundStore.CloneSound("TIP");	// Tip 뜰 때
+	m_SoundStore.CloneSound("Unable");	// 불가능한 클릭
+	m_SoundStore.CloneSound("Upgrade");	// 레벨 업 할 때
+	m_SoundStore.CloneSound("Weapon");	// 장비 장착할 때
 }
 
 CCanvas * CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)
 {
-	auto	iter = find_if(m_mapMoveCanvass.begin(), m_mapMoveCanvass.end(), [&](pair<wstring, CCanvas*> pCantag) {
-		return pCantag.first == pCanvasTag;
-	});
+	auto	iter = m_mapMoveCanvass.find(pCanvasTag);
 
 	if (iter == m_mapMoveCanvass.end())
 		return nullptr;
@@ -49,14 +46,13 @@ CCanvas * CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)
 
 void CUI_Manager::Add_MoveCanvas(const wstring& pCanvasTag, CCanvas * pCanvas)
 {
+	Assert(m_mapMoveCanvass.find(pCanvasTag) == m_mapMoveCanvass.end());
 	m_mapMoveCanvass.emplace(pCanvasTag, pCanvas);
 }
 
 CCanvas * CUI_Manager::Find_Canvas(const wstring & pCanvasTag)
 {
-	auto	iter = find_if(m_mapCanvass.begin(), m_mapCanvass.end(), [&](pair<wstring, CCanvas*> pCantag) {
-		return pCantag.first == pCanvasTag;
-	});
+	auto	iter = m_mapCanvass.find(pCanvasTag);
 
 	if (iter == m_mapCanvass.end())
 		return nullptr;
@@ -66,14 +62,13 @@ CCanvas * CUI_Manager::Find_Canvas(const wstring & pCanvasTag)
 
 void CUI_Manager::Add_Canvas(const wstring & pCanvasTag, CCanvas * pCanvas)
 {
+	Assert(m_mapCanvass.find(pCanvasTag) == m_mapCanvass.end());
 	m_mapCanvass.emplace(pCanvasTag, pCanvas);
 }
 
 CCanvas* CUI_Manager::Find_WindowCanvas(const wstring& pCanvasTag)
 {
-	auto	iter = find_if(m_mapWindowCanvass.begin(), m_mapWindowCanvass.end(), [&](pair<wstring, CCanvas*> pCantag) {
-		return pCantag.first == pCanvasTag;
-		});
+	auto	iter = m_mapWindowCanvass.find(pCanvasTag);
 
 	if (iter == m_mapWindowCanvass.end())
 		return nullptr;
@@ -83,6 +78,7 @@ CCanvas* CUI_Manager::Find_WindowCanvas(const wstring& pCanvasTag)
 
 void CUI_Manager::Add_WindowCanvas(const wstring& pCanvasTag, CCanvas* pCanvas)
 {
+	Assert(m_mapWindowCanvass.find(pCanvasTag) == m_mapWindowCanvass.end());
 	m_mapWindowCanvass.emplace(pCanvasTag, pCanvas);
 }
 

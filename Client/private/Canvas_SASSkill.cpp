@@ -129,6 +129,7 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
 	{
+		CUI_Manager::GetInstance()->PlaySound();
 		m_bChangeX = !m_bChangeX;
 		InputData();
 	}
