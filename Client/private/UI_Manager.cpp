@@ -3,11 +3,36 @@
 #include "Canvas.h"
 
 #include "Canvas_Acquisition.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
 {
+	//m_SoundStore.CloneSound("UIClick");		// 메인에서 클릭할 때
+	//m_SoundStore.CloneSound("UIClick2");	// 불가능한 클릭
+	//m_SoundStore.CloneSound("UIClick2");	// 파티 클릭 할 때
+	//m_SoundStore.CloneSound("UIClick2");	// 상태이상 소리 긴 것
+	//m_SoundStore.CloneSound("UIClick2");	// 상태이상 소리 짧은 것
+	//m_SoundStore.CloneSound("UIClick2");	// 아이템 넘길 때
+	//m_SoundStore.CloneSound("UIClick2");	// 아이템 사용 불가
+	//m_SoundStore.CloneSound("UIClick2");	// 아이템 사용
+	//m_SoundStore.CloneSound("UIClick2");	// 메인 들어갈 때
+	//m_SoundStore.CloneSound("UIClick2");	// 메인 나갈 때
+	//m_SoundStore.CloneSound("UIClick2");	// 몬스터 경고 (몬스터 발견 했을 때?)
+	//m_SoundStore.CloneSound("UIClick2");	// 안내창 뜰 때
+	//m_SoundStore.CloneSound("UIClick2");	// 안내칭 끌 때
+	//m_SoundStore.CloneSound("UIClick2");	// art
+	//m_SoundStore.CloneSound("UIClick2");	// ctrl
+	//m_SoundStore.CloneSound("UIClick2");	// x
+	//m_SoundStore.CloneSound("UIClick2");	// 마우스 클릭?
+	//m_SoundStore.CloneSound("UIClick2");	// 튜토리얼 켤 때
+	//m_SoundStore.CloneSound("UIClick2");	// 튜토리얼 끌 때
+	//m_SoundStore.CloneSound("UIClick2");	// Tip 뜰 때
+	//m_SoundStore.CloneSound("UIClick2");	// 불가능한 클릭
+	//m_SoundStore.CloneSound("UIClick2");	// 레벨 업 할 때
+	//m_SoundStore.CloneSound("UIClick2");	// 장비 장착할 때
+
 }
 
 CCanvas * CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)
@@ -63,26 +88,29 @@ void CUI_Manager::Add_WindowCanvas(const wstring& pCanvasTag, CCanvas* pCanvas)
 
 void CUI_Manager::Set_TempOff(const _bool bOff)
 {
-	for (map<wstring, CCanvas*>::iterator iter = m_mapMoveCanvass.begin(); iter != m_mapMoveCanvass.end(); ++iter)
-		iter->second->TempOff(bOff);
+	for (auto& itr : m_mapMoveCanvass)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(itr.second))
+			itr.second->TempOff(bOff);
+	}
 
-	for (map<wstring, CCanvas*>::iterator iter = m_mapCanvass.begin(); iter != m_mapCanvass.end(); ++iter)
-		iter->second->TempOff(bOff);
+	for (auto& itr : m_mapCanvass)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(itr.second))
+			itr.second->TempOff(bOff);
+	}
 }
 
 void CUI_Manager::Clear()
 {
-	// for (auto& Pair : m_mapMoveCanvass)
-		// Safe_Release(Pair.second);
-	m_mapMoveCanvass.clear();
-
-	// for (auto& Pair : m_mapCanvass)
-		// Safe_Release(Pair.second);
 	m_mapCanvass.clear();
-	
-	// for (auto& Pair : m_mapWindowCanvass)
-		// Safe_Release(Pair.second);
+	m_mapMoveCanvass.clear();
 	m_mapWindowCanvass.clear();
+}
+
+void CUI_Manager::PlaySound(const string& SoundName)
+{
+	m_SoundStore.PlaySound(SoundName);
 }
 
 void CUI_Manager::Free()

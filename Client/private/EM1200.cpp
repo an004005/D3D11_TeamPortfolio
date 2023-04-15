@@ -119,8 +119,13 @@ void CEM1200::SetUpSound()
 	m_SoundStore.CloneSound("crawl_attack_tenta_charging_loop");
 	m_SoundStore.CloneSound("crawl_attack_tenta_up");
 	m_SoundStore.CloneSound("crawl_move_groggy");
+	m_SoundStore.CloneSound("crawl_move_rush_ground");
+	m_SoundStore.CloneSound("crawl_move_rush_voice");
 
-	m_pModelCom->Add_EventCaller("crawl_move_groggy", [this] {m_SoundStore.PlaySound("crawl_move_groggy"); });
+	m_pModelCom->Add_EventCaller("crawl_move_groggy", [this] {m_SoundStore.PlaySound("crawl_move_groggy", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("crawl_attack_scream", [this] {m_SoundStore.PlaySound("crawl_attack_scream", m_pTransformCom); });
+	m_pModelCom->Add_EventCaller("crawl_attack_shout", [this] {m_SoundStore.PlaySound("crawl_attack_shout", m_pTransformCom); });
+	
 }
 
 void CEM1200::SetUpAnimationEvent()
@@ -253,6 +258,9 @@ void CEM1200::SetUpAnimationEvent()
 
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1200_Stamp_Distortion")
 				->Start_Attach(this, "Target", false, true);
+
+
+			m_SoundStore.PlaySound("crawl_move_rush_ground", m_pTransformCom);
 	});
 
 	m_pModelCom->Add_EventCaller("Shout2_Start", [this]
@@ -523,8 +531,6 @@ void CEM1200::SetUpMainFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_205_AL_atk_a2_shout1_start");
-					m_SoundStore.PlaySound("crawl_attack_scream", m_pTransformCom);
-
 				})
 				.Tick([this](_double)
 				{
@@ -600,7 +606,6 @@ void CEM1200::SetUpMainFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_224_AL_atk_a8_shout2_start");
-					m_SoundStore.PlaySound("crawl_attack_shout", m_pTransformCom);
 
 					ClearDamagedTarget();
 				})
@@ -810,6 +815,7 @@ void CEM1200::SetUpMainFSM()
 				.OnStart([this]
 				{
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_210_AL_atk_a3_tackle2_start");
+					m_SoundStore.PlaySound("crawl_move_rush_voice", m_pTransformCom);
 				})
 				.Tick([this](_double TimeDelta)
 				{

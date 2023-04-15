@@ -35,11 +35,15 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	// 	return E_FAIL;
 
-	CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+
+	// _matrix matTarget = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, 0.f, 0.f);
+	// CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
+	// 	->GetTransform()->Set_WorldMatrix(matTarget);
+
+	// Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 0.f, 0.f, 1.f));
 
 	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
@@ -55,12 +59,12 @@ HRESULT CLevel_FinalStage::Initialize()
 	// 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 	// }
 
-	Json PreviewData;
-	{
-		PreviewData["Model"] = "Prototype_Model_em8200";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
-		auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
-	}
+	// Json PreviewData;
+	// {
+	// 	PreviewData["Model"] = "Prototype_Model_em8200";
+	// 	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+	// 	auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
+	// }
 
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
@@ -75,6 +79,10 @@ HRESULT CLevel_FinalStage::Initialize()
 	/////////////////////////////////
 	// 투명 벽 생성 코드 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/InvisibleWall_NotVisible.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/WaterFall.json");
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/PlayerStartPos.json");
+
 	for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapDecorate")->GetGameObjects())
 	{
 		if (iter->GetPrototypeTag() == L"Prototype_InvisibleWall")
@@ -93,6 +101,7 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
+	CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
 	return S_OK;
 }
 

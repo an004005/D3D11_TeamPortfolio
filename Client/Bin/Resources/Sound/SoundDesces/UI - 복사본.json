@@ -1,0 +1,82 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "MainClick",
+            "SoundFiles": [
+                "UI/UI_click_elements.1.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "UnableClick",
+            "SoundFiles": [
+                "UI/UI_click_elements_unable.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "PartyClick",
+            "SoundFiles": [
+                "UI/UI_click_party.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "DangerLong",
+            "SoundFiles": [
+                "UI/UI_fx_danger_long.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "DangerShort",
+            "SoundFiles": [
+                "UI/UI_fx_danger_short.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "ItemSwitch",
+            "SoundFiles": [
+                "UI/UI_item_switch.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "ItemUnable",
+            "SoundFiles": [
+                "UI/UI_item_unable.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+    ]
+}

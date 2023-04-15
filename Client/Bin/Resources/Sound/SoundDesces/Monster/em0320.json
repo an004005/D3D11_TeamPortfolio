@@ -1,0 +1,59 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "boss1_attack_cannon",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_cannon.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "boss1_attack_dive",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_dive.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 25.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "boss1_attack_hook",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_hook_1.wav",
+                "Monsters/em0320/boss1_attack_hook_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "boss1_attack_spin",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_spin.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "boss1_move",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_move_1.wav",
+                "Monsters/em0320/boss1_move_2.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        }
+        
+     
+    ]
+}

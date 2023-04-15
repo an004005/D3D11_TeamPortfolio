@@ -59,7 +59,7 @@ HRESULT CCanvas_ItemWindow::Render()
 		return E_FAIL;
 
 	_float2 vFontSize = { 0.45f, 0.45f };
-	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	pair<wstring, CItem_Manager::ITEMINFO> ItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
 
@@ -77,7 +77,7 @@ HRESULT CCanvas_ItemWindow::Render()
 	else
 	{
 		fMinusPosition = 0.0f;
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	}
 	
 	_tchar szText[MAX_PATH] = TEXT("");
