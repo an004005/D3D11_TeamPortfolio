@@ -53,8 +53,8 @@ void CEnvironmentEffect::Imgui_RenderProperty()
 		"EndingCredit_Kibum",
 		"EndingCredit_Suhyun",
 		"EndingCredit_Team",
-		"EndingCredit_Pic_RedRect"
-
+		"EndingCredit_Pic_RedRect",
+		"EndingCredit_Sound"
     };
     if (ImGui::BeginCombo("Env Effect Seletor", EnvEffectTypeNames[m_eType]))
     {
@@ -147,6 +147,11 @@ void CEnvironmentEffect::SpawnEffect()
 		break;
 	case EndingCredit_Pic_RedRect:
 		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Pic_RedRect");
+		m_pEffectGroup->Start_NoAttach(this, true);
+		Safe_AddRef(m_pEffectGroup);
+		break;
+	case EndingCredit_Sound:
+		m_pEffectGroup = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_ENVIRENMENT, L"EndingCredit_Sound");
 		m_pEffectGroup->Start_NoAttach(this, true);
 		Safe_AddRef(m_pEffectGroup);
 		break;

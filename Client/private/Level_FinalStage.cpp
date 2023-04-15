@@ -26,7 +26,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 // m_bPlayerSpawn = false;
+	 m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
@@ -101,7 +101,7 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+	//CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
 	return S_OK;
 }
 
@@ -128,6 +128,8 @@ void CLevel_FinalStage::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	// CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+
+	
 }	
 
 CLevel_FinalStage * CLevel_FinalStage::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
