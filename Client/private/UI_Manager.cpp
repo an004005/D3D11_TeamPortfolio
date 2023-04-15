@@ -108,6 +108,7 @@ void CUI_Manager::Clear()
 
 void CUI_Manager::PlaySound(const string& SoundName)
 {
+	m_SoundStore.StopAll();
 	m_SoundStore.PlaySound(SoundName);
 }
 

@@ -1545,6 +1545,7 @@ void CCanvas_BrainMap::OnIcon_Tick()
 				m_iCurrentIndex = i;
 				Find_ChildUI(L"Icon_Pick")->Set_Position(m_vecIconUI[i]->Get_Position());
 				m_CurrentBrainInfo = m_vecIconUI[i]->Get_BrainInfo();
+				
 			}
 		}
 
@@ -1576,6 +1577,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 	// 현재 플레이어가 가지고 있는 BP를 확인해서 Icon 의 BP 보다 큰 경우에만 구매할 수 있다.
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[iIndex]->Get_BrainInfo().iBP)
 	{			
+
 		// 게이지가 가득 차야 아이템을 구매할 수 있다.
 		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Set_ChargeGauge(true);
 		dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_1"))->Set_ChargeGauge(true);
@@ -1584,6 +1586,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 		if (true == dynamic_cast<CMain_BrainGaugeUI*>(Find_ChildUI(L"IconGauge_0"))->Get_GaugeFull())
 		{
+			
 			m_bSkillAcquisition = true;
 			m_szAlarmText = L"BP를 소모했습니다.";
 			m_vecIconUI[iIndex]->Set_BrainUse();
@@ -1614,7 +1617,8 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 				m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
 			}
-			CUI_Manager::GetInstance()->PlaySound("MainClick");
+
+			CUI_Manager::GetInstance()->PlaySound("Upgrade");
 			return;
 		}
 	}

@@ -38,36 +38,25 @@ void CMonsterLockonUI::BeginTick()
 
 	//여기서 메니저 그룹에 내 이펙트를 넣어줌.
 	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", PLAYERTEST_LAYER_FRONTUI);
-	//m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", PLAYERTEST_LAYER_FRONTUI);
+	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", PLAYERTEST_LAYER_FRONTUI);
 
 	Safe_AddRef(m_pTargetGroup);
-	//Safe_AddRef(m_pTargetRhombusGroup);
+	Safe_AddRef(m_pTargetRhombusGroup);
 
 	Assert(m_pTargetGroup != nullptr);
-	//Assert(m_pTargetRhombusGroup != nullptr);
+	Assert(m_pTargetRhombusGroup != nullptr);
 
 	//TimeLine 끝나고 유지 : 2
 	m_pTargetGroup->Start_Attach(m_pOwner, m_strBoneName, true, true);
 
 	//TimeLine 끝나고 삭제 : 4
-	//m_pTargetRhombusGroup->Start_AttachPivot(m_pOwner, m_UI_PivotMatrix, "Target", true, true, true);
+	m_pTargetRhombusGroup->Start_Attach(m_pOwner, "Target", true, true);
 }
 
 void CMonsterLockonUI::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
-	// if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pOwner)
-	// 	&& CGameInstance::GetInstance()->Check_ObjectAlive(m_pTargetGroup))
-	// {
-	// 	_matrix	SocketMatrix = m_pOwner->GetBoneMatrix("Target") * m_pOwner->GetTransform()->Get_WorldMatrix();
-	//
-	// 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
-	// 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
-	// 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
-	//
-	// 	m_pTargetGroup->Set_Transform(SocketMatrix);
-	// }
 }
 
 void CMonsterLockonUI::Imgui_RenderProperty()
@@ -115,12 +104,12 @@ void CMonsterLockonUI::Free()
 			m_pTargetGroup = nullptr;
 		}
 
-		/*if (m_pTargetRhombusGroup != nullptr)
+		if (m_pTargetRhombusGroup != nullptr)
 		{
 			m_pTargetRhombusGroup->SetDelete();
 			Safe_Release(m_pTargetRhombusGroup);
 			m_pTargetRhombusGroup = nullptr;
-		}*/
+		}
 	}
 	
 }
