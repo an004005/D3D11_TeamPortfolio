@@ -1,0 +1,43 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "UI_monster_alert",
+            "SoundFiles" : ["UI/UI_monster_alert.wav"],
+            "2DSound" : true,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "UI_NoDamage",
+            "SoundFiles" : ["UI/UI_tip_popup.wav"],
+            "2DSound" : true,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "Break_Brain",
+            "SoundFiles" : ["Monsters/Break_Brain.mp3"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 10.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "Metal_Sound_Effect",
+            "SoundFiles" : [
+                "Impact/fx_impact_object_large_metalic.wav",
+                "Impact/fx_impact_object_small_metalic.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 10.0,
+            "MaxDistance" : 30.0
+        }
+    ]
+}

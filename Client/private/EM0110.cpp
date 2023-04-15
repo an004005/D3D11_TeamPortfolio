@@ -92,6 +92,7 @@ void CEM0110::SetUpSound()
 	m_SoundStore.CloneSound("horse_attack_spin");
 	m_SoundStore.CloneSound("horse_runs_bip");
 	m_SoundStore.CloneSound("horse_walks_bip");
+	m_SoundStore.CloneSound("Metal_Sound_Effect");
 
 	m_pModelCom->Add_EventCaller("horse_attack_fieldoil", [this] {m_SoundStore.PlaySound("horse_attack_fieldoil", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("horse_attack_rush", [this] {m_SoundStore.PlaySound("horse_attack_rush", m_pTransformCom); });
@@ -613,6 +614,7 @@ void CEM0110::CheckHP(DAMAGE_PARAM& tDamageParams)
 		//데미지 폰트 안띄우려고 
 		tDamageParams.iDamage = 1;
 
+		m_SoundStore.PlaySound("Metal_Sound_Effect", m_pTransformCom);
 		//hp가 0보다 작아지면 아머 삭제. 
 		if (m_iArmorHp <= 0)
 			m_bDestroyArmor = true;
