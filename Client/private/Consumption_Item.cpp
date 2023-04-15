@@ -454,10 +454,10 @@ void CConsumption_Item::Free()
 
     for (auto iter : m_vecModelType)
     {
-        Safe_Release(iter);       
+        Safe_Release(iter);
     }
     m_vecModelType.clear();
-
+    
     Safe_Release(m_pRenderer);
-    Safe_Release(m_pModel);
+    //Safe_Release(m_pModel);   
 }
