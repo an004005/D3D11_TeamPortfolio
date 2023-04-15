@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
+#include "SoundStore.h"
 
 BEGIN(Client)
 
@@ -46,7 +47,7 @@ private:
 
 	string m_strTargetBoneName = "Target";
 
-	
+	CSoundStore		m_SoundStore;
 public:
 	static CEMUI* Create(class CEnemy* pEnemy);
 	virtual void Free() override;

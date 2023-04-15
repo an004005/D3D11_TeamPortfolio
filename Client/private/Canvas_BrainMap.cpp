@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
 #include "UI_Manager.h"
+#include "Item_Manager.h"
 
 #include "Canvas_PlayerInfoMove.h"
 #include "DefaultUI.h"
@@ -42,6 +43,22 @@ HRESULT CCanvas_BrainMap::Initialize(void* pArg)
 	Link_Initialize();
 
 	m_arrCurrentHighLevel.fill(0);
+
+	for (size_t i = 0; i < m_vecIconUI.size(); i++)
+	{
+		if (true == CItem_Manager::GetInstance()->Get_Brain(i))
+		{
+			m_vecIconUI[i]->Set_BrainUse();
+
+			for (_int j = 0; j < 3; ++j)
+			{
+				if (-1 == m_vecIconUI[i]->Get_BrainInfo().arrNeighbor[j])
+					break;
+
+				m_vecIconUI[m_vecIconUI[i]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -110,12 +127,12 @@ HRESULT CCanvas_BrainMap::Render()
 	if (false == m_bSkillAcquisition)
 	{
 		m_iPriority = m_iStartPriority;
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	}
 	else
 	{
 		m_iPriority = 20;
-		vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SkillAcquisition"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("<%s>"), m_CurrentBrainInfo.szBrainName);
@@ -167,7 +184,7 @@ HRESULT CCanvas_BrainMap::Render()
 		{
 			// Icon 의 BP
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP >= m_vecIconUI[m_iCurrentIndex]->Get_BrainInfo().iBP)
-				vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+				vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 			else
 				vColor = { 0.488f, 0.427f, 0.384f, 1.0f };
 		}
@@ -1186,12 +1203,12 @@ void CCanvas_BrainMap::ChildUI_Intiialize()
 		{
 			CMain_OnMouseUI* pMouseUI = dynamic_cast<CMain_OnMouseUI*>((*iter).second);
 			pMouseUI->Set_BrainInfo(m_vecBrain[m_iIconCount]);
-			
+
 			if(0 == m_vecBrain[m_iIconCount].iLevel)
 				pMouseUI->Set_IconIndex(m_vecBrain[m_iIconCount].vOnIconIndex);
 			else
 				pMouseUI->Set_IconIndex(m_vecBrain[m_iIconCount].vOffIconIndex);
-
+			
 			m_vecIconUI.push_back(pMouseUI);
 
 			++m_iIconCount;
@@ -1569,16 +1586,24 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 			m_bSkillAcquisition = true;
 			m_szAlarmText = L"BP를 소모했습니다.";
 			m_vecIconUI[iIndex]->Set_BrainUse();
+			CItem_Manager::GetInstance()->Set_Brain(iIndex);
 
 			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
 			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
 
-			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가
+			// 다 찍는데 206 필요 (새로 찍어야 하는 BP 는 25 필요)
+			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가 5, 5
 			{
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy += 50;
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
 				dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
 			}
+			else if (iIndex == 35)	// 공중 추가 공격 5 
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_KINETIC_COMBO_4] = true;
+			else if (iIndex == 36)	// 추가 공격 확장 2 6 
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_KINETIC_COMBO_AIR] = true;
+			else if (iIndex == 53) // 데미지 경감 4
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainMap[BRAINMAP_BRAINFIELD_HARDBODY] = true;
 
 			// 레벨에 따른 아이콘 구매할 수 있는 정도
 			for (_int j = 0; j < 3; ++j)

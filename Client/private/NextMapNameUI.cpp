@@ -56,8 +56,6 @@ void CNextMapNameUI::Tick(_double TimeDelta)
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_TUTORIAL,
 				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(0);
 		}
 		else if (m_wsNextRoomName == L"½º¿À-·ù½Å±¸")
 		{
@@ -79,40 +77,30 @@ void CNextMapNameUI::Tick(_double TimeDelta)
 					LEVEL_DOWNTOWN_3,
 					CLevel_Loading_Simple::Create<CLevel_DownTown_Third>(m_pDevice, m_pContext));
 			}
-
-			CGameManager::GetInstance()->Set_Map(1);
 		}
 		else if (m_wsNextRoomName == L"Å°ÄíÄ¡¹Ù 3Ãþ")
 		{
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_CONSTRUCTIONSITE_3F,
 				CLevel_Loading_Simple::Create<CLevel_ConstructionSite3F>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(2);
 		}
 		else if (m_wsNextRoomName == L"Å°ÄíÄ¡¹Ù 2Ãþ")
 		{
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_CONSTRUCTIONSITE_2F,
 				CLevel_Loading_Simple::Create<CLevel_ConstructionSite2F>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(3);
 		}
 		else if (m_wsNextRoomName == L"ÆóÁöÇÏ¼±·Î ½º¿À 9È£¼±")
 		{
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_SUBWAY,
 				CLevel_Loading_Simple::Create<CLevel_Subway>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(4);
 		}
 		else if (m_wsNextRoomName == L"±¸ Åä¹ú±ºº´¿ø")
 		{
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_HOSPITAL_1F,
 				CLevel_Loading_Simple::Create<CLevel_Hospital_1F>(m_pDevice, m_pContext));
-
-			CGameManager::GetInstance()->Set_Map(5);
 		}
 
 		CGameObject::SetDelete();

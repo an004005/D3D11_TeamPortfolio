@@ -8504,7 +8504,12 @@
         "Duration": 140.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "crawl_attack_scream",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_em1200_206_AL_atk_a2_shout1_loop": {
         "Duration": 60.0,
@@ -8529,7 +8534,7 @@
             },
             {
                 "EventName": "Rush_End",
-                "EventTime": 80.0
+                "EventTime": 77.0
             }
         ]
     },
@@ -8601,6 +8606,10 @@
             {
                 "EventName": "Shout2_Start",
                 "EventTime": 240.0
+            },
+            {
+                "EventName": "crawl_attack_shout",
+                "EventTime": 85.0
             }
         ]
     },

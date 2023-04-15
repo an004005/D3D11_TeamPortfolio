@@ -1,0 +1,54 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "santa_doubleswing",
+            "SoundFiles" : ["Monsters/em0900/santa_doubleswing.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "santa_fx_death",
+            "SoundFiles" : ["Monsters/em0900/santa_fx_death.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "santa_hit_voice_1",
+            "SoundFiles" : [
+                "Monsters/em0900/santa_hit_voice_1.wav",
+                "Monsters/em0900/santa_hit_voice_2.wav",
+                "Monsters/em0900/santa_hit_voice_3.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "santa_spin",
+            "SoundFiles" : ["Monsters/em0900/santa_spin.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "santa_throw_voice",
+            "SoundFiles" : ["Monsters/em0900/santa_throw_voice.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        }
+
+    ]
+}

@@ -169,8 +169,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_Sound()))
 		return E_FAIL;
 
-	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
-		return E_FAIL;
+	//if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
+	//	return E_FAIL;
 
 	if (FAILED(SetUp_TrainStateMachine()))
 		return E_FAIL;
@@ -6015,6 +6015,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("fx_plyr_hit_metalic");		// 중피격
 	m_SoundStore.CloneSound("fx_impact_player_hit_3");	// 강피격
 
+	//MonsterUI
+	m_SoundStore.CloneSound("UI_monster_alert");
+
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
 	m_pModel->Add_EventCaller("attack_nor_3", [this] {Event_EffectSound("attack_nor_3"); });
@@ -11429,7 +11432,7 @@ void CPlayer::Update_TargetUI()
 {
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
 
-	if (pTarget != nullptr && (pTarget->Exclude() == true || m_bBrainCrash))
+	if (pTarget != nullptr && (pTarget->Exclude() || m_bBrainCrash))
 		pTarget = nullptr;
 
 	if (m_pSettedTarget != pTarget)
@@ -11437,13 +11440,15 @@ void CPlayer::Update_TargetUI()
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 		//원래 타겟이 없다가 생긴 경우
-		if (m_pSettedTarget == nullptr && pTarget != nullptr)
+		if (m_pSettedTarget == nullptr && pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
 			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
+
+			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 
 		//원래 타겟이 있었는데 사라진 경우
@@ -11452,7 +11457,7 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->SetDelete();
 		}
 
-		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
+		else if (m_pSettedTarget != nullptr && pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
 
@@ -11461,62 +11466,18 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->Set_Owner(pTarget);
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
 			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
+
+			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 
 		//info bar 설정
-		if (pTarget != nullptr)
+		if (pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 			pTarget->GetEnemyUI()->Create_UIInfo();
-
-		//Create_TargetInfoBar(pTarget);
 
 		m_pSettedTarget = pTarget;
 	}
 
 }
-
-//void CPlayer::Create_TargetInfoBar(CGameObject* pTarget)
-//{
-//	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-//
-//	CEnemy* pEnemy = dynamic_cast<CEnemy*>(pTarget);
-//	if (pEnemy == nullptr) return;
-//	
-//	if (pEnemy->GetHasName() == true)
-//		return;
-//
-//	if (pEnemy->HasCrushGauge() == true)
-//	{
-//		CMonsterShildUI* pUI_Shild = nullptr;
-//		pUI_Shild = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterShield")));
-//
-//		assert(pUI_Shild != nullptr);
-//		pUI_Shild->Set_Owner(pTarget);
-//
-//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
-//		pUI_Shild->SetPivotMatrix(PivotMatrix);
-//
-//		_int iLevel = pEnemy->Get_EnemyLevel();
-//		_int iName = pEnemy->Get_EnemyName();
-//		pUI_Shild->Set_MonsterInfo(iLevel, iName);
-//	}
-//	else
-//	{
-//		CMonsterHpUI* pUI_HP = nullptr;
-//		pUI_HP = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterHP")));
-//
-//		assert(pUI_HP != nullptr);
-//		pUI_HP->Set_Owner(pTarget);
-//
-//		_float4x4 PivotMatrix = pEnemy->Get_UIPivotMatrix(ENEMY_INFOBAR);
-//		pUI_HP->SetPivotMatrix(PivotMatrix);
-//
-//		_int iLevel = pEnemy->Get_EnemyLevel();
-//		_int iName = pEnemy->Get_EnemyName();
-//		pUI_HP->Set_MonsterInfo(iLevel, iName);
-//	}
-//	
-//	pEnemy->Set_HasName();
-//}
 
 void CPlayer::NetualChecker(_double TimeDelta)
 {

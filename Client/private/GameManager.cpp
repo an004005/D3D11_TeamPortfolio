@@ -7,6 +7,7 @@
 #include "Canvas_LeftTalk.h"
 #include "Canvas_Quest.h"
 #include "DistanceUI.h"
+#include "Canvas_Alarm.h"
 
 CGameManager* CGameManager::s_GameManager = nullptr;
 
@@ -52,14 +53,53 @@ HRESULT CGameManager::Initialize()
 	m_pCanvas_LeftTalk = dynamic_cast<CCanvas_LeftTalk*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_LeftTalk", &json));
 	assert(m_pCanvas_LeftTalk != nullptr && "Failed to Clone : Canvas_LeftTalk");
 
-	arrMap.fill(false);
-	arrMap[0] = true;
-	
+	if (LEVEL_NOW == LEVEL_DOWNTOWN_1)
+	{
+		// 맵 이름
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
+		pCanvas_Alarm->Set_MapName(0.0f);
+	}
+	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+		CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+		assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+		pCanvas_Quest->Add_Quest(4, false);
+
+		// 맵 이름
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
+		pCanvas_Alarm->Set_MapName(3.0f);
+	}
+	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+		CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+		assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+		pCanvas_Quest->Add_Quest(2, false);
+	}
+	else if (LEVEL_NOW == LEVEL_SUBWAY)
+	{
+		// 맵 이름
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
+		pCanvas_Alarm->Set_MapName(1.0f);
+	}
+	else if (LEVEL_NOW == LEVEL_HOSPITAL_1F)
+	{
+		// 맵 이름
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
+		pCanvas_Alarm->Set_MapName(2.0f);
+	}
+
 	return S_OK;
 }
 
 void CGameManager::Tick(_double TimeDelta)
 {
+
 
 }
 
@@ -69,16 +109,30 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 	{
 		m_pCanvas_Acquisition->Set_EnemyUI(tReport.eName, tReport.eStat.iLevel);
 
-		if (false == m_bEM0320Dead)
+		//if (false == m_bEM0320Dead)
+		//{
+		//	if (tReport.eName == EEnemyName::EM0320)
+		//	{
+		//		// 공사장에서 경견페리 죽었을 때
+		//		m_bEM0320Dead = true;
+		//		
+		//		CGameManager::GetInstance()->Set_LeftTalk(7);
+		//		CGameManager::GetInstance()->Set_LeftTalk(8);
+		//		CGameManager::GetInstance()->Set_LeftTalk(9);
+		//	}
+		//}
+
+		if (false == m_bEM1200Dead)
 		{
-			if (tReport.eName == EEnemyName::EM0320)
+			if (tReport.eName == EEnemyName::EM1100)
 			{
-				// 공사장에서 경견페리 죽었을 때
-				m_bEM0320Dead = true;
-				
-				CGameManager::GetInstance()->Set_LeftTalk(7);
-				CGameManager::GetInstance()->Set_LeftTalk(8);
-				CGameManager::GetInstance()->Set_LeftTalk(9);
+				// 병원에서 물보스를 죽였을 때
+				m_bEM1200Dead = true;
+
+				CGameManager::GetInstance()->Set_LeftTalk(32);
+				CGameManager::GetInstance()->Set_LeftTalk(35);
+				CGameManager::GetInstance()->Set_LeftTalk(36);
+				CGameManager::GetInstance()->Set_LeftTalk(37);
 			}
 		}
 	}

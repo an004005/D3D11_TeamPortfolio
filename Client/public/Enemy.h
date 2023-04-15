@@ -173,7 +173,7 @@ protected:
 	//
 
 	_float m_fFireResist = 0.6f; // 높을 수록 안걸림
-	_float m_fThunderResist = 0.6f; // 높을 수록 안걸림
+	_float m_fThunderResist = 0.8f; // 높을 수록 안걸림
 	CCoolTimeHelper m_FireTick;
 
 	string m_strImpactTag = "fx_impact_flesh";

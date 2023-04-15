@@ -37,6 +37,7 @@ private:
 	_double	m_dTalk_TimeAcc = { 3.0 };
 
 	_int		m_iQuestNum = { -1 };
+	_int		m_iMapMove = { -1 };
 
 public:
 	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
