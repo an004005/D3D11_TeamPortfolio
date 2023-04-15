@@ -1264,16 +1264,16 @@ void CPlayerHotFixer::Player_Something_Update()
 	_float4x4	NoticeNeonPivot = XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.1f, 0.f, 0.f);
 	
 	/*if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pPlayer->m_pCautionNeon.first))*/
-	if (m_pPlayer->m_pCautionNeon.first != nullptr)
+	if (m_pPlayer->m_pCautionNeon != nullptr)
 	{
-		m_pPlayer->m_pCautionNeon.first->SetDelete();
-		m_pPlayer->m_pCautionNeon.first = nullptr;
+		m_pPlayer->m_pCautionNeon->SetDelete();
+		m_pPlayer->m_pCautionNeon = nullptr;
 	}
 
-	if (m_pPlayer->m_pCautionNeon.first == nullptr)
+	if (m_pPlayer->m_pCautionNeon == nullptr)
 	{
-		m_pPlayer->m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
-		m_pPlayer->m_pCautionNeon.first->Start_AttachPivot(m_pPlayer, NoticeNeonPivot, "String2", true, true);
+		m_pPlayer->m_pCautionNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
+		m_pPlayer->m_pCautionNeon->Start_AttachPivot(m_pPlayer, NoticeNeonPivot, "String2", true, true);
 	}
 }
 

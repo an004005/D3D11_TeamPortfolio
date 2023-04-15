@@ -33,8 +33,7 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams);
-	virtual void PlayBC() override;
-
+	
 
 public:
 	//행동 관련 함수 정의
@@ -46,7 +45,6 @@ public:
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
 	void HitWeakProcess(_double TimeDelta);
-	_bool CanMove4BC(_float fMinDist);
 	_bool PriorityCondition();
 private:
 	//충돌 관련 함수 정의
@@ -91,7 +89,6 @@ private:
 
 	//Brain Crush
 	_double		m_BCLoopTime = 0.0;
-	_bool		m_CanFullBC = false;
 
 public:
 	static CEM0900* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

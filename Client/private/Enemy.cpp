@@ -252,7 +252,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		return;
 
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
-	Assert(tDamageParams.iDamage > 0);
+	//Assert(tDamageParams.iDamage > 0);
 
 	Assert(tDamageParams.iDamage < 20000);
 	// ex) 데미지 100 => 90 ~ 110 랜덤으로 변경

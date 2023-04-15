@@ -357,7 +357,8 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Rush_Start to Idle", "Idle")
 				.Predicator([this]
 				{
-					return PriorityCondition() || (m_eCurAttackType != EAttackType::ATK_LIGHT && m_eCurAttackType != EAttackType::ATK_END);
+						return PriorityCondition()
+							|| HitHeavyCondition();
 				})
 
 		.AddState("Rush_Loop")
@@ -390,7 +391,9 @@ void CEM0750::SetUpFSM()
 			.AddTransition("Rush_Loop to Rush_End", "Rush_End")
 				.Predicator([this]
 				{
-					return PriorityCondition() || m_fRushTime <= 0.f;
+					return PriorityCondition() 
+						|| HitHeavyCondition()
+						|| m_fRushTime <= 0.f;
 				})
 
 		.AddState("Rush_End")
@@ -539,6 +542,11 @@ _bool CEM0750::PriorityCondition()
 {
 	return  m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
 
+}
+
+_bool CEM0750::HitHeavyCondition()
+{
+	return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP || m_eCurAttackType == EAttackType::ATK_SPECIAL_END || m_eCurAttackType == EAttackType::ATK_TO_AIR;
 }
 
 void CEM0750::Rush_StaticCheckSweep()

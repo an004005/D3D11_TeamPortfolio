@@ -59,7 +59,7 @@ private:
 	class CEM0220_Controller*		m_pController = nullptr;
 	class CEM0220_AnimInstance*		m_pASM = nullptr;
 	CMaterial* m_pWeak = nullptr;
-
+	class CEMBrain* m_pBrain = nullptr;
 	vector<class CEM0221*>	m_pLanterns;
 private:
 	//원시 데이터
@@ -80,6 +80,8 @@ private:
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
+	//BC
+	_double		m_BCLoopTime = 0.0;
 public:
 	static CEM0220* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

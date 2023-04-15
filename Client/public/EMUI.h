@@ -34,10 +34,10 @@ private:
 	class CCanvas_BossHpMove* m_BossHp = nullptr;
 	class CEffectGroup* m_pCGEffect = nullptr;
 
+	class CEffectGroup*	 m_pNoticeNeon = nullptr;
 	string m_strWeakBoneName = "Weak01";
 	string m_strShieldUIPivotBoneName = "Target";
 
-	pair<class CEffectGroup*, class CParticleGroup*> m_pNoticNeon = { nullptr ,nullptr };
 	
 public:
 	static CEMUI* Create(class CEnemy* pEnemy);

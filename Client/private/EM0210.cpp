@@ -59,6 +59,10 @@ HRESULT CEM0210::Initialize(void * pArg)
 	//시작부터 투명상태 적용
 	m_IsInvisible = true;
 
+	//브레인 생성
+	m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Brain"), TEXT("Prototype_EMBrain")));
+	assert(m_pBrain != nullptr);
+
 	return S_OK;
 }
 
@@ -447,9 +451,7 @@ void CEM0210::SetUpFSM()
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
 				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
 
-				//브레인 생성
-				m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_EnemyBrain"), TEXT("Prototype_EMBrain")));
-
+				m_pBrain->InitBC();
 				m_BCLoopTime = 0.0;
 			})
 			.Tick([this](_double TimeDelta)
@@ -510,7 +512,7 @@ void CEM0210::SetUpFSM()
 						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
 
 						//const _float fPlayRatio = m_CanFullBC ? 0.8f : 0.2f;
-						const _float fPlayRatio = m_CanFullBC ? 0.7f : 0.55f;
+						const _float fPlayRatio = m_CanFullBC ? 0.7f : 0.5f;
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{
@@ -603,7 +605,9 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Spin to Idle", "Idle")
 				.Predicator([this]
 				{
-					return PriorityCondition() ||  m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return PriorityCondition() 
+						|| HitHeavyCondition()
+						|| m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Attack_Somersault")
@@ -620,7 +624,9 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Attack_Somersault to Idle", "Idle")
 				.Predicator([this]
 			{
-				return  PriorityCondition() || m_eCurAttackType == EAttackType::ATK_TO_AIR || m_pASM->isSocketPassby("FullBody", 0.95f);
+				return  PriorityCondition()
+					|| HitHeavyCondition()
+					|| m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -724,6 +730,7 @@ void CEM0210::Late_Tick(_double TimeDelta)
 	}
 	else
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
+
 }
 
 
@@ -979,6 +986,11 @@ void CEM0210::HeavyAttackPushStart()
 _bool CEM0210::PriorityCondition()
 {
 	return m_bCrushStart || m_bDead || m_bDownFirstHit || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
+}
+
+_bool CEM0210::HitHeavyCondition()
+{
+	return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP || m_eCurAttackType == EAttackType::ATK_SPECIAL_END || m_eCurAttackType == EAttackType::ATK_TO_AIR;
 }
 
 

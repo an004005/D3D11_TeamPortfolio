@@ -11,6 +11,7 @@
 #include "ImguiUtils.h"
 #include "BulletBuilder.h"
 #include "Material.h"
+#include "EMBrain.h"
 
 CEM0220::CEM0220(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -56,6 +57,10 @@ HRESULT CEM0220::Initialize(void * pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(220.f));
 
 	SetUp_Lantern();
+
+	//브레인 생성
+	m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Brain"), TEXT("Prototype_EMBrain")));
+	assert(m_pBrain != nullptr);
 
 	return S_OK;
 }
@@ -199,22 +204,60 @@ void CEM0220::SetUpFSM()
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_486_AL_BCchance_loop");
 				m_pModelCom->Find_Animation("AS_em0200_486_AL_BCchance_loop")->SetLooping(true);
+
+				m_pBrain->InitBC();
+				m_BCLoopTime = 0.0;
 			})
+			.Tick([this](_double TimeDelta)
+			{
+				_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+				m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+				m_BCLoopTime += TimeDelta;
+			})
+			.AddTransition("BrainCrushLoop to BrainCrushLoopDead", "BrainCrushLoopDead")
+				.Predicator([this]
+				{
+					//브레인 크러쉬를 하지 않았을때는 부모쪽에서 3초 안에 죽임
+					return m_BCLoopTime >= 5.0;
+				})
+
 			.AddTransition("BrainCrushLoop to BrainCrushEnd", "BrainCrushEnd")
 				.Predicator([this]
 				{
 					return m_bBrainCrush;
 				})
 
+			.AddState("BrainCrushLoopDead")
+				.OnStart([this]
+				{
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+					m_pBrain->SetDelete();
+					SetDead();
+				})
+
 		.AddState("BrainCrushEnd")
 			.OnStart([this]
 			{
-				m_pASM->InputAnimSocketOne("FullBody", "AS_em0200_487_AL_BCchance_end");
+				m_pASM->InputAnimSocketOne("FullBody", "AS_BC_em_common_em0200");
+				m_pBrain->BeginBC();
 			})
 			.Tick([this](_double)
 			{
-				if (m_pASM->isSocketPassby("FullBody", 0.95f))
-					SetDead();
+					SocketLocalMove(m_pASM);
+
+					if (m_pBrain != nullptr)
+					{
+						_matrix WeakBoneMatrix = GetBoneMatrix("Weak01") * m_pTransformCom->Get_WorldMatrix();
+						m_pBrain->GetTransform()->Set_WorldMatrix(WeakBoneMatrix);
+
+						if (m_pASM->isSocketPassby("FullBody", 0.5f))
+						{
+							m_pBrain->EndBC();
+							m_pBrain->SetDelete();
+							m_pBrain = nullptr;
+							SetDead();
+						}
+					}
 			})
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -519,7 +562,7 @@ void CEM0220::Create_Bullet()
 
 
 	eDamageParam.eAttackType = EAttackType::ATK_END;
-	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_END;
+	eDamageParam.eDeBuff = EDeBuffType::DEBUFF_OIL;
 	eDamageParam.iDamage = 50;
 
 	_vector vBonePos = (m_pModelCom->GetBoneMatrix("Target") * m_pTransformCom->Get_WorldMatrix()).r[3];
