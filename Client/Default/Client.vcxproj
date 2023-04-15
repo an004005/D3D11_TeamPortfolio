@@ -529,6 +529,7 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="EM8200_BrainField.h" />
     <ClInclude Include="EnvironmentEffect.h" />
+    <ClInclude Include="PostVFX_Cinema.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -884,6 +885,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="EM8200_BrainField.cpp" />
     <ClCompile Include="EnvironmentEffect.cpp" />
+    <ClCompile Include="PostVFX_Cinema.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

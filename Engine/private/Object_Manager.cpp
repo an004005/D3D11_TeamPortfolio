@@ -448,6 +448,29 @@ void CObject_Manager::Add_InLayer(const _tchar * pLayerTag, CGameObject * pGameO
 	}
 }
 
+void CObject_Manager::Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGameObject* pGameObject)
+{
+	auto iter = Find_Layer(iLevelIndex, pLayerTag);
+
+	if (iter == nullptr)
+	{
+		CLayer* pLayer = nullptr;
+		pLayer = CLayer::Create();
+		Assert(pLayer != nullptr);
+
+		FAILED_CHECK(pLayer->Add_GameObject(pGameObject));
+
+		_tchar* pLayerTagCopy = new _tchar[lstrlen(pLayerTag) + 1];
+		lstrcpy(pLayerTagCopy, pLayerTag);
+
+		m_vecLayers[iLevelIndex].emplace(pLayerTagCopy, pLayer);
+	}
+	else
+	{
+		FAILED_CHECK(iter->Add_GameObject(pGameObject));
+	}
+}
+
 void CObject_Manager::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	auto iter = Find_Layer(LEVEL_NOW, pLayerTag);

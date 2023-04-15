@@ -135,6 +135,11 @@ CCamera* CCamera_Manager::Add_Camera(const string& strCamTag, _uint iLevelIdx, c
 	return pCamera;
 }
 
+void CCamera_Manager::DeleteCamera(const string& strCamTag)
+{
+	
+}
+
 void CCamera_Manager::SetMainCamera(const string& strCamTag)
 {
 	Assert(FindCamera(strCamTag) != nullptr);
@@ -299,6 +304,8 @@ void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
 
 void CCamera_Manager::ReleaseCameraFovCurve()
 {
+	if (nullptr == m_pFovCurve) return;
+
 	Safe_Release(m_pFovCurve);
 	m_pFovCurve = nullptr;
 	

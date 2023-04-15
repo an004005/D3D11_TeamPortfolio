@@ -3,6 +3,7 @@
 #include "ImguiObject.h"
 #include "ScarletCharacter.h"
 #include "HelperClasses.h"
+#include "SoundStore.h"
 
 BEGIN(Client)
 class CAI_CH0300_AnimInstance;
@@ -130,6 +131,10 @@ private:
 // 피타격 관련
 private:
 	_bool		m_bAttackEnable = false;
+
+// 사운드
+private:
+	CSoundStore	m_SoundStore;
 
 public:
 	static CAI_CH0300* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

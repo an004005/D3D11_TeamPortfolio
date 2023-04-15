@@ -811,6 +811,36 @@ PS_OUT PS_EM8200_BRAINFIELD_MAP_15(PS_IN In)
 	return Out;
 }
 
+
+PS_OUT PS_LOADING_16(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	float4 vFlag = g_FlagTexture.Sample(LinearSampler, In.vTexUV);
+	float4 vFlagNonAlpha = g_FlagTextureNonAlpha.Sample(LinearSampler, In.vTexUV);
+	
+
+	if (vFlagNonAlpha.z == SHADER_TOON_GRAY_INGNORE)
+	{
+		float fGrain = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)10.f, (float2)0.f));
+		Out.vColor.rgb = fGrain * float3(181.f/ 255.f, 173.f/ 255.f, 155.f/ 255.f);
+		
+	}
+	else if (vFlag.z == SHADER_TOON_GRAY_INGNORE)
+	{
+		Out.vColor.rgb = float3(1.f, 0.f, 0.f);
+	}
+	else
+	{
+		Out.vColor = 0.f;
+	}
+
+	Out.vColor.rgb = lerp(COL_BLACK, Out.vColor.rgb, g_float_0);
+
+	Out.vColor.a = 1.f;
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Default_Test
@@ -1032,5 +1062,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_EM8200_BRAINFIELD_MAP_15();
+	}
+
+	//16
+	pass Loading_16
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_ZEnable_ZWriteEnable_FALSE, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_LOADING_16();
 	}
 }
