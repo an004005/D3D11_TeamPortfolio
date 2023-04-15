@@ -219,6 +219,11 @@ void CEM8200_BrainField::CloseBrainField()
 	m_pBrainFieldRedString->SetVisible(false);
 }
 
+void CEM8200_BrainField::SetCableTP(_float fValue)
+{
+	m_pCables->SetCableTP(fValue);
+}
+
 void CEM8200_BrainField::Free()
 {
 	CGameObject::Free();
@@ -547,6 +552,18 @@ void CEM8200_BrainFieldCables::SetCableYellow(_float fValue)
 		for (auto pMtrl : m_CableModels[i]->GetMaterials())
 		{
 			pMtrl->GetParam().Ints[0] = (_int)fValue;
+		}
+	}
+}
+
+
+void CEM8200_BrainFieldCables::SetCableTP(_float fValue)
+{
+	for (int i = 0; i < CABLE_END; ++i)
+	{
+		for (auto pMtrl : m_CableModels[i]->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = fValue;
 		}
 	}
 }

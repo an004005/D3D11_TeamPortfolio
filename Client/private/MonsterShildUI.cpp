@@ -48,9 +48,10 @@ void CMonsterShildUI::BeginTick()
 	Assert(m_pGroup != nullptr);
 	Assert(m_pMonsterName != nullptr);
 
-	_float4x4	EyesPivot = XMMatrixTranslation(0.f, 0.5f, 0.f);
-	m_pGroup->Start_AttachPivot(m_pOwner, EyesPivot, m_strPivotBoneName, true, true);
-	m_pMonsterName->Start_AttachPivot(m_pOwner, EyesPivot, m_strPivotBoneName, true, true);
+
+	// _float4x4	EyesPivot = XMMatrixTranslation(0.f, 0.5f, 0.f);
+	m_pGroup->Start_AttachPivot(m_pOwner, m_Pivot, m_strPivotBoneName, true, true);
+	m_pMonsterName->Start_AttachPivot(m_pOwner, m_Pivot, m_strPivotBoneName, true, true);
 
 	m_pMonsterName->GetSecondEffect()->GetParams().Float2s[0] = { m_fMonsterLevel, m_fNameIndex };
 }

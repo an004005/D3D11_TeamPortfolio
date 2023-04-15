@@ -26,8 +26,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/BossBatch.json");
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/MonsterBatch_Test.json"); 기존 몬스터 배치 테스트
@@ -69,7 +69,10 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Item_Batch.json");
 	
 	// Flower Test
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/FlowerTest.json");
+	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/FlowerTest.json");
+
+	// RedString Batch 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/RedString_Batch.json");
 
 	// Story Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Hospital_1F.json");

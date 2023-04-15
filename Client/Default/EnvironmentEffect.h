@@ -29,6 +29,7 @@ private:
 
 public:
 	virtual HRESULT Initialize(void* pArg) override;
+	virtual void Tick(_double TimeDelta) override;
 	virtual void Imgui_RenderProperty() override;
 	virtual void SaveToJson(Json& json) override;
 	virtual void LoadFromJson(const Json& json) override;

@@ -20,6 +20,11 @@
 #include "PlayerInfoManager.h"
 #include "EM8200_CopyRush.h"
 #include "EM8200_BrainField.h"
+#include "EM8200_BrainCrushCables.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
+#include "BrainField.h"
+
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -52,7 +57,6 @@ HRESULT CEM8200::Initialize(void* pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM8200;
-	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
@@ -61,11 +65,17 @@ HRESULT CEM8200::Initialize(void* pArg)
 
 	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
 
-	m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("KarenAnimCamaera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+	m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("KarenAnimCamaera"));
+	if (m_pKaren_AnimCam == nullptr)
+		m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("KarenAnimCamaera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
 	Safe_AddRef(m_pKaren_AnimCam);
 
 	m_pEMUI->SetWeakBoneName("Spine1");
 
+	m_bSpawnEffect = false;
+
+	m_fFireResist = 1.f;
+	m_fThunderResist = 1.f;
 
 	return S_OK;
 }
@@ -75,6 +85,8 @@ void CEM8200::SetUpComponents(void* pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"Model", (CComponent**)&m_pModelCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"KineticModel", (CComponent**)&m_pKineticModel));
+
+	m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(false);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM8200_Controller::Create();
@@ -107,6 +119,14 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	_double TickPerSec = m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->GetTickPerSec();
 	m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->SetTickPerSec(TickPerSec * 2.0);
+
+	m_pBrainCrushCables = dynamic_cast<CEM8200_BrainCrushCables*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_BrainCrushCables"));
+	m_pBrainCrushCables->SetTargetInfo(m_pTransformCom, m_pModelCom);
+	
+	m_pBrainCrushRimLight = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_RimLight");
+	m_pBrainCrushChromaticAberration = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_ChromaticAberration");
+	m_pBrainCrushChromaticAberrationCrash = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_ChromaticAberration_Crash");
+	m_pChromaticAberration = dynamic_cast<CPostVFX_ChromaticAberration*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayerNoBegin(LEVEL_NOW, L"Prototype_PostVFX_ChromaticAberration"));
 }
 
 void CEM8200::Detected_Attack()
@@ -540,8 +560,11 @@ void CEM8200::Tick(_double TimeDelta)
 				pMtrl->GetParam().Floats[2] = fTPStartOut;
 			}
 			m_pKarenMaskEf->GetParams().Floats[1] = fTPStartOut;
+			if (m_pBrainField->IsOpen())
+			{
+				m_pBrainField->SetCableTP(fTPStartOut);
+			}
 		}
-
 	}
 
 	{
@@ -554,6 +577,10 @@ void CEM8200::Tick(_double TimeDelta)
 
 			}
 			m_pKarenMaskEf->GetParams().Floats[1] = fTPEndOut;
+			if (m_pBrainField->IsOpen())
+			{
+				m_pBrainField->SetCableTP(fTPEndOut);
+			}
 		}
 	}
 
@@ -620,6 +647,8 @@ void CEM8200::Tick(_double TimeDelta)
 	m_pLeftCopy->Tick(TimeDelta);
 	m_pRightCopy->Tick(TimeDelta);
 
+	m_pChromaticAberration->Tick(TimeDelta);
+
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -638,6 +667,9 @@ void CEM8200::Late_Tick(_double TimeDelta)
 
 	m_pBrainField->Tick(TimeDelta);
 	m_pBrainField->Late_Tick(TimeDelta);
+	m_pBrainCrushCables->Tick(TimeDelta);
+	m_pBrainCrushCables->Late_Tick(TimeDelta);
+	m_pChromaticAberration->Late_Tick(TimeDelta);
 }
 
 void CEM8200::AfterPhysX()
@@ -704,12 +736,27 @@ void CEM8200::Imgui_RenderProperty()
 	{
 		m_pBrainField->CloseBrainField();
 	}
+	if (ImGui::CollapsingHeader("BrainCrush"))
+	{
+		m_pBrainCrushCables->Imgui_RenderProperty();
+		m_pBrainCrushCables->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::CollapsingHeader("Chromatic"))
+	{
+		m_pChromaticAberration->Imgui_RenderProperty();
+		m_pChromaticAberration->Imgui_RenderComponentProperties();
+	}
 }
 
 void CEM8200::SetUpUI()
 {
 	__super::SetUpUI();
-	m_pEMUI->SetShieldUIPivotBoneName("Spine1");
+	m_pEMUI->SetShieldUIPivotBoneName("HairRoot");
+	m_pEMUI->SetShieldUIPivot(_float4x4::CreateTranslation({0.f, 0.4f, 0.f}));
+
+
+	m_pEMUI->SetTargetBone("HairRoot");
+	// m_pEMUI->Create_BossUI();
 }
 
 _bool CEM8200::IsPlayingSocket() const
@@ -738,6 +785,7 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				pMtrl->GetParam().Floats[2] = 0;
 			}
 		})
+
 	.AddTransition("Idle to BrainCrushReady", "BrainCrushReady")
 		.Predicator([this]
 		{
@@ -1928,6 +1976,11 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
+			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(true);
+			m_pModelCom->FindMaterial(L"MI_em8200_HAIR_0")->SetActive(false);
+
+
+
 			m_pBrainField->OpenBrainField();
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
 
@@ -1997,6 +2050,9 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			m_pBrainField->CloseBrainField();
 			m_pASM->InputAnimSocketOne("FullBody",  "AS_em8300_485_AL_BCchance_start");
+
+			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(false);
+			m_pModelCom->FindMaterial(L"MI_em8200_HAIR_0")->SetActive(true);
 		})
 		.AddTransition("BrainCrushReady to BrainCrushReadyLoop", "BrainCrushReadyLoop")
 			.Predicator([this]
@@ -2020,9 +2076,17 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_1")
 		.OnStart([this]
 		{
-			if (m_pTarget)
-				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+			// if (m_pTarget)
+				// m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+			_float fPlayRatio = m_pModelCom->Find_Animation("AS_EnpcBC_dam_c02_em8200")->GetPlayRatio(); 
+			_float fValue = m_pBrainCrushRimLight->GetValue(fPlayRatio);
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+				pMtrl->GetParam().Floats[0] = fValue;
+			
 		})
 		.AddTransition("BrainCrushStart_1 to BrainCrushStart_2", "BrainCrushStart_2")
 			.Predicator([this]
@@ -2033,7 +2097,12 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_2")
 		.OnStart([this]
 		{
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+			m_pBrainCrushCables->Activate(true);
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c03_em8200");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+
 		})
 		.AddTransition("BrainCrushStart_2 to BrainCrushStart_3", "BrainCrushStart_3")
 			.Predicator([this]
@@ -2044,12 +2113,21 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_3")
 		.OnStart([this]
 		{
-			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetDuration(100000.0);
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
+			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetStay(true);
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
 		})
-
-	
-
+		.Tick([this](_double TimeDelta)
+		{
+			_float fPlayRatio = m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->GetPlayRatio(); 
+			m_pChromaticAberration->GetParam().Floats[0] = m_pBrainCrushChromaticAberration->GetValue(fPlayRatio);;
+			m_pChromaticAberration->GetParam().Ints[0] = (_int)m_pBrainCrushChromaticAberrationCrash->GetValue(fPlayRatio);
+			if (fPlayRatio > 0.5f)
+			{
+				m_pBrainCrushCables->Activate(false);
+				for (auto pMtrl : m_pModelCom->GetMaterials())
+					pMtrl->GetParam().Floats[0] = 0.f;
+			}
+		})
 	;
 
 }
@@ -2232,5 +2310,6 @@ void CEM8200::Free()
 	Safe_Release(m_pRightCopy);
 
 	Safe_Release(m_pBrainField);
-
+	Safe_Release(m_pBrainCrushCables);
+	Safe_Release(m_pChromaticAberration);
 }
