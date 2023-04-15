@@ -24,6 +24,8 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "BrainField.h"
+#include "UI_Manager.h"
+#include "GameManager.h"
 #include "Canvas_MainTalk.h"
 #include "EnvironmentEffect.h"
 #include "TestTarget.h"
@@ -847,7 +849,7 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
 		.Predicator([this]
 		{
-			// return CGameInstance::GetInstance()->KeyDown(DIK_P);
+			 //return CGameInstance::GetInstance()->KeyDown(DIK_P);
 				return m_eInput == CController::CTRL;
 		})
 
@@ -2093,6 +2095,10 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 
 	.OnExit([this]
 	{
+			// UI 보이기
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(false);
+
 			m_pController->SetActive(true);
 	})
 		.AddTransition("ImCombatIdle to Idle", "Idle")
@@ -2295,6 +2301,11 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
 
 			// 루카 대사 
+			CGameManager::GetInstance()->Set_LeftTalk(104);
+			CGameManager::GetInstance()->Set_LeftTalk(105);
+			CGameManager::GetInstance()->Set_LeftTalk(106);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
 			})
 
 				

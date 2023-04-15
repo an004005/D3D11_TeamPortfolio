@@ -17,6 +17,8 @@
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
 #include "Camera_Player.h"
+
+
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -490,9 +492,15 @@ void CEM1200::SetUpMainFSM()
 
 		.AddState("Death")
 				.OnStart([this]
-				{
-					//이친구는 안죽음...
+				{		
 					//m_pASM->InputAnimSocketOne("FullBody", "AS_em0700_474_AL_dead_down02");
+
+					CGameManager::GetInstance()->Set_LeftTalk(109);
+					CGameManager::GetInstance()->Set_LeftTalk(110);
+					CGameManager::GetInstance()->Set_LeftTalk(111);
+					CGameManager::GetInstance()->Set_LeftTalk(112);
+					CGameManager::GetInstance()->Set_LeftTalk(113);
+					CGameManager::GetInstance()->Set_LeftTalk(114);
 				})
 
 
