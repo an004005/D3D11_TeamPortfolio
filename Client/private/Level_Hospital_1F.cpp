@@ -79,8 +79,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	// Item Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Item_Batch.json");
 	
-	// Flower Test
-	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/FlowerTest.json");
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Achieve_Batch.json");
 
 	// RedString Batch 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/RedString_Batch.json");
@@ -153,7 +153,7 @@ void CLevel_Hospital_1F::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Hospital_1F * CLevel_Hospital_1F::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

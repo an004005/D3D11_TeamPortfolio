@@ -529,6 +529,10 @@ void CEM0320::SetUpMainFSM()
 							->Start_NoAttach(this, false);
 
 						m_bEnding = true;
+					
+						CGameManager::GetInstance()->Set_LeftTalk(7);
+						CGameManager::GetInstance()->Set_LeftTalk(8);
+						CGameManager::GetInstance()->Set_LeftTalk(9);
 					}
 			})
 

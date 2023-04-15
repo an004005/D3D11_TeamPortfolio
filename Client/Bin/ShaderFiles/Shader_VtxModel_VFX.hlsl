@@ -195,6 +195,7 @@ PS_OUT_NORM PS_KAREN_MASK_ALL(PS_IN_NORM In)
 	{
 		if (Out.vColor.r > 0.3f)
 		{
+			Out.vColor.rgb = g_vec4_0;
 			Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
 		}
 		else
@@ -1106,7 +1107,7 @@ PS_OUT PS_ENDING_LINE(PS_IN In)
 	Out.vColor.rgb = Out.vColor.rgb * 2.5f;
 	Out.vColor.a = vLineColor.a;
 
-	Out.vFlag = float4(0.f, 0.f, 0.f, 0.f);
+	Out.vFlag = float4(0.f, 0.f, SHADER_TOON_GRAY_INGNORE, 0.f);
 	return Out;
 }
 

@@ -55,6 +55,9 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_3.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_4.json");
 
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Achieve_Batch.json");
+
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_BossRoom .json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 
@@ -122,7 +125,7 @@ void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -85,7 +85,7 @@ HRESULT CCanvas_Main::Render()
 		return E_FAIL;
 
 	_float2 vFontSize = { 0.5f, 0.5f };
-	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// »ó´Ü
@@ -114,7 +114,7 @@ HRESULT CCanvas_Main::Render()
 	_tchar szText[MAX_PATH] = TEXT("");
 	PLAYER_STAT tPlayerStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iBP);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1270.0f, 34.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1260.0f, 34.0f), 0.f, vFontSize, vColor);
 	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1215.0f, 34.0f), 0.f, vFontSize, vColor);
 
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iCoin);

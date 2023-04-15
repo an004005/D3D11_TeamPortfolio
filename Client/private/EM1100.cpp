@@ -764,6 +764,16 @@ void CEM1100::Tick(_double TimeDelta)
 	HitWeakProcess(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
+
+	// 체력이 적을 때 Talk 를 한 번 띄운다.
+	if (false == m_bTalk)
+	{
+		if (m_iHP <= m_iMaxHP * 0.2)
+		{
+			m_bTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(103);
+		}
+	}
 }
 
 void CEM1100::Late_Tick(_double TimeDelta)

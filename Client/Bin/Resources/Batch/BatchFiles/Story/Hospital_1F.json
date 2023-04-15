@@ -476,6 +476,86 @@
                 -13.824541091918945,
                 1.0
             ]
+        },
+        {
+            "JsonData": {
+                "ObjectTag": "Left_6",
+                "Prototype_GameObject": "Prototype_StoryTrigger\u0000",
+                "QuestIndex": -1,
+                "RigidBody": {
+                    "ColliderType": 5,
+                    "Density": 10.0,
+                    "OriginTransform": [
+                        9.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        3.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        5.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ShapeType": 0,
+                    "bKinematic": false,
+                    "bTrigger": true
+                },
+                "Talk": false,
+                "TalkIndex": [
+                    30,
+                    31
+                ],
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -29.96724510192871,
+                        1.9077913761138916,
+                        9.506634712219238,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_Trigger",
+                "ProtoTag": "Prototype_StoryTrigger"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -29.96724510192871,
+                1.9077913761138916,
+                9.506634712219238,
+                1.0
+            ]
         }
     ]
 }

@@ -43,7 +43,8 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Item_Batch.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Special_2F.json");
-    
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Flower.json");
+
     // Monster Trigger(with Invisible Wall)
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster1stWave.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster2ndWave_Fix.json");
@@ -51,14 +52,15 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster4thWaveBoss.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/ConstructionSite2F.json");
 
-    // Test Code AchieveItem Test
-    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/AchieveTest.json");
+    // AchieveItem Batch
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Achieve_Batch.json");
     
     // Red String Batch
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_1.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_2.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_3.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedString_4.json");
+    CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/RedPaticle.json");
 
     // Boss Area Kinetic Object Preset(Recycle)
     Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_Construction2FBossRoom.json");
@@ -128,7 +130,7 @@ void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 
 
     CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite2F* CLevel_ConstructionSite2F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -54,6 +54,7 @@
 #include "EnvironmentEffect.h"
 #include "VIBuffer_Point_Instancing.h"
 #include "Map_KineticBatchPreset.h"
+#include "PostVFX_Cinema.h"
 
 //////////
 #include "InvisibleWall.h"
@@ -204,6 +205,13 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_WhiteOut"),
 		CPostVFX_WhiteOut::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Cinema"),
+		CPostVFX_Cinema::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ProtoPostVFX_Loading"),
+		CPostVFX_Loading::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For. Prototype_Component_SuperSpeedTrail */

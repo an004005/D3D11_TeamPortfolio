@@ -575,6 +575,11 @@ void CGameInstance::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag)
 	return m_pObject_Manager->Add_EmptyLayer(iLevelIndex, pLayerTag);
 }
 
+void CGameInstance::Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGameObject* pGameObject)
+{
+	m_pObject_Manager->Add_InLayer(iLevelIndex, pLayerTag, pGameObject);
+}
+
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 {
 	m_pObject_Manager->Imgui_ProtoViewer(szSelectedProto);
@@ -914,6 +919,10 @@ void CGameInstance::PlayShake(_float fDuration, _float fMagnitude)
 	return m_pCamera_Manager->PlayShake(fDuration, fMagnitude);
 }
 
+void CGameInstance::DeleteCamera(const string& strCamTag)
+{
+}
+
 void CGameInstance::ResetTimeRatio()
 {
 	m_pGameTime_Manager->ResetTimeRatio();
@@ -1014,6 +1023,11 @@ _vector & CGameInstance::GetPeekingPos()
 void CGameInstance::SetPeekingPos(_fvector vPeekingPos)
 {
 	m_vecPeekingPos = vPeekingPos;
+}
+
+void CGameInstance::LoadFogJson(const string& strJsonPath)
+{
+	m_pRenderer->LoadFogJson(strJsonPath);
 }
 
 void CGameInstance::Release_Engine()
