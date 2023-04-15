@@ -166,8 +166,8 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_Sound()))
 		return E_FAIL;
 
-	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
-		return E_FAIL;
+	//if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
+	//	return E_FAIL;
 
 	if (FAILED(SetUp_TrainStateMachine()))
 		return E_FAIL;

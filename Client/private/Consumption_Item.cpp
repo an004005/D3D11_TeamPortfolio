@@ -124,16 +124,16 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                     return pair.first == m_strName;
                     });
 
-                if (iter != vecItemInfo.end())
-                {
-                    if (11 >= (*iter).second.iCount + 1)
-                        CGameManager::GetInstance()->Set_AddlItem(m_strName);
-                }
-            }
-            // 업적 아이템일 경우 
-            else if (m_eTypeInfo == TYPE_ACHIEVE)
+            if (iter != vecItemInfo.end())
             {
-                CItem_Manager::GetInstance()->Set_ItemCount(m_AchieveName, 1);
+                if (10 >= (*iter).second.iCount + 1)
+                    CGameManager::GetInstance()->Set_AddlItem(m_strName);
+            }
+        }
+        // 업적 아이템일 경우 
+        else if (m_eTypeInfo == TYPE_ACHIEVE)
+        {
+            CItem_Manager::GetInstance()->Set_ItemCount(m_AchieveName, 1);
 
                 vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
                 auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
@@ -162,6 +162,8 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
     {
         if (m_bOverlapCheck && !m_bGetItem)
         {
+            // 꽃죽음
+            CGameManager::GetInstance()->Set_Flower();
             m_bDelete = true;
         }
     }

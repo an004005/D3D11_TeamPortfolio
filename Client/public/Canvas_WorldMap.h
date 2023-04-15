@@ -38,7 +38,6 @@ private:
 	_bool		m_bAlpha = { false };
 	_bool		m_bReverse = { false };
 
-	array<_bool, 6> arrMapChake;
 	wstring	m_wsName = { L"" };
 	_uint		m_iInputCount = { 0 };
 

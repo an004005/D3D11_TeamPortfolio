@@ -8,7 +8,7 @@
 #include "JsonStorage.h"
 #include "Level_Maptool.h"
 #include "VFX_Manager.h"
-
+#include "FullUI.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -29,6 +29,11 @@ HRESULT CLevel_Logo::Initialize()
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_LevelSwitcher::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_AppLog::Create(m_pDevice, m_pContext));
 	CVFX_Manager::GetInstance()->Initialize((LEVEL)LEVEL_NOW);
+
+	/* For.Prototype_GameObject_MainUI */
+	CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, TEXT("Full_UI"), CFullUI::Create(m_pDevice, m_pContext));
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Logo.json");
+	CGameInstance::GetInstance()->Clone_GameObject(PLAYERTEST_LAYER_FRONTUI, L"Full_UI", &json);
 
 	return S_OK;
 }

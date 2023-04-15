@@ -44,6 +44,8 @@ private:
 	void	HanabiHpSet(const _float& fPercentage);
 	void	TsugumiSet(const _float& fPercentage);
 
+	void	PlayerHpManagement_Tick();
+
 private:
 	vector<CItem_Manager::BATTLEITEM> m_vecBattleItme;
 

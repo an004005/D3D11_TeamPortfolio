@@ -74,7 +74,7 @@ HRESULT CCanvas_Party::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float4 vColor = { 0.752f, 0.752f, 0.596f, 1.0f };
+	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	// 오른쪽 상단 배틀 멤버

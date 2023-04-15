@@ -360,6 +360,9 @@ void CCanvas::TempOff(const _bool & bOff)
 {
 	CUI::TempOff(bOff);
 
+	if (100 < m_mapChildUIs.size()) 
+		return;
+
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->TempOff(bOff);
 }
