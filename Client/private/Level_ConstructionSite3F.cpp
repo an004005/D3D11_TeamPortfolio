@@ -45,6 +45,9 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_3.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/RedString_4.json");
 
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Achieve_Batch.json");
+
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Kinetic_Normal_BossRoom .json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 

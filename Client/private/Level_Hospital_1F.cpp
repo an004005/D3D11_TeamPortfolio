@@ -68,8 +68,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	// Item Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Item_Batch.json");
 	
-	// Flower Test
-	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/FlowerTest.json");
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Achieve_Batch.json");
 
 	// RedString Batch 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/RedString_Batch.json");
