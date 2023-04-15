@@ -68,6 +68,12 @@ HRESULT CAI_CH0300::Initialize(void* pArg)
 
 	m_pModel->FindMaterial(L"MI_ch0300_HOOD_0")->SetActive(false);
 
+	m_SoundStore.CloneSound("AI_fire_swing_1");
+	m_SoundStore.CloneSound("AI_fire_swing_2");
+	m_SoundStore.CloneSound("AI_fire_stab_ready");
+	m_SoundStore.CloneSound("AI_fire_stab_mult_1");
+	m_SoundStore.CloneSound("attack_fire_3");
+
 	return S_OK;
 }
 
@@ -365,6 +371,21 @@ HRESULT CAI_CH0300::SetUp_Event()
 	m_pModel->Add_EventCaller("Jump", [&]() {m_fYSpeed = 10.f ; });
 	m_pModel->Add_EventCaller("HitDown", [&]() {m_fYSpeed = -30.f; });
 	m_pModel->Add_EventCaller("Twist_Particle", [&]() {Twist_Particle(); });
+
+
+	/*
+	m_SoundStore.CloneSound("AI_fire_swing_1");
+	m_SoundStore.CloneSound("AI_fire_swing_2");
+	m_SoundStore.CloneSound("AI_fire_stab_ready");
+	m_SoundStore.CloneSound("AI_fire_stab_mult_1");
+	m_SoundStore.CloneSound("attack_fire_3");
+	*/
+
+	m_pModel->Add_EventCaller("AI_fire_swing_1", [&]() {m_SoundStore.PlaySound("AI_fire_swing_1", m_pTransformCom); });
+	m_pModel->Add_EventCaller("AI_fire_swing_2", [&]() {m_SoundStore.PlaySound("AI_fire_swing_2", m_pTransformCom); });
+	m_pModel->Add_EventCaller("AI_fire_stab_ready", [&]() {m_SoundStore.PlaySound("AI_fire_stab_ready", m_pTransformCom); });
+	m_pModel->Add_EventCaller("AI_fire_stab_mult_1", [&]() {m_SoundStore.PlaySound("AI_fire_stab_mult_1", m_pTransformCom); });
+	m_pModel->Add_EventCaller("attack_fire_3", [&]() {m_SoundStore.PlaySound("attack_fire_3", m_pTransformCom); });
 
 	return S_OK;
 }

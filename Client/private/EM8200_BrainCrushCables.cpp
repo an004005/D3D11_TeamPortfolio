@@ -194,8 +194,11 @@ void CEM8200_BrainCrushCables::SetUpFSM()
 				m_PhysxHeadOnce.Reset();
 				m_PhysxBodyOnce.Reset();
 				m_CableModels[HEAD_1]->SetPlayAnimation("AS_BC_em8300_c04_1_co0100_1");
+				m_CableModels[HEAD_1]->GetPlayAnimation()->SetTickPerSec(50.f);
 				m_CableModels[HEAD_2]->SetPlayAnimation("AS_BC_em8300_c04_1_co0100_2");
+				m_CableModels[HEAD_2]->GetPlayAnimation()->SetTickPerSec(50.f);
 				m_CableModels[HEAD_3]->SetPlayAnimation("AS_BC_em8300_c04_1_co0100_3");
+				m_CableModels[HEAD_3]->GetPlayAnimation()->SetTickPerSec(50.f);
 			})
 			.Tick([this](_double TimeDelta)
 			{

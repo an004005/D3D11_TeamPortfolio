@@ -216,6 +216,12 @@ private:
 	CDoOnce m_ItemSpawn;
 
 public:
+	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }
+
+private:
+	_bool	m_bBrainCrashCommand = false;
+
+public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;
 	virtual void			Free() override;

@@ -65,13 +65,23 @@ void CCanvas_ItemMove::Key_Input()
 		->	Set_IconLight(dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Light());
 
 	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
-	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse()) return;
+	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse())
+	{
+		if (true == m_bInputSound)
+		{
+			m_bInputSound = false;
+			CUI_Manager::GetInstance()->PlaySound("ItemUnable");
+		}
+			return;
+	}
 
 	// 조명 Reset 하기
 	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_LightReset();
 
 	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_MB) || CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
+		m_bInputSound = true;
+		CUI_Manager::GetInstance()->PlaySound("ItemUse");
 		// 예외 처리.. 할까..? 체력이 가득 찼을 경우 체력 아이템을 사용하지 못 하게 한다... 이렇게 되면 조건문이 너무 많아져서..ㅜ
 
 		// 화살표 이동하기

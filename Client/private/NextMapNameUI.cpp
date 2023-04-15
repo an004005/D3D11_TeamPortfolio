@@ -96,11 +96,23 @@ void CNextMapNameUI::Tick(_double TimeDelta)
 				LEVEL_SUBWAY,
 				CLevel_Loading_Simple::Create<CLevel_Subway>(m_pDevice, m_pContext));
 		}
+		else if (m_wsNextRoomName == L"???")	 // 나오미방
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_NAOMIROOM,
+				CLevel_Loading_Simple::Create<CLevel_NaomiRoom>(m_pDevice, m_pContext));
+		}
 		else if (m_wsNextRoomName == L"구 토벌군병원")
 		{
 			CGameInstance::GetInstance()->Open_Loading(
 				LEVEL_HOSPITAL_1F,
 				CLevel_Loading_Simple::Create<CLevel_Hospital_1F>(m_pDevice, m_pContext));
+		}
+		else if (m_wsNextRoomName == L"????")	 // 최종보스방
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_FINAL_STAGE,
+				CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
 		}
 
 		CGameObject::SetDelete();
