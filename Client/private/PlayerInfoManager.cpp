@@ -653,7 +653,7 @@ void CPlayerInfoManager::SAS_Checker()
 		else
 		{
 			// 사용중임, 감소
-			m_tPlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_tPlayerStat.Sasese[i].UseRate);
+			//m_tPlayerStat.Sasese[i].Energy -= (g_fTimeDelta * m_tPlayerStat.Sasese[i].UseRate);
 
 			if (0.f >= m_tPlayerStat.Sasese[i].Energy)
 			{

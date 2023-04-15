@@ -1,0 +1,568 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "attack_elec_1_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_1_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_2_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_2_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_3_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_3_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_4_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_4_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_5_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_5_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_charge_lv1_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_charge_lv1_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_charge_lv2_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_charge_lv2_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_dashattack_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_dashattack_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_jumpattack_1_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_jumpattack_1_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_jumpattack_2_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_jumpattack_2_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_spin_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_spin_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_spindown_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_spindown_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "attack_elec_upper_fix",
+            "SoundFiles": [
+                "Attack/Elec/attack_elec_upper_fix.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_charge_loop",
+            "SoundFiles": [
+                "FX/fx_charge_loop.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_charge_lv1",
+            "SoundFiles": [
+                "FX/fx_charge_lv1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_charge_lv2",
+            "SoundFiles": [
+                "FX/fx_charge_lv2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_charge_startmotion",
+            "SoundFiles": [
+                "FX/fx_charge_startmotion.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_arm_in",
+            "SoundFiles": [
+                "FX/fx_SAS_arm_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_elec_in",
+            "SoundFiles": [
+                "FX/fx_SAS_elec_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_fire_in",
+            "SoundFiles": [
+                "FX/fx_SAS_fire_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_pcy_in",
+            "SoundFiles": [
+                "FX/fx_SAS_pcy_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_pcyfield_in",
+            "SoundFiles": [
+                "FX/fx_SAS_pcyfield_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_slowtime_in",
+            "SoundFiles": [
+                "FX/fx_SAS_slowtime_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_tele_in",
+            "SoundFiles": [
+                "FX/fx_SAS_tele_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_SAS_cleared",
+            "SoundFiles": [
+                "FX/fx_SAS_cleared.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_execute",
+            "SoundFiles": [
+                "FX/fx_execute.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "BrainField_Swing",
+            "SoundFiles": [
+                "Kinetic/BrainField_Swing.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_jail_exp",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_jail_exp.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_imp",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_pole_multi_imp1.wav",
+                "Kinetic/fx_kine_super_pole_multi_imp2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_lift",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_pole_multi_lift.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_imp",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_telepole_imp.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_truck_example",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_truck_example.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "fx_kine_super_truck_lift",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_truck_lift.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "AI_gunshot",
+            "SoundFiles": [
+                "AI/AI_gunshot_1.wav",
+                "AI/AI_gunshot_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "AI_fire_swing_1",
+            "SoundFiles": [
+                "AI/AI_fire_swing_1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "AI_fire_swing_2",
+            "SoundFiles": [
+                "AI/AI_fire_swing_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "AI_fire_stab_ready",
+            "SoundFiles": [
+                "AI/AI_fire_stab_ready.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "AI_fire_stab_mult_1",
+            "SoundFiles": [
+                "AI/AI_fire_stab_mult_1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "move_doubleJump",
+            "SoundFiles": [
+                "Move/move_doubleJump.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "move_Landing",
+            "SoundFiles": [
+                "Move/move_Landing.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "move_stop",
+            "SoundFiles": [
+                "Move/move_stop.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "Special_Train",
+            "SoundFiles": [
+                "Kinetic/Special_Train.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "Special_Container_1",
+            "SoundFiles": [
+                "Kinetic/Special_Container_1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_Container_2",
+            "SoundFiles": [
+                "Kinetic/Special_Container_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 2,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_Container_3",
+            "SoundFiles": [
+                "Kinetic/Special_Container_3.wav"
+            ],
+            "2DSound": false,
+            "Volume": 2,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_Drop_Success",
+            "SoundFiles": [
+                "Kinetic/Special_Drop_Success.wav"
+            ],
+            "2DSound": false,
+            "Volume": 2,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_IronBars_Start",
+            "SoundFiles": [
+                "Kinetic/Special_IronBars_Start.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_IronBars_FirstHit",
+            "SoundFiles": [
+                "Kinetic/Special_IronBars_FirstHit.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_IronBars_Shoot",
+            "SoundFiles": [
+                "Kinetic/Special_IronBars_Shoot.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_IronBars_Reload",
+            "SoundFiles": [
+                "Kinetic/Special_IronBars_Reload.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "Special_IronBars_Finish",
+            "SoundFiles": [
+                "Kinetic/Special_IronBars_Finish.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        }
+    ]
+}

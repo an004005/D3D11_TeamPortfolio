@@ -500,6 +500,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "move_stop",
+                "EventTime": 0.0
             }
         ]
     },
@@ -516,6 +520,10 @@
         "vecEvent": [
             {
                 "EventName": "LandingDust",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
                 "EventTime": 0.0
             }
         ]
@@ -551,6 +559,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -583,7 +595,12 @@
         "Duration": 45.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_doubleJump",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_044_AL_runjump_fall": {
         "Duration": 25.0,
@@ -599,6 +616,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -612,7 +633,12 @@
         "Duration": 8.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_jump",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_051_AL_dodge_F_start": {
         "Duration": 22.0,
@@ -778,6 +804,10 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
+                "EventTime": 0.0
             }
         ]
     },
@@ -792,6 +822,10 @@
             },
             {
                 "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
                 "EventTime": 0.0
             }
         ]
@@ -808,6 +842,10 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
+                "EventTime": 0.0
             }
         ]
     },
@@ -822,6 +860,10 @@
             },
             {
                 "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
                 "EventTime": 0.0
             }
         ]
@@ -1132,6 +1174,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1168,6 +1214,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1200,7 +1250,12 @@
         "Duration": 44.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_doubleJump",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_144_AL_runjump_fall": {
         "Duration": 25.0,
@@ -1224,6 +1279,10 @@
         "vecEvent": [
             {
                 "EventName": "LandingDust",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
                 "EventTime": 0.0
             }
         ]
@@ -1500,6 +1559,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1514,6 +1577,10 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
                 "EventTime": 0.0
             }
         ]
@@ -1530,6 +1597,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1544,6 +1615,10 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_dash",
                 "EventTime": 0.0
             }
         ]
@@ -1639,6 +1714,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "attack_elec_1_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1737,6 +1816,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "attack_elec_2_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1851,6 +1934,10 @@
             {
                 "EventName": "Middle_CamShake_0.2",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "attack_elec_3_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1950,6 +2037,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 135.0
+            },
+            {
+                "EventName": "attack_elec_4_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2033,6 +2124,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 80.0
+            },
+            {
+                "EventName": "attack_elec_5_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2104,6 +2199,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "attack_elec_upper_fix",
+                "EventTime": 5.0
             }
         ]
     },
@@ -2120,6 +2219,10 @@
         "vecEvent": [
             {
                 "EventName": "LandingDust",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "move_Landing",
                 "EventTime": 0.0
             }
         ]
@@ -2247,6 +2350,10 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_charge_startmotion",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2268,6 +2375,10 @@
         "vecEvent": [
             {
                 "EventName": "Bright_On",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_charge_loop",
                 "EventTime": 0.0
             }
         ]
@@ -2340,6 +2451,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 70.0
+            },
+            {
+                "EventName": "attack_elec_charge_lv1_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2415,6 +2530,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 90.0
+            },
+            {
+                "EventName": "attack_elec_charge_lv2_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2482,6 +2601,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "attack_elec_charge_lv2_fix",
+                "EventTime": 5.0
             }
         ]
     },
@@ -2541,6 +2664,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 15.0
+            },
+            {
+                "EventName": "attack_elec_dashattack_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2688,6 +2815,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 110.0
+            },
+            {
+                "EventName": "attack_elec_spin_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3043,6 +3174,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 30.0
+            },
+            {
+                "EventName": "attack_elec_jumpattack_1_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3106,6 +3241,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 30.0
+            },
+            {
+                "EventName": "attack_elec_jumpattack_2_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3325,6 +3464,10 @@
             {
                 "EventName": "Bright_On",
                 "EventTime": 1.0
+            },
+            {
+                "EventName": "attack_elec_spindown_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3376,6 +3519,18 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 40.0
+            },
+            {
+                "EventName": "attack_nor_dashattack",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "attack_fire_dashattack",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "attack_elec_dashattack_fix",
+                "EventTime": 10.0
             }
         ]
     },
@@ -3457,6 +3612,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "attack_elec_spin_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3729,6 +3888,10 @@
             },
             {
                 "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kinetic_lifting",
                 "EventTime": 0.0
             }
         ]
@@ -4714,6 +4877,10 @@
             {
                 "EventName": "BF_Swing_End",
                 "EventTime": 60.0
+            },
+            {
+                "EventName": "BrainField_Swing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4729,12 +4896,16 @@
             {
                 "EventName": "BF_Swing_End",
                 "EventTime": 65.0
+            },
+            {
+                "EventName": "BrainField_Swing",
+                "EventTime": 0.0
             }
         ]
     },
     "AS_ch0100_603_AL_BF_swing_a3": {
         "Duration": 200.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 70.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -4751,6 +4922,10 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "BrainField_Swing",
                 "EventTime": 0.0
             }
         ]
@@ -5167,6 +5342,14 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "AI_fire_swing_1",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "AI_fire_swing_2",
+                "EventTime": 40.0
             }
         ]
     },
@@ -5222,6 +5405,14 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 110.0
+            },
+            {
+                "EventName": "AI_fire_stab_mult_1",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "AI_fire_stab_mult_1",
+                "EventTime": 65.0
             }
         ]
     },
@@ -5229,7 +5420,12 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "AI_fire_stab_ready",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0300_203_AL_atk_a3": {
         "Duration": 125.0,
@@ -5243,6 +5439,10 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "AI_fire_swing_2",
+                "EventTime": 35.0
             }
         ]
     },
@@ -5273,6 +5473,10 @@
             {
                 "EventName": "HitDown",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "attack_fire_3",
+                "EventTime": 30.0
             }
         ]
     },

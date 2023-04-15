@@ -91,6 +91,9 @@ HRESULT CSpecial_HBeam_Bundle::Initialize(void * pArg)
 		}
 	});
 
+	m_SoundStore.CloneSound("fx_kine_super_jail_exp");
+	m_SoundStore.CloneSound("fx_kine_super_pole_multi_imp");
+
 	return S_OK;
 }
 
@@ -184,7 +187,7 @@ void CSpecial_HBeam_Bundle::Tick(_double TimeDelta)
 			{
 				vDir.Normalize();
 				vDir.w = 0.f;
-				vDir *= -5.f;
+				vDir *= -2.f;
 				static_cast<CSpecial_HBeam_Single*>(iter)->AddVelocity({ vDir.x, vDir.y - 0.1f, vDir.z });
 			}
 		}
@@ -288,6 +291,8 @@ void CSpecial_HBeam_Bundle::HBeam_Decompose()
 {
 	m_bRenderOption = false;
 
+	m_SoundStore.PlaySound("fx_kine_super_jail_exp", m_pTransformCom);
+
 	//for (auto& iter : m_pHBeam_Single)
 	//	static_cast<CSpecial_HBeam_Single*>(iter)->Set_Kinetic(false);
 }
@@ -338,6 +343,8 @@ void CSpecial_HBeam_Bundle::HBeam_Collision()
 {
 	if (m_fCollisionTime >= 0.5f)
 	{
+		m_SoundStore.PlaySound("fx_kine_super_pole_multi_imp", m_pTransformCom);
+
 		physx::PxSweepHit hitBuffer[4];
 		physx::PxSweepBuffer overlapOut(hitBuffer, 4);
 		SphereSweepParams params2;
@@ -377,6 +384,8 @@ void CSpecial_HBeam_Bundle::HBeam_Collision()
 
 void CSpecial_HBeam_Bundle::HBeam_Explosion()
 {
+	m_SoundStore.PlaySound("fx_kine_super_pole_multi_imp", m_pTransformCom);
+
 	physx::PxSweepHit hitBuffer[4];
 	physx::PxSweepBuffer overlapOut(hitBuffer, 4);
 	SphereSweepParams params2;
