@@ -84,6 +84,7 @@
 #include "Canvas_DriveMove.h"
 
 #include "InvisibleWall.h"
+#include "EnvironmentEffect.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -2066,6 +2067,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		{
 			m_bBrainField_Prod = true;
 
+			m_SoundStore.PlaySound("fx_kinetic_brainfield_in", m_pTransformCom);
+
 			m_pASM->SetCurState("IDLE");
 			m_pASM->SetCurState_BrainField("IDLE");
 			m_bSeperateAnim = false;
@@ -2124,6 +2127,14 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				if (auto pWall = dynamic_cast<CInvisibleWall*>(iter))
 				{
 					pWall->SetVisible(false);
+				}
+			}
+
+			for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if (auto pEnvEff = dynamic_cast<CEnvironmentEffect*>(iter))
+				{
+					pEnvEff->SetVisible(false);
 				}
 			}
 
@@ -2217,6 +2228,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			m_bSeperateAnim = false;
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 
+			m_SoundStore.PlaySound("fx_kinetic_brainfield_out", m_pTransformCom);
+
 			m_bBrainField_Prod = true;
 
 			list<CAnimation*> TestAnim;
@@ -2259,6 +2272,14 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			m_bDriveMask = false;
 			m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
 			m_pModel->FindMaterial(L"MI_ch0100_HAIR_1")->SetActive(true);
+
+			for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if (auto pEnvEff = dynamic_cast<CEnvironmentEffect*>(iter))
+				{
+					pEnvEff->SetVisible(true);
+				}
+			}
 
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_close_NF"));
@@ -3797,6 +3818,8 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 			.OnStart([&]()
 			{
 				m_bAir = true;
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_BreakFall_Front);
 				m_fYSpeed = 5.f;
 			})
@@ -3811,8 +3834,6 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("BREAKFALL_LANDING")
 			.OnStart([&]()
 			{
-				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
-				m_bHit = false;
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_BreakFall_Landing);
 			})
 
@@ -5947,6 +5968,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("Special_IronBars_Reload");
 	m_SoundStore.CloneSound("Special_IronBars_Finish");
 
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_out");
+
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
 	m_pModel->Add_EventCaller("attack_nor_3", [this] {Event_EffectSound("attack_nor_3"); });
@@ -6084,7 +6108,7 @@ void CPlayer::Update_CautionNeon()
 	_float fCurHP = (_float)CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
 	_float fMaxHP = (_float)CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
 
-	if (0.2f >= fCurHP / fMaxHP)
+	if (0.3f >= fCurHP / fMaxHP)
 	{
 		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon))
 		{
@@ -7542,6 +7566,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em1100m_ch0100"));
 	m_BrainCrash_em1100.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em8220_2_c02_ch0100"));
+	m_BrainCrash_em8200_01.push_back(pAnimation);
+
+	NULL_CHECK(pAnimation = m_pModel->Find_Animation("AS_BC_em8220_2_c08_ch0100"));
+	m_BrainCrash_em8200_02.push_back(pAnimation);
 
 	m_pBrainCrashStateMachine = CFSMComponentBuilder()
 		.InitState("BRAINCRASH_NOUSE")

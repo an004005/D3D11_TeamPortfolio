@@ -376,9 +376,11 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 			{ 
 				//Monster_em8200
 
-				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
+				/*if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
 				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetPrototypeTag() != L"Monster_em8200") return false;
-				return m_pPlayer->m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
+				return m_pPlayer->m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();*/
+
+				return m_pPlayer->m_bBrainCrashInput;
 			})
 			.Priority(0)
 
@@ -517,8 +519,9 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		.AddState("BRAINCRASH_EM8200_SCENE01")
 		.OnStart([&]()
 		{
-			m_pPlayer->m_bBrainCrash = true;
-			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em8200_BrainCrash_01");
+			m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+			m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em8200_01);
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -528,14 +531,13 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		{
 		})
 		.AddTransition("BRAINCRASH_EM8200_SCENE01 to BRAINCRASH_EM8200_SCENE02", "BRAINCRASH_EM8200_SCENE02")
-		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 		.Priority(0)
 
 		.AddState("BRAINCRASH_EM8200_SCENE02")
 		.OnStart([&]()
 		{
-			m_pPlayer->m_bBrainCrash = true;
-			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -545,14 +547,15 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		{
 		})
 		.AddTransition("BRAINCRASH_EM8200_SCENE02 to BRAINCRASH_EM8200_SCENE03", "BRAINCRASH_EM8200_SCENE03")
-		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 		.Priority(0)
 
 		.AddState("BRAINCRASH_EM8200_SCENE03")
 		.OnStart([&]()
 		{
-			m_pPlayer->m_bBrainCrash = true;
-			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em8200_BrainCrash_02");
+			m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
+			m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_em8200_02);
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -562,14 +565,13 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		{
 		})
 		.AddTransition("BRAINCRASH_EM8200_SCENE03 to BRAINCRASH_EM8200_SCENE04", "BRAINCRASH_EM8200_SCENE04")
-		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 		.Priority(0)
 
 		.AddState("BRAINCRASH_EM8200_SCENE04")
 		.OnStart([&]()
 		{
-			m_pPlayer->m_bBrainCrash = true;
-			m_pPlayer->m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -579,7 +581,7 @@ void CPlayerHotFixer::BrainCrashStateMachine_ReCompoile()
 		{
 		})
 		.AddTransition("BRAINCRASH_EM8200_SCENE04 to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
-		.Predicator([&]()->_bool { return m_pPlayer->m_pSasPortrait->isFinish(); })
+		.Predicator([&]()->_bool { return m_pPlayer->m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
 		.Priority(0)
 
 		.Build();

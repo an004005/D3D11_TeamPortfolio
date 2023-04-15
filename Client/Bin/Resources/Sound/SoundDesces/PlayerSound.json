@@ -510,6 +510,17 @@
             "MaxDistance" : 40.0
         },
         {
+            "Name": "Special_Drop_Fail",
+            "SoundFiles": [
+                "Kinetic/Special_Drop_Fail.wav"
+            ],
+            "2DSound": false,
+            "Volume": 2,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
             "Name": "Special_IronBars_Start",
             "SoundFiles": [
                 "Kinetic/Special_IronBars_Start.wav"
@@ -557,6 +568,28 @@
             "Name": "Special_IronBars_Finish",
             "SoundFiles": [
                 "Kinetic/Special_IronBars_Finish.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in",
+            "SoundFiles": [
+                "Kinetic/fx_kinetic_brainfield_in.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_out",
+            "SoundFiles": [
+                "Kinetic/fx_kinetic_brainfield_out.wav"
             ],
             "2DSound": false,
             "Volume": 1,

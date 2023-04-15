@@ -685,8 +685,13 @@ void CBrainFieldCables::SetUpFSM()
 			.OnStart([this]
 			{
 				m_CableModels[HEAD_1]->SetPlayAnimation("AS_BrainFieldOpen_c01_co0100_1");
+				m_CableModels[HEAD_1]->GetPlayAnimation()->SetTickPerSec(60.f);
+
 				m_CableModels[HEAD_2]->SetPlayAnimation("AS_BrainFieldOpen_c01_co0100_2");
+				m_CableModels[HEAD_2]->GetPlayAnimation()->SetTickPerSec(60.f);
+
 				m_CableModels[HEAD_3]->SetPlayAnimation("AS_BrainFieldOpen_c01_co0100_3");
+				m_CableModels[HEAD_3]->GetPlayAnimation()->SetTickPerSec(60.f);
 
 				const _matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
 				for (int i = 0; i < 3; ++i)
@@ -724,13 +729,22 @@ void CBrainFieldCables::SetUpFSM()
 			.OnStart([this]
 			{
 				m_CableModels[HEAD_1]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0100_1");
+				m_CableModels[HEAD_1]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[HEAD_2]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0100_2");
+				m_CableModels[HEAD_2]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[HEAD_3]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0100_3");
+				m_CableModels[HEAD_3]->GetPlayAnimation()->SetTickPerSec(60.f);
+
 				m_CableModels[BACK_1]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0101_1");
+				m_CableModels[BACK_1]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_2]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0101_2");
+				m_CableModels[BACK_2]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_3]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0101_3");
+				m_CableModels[BACK_3]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_4]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0101_4");
+				m_CableModels[BACK_4]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_5]->SetPlayAnimation("AS_BrainFieldOpen_c02_co0101_5");
+				m_CableModels[BACK_5]->GetPlayAnimation()->SetTickPerSec(60.f);
 
 				const _matrix TargetWorldMatrix = m_pTargetTransform->Get_WorldMatrix();
 				for (int i = 0; i < CABLE_END; ++i)
@@ -771,10 +785,16 @@ void CBrainFieldCables::SetUpFSM()
 
 				// 등 케이블 1직선으로 만들기
 				m_CableModels[BACK_1]->SetPlayAnimation("AS_co0101_001_start01");
+				m_CableModels[BACK_1]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_2]->SetPlayAnimation("AS_co0101_001_start02");
+				m_CableModels[BACK_2]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_3]->SetPlayAnimation("AS_co0101_001_start03");
+				m_CableModels[BACK_3]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_4]->SetPlayAnimation("AS_co0101_001_start04");
+				m_CableModels[BACK_4]->GetPlayAnimation()->SetTickPerSec(60.f);
 				m_CableModels[BACK_5]->SetPlayAnimation("AS_co0101_001_start05");
+				m_CableModels[BACK_5]->GetPlayAnimation()->SetTickPerSec(60.f);
+
 				for (int i = BACK_1; i < CABLE_END; ++i)
 				{
 					m_CableModels[i]->GetPlayAnimation()->SetPlayRatio(1.0);
