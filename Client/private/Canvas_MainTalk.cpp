@@ -421,8 +421,8 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	case 35:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"너희들의 도움이 필요해. 얼른 한 시라도 빨리 시간을 돌려서 " };
-		tTalkInfo.wsTalk1 = { L"나오미가 그렇게 변해버리기 전으로 돌아가야만 해." };
+		tTalkInfo.wsTalk0 = { L"유이토. 너의 초뇌능력이 필요해. 한시라도 빨리 시간을 돌려서.. " };
+		tTalkInfo.wsTalk1 = { L"나오미가 그 지하철역으로 가는 걸.. 막아야만 해." };
 	}
 	break;
 	
@@ -442,13 +442,13 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	}
 	break;
 
-	case 38:
-	{
-		tTalkInfo.wsName = { L"루카" };
-		tTalkInfo.wsTalk0 = { L"맞아요, 중대장님. 나오미를 돌아오게 할 방법이 있을 거예요." };
-		tTalkInfo.wsTalk1 = { L"저희가 도와드릴게요." };
-	}
-	break;
+	// case 38:
+	// {
+	// 	tTalkInfo.wsName = { L"루카" };
+	// 	tTalkInfo.wsTalk0 = { L"맞아요, 중대장님. 나오미를 돌아오게 할 방법이 있을 거예요." };
+	// 	tTalkInfo.wsTalk1 = { L"저희가 도와드릴게요." };
+	// }
+	// break;
 	
 	case 39:
 	{
@@ -461,24 +461,24 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	case 40:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"너희가 딸을 잃은 아픔을 알기나해?" };
-		tTalkInfo.wsTalk1 = { L"그깟 미래? 내 딸이 없는 미래는 난 아무래도 상관없어." };
+		tTalkInfo.wsTalk0 = { L"네가 딸을 잃은 아픔을 알기나해?" };
+		tTalkInfo.wsTalk1 = { L"그깟 미래? 나오미가 없는 미래는 아무래도 상관없어." };
 	}
 	break;
 
 	case 41:
 	{
 		tTalkInfo.wsName = { L"유이토" };
-		tTalkInfo.wsTalk0 = { L"중대장님이 원하시는 대로 저희가 가만히 있지 않을 겁니다." };
-		tTalkInfo.wsTalk1 = { L"" };
+		tTalkInfo.wsTalk0 = { L"...!!" };
+		tTalkInfo.wsTalk1 = { L"그렇다면 저희가 가만있지 않을겁니다." };
 	}
 	break;
 
 	case 42:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"너희가 그렇게 나온다면 너희를 없애서라도 내 딸을 지켜낼거다." };
-		tTalkInfo.wsTalk1 = { L"" };
+		tTalkInfo.wsTalk0 = { L"...그렇군." };
+		tTalkInfo.wsTalk1 = { L"너희는 억지로라도 내 계획의 장기말로 써주겠다!" };
 	}
 	break;
 
