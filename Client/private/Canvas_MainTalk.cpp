@@ -387,7 +387,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 
 	case 31:
 	{
-		tTalkInfo.wsName = { L"루카" };
+		tTalkInfo.wsName = { L"츠구미" };
 		tTalkInfo.wsTalk0 = { L"나오미 라구요...?" };
 		tTalkInfo.wsTalk1 = { L"" };
 	}
@@ -444,7 +444,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 
 	case 38:
 	{
-		tTalkInfo.wsName = { L"루카" };
+		tTalkInfo.wsName = { L"하나비" };
 		tTalkInfo.wsTalk0 = { L"맞아요, 중대장님. 나오미를 돌아오게 할 방법이 있을 거예요." };
 		tTalkInfo.wsTalk1 = { L"저희가 도와드릴게요." };
 	}

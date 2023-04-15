@@ -46,7 +46,7 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 
 void CCanvas_Quest::Tick(_double TimeDelta)
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_E))
 	{
 		m_fQuestMove = !m_fQuestMove;
 		m_bVisible = true;
