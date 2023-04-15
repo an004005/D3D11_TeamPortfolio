@@ -9,29 +9,31 @@ IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
 {
-	m_SoundStore.CloneSound("MainClick");		// 메인에서 클릭할 때
-	m_SoundStore.CloneSound("UnableClick");	// 불가능한 클릭
-	m_SoundStore.CloneSound("PartyClick");	// 파티 클릭 할 때
+	m_SoundStore.CloneSound("MainClick");		// 메인에서 클릭할 때 +(BrainMap 클릭)
+	m_SoundStore.CloneSound("UnableClick");	// 불가능한 클릭 +
+	m_SoundStore.CloneSound("PartyClick");	// 파티 클릭 할 때 +
 	m_SoundStore.CloneSound("DangerLong");	// 상태이상 소리 긴 것
-	m_SoundStore.CloneSound("DangerShort");	// 상태이상 소리 짧은 것
-	m_SoundStore.CloneSound("ItemSwitch");	// 아이템 넘길 때
-	m_SoundStore.CloneSound("ItemUnable");	// 아이템 사용 불가
-	m_SoundStore.CloneSound("ItemUse");	// 아이템 사용
-	m_SoundStore.CloneSound("MainIn");	// 메인 들어갈 때
-	m_SoundStore.CloneSound("MainOut");	// 메인 나갈 때
+	m_SoundStore.CloneSound("DangerShort");	// 상태이상 소리 짧은 것 + 
+	m_SoundStore.CloneSound("ItemSwitch");	// 아이템 넘길 때 + ★
+	m_SoundStore.CloneSound("ItemUnable");	// 아이템 사용 불가 +
+	m_SoundStore.CloneSound("ItemUse");	// 아이템 사용 + ★
+	m_SoundStore.CloneSound("MainIn");	// 메인 들어갈 때 + + + ★
+	m_SoundStore.CloneSound("MainOut");	// 메인 나갈 때 + + + ★
 	m_SoundStore.CloneSound("MonsterAlert");	// 몬스터 경고 (몬스터 발견 했을 때?)
 	m_SoundStore.CloneSound("PopupClose");	// 안내창 뜰 때
 	m_SoundStore.CloneSound("PopupOn");	// 안내칭 끌 때
-	m_SoundStore.CloneSound("Alt");	// art
-	m_SoundStore.CloneSound("Ctrl");	// ctrl
-	m_SoundStore.CloneSound("X");	// x
-	m_SoundStore.CloneSound("Mouseover");	// 마우스 클릭?
-	m_SoundStore.CloneSound("TABLarge");	// 튜토리얼 켤 때
-	m_SoundStore.CloneSound("TABSmall");	// 튜토리얼 끌 때
-	m_SoundStore.CloneSound("TIP");	// Tip 뜰 때
+	m_SoundStore.CloneSound("Alt");	// art + ★
+	m_SoundStore.CloneSound("Ctrl");	// ctrl + ★
+	m_SoundStore.CloneSound("X");	// x + ★
+	m_SoundStore.CloneSound("Mouseover");	// 마우스 클릭? +
+	m_SoundStore.CloneSound("TABLarge");	// 튜토리얼 켤 때 + ★
+	m_SoundStore.CloneSound("TABSmall");	// 튜토리얼 끌 때 + ★
+	m_SoundStore.CloneSound("TIP");	// Tip 뜰 때 +z ★
 	m_SoundStore.CloneSound("Unable");	// 불가능한 클릭
-	m_SoundStore.CloneSound("Upgrade");	// 레벨 업 할 때
-	m_SoundStore.CloneSound("Weapon");	// 장비 장착할 때
+	m_SoundStore.CloneSound("Upgrade");	// 레벨 업 할 때 + ★
+	m_SoundStore.CloneSound("Weapon");	// 장비 장착할 때 + ★
+
+//	CUI_Manager::GetInstance()->PlaySound("xxX");
 }
 
 CCanvas * CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)

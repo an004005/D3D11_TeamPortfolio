@@ -1569,6 +1569,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 	{
 		m_bSkillAcquisition = true;
 		m_szAlarmText = L"습득 조건을 충족하지 않습니다.";
+		CUI_Manager::GetInstance()->PlaySound("UnableClick");
 		return;
 	}
 
@@ -1613,6 +1614,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 				m_vecIconUI[m_vecIconUI[iIndex]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
 			}
+			CUI_Manager::GetInstance()->PlaySound("MainClick");
 			return;
 		}
 	}
@@ -1623,6 +1625,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 
 		m_bSkillAcquisition = true;
 		m_szAlarmText = L"BP가 부족합니다.";
+		CUI_Manager::GetInstance()->PlaySound("UnableClick");
 		return;
 	}
 }
