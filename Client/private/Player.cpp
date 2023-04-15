@@ -2015,11 +2015,13 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
 			{
-
-				CPlayerInfoManager::GetInstance()->Change_DriveEnergy(CHANGE_DECREASE, fTimeDelta);
-				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, PLATERTEST_LAYER_PLAYER);
-				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, LAYER_PLAYEREFFECT);
-				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, L"Layer_Camera");
+				if (false == m_bBrainCrash)
+				{
+					CPlayerInfoManager::GetInstance()->Change_DriveEnergy(CHANGE_DECREASE, fTimeDelta);
+					CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, PLATERTEST_LAYER_PLAYER);
+					CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, LAYER_PLAYEREFFECT);
+					CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, L"Layer_Camera");
+				}
 			}
 
 			//IM_LOG("DRIVE : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy);
@@ -7718,6 +7720,13 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.AddState("BRAINCRASH_NOUSE")
 		.OnStart([&]()
 		{
+			if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
+			{
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, PLATERTEST_LAYER_PLAYER);
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, LAYER_PLAYEREFFECT);
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, L"Layer_Camera");
+			}
+
 			m_pASM->ClearAnimSocket("BrainCrash_AnimSocket");
 			m_bBrainCrash = false;
 		})
@@ -7752,6 +7761,10 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.AddState("BRAINCRASH_CUTSCENE")
 		.OnStart([&]()
 		{
+			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLATERTEST_LAYER_PLAYER);
+			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, LAYER_PLAYEREFFECT);
+			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, L"Layer_Camera");
+
 			m_bSeperateAnim = false;
 			m_bKineticMove = false;
 
