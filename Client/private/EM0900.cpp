@@ -29,6 +29,8 @@ HRESULT CEM0900::Initialize(void * pArg)
 	Json em900_json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Monster/em0900/em0900Base.json");
 	pArg = &em900_json;
 
+	m_strDeathSoundTag = "santa_fx_death";
+	m_strImpactVoiceTag = "santa_hit_voice_1";
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
@@ -90,6 +92,12 @@ void CEM0900::SetUpComponents(void * pArg)
 void CEM0900::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("santa_doubleswing");
+	m_SoundStore.CloneSound("santa_spin");
+	m_SoundStore.CloneSound("santa_throw_voice");
+	m_SoundStore.CloneSound("Break_Brain");
+	m_SoundStore.CloneSound("Metal_Sound_Effect");
 }
 
 void CEM0900::SetUpAnimationEvent()
@@ -338,6 +346,7 @@ void CEM0900::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", 0.5f))
 						{
+							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;
@@ -372,6 +381,7 @@ void CEM0900::SetUpFSM()
 				m_bAttack = false;
 				m_dLoopTick = 0.5;
 
+				m_SoundStore.PlaySound("santa_spin", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -438,6 +448,7 @@ void CEM0900::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_202_AL_atk_a2_feint");
+				m_SoundStore.PlaySound("santa_doubleswing", m_pTransformCom);
 			})
 			.Tick([this](_double)
 			{
@@ -487,6 +498,7 @@ void CEM0900::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_222_AL_atk_a1_end");
+				m_SoundStore.PlaySound("santa_throw_voice", m_pTransformCom);
 			})
 			.AddTransition("Throw_End to Idle", "Idle")
 				.Predicator([this]
@@ -604,6 +616,7 @@ void CEM0900::CheckHP(DAMAGE_PARAM& tDamageParams)
 		//데미지 폰트 안띄우려고 
 		tDamageParams.iDamage = 1;
 
+		m_SoundStore.PlaySound("Metal_Sound_Effect", m_pTransformCom);
 		//hp가 0보다 작아지면 아머 삭제. 
 		if (m_iArmorHp <= 0)
 			m_bDestroyArmor = true;

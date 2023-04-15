@@ -99,6 +99,7 @@ void CEM0700::SetUpSound()
 	m_SoundStore.CloneSound("voidfly_move");
 	m_SoundStore.CloneSound("mon_3_move");
 	m_SoundStore.CloneSound("mon_3_provoke");
+	m_SoundStore.CloneSound("Break_Brain");
 
 	m_pModelCom->Add_EventCaller("voidfly_move", [this] {m_SoundStore.PlaySound("voidfly_move", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("mon_3_move", [this] {m_SoundStore.PlaySound("mon_3_move", m_pTransformCom); });
@@ -437,6 +438,7 @@ void CEM0700::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", 0.5f))
 						{
+							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;

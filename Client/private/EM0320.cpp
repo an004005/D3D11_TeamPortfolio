@@ -116,6 +116,14 @@ void CEM0320::SetUpComponents(void* pArg)
 void CEM0320::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("boss1_attack_cannon");
+	m_SoundStore.CloneSound("boss1_attack_dive");
+	m_SoundStore.CloneSound("boss1_attack_hook");
+	m_SoundStore.CloneSound("boss1_attack_spin");
+	m_SoundStore.CloneSound("boss1_move");
+
+	m_pModelCom->Add_EventCaller("boss1_move", [this] {m_SoundStore.PlaySound("boss1_move", m_pTransformCom); });
 }
 
 void CEM0320::SetUpAnimationEvent()
@@ -310,6 +318,8 @@ void CEM0320::SetUpMainFSM()
 					m_pASM->AttachAnimSocketOne("FullBody",  "AS_em0300_201_AL_atk_a1_L");
 				else
 					m_pASM->AttachAnimSocketOne("FullBody",  "AS_em0300_202_AL_atk_a2_R");
+
+				m_SoundStore.PlaySound("boss1_attack_hook", m_pTransformCom);
 			})
 			.Tick([this](_double)
 			{
@@ -327,6 +337,9 @@ void CEM0320::SetUpMainFSM()
 			{
 				End_AttackState();
 				m_pASM->AttachAnimSocketOne("FullBody",  "AS_em0320_228_AL_atk8_waterball_F");
+
+				m_SoundStore.PlaySound("boss1_attack_cannon", m_pTransformCom);
+
 				// 공격 시작은 Start_Spin 이벤트로 시작
 			})
 			.AddTransition("WaterBall to Idle", "Idle")
@@ -341,6 +354,9 @@ void CEM0320::SetUpMainFSM()
 			{
 				End_AttackState();
 				m_pASM->AttachAnimSocketOne("FullBody",  "AS_em0320_225_AL_atk7_spin");
+
+				m_SoundStore.PlaySound("boss1_attack_spin", m_pTransformCom);
+
 				// 공격 시작은 Start_Spin 이벤트로 시작
 			})
 			.Tick([this](_double)
@@ -359,6 +375,7 @@ void CEM0320::SetUpMainFSM()
 			{
 				m_pController->SetActive(false);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_204_AL_atk_a3_start");
+				m_SoundStore.PlaySound("boss1_attack_dive", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
