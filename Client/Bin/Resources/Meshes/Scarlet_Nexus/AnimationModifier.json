@@ -3865,7 +3865,7 @@
                 "EventTime": 80.0
             },
             {
-                "EventName": "CamMod",
+                "EventName": "ResetCamMod",
                 "EventTime": 200.0
             },
             {

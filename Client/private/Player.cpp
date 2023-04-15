@@ -2225,6 +2225,10 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				}
 			}
 
+			CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER)->SetActive(false);
+
+		
+
 			CPlayerInfoManager::GetInstance()->Hanabi_Active(false);
 			CPlayerInfoManager::GetInstance()->Tsugumi_Active(false);
 
@@ -2295,6 +2299,8 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				m_pCanvas_BrainField = dynamic_cast<CCanvas_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BrainField", &json));
 				assert(m_pCanvas_BrainField != nullptr && "Failed to Clone : CCanvas_BrainField");
 			}
+
+			CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER)->SetActive(true);
 
 			CUI_Manager::GetInstance()->Set_TempOff(false);
 			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(true);
@@ -2534,6 +2540,7 @@ HRESULT CPlayer::SetUp_Event()
 	m_pModel->Add_EventCaller("Jump", [&]() {Jump(); });
 
 	m_pModel->Add_EventCaller("CamMod", [&]() {Event_CamMod(); });
+	m_pModel->Add_EventCaller("ResetCamMod", [&]() {m_pCamSpot->Reset_CamMod(); });
 
 	m_pModel->Add_EventCaller("Collision_Start", [&]() {Event_CollisionStart(); });
 	m_pModel->Add_EventCaller("Collision_End", [&]() {Event_collisionEnd(); });
@@ -4137,6 +4144,8 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			}
 
 			CPlayerInfoManager::GetInstance()->Set_KineticCharge(0.f);
+
+			m_pCamSpot->Reset_CamMod();
 
 			IM_LOG("Kinetic No Use");
 		})
@@ -6228,7 +6237,7 @@ void CPlayer::Update_NoticeNeon()
 
 	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Reference", true, true);
+		m_pNoticeNeon->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
 		Safe_AddRef(m_pNoticeNeon);
 	}
 

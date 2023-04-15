@@ -219,7 +219,9 @@ HRESULT CSAS_Portrait::Initialize(void* pArg)
 		
 		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_HOOD_0")->SetActive(false);
 		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"MI_ch0400_MASK_0")->SetActive(false);
-		
+		m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->FindMaterial(L"Proto_MtrlAnim_Empty")->SetActive(false);
+
+
 		for (auto pMtrl : m_SAS_PortraitModels[static_cast<_uint>(ESASType::SAS_HARDBODY)]->GetMaterials())
 		{
 			pMtrl->GetParam().iPass = 6;
