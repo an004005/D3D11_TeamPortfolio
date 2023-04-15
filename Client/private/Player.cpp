@@ -5963,7 +5963,7 @@ void CPlayer::Update_NoticeNeon()
 
 	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Reference", true, true);
+		m_pNoticeNeon->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
 		Safe_AddRef(m_pNoticeNeon);
 	}
 
@@ -7456,14 +7456,16 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			{ 
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
 				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
-			})
+				})
 			.Priority(0)
 
-		.AddState("BRAINCRASH_CUTSCENE")
+	.AddState("BRAINCRASH_CUTSCENE")
 		.OnStart([&]()
 		{
 			m_bBrainCrash = true;
 			m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+			CGameInstance::GetInstance()->Pop_InLayer(PLAYERTEST_LAYER_MONSTER, TEXT("Layer_EnemyTmp"), CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+			CGameInstance::GetInstance()->SetLayerTimeRatio(0.f, PLAYERTEST_LAYER_MONSTER);
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -7541,7 +7543,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLAYERTEST_LAYER_MONSTER);
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })

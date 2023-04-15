@@ -7,6 +7,8 @@
 #include "ScarletCharacter.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "EffectSystem.h"
+
 CBullet::CBullet(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {

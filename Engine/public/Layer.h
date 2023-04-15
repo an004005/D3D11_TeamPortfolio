@@ -24,6 +24,8 @@ public:
 	void SetActive(_bool bActive) { m_bActive = bActive;}
 	_bool IsActive() const { return m_bActive; }
 
+	CGameObject* Pop_InLayer(CGameObject* pGameObject);
+
 private:
 	list<class CGameObject*>			m_GameObjects;
 	typedef list<class CGameObject*>	GAMEOBJECTS;
