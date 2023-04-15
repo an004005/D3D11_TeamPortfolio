@@ -3,6 +3,7 @@
 #include "Canvas.h"
 
 #include "Canvas_Acquisition.h"
+#include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CUI_Manager)
 
@@ -63,25 +64,23 @@ void CUI_Manager::Add_WindowCanvas(const wstring& pCanvasTag, CCanvas* pCanvas)
 
 void CUI_Manager::Set_TempOff(const _bool bOff)
 {
-	for (map<wstring, CCanvas*>::iterator iter = m_mapMoveCanvass.begin(); iter != m_mapMoveCanvass.end(); ++iter)
-		iter->second->TempOff(bOff);
+	for (auto& itr : m_mapMoveCanvass)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(itr.second))
+			itr.second->TempOff(bOff);
+	}
 
-	for (map<wstring, CCanvas*>::iterator iter = m_mapCanvass.begin(); iter != m_mapCanvass.end(); ++iter)
-		iter->second->TempOff(bOff);
+	for (auto& itr : m_mapCanvass)
+	{
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(itr.second))
+			itr.second->TempOff(bOff);
+	}
 }
 
 void CUI_Manager::Clear()
 {
-	// for (auto& Pair : m_mapMoveCanvass)
-		// Safe_Release(Pair.second);
-	m_mapMoveCanvass.clear();
-
-	// for (auto& Pair : m_mapCanvass)
-		// Safe_Release(Pair.second);
 	m_mapCanvass.clear();
-	
-	// for (auto& Pair : m_mapWindowCanvass)
-		// Safe_Release(Pair.second);
+	m_mapMoveCanvass.clear();
 	m_mapWindowCanvass.clear();
 }
 

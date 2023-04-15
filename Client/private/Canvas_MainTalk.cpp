@@ -404,7 +404,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	case 33:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"다들 구 토벌 병원으로 가서 나오미의 약을 찾아주기를 부탁하네" };
+		tTalkInfo.wsTalk0 = { L"다들 구 토벌 병원으로 가서 나오미의 약을 찾아주기를 부탁한다." };
 		tTalkInfo.wsTalk1 = { L"거기라면 해결할 방법이 있을 거야." };
 	}
 	break;

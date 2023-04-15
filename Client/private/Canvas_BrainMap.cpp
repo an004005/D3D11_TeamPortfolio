@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
 #include "UI_Manager.h"
+#include "Item_Manager.h"
 
 #include "Canvas_PlayerInfoMove.h"
 #include "DefaultUI.h"
@@ -42,6 +43,22 @@ HRESULT CCanvas_BrainMap::Initialize(void* pArg)
 	Link_Initialize();
 
 	m_arrCurrentHighLevel.fill(0);
+
+	for (size_t i = 0; i < m_vecIconUI.size(); i++)
+	{
+		if (true == CItem_Manager::GetInstance()->Get_Brain(i))
+		{
+			m_vecIconUI[i]->Set_BrainUse();
+
+			for (_int j = 0; j < 3; ++j)
+			{
+				if (-1 == m_vecIconUI[i]->Get_BrainInfo().arrNeighbor[j])
+					break;
+
+				m_vecIconUI[m_vecIconUI[i]->Get_BrainInfo().arrNeighbor[j]]->Set_OnIcon();
+			}
+		}
+	}
 
 	return S_OK;
 }
@@ -1186,12 +1203,12 @@ void CCanvas_BrainMap::ChildUI_Intiialize()
 		{
 			CMain_OnMouseUI* pMouseUI = dynamic_cast<CMain_OnMouseUI*>((*iter).second);
 			pMouseUI->Set_BrainInfo(m_vecBrain[m_iIconCount]);
-			
+
 			if(0 == m_vecBrain[m_iIconCount].iLevel)
 				pMouseUI->Set_IconIndex(m_vecBrain[m_iIconCount].vOnIconIndex);
 			else
 				pMouseUI->Set_IconIndex(m_vecBrain[m_iIconCount].vOffIconIndex);
-
+			
 			m_vecIconUI.push_back(pMouseUI);
 
 			++m_iIconCount;
@@ -1569,6 +1586,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 			m_bSkillAcquisition = true;
 			m_szAlarmText = L"BP를 소모했습니다.";
 			m_vecIconUI[iIndex]->Set_BrainUse();
+			CItem_Manager::GetInstance()->Set_Brain(iIndex);
 
 			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
 			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
