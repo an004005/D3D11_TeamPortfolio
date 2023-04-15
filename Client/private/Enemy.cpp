@@ -252,7 +252,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		return;
 
 	// 이상한 데미지 들어오는거 감지용, 버그 다 찾으면 지우기
-	Assert(tDamageParams.iDamage > 0);
+	//Assert(tDamageParams.iDamage > 0);
 
 	Assert(tDamageParams.iDamage < 20000);
 	// ex) 데미지 100 => 90 ~ 110 랜덤으로 변경
@@ -575,7 +575,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 	{
 	case EDeBuffType::DEBUFF_FIRE:
 		if (m_eDeBuff == EDeBuffType::DEBUFF_OIL
-			|| CGameUtils::GetRandFloat() >= m_fFireResist)
+			|| CGameUtils::GetRandFloat() > m_fFireResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 		break;
 	case EDeBuffType::DEBUFF_OIL:
@@ -583,7 +583,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 		break;
 	case EDeBuffType::DEBUFF_THUNDER:
 		if (m_eDeBuff == EDeBuffType::DEBUFF_WATER
-			|| CGameUtils::GetRandFloat() >= m_fThunderResist)
+			|| CGameUtils::GetRandFloat() > m_fThunderResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
 		break;
 	case EDeBuffType::DEBUFF_WATER:
@@ -629,11 +629,6 @@ void CEnemy::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 		m_iCrushGauge -= iDamage*1.2;
 		if (m_iCrushGauge < 0)
 		{
-			//브레인크러쉬 터져서 임시로 해둠 나중에 꼭 삭제!!!!
-			SetDead();
-			return;
-
-
 			if (m_bCrushStart == false)
 				m_pEMUI->Create_CGUI();
 		

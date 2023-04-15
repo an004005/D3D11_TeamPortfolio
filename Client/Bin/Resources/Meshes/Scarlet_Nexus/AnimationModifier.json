@@ -95,6 +95,24 @@
         "bLooping": false,
         "vecEvent": []
     },
+    "AS_BC_em8220_2_c02_ch0100": {
+        "Duration": 65.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em8220_2_c03_ch0100": {
+        "Duration": 116.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em8220_2_c08_ch0100": {
+        "Duration": 137.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
     "AS_BC_em_common_ch0100_end": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
@@ -117,6 +135,18 @@
         "vecEvent": []
     },
     "AS_BC_em_common_em0700": {
+        "Duration": 207.0,
+        "TickPerSecond": 69.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em_common_em0800": {
+        "Duration": 207.0,
+        "TickPerSecond": 69.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_BC_em_common_em0900": {
         "Duration": 207.0,
         "TickPerSecond": 69.0,
         "bLooping": false,
@@ -174,6 +204,130 @@
             {
                 "EventName": "BrainField_RedTextParticle_Explode",
                 "EventTime": 282.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 11.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 114.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 125.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 138.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 160.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 166.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 180.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 186.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 11.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 60.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 114.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 125.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 138.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 160.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 166.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 180.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 186.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_A",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_CableSpark_Effect_B",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_Cable_Particle",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_RedTextParticle_Head",
+                "EventTime": 30.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 90.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 110.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 130.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 150.0
+            },
+            {
+                "EventName": "BrainField_MaskNoise",
+                "EventTime": 170.0
             }
         ]
     },
@@ -2097,7 +2251,16 @@
         "Duration": 45.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Trail_Off",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_210_AL_atk_charge_cancel": {
         "Duration": 73.0,
@@ -2382,6 +2545,14 @@
             {
                 "EventName": "Elec_Attack_Dash_End_Particle",
                 "EventTime": 10.0
+            },
+            {
+                "EventName": "Bright_On",
+                "EventTime": 1.0
+            },
+            {
+                "EventName": "Bright_Off",
+                "EventTime": 15.0
             }
         ]
     },
@@ -6320,14 +6491,9 @@
     },
     "AS_em0300_411_AL_WT_break": {
         "Duration": 70.0,
-        "TickPerSecond": 15.0,
+        "TickPerSecond": 13.0,
         "bLooping": false,
-        "vecEvent": [
-            {
-                "EventName": "DeadFlower",
-                "EventTime": 60.0
-            }
-        ]
+        "vecEvent": []
     },
     "AS_em0300_415_AL_damage_m_F": {
         "Duration": 240.0,

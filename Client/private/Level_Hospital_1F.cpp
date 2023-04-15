@@ -26,8 +26,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	/*if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;*/
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+		return E_FAIL;
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/BossBatch.json");
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/MonsterBatch_Test.json"); 기존 몬스터 배치 테스트
@@ -45,8 +45,7 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	// 2F Monster 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Monster_Batch_2F_1st.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Monster_Batch_2F_2nd.json");
-
-	
+		
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/Hospital1F/Normal_Kinetic_2F_BossRoom.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 
@@ -68,6 +67,12 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 	// Item Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/Item_Batch.json");
+	
+	// Flower Test
+	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/FlowerTest.json");
+
+	// RedString Batch 
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Hospital1F/RedString_Batch.json");
 
 	// Story Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Hospital_1F.json");

@@ -53,7 +53,7 @@ private:
 
 private:
 	_bool PriorityCondition();
-
+	_bool HitHeavyCondition();
 private:
 	class CEM0210_Controller*		m_pController = nullptr;
 	class CEM0210_AnimInstance*		m_pASM = nullptr;

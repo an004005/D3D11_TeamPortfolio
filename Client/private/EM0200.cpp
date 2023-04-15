@@ -334,10 +334,7 @@ void CEM0200::SetUpFSM()
 				{
 					return PriorityCondition()
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
-					|| m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+					|| HitHeavyCondition();
 				})
 
 		.AddState("FlowerShower")
@@ -365,10 +362,7 @@ void CEM0200::SetUpFSM()
 				{
 					return PriorityCondition()
 					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
-					|| m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+					|| HitHeavyCondition();
 				})
 
 
@@ -395,7 +389,9 @@ void CEM0200::SetUpFSM()
 			.AddTransition("JumpAtk to JumpAtkLand", "JumpAtkLand")
 				.Predicator([this]
 				{
-					return PriorityCondition() || (m_bJumpAttack && m_bOnFloor);
+					return PriorityCondition()
+						|| HitHeavyCondition()
+						||(m_bJumpAttack && m_bOnFloor);
 				})
 		.AddState("JumpAtkLand")
 			.OnStart([this]
@@ -406,11 +402,8 @@ void CEM0200::SetUpFSM()
 				.Predicator([this]
 				{
 					return PriorityCondition()
-					|| m_pASM->isSocketPassby("FullBody", 0.95f)
-					|| m_eCurAttackType == EAttackType::ATK_TO_AIR
-					|| m_eCurAttackType == EAttackType::ATK_HEAVY
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP
-					|| m_eCurAttackType == EAttackType::ATK_SPECIAL_END;
+						|| m_pASM->isSocketPassby("FullBody", 0.95f)
+						|| HitHeavyCondition();
 				})
 
 
@@ -870,6 +863,11 @@ _bool CEM0200::IsPlayingSocket() const
 _bool CEM0200::PriorityCondition()
 {
 	return m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
+}
+
+_bool CEM0200::HitHeavyCondition()
+{
+	return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP || m_eCurAttackType == EAttackType::ATK_SPECIAL_END || m_eCurAttackType == EAttackType::ATK_TO_AIR;
 }
 
 CEM0200* CEM0200::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

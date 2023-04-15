@@ -365,45 +365,40 @@ _bool CSpecialObject::Collision_Check_Capsule(CRigidBody * AttackTrigger, DAMAGE
 
 void CSpecialObject::OutlineMaker()
 {
-	if (m_bOutline != m_bBeforeOutline)
+	if (m_bOutline)
 	{
-		if (m_bOutline)
+		for (auto& Model : m_pModelComs)
 		{
-			for (auto& Model : m_pModelComs)
+			for (auto& iter : Model->GetMaterials())
 			{
-				for (auto& iter : Model->GetMaterials())
+				if (0 == iter->GetParam().Ints.size())
 				{
-					if (0 == iter->GetParam().Ints.size())
-					{
-						iter->GetParam().Ints.push_back(0);
-					}
-					else
-					{
-						iter->GetParam().Ints[0] = 1;
-					}
+					iter->GetParam().Ints.push_back(0);
 				}
-			}
-		}
-		else
-		{
-			for (auto& Model : m_pModelComs)
-			{
-				for (auto& iter : Model->GetMaterials())
+				else
 				{
-					if (0 == iter->GetParam().Ints.size())
-					{
-						iter->GetParam().Ints.push_back(0);
-					}
-					else
-					{
-						iter->GetParam().Ints[0] = 0;
-					}
+					iter->GetParam().Ints[0] = 1;
 				}
 			}
 		}
 	}
-
-	m_bBeforeOutline = m_bOutline;
+	else
+	{
+		for (auto& Model : m_pModelComs)
+		{
+			for (auto& iter : Model->GetMaterials())
+			{
+				if (0 == iter->GetParam().Ints.size())
+				{
+					iter->GetParam().Ints.push_back(0);
+				}
+				else
+				{
+					iter->GetParam().Ints[0] = 0;
+				}
+			}
+		}
+	}
 }
 
 void CSpecialObject::BrightChecker()

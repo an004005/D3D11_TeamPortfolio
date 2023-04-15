@@ -43,7 +43,7 @@ void CEM0900_Controller::AI_Tick(_double TimeDelta)
 		return;
 
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
-	{
+	{	
 		DefineState(TimeDelta);
 	}
 }
@@ -57,9 +57,11 @@ void CEM0900_Controller::Tick_Near(_double TimeDelta)
 	{
 	case 0:
 		AddCommand("4Attack", 0.f, &CAIController::Input, F);
+		AddCommand("Wait", 1.5f, &CAIController::Wait);
 		break;
 	case 1:
 		AddCommand("Spin", 0.f, &CAIController::Input, S);
+		AddCommand("Wait", 1.5f, &CAIController::Wait);
 		break;
 	case 2:
 		AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, static_cast<EMoveAxis>(CMathUtils::RandomUInt(7)), 1.f);
@@ -76,6 +78,7 @@ void CEM0900_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
 	AddCommand("Throw", 0.f, &CAIController::Input, T);
+	AddCommand("Wait", 2.f, &CAIController::Wait);
 }
 
 void CEM0900_Controller::Tick_Outside(_double TimeDelta)

@@ -363,7 +363,9 @@ void CEM0650::SetUpFSM()
 			.AddTransition("Attack to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bDead 
+						|| HitHeavyCondition()
+						|| m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -523,6 +525,11 @@ void CEM0650::Make_Decal(_double TimeDelta)
 _bool CEM0650::PriorityCondition()
 {
 	return  m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
+}
+
+_bool CEM0650::HitHeavyCondition()
+{
+	return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP || m_eCurAttackType == EAttackType::ATK_SPECIAL_END || m_eCurAttackType == EAttackType::ATK_TO_AIR;
 }
 
 void CEM0650::HeavyAttackPushStart()

@@ -1,0 +1,39 @@
+{
+    "ObjectTag": "",
+    "Priority": 9999,
+    "Prototype_GameObject": "Prototype_PostVFX_ChromaticAberration\u0000",
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [0.0, 0.0, 0.0, 0.0],
+        "Float4x4s": [],
+        "Floats": [
+            0.0
+        ],
+        "Ints": [0],
+        "Pass": 13,
+        "Textures": [
+            "../Bin/Resources/Texture/VFX/T_ef_ev_one_glass_002.png",
+            "../Bin/Resources/Textures/LUT/FilmColor/BlueHue.png"
+        ]
+    },
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

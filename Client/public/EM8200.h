@@ -203,7 +203,12 @@ private:
 	class CEM8200_BrainField* m_pBrainField = nullptr;
 
 	CDoOnce m_BrainCrushOnce;
+	class CEM8200_BrainCrushCables* m_pBrainCrushCables = nullptr;
 
+	CCurveFloatImpl* m_pBrainCrushRimLight = nullptr;
+	CCurveFloatImpl* m_pBrainCrushChromaticAberration = nullptr;
+	CCurveFloatImpl* m_pBrainCrushChromaticAberrationCrash = nullptr;
+	class CPostVFX_ChromaticAberration* m_pChromaticAberration = nullptr;
 
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
