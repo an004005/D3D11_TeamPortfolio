@@ -23,6 +23,20 @@ HRESULT CEnvironmentEffect::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CEnvironmentEffect::Tick(_double TimeDelta)
+{
+	CGameObject::Tick(TimeDelta);
+
+	if (m_pEffectGroup)
+	{
+		m_pEffectGroup->SetVisible(m_bVisible);
+	}
+	if (m_pParticleGroup)
+	{
+		m_pParticleGroup->SetVisible(m_bVisible);
+	}
+}
+
 void CEnvironmentEffect::Imgui_RenderProperty()
 {
 	CGameObject::Imgui_RenderProperty();

@@ -324,6 +324,12 @@ HRESULT CPostVFX_ChromaticAberration::Initialize(void* pArg)
 	m_tParam.Floats[0] = 0.f;
 	m_tParam.Float4s.push_back(_float4::Zero);
 
+	m_tParam.Ints.push_back(0);
+
+	m_tParam.Textures.push_back({dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws("../Bin/Resources/Texture/VFX/T_ef_ev_one_glass_002.png").c_str())), 0});
+	m_tParam.Textures.push_back({dynamic_cast<CTexture*>(CGameInstance::GetInstance()->Clone_Component(CGameUtils::s2ws("../Bin/Resources/Textures/LUT/FilmColor/BlueHue.png").c_str())), 0});
+
+
 	return S_OK;
 }
 
@@ -362,6 +368,13 @@ CGameObject* CPostVFX_ChromaticAberration::Clone(void* pArg)
 	}
 
 	return pInstance;
+}
+
+void CPostVFX_ChromaticAberration::Free()
+{
+	CPostProcess::Free();
+	for (auto pTex : m_tParam.Textures)
+		Safe_Release(pTex.first);
 }
 
 /***********************************
