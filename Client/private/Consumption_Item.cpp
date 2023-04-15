@@ -161,6 +161,8 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
     {
         if (m_bOverlapCheck && !m_bGetItem)
         {
+            // ²ÉÁ×À½
+            CGameManager::GetInstance()->Set_Flower();
             m_bDelete = true;
         }
     }

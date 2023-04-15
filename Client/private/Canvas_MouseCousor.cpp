@@ -89,7 +89,7 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		//m_pCanvas_Alarm->Set_MapName();
 
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 9000;
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 8000;
 
 
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");

@@ -50,7 +50,7 @@ void CCanvas_SASInfoLeftMove::Tick(_double TimeDelta)
 	// 아직 멤버가 아니라면 Tick 을 돌지 않는다.
 	if (false == m_bMember)
 	{
-		if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI) && false == m_bTempOff)
+		if (false == m_bTempOff && true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::TSUGUMI))
 		{
 			m_bMember = true;
 

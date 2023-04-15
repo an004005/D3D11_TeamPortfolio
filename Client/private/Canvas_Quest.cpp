@@ -69,8 +69,8 @@ HRESULT CCanvas_Quest::Render()
 	_float4 vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	_float2 vPosition = Find_ChildUI(L"ChakeBase")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", m_wsQuest.c_str(), vPosition + _float2(50.0f, 7.0f), 0.f, vFontSize, vColor);
+	_float2 vPosition = Find_ChildUI(L"BackGround")->GetScreenSpaceLeftTop(); // ChakeBase
+	pGameInstance->Render_Font(L"Pretendard32", m_wsQuest.c_str(), vPosition + _float2(430.0f, 23.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
@@ -90,8 +90,9 @@ void CCanvas_Quest::Imgui_RenderProperty()
 	//}
 }
 
-void CCanvas_Quest::Add_Quest(const _int iIndex)
+void CCanvas_Quest::Add_Quest(const _int iIndex, const _bool bRender)
 {
+	if (false == bRender) m_fQuestMove = false;
 	m_iQuestIndex = iIndex;
 
 	QUESTINFO tQuestInfo;
@@ -119,6 +120,12 @@ void CCanvas_Quest::Add_Quest(const _int iIndex)
 	case 3:
 	{
 		m_wsQuest = L"병원에서 나오미의 약을 찾아 중대장에게 가기.";
+	}
+	break;
+
+	case 4:
+	{
+		m_wsQuest = L"동료와 함께 공사장에 나타난 괴이를 처치하세요.";
 	}
 	break;
 
@@ -211,7 +218,7 @@ void CCanvas_Quest::Success_Tick()
 			CGameManager::GetInstance()->Set_SuccessQuest(500);
 		}
 	}
-	else if (1 == m_iQuestIndex)
+	else if (1 == m_iQuestIndex)	// 4랑 세트
 	{
 		// 여기서는 추가로 플레이어 이동까지 한다.
 		if (3.0 < m_d3FMapMove_TimaAcc)
@@ -222,23 +229,37 @@ void CCanvas_Quest::Success_Tick()
 		}
 		else
 			m_d3FMapMove_TimaAcc += TIME_DELTA;
-
-		// 케스트 성공 조건 : 기름 보스를 잡으면 된다.
-		if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
-		{
-			if (dynamic_cast<CGameManager_Tutorial*>(CGameManager_Tutorial::GetInstance())->Get_EM0320Dead())
-			{
-				Set_SuccessQuest();
-			}
-		}
 	}
 	else if (2 == m_iQuestIndex)
 	{
+		if (CGameManager::GetInstance()->Get_Flower())
+		{
+			m_iQuestIndex = -1;
+			Set_SuccessQuest();
 
+			CGameManager::GetInstance()->Set_LeftTalk(26);
+			CGameManager::GetInstance()->Set_LeftTalk(27);
+			CGameManager::GetInstance()->Set_LeftTalk(28);
+			CGameManager::GetInstance()->Set_LeftTalk(29);
+			CGameManager::GetInstance()->Set_SuccessQuest(2000);
+		}
 	}
 	else if (3 == m_iQuestIndex)
 	{
 		CGameObject::SetDelete();
+	}
+	else if (4 == m_iQuestIndex)
+	{
+		// 퀘스트 성공 조건 : 기름 보스를 잡으면 된다.
+		if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
+		{
+			if (CGameManager::GetInstance()->Get_EM0320Dead())
+			{
+				m_iQuestIndex = -1;
+				Set_SuccessQuest();
+				CGameManager::GetInstance()->Set_SuccessQuest(1000);
+			}
+		}
 	}
 }
 

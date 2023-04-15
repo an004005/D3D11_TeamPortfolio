@@ -200,6 +200,32 @@ void CCanvas_WorldMap::CloneBar()
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
+	else 	if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
+	{
+		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
+		pCanvasMapBar->Set_Name(L"´ë·Î");
+		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->SetVisible(m_bMapUI);
+		vecMapBar.push_back(pCanvasMapBar);
+
+		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
+		pCanvasMapBar->Set_Name(L"½º¿À-·ù½Å±¸");
+		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->SetVisible(m_bMapUI);
+		vecMapBar.push_back(pCanvasMapBar);
+
+		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
+		pCanvasMapBar->Set_Name(L"Å°ÄíÄ¡¹Ù 3Ãþ");
+		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->SetVisible(m_bMapUI);
+		vecMapBar.push_back(pCanvasMapBar);
+
+		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
+		pCanvasMapBar->Set_Name(L"Å°ÄíÄ¡¹Ù 2Ãþ");
+		pCanvasMapBar->Set_PosY(70.0f);
+		pCanvasMapBar->SetVisible(m_bMapUI);
+		vecMapBar.push_back(pCanvasMapBar);
+	}
 	else 	if (LEVEL_NOW == LEVEL_SUBWAY)
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));

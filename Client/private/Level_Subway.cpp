@@ -11,7 +11,7 @@ CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 
 HRESULT CLevel_Subway::Initialize()
 {
-	m_bPlayerSpawn = false;
+	//m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Subway";
 	m_strShadowCamJsonPath.clear();

@@ -360,20 +360,16 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 		tTalkInfo.wsName = { L"유이토" };
 		tTalkInfo.wsTalk0 = { L"???" };
 		tTalkInfo.wsTalk1 = { L"" };
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
 	break;
 
-	//******************************************************** [3] 29
+	//******************************************************** [3] 29 ~ 34
 	case 29:
-	{
-		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"다들 마침 여기 있었군 지금 지하철에 내 딸이 있어" };
-		tTalkInfo.wsTalk1 = { L"어서 내 딸을 무사히 구출해 주기를 부탁한다." };
-	}
-	break;
-
-	//******************************************************** [3] 30 ~ 34
-	case 30:
 	{
 		tTalkInfo.wsName = { L"중대장" };
 		tTalkInfo.wsTalk0 = { L"다들 멈춰!!!!!" };
@@ -381,7 +377,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	}
 	break;
 
-	case 31:
+	case 30:
 	{
 		tTalkInfo.wsName = { L"중대장" };
 		tTalkInfo.wsTalk0 = { L"지금 나도 믿기지 않지만 뒤에 있는 아이는 내 딸이다." };
@@ -389,7 +385,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	}
 	break;
 
-	case 32:
+	case 31:
 	{
 		tTalkInfo.wsName = { L"루카" };
 		tTalkInfo.wsTalk0 = { L"나오미 라구요...?" };
@@ -397,11 +393,19 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	}
 	break;
 
+	case 32:
+	{
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"그렇다... 어쩌다 내 딸이 이렇게 되었는지는 모르겠지만," };
+		tTalkInfo.wsTalk1 = { L"여기는 내가 지킬 테니." };
+	}
+	break;
+
 	case 33:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"그렇다... 어쩌다 내 딸이 이렇게 되었는지는 모르겠지만 여긴 내가 지킬 테니" };
-		tTalkInfo.wsTalk1 = { L"다들 구 토벌 병원으로 가서 약을 구해다 줘 거기라면 해결할 방법이 있을 거야" };
+		tTalkInfo.wsTalk0 = { L"다들 구 토벌 병원으로 가서 나오미의 약을 찾아주기를 부탁하네" };
+		tTalkInfo.wsTalk1 = { L"거기라면 해결할 방법이 있을 거야." };
 	}
 	break;
 	

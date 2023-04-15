@@ -96,6 +96,7 @@ private:
 	_float4x4	pivot;
 
 	_bool	m_bWeakTalk = { false };
+	_bool	m_bTalk = { false };
 
 public:
 	static CEM1100* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
