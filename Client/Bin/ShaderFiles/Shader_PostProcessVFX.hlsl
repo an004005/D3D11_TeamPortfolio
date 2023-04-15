@@ -577,26 +577,64 @@ PS_OUT PS_BRAINFIELD_13(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	// 색수차
-	if (In.vTexUV.x < 0.02 || In.vTexUV.x >= 0.98 || In.vTexUV.y < 0.02 || In.vTexUV.y > 0.98)
+	if (g_int_0 == 0)
 	{
+		// 색수차
+		if (In.vTexUV.x < 0.02 || In.vTexUV.x >= 0.98 || In.vTexUV.y < 0.02 || In.vTexUV.y > 0.98)
+		{
+			Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+			Out.vColor.a = 1.f;
+			return Out;
+		}
+
+		if (g_float_0 > 0.f)
+		{
+			float3 vOffset = float3(-0.007f, 0.007f, 0.02f) * g_float_0;
+			Out.vColor.rgb = ChromaticAberration(In.vTexUV, vOffset);
+		    Out.vColor.a = 1.f;
+			return Out;
+		}
+
+		// ~색수차
+
 		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-		Out.vColor.a = 1.f;
-		return Out;
+		Out.vColor.a = 1.f;		
 	}
-
-	if (g_float_0 > 0.f)
+	else
 	{
-		float3 vOffset = float3(-0.007f, 0.007f, 0.02f) * g_float_0;
-		Out.vColor.rgb = ChromaticAberration(In.vTexUV, vOffset);
-	    Out.vColor.a = 1.f;
-		return Out;
+		if (In.vTexUV.x < 0.02 || In.vTexUV.x >= 0.98 || In.vTexUV.y < 0.02 || In.vTexUV.y > 0.98)
+		{
+			Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
+		}
+		else
+		{
+			float3 vOffset = float3(-0.007f, 0.007f, 0.02f) * g_float_0;
+			Out.vColor.rgb = ChromaticAberration(In.vTexUV, vOffset);
+		}
+		Out.vColor.a = 1.f;
+
+		float blend = g_float_0; // 0.5를 최대 값으로 사용하기 위함
+
+		float COLORS = 16.f; // LUT 가로 개수?
+
+		float maxColor = COLORS - 1.0;
+		float4 col = Out.vColor;
+		float halfColX = 0.5f / 256.f; // LUT텍스쳐 가로 픽셀 사이즈
+		float halfColY = 0.5f / 16.f; // LUT텍스쳐 세로 픽셀 사이즈
+		float threshold = maxColor / COLORS;
+
+		float xOffset = halfColX + col.r * threshold / COLORS;
+		float yOffset = halfColY + col.g * threshold;
+		float cell = floor(col.b * maxColor);
+
+		float2 lutPos = float2(cell / COLORS + xOffset, yOffset);
+		float4 gradedCol = g_tex_1.Sample(LinearSampler, lutPos); // blue hue
+		 
+		Out.vColor.rgb = lerp(col.rgb, gradedCol.rgb, blend);
+
+		Out.vColor.rgb += g_tex_0.Sample(LinearSampler, In.vTexUV);
+		Out.vColor.rgb = saturate(Out.vColor.rgb);
 	}
-
-	// ~색수차
-
-	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV);
-	Out.vColor.a = 1.f;
 
 	
 	return Out;

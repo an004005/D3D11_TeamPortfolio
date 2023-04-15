@@ -19,6 +19,11 @@
 #include "PlayerInfoManager.h"
 #include "EM8200_CopyRush.h"
 #include "EM8200_BrainField.h"
+#include "EM8200_BrainCrushCables.h"
+#include "CurveManager.h"
+#include "CurveFloatMapImpl.h"
+#include "BrainField.h"
+
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -62,6 +67,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 
 	m_pEMUI->SetWeakBoneName("Spine1");
 
+	m_bSpawnEffect = false;
 
 	return S_OK;
 }
@@ -103,6 +109,14 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	_double TickPerSec = m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->GetTickPerSec();
 	m_pModelCom->Find_Animation("AS_em8200_BrainField_start")->SetTickPerSec(TickPerSec * 2.0);
+
+	m_pBrainCrushCables = dynamic_cast<CEM8200_BrainCrushCables*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_BrainCrushCables"));
+	m_pBrainCrushCables->SetTargetInfo(m_pTransformCom, m_pModelCom);
+	
+	m_pBrainCrushRimLight = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_RimLight");
+	m_pBrainCrushChromaticAberration = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_ChromaticAberration");
+	m_pBrainCrushChromaticAberrationCrash = CCurveManager::GetInstance()->GetCurve("EM8200_BrainCrash_ChromaticAberration_Crash");
+	m_pChromaticAberration = dynamic_cast<CPostVFX_ChromaticAberration*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayerNoBegin(LEVEL_NOW, L"Prototype_PostVFX_ChromaticAberration"));
 }
 
 void CEM8200::Detected_Attack()
@@ -588,6 +602,8 @@ void CEM8200::Tick(_double TimeDelta)
 	m_pLeftCopy->Tick(TimeDelta);
 	m_pRightCopy->Tick(TimeDelta);
 
+	m_pChromaticAberration->Tick(TimeDelta);
+
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
 }
@@ -606,6 +622,9 @@ void CEM8200::Late_Tick(_double TimeDelta)
 
 	m_pBrainField->Tick(TimeDelta);
 	m_pBrainField->Late_Tick(TimeDelta);
+	m_pBrainCrushCables->Tick(TimeDelta);
+	m_pBrainCrushCables->Late_Tick(TimeDelta);
+	m_pChromaticAberration->Late_Tick(TimeDelta);
 }
 
 void CEM8200::AfterPhysX()
@@ -672,6 +691,16 @@ void CEM8200::Imgui_RenderProperty()
 	{
 		m_pBrainField->CloseBrainField();
 	}
+	if (ImGui::CollapsingHeader("BrainCrush"))
+	{
+		m_pBrainCrushCables->Imgui_RenderProperty();
+		m_pBrainCrushCables->Imgui_RenderComponentProperties();
+	}
+	if (ImGui::CollapsingHeader("Chromatic"))
+	{
+		m_pChromaticAberration->Imgui_RenderProperty();
+		m_pChromaticAberration->Imgui_RenderComponentProperties();
+	}
 }
 
 void CEM8200::SetUpUI()
@@ -706,6 +735,12 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				pMtrl->GetParam().Floats[2] = 0;
 			}
 		})
+				.AddTransition("to BrainCrushStart_1", "BrainCrushStart_1")
+					.Predicator([this]
+					{
+						return CGameInstance::GetInstance()->KeyDown(DIK_O);
+					})
+
 	.AddTransition("Idle to BrainCrushReady", "BrainCrushReady")
 		.Predicator([this]
 		{
@@ -1953,9 +1988,17 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_1")
 		.OnStart([this]
 		{
-			if (m_pTarget)
-				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+			// if (m_pTarget)
+				// m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+			_float fPlayRatio = m_pModelCom->Find_Animation("AS_EnpcBC_dam_c02_em8200")->GetPlayRatio(); 
+			_float fValue = m_pBrainCrushRimLight->GetValue(fPlayRatio);
+			for (auto pMtrl : m_pModelCom->GetMaterials())
+				pMtrl->GetParam().Floats[0] = fValue;
+			
 		})
 		.AddTransition("BrainCrushStart_1 to BrainCrushStart_2", "BrainCrushStart_2")
 			.Predicator([this]
@@ -1966,7 +2009,12 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_2")
 		.OnStart([this]
 		{
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
+			m_pBrainCrushCables->Activate(true);
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c03_em8200");
+		})
+		.Tick([this](_double TimeDelta)
+		{
+
 		})
 		.AddTransition("BrainCrushStart_2 to BrainCrushStart_3", "BrainCrushStart_3")
 			.Predicator([this]
@@ -1977,12 +2025,19 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_3")
 		.OnStart([this]
 		{
-			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetDuration(100000.0);
-			m_pASM->AttachAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
+			m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->SetStay(true);
+			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_fin_c05_em8200");
 		})
-
-	
-
+		.Tick([this](_double TimeDelta)
+		{
+			_float fPlayRatio = m_pModelCom->Find_Animation("AS_EnpcBC_fin_c05_em8200")->GetPlayRatio(); 
+			m_pChromaticAberration->GetParam().Floats[0] = m_pBrainCrushChromaticAberration->GetValue(fPlayRatio);;
+			m_pChromaticAberration->GetParam().Ints[0] = (_int)m_pBrainCrushChromaticAberrationCrash->GetValue(fPlayRatio);
+			if (fPlayRatio > 0.5f)
+			{
+				m_pBrainCrushCables->Activate(false);
+			}
+		})
 	;
 
 }
@@ -2164,5 +2219,6 @@ void CEM8200::Free()
 	Safe_Release(m_pRightCopy);
 
 	Safe_Release(m_pBrainField);
-
+	Safe_Release(m_pBrainCrushCables);
+	Safe_Release(m_pChromaticAberration);
 }

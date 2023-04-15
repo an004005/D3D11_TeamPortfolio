@@ -305,6 +305,7 @@
     <ClInclude Include="..\public\EM1200_Controller.h" />
     <ClInclude Include="..\public\EM8200.h" />
     <ClInclude Include="..\public\EM8200_AnimInstance.h" />
+    <ClInclude Include="..\public\EM8200_BrainCrushCables.h" />
     <ClInclude Include="..\public\EM8200_Controller.h" />
     <ClInclude Include="..\public\EM8200_CopyRush.h" />
     <ClInclude Include="..\public\EMBrain.h" />
@@ -654,6 +655,7 @@
     <ClCompile Include="..\private\EM1200_Controller.cpp" />
     <ClCompile Include="..\private\EM8200.cpp" />
     <ClCompile Include="..\private\EM8200_AnimInstance.cpp" />
+    <ClCompile Include="..\private\EM8200_BrainCrushCables.cpp" />
     <ClCompile Include="..\private\EM8200_Controller.cpp" />
     <ClCompile Include="..\private\EM8200_CopyRush.cpp" />
     <ClCompile Include="..\private\EMBrain.cpp" />

@@ -27,7 +27,7 @@
 #include "Imgui_CamAnimEditor.h"
 #include "GameManager.h"
 
-#define ADD_PLAYER
+// #define ADD_PLAYER
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)

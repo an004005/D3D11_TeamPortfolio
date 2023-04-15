@@ -1574,6 +1574,9 @@
     <ClInclude Include="..\public\Level_DownTown.h">
       <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM8200_BrainCrushCables.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2580,6 +2583,9 @@
     <ClCompile Include="EnvironmentEffect.cpp" />
     <ClCompile Include="..\private\Level_DownTown.cpp">
       <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_BrainCrushCables.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
