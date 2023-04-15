@@ -33,6 +33,10 @@ public:
 	CBulletBuilder& Set_Radius(_float	fRad);
 	CBulletBuilder& Set_Sound(_bool bSound);
 
+	CBulletBuilder& Set_LoopSound(const string& SoundTag);
+	CBulletBuilder& Set_HitSound(const string& SoundTag);
+
+
 	void Build();
 
 private:
@@ -58,6 +62,11 @@ private:
 
 	_bool			m_bRotParticles = false;
 	_bool			m_bUseSound = false;
+
+	string m_LoopSoundTag;
+	string m_HitSoundTag;
+
+
 public:
 	virtual void Free() override;
 };

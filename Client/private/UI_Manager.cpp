@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "..\public\UI_Manager.h"
+
+#include <GameUtils.h>
+
 #include "Canvas.h"
 
 #include "Canvas_Acquisition.h"
@@ -33,6 +36,9 @@ CUI_Manager::CUI_Manager()
 	m_SoundStore.CloneSound("Upgrade");	// 레벨 업 할 때 + ★
 	m_SoundStore.CloneSound("Weapon");	// 장비 장착할 때 + ★
 
+#ifndef _DEBUG
+	CGameUtils::HideCursor();
+#endif
 //	CUI_Manager::GetInstance()->PlaySound("xxX");
 }
 
@@ -104,6 +110,24 @@ void CUI_Manager::Clear()
 	m_mapCanvass.clear();
 	m_mapMoveCanvass.clear();
 	m_mapWindowCanvass.clear();
+}
+
+void CUI_Manager::Tick(_double TimeDelta)
+{
+	
+	if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
+	{
+		if (m_bMouseActive)
+		{
+			m_bMouseActive = false;
+			CGameUtils::HideCursor();
+		}
+		else
+		{
+			m_bMouseActive = true;
+			CGameUtils::ShowCursor();
+		}
+	}
 }
 
 void CUI_Manager::PlaySound(const string& SoundName)

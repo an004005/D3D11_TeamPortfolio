@@ -125,7 +125,6 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 
 		m_pFSM->Tick(TimeDelta);
 
-
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
 		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
 		// AddCommand("Ice_Needle_Attack", 0.f, &CEM8200_Controller::Input, Q);

@@ -7,6 +7,7 @@
 #include "EffectGroup.h"
 #include "SoundStore.h"
 #include "TimerHelper.h"
+#include "SoundStore.h"
 
 BEGIN(Engine)
 class CRenderer;
@@ -67,6 +68,9 @@ public:
 	void Set_Sound(_bool bSound) {
 		m_bUseSound = bSound;
 	}
+	void Set_LoopSound(const string& SoundTag);
+	void Set_HitSound(const string& SoundTag);
+
 protected:
 	_bool CheckDamagedTarget(CGameObject* pTarget);
 
@@ -107,6 +111,10 @@ protected:
 
 
 	_bool	m_bRotParticles = false;
+
+	string m_LoopSoundTag;
+	string m_HitSoundTag;
+
 public:
 	static CBullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

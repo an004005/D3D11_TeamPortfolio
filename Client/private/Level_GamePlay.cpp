@@ -147,7 +147,6 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 	// });
 
 
-	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 
 	FAILED_CHECK(CFactoryMethod::MakePlayerPrototypes(m_pDevice, m_pContext));
 
@@ -168,10 +167,19 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeNPCPrototypes(m_pDevice, m_pContext);
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
+
+	pGameInstance->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	Json PreviewData;
+	{
+		PreviewData["Model"] = "Prototype_Model_em8200";
+		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+		auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
+	}
 
 
 	return S_OK;

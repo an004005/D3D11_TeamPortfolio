@@ -88,6 +88,7 @@ protected:
 private:
 	void Play_MidHitAnim();
 	void Play_HeavyHitAnim();
+	void TP_Start();
 
 
 private:
@@ -211,6 +212,8 @@ private:
 	class CPostVFX_ChromaticAberration* m_pChromaticAberration = nullptr;
 
 	class CCanvas_MainTalk* m_pCanvas_MainTalk = nullptr;
+
+	CDoOnce m_ItemSpawn;
 
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }

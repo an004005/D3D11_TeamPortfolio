@@ -32,6 +32,11 @@ public:
 
 	void Clear();
 
+	void SetMouseActive(_bool bActive) { m_bMouseActive = bActive; }
+	_bool IsMouseActive() const { return m_bMouseActive; }
+
+	void Tick(_double TimeDelta);
+
 public:
 	void	PlaySound(const string& SoundName);
 
@@ -41,6 +46,8 @@ private:
 	map<wstring, CCanvas*> m_mapWindowCanvass;
 
 	CSoundStore m_SoundStore;
+
+	_bool m_bMouseActive = false;
 
 public:
 	virtual void Free() override;

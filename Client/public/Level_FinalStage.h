@@ -14,7 +14,6 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual HRESULT Ready_Lights() override;
 
-	
 	virtual void Tick(_double TimeDelta) override;
 
 public:
