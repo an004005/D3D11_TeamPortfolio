@@ -153,7 +153,7 @@ void CLevel_Hospital_1F::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Hospital_1F * CLevel_Hospital_1F::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

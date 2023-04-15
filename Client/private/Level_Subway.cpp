@@ -62,6 +62,7 @@ HRESULT CLevel_Subway::Initialize()
 
 	// UI Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Subway.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Subway.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
@@ -127,7 +128,7 @@ void CLevel_Subway::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Subway * CLevel_Subway::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

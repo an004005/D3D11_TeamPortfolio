@@ -46,7 +46,7 @@ HRESULT CCanvas_Quest::Initialize(void* pArg)
 
 void CCanvas_Quest::Tick(_double TimeDelta)
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_Q))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_E))
 	{
 		m_fQuestMove = !m_fQuestMove;
 		m_bVisible = true;
@@ -93,6 +93,7 @@ void CCanvas_Quest::Imgui_RenderProperty()
 void CCanvas_Quest::Add_Quest(const _int iIndex, const _bool bRender)
 {
 	if (false == bRender) m_fQuestMove = false;
+	else CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
 	m_iQuestIndex = iIndex;
 
 	QUESTINFO tQuestInfo;

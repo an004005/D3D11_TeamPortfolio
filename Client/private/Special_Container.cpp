@@ -54,6 +54,8 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 		{
 			if (m_bCollision) return;
 
+			m_SoundStore.PlaySound("Special_Container_2", m_pTransformCom);
+
 			m_bCollision = true;
 			m_bAddAble = true;
 
@@ -83,6 +85,9 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			//CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
 		}
 	});
+
+	m_SoundStore.CloneSound("Special_Container_2");
+	m_SoundStore.CloneSound("Special_Container_3");
 
 	return S_OK;
 }
@@ -176,6 +181,8 @@ void CSpecial_Container::Imgui_RenderProperty()
 void CSpecial_Container::Container_ChangeIndex(_uint iIndex)
 {
 	if (m_iModelIndex == iIndex) return;
+
+	m_SoundStore.PlaySound("Special_Container_3", m_pTransformCom);
 
 	m_iModelIndex = iIndex;
 

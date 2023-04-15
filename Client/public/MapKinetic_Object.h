@@ -71,7 +71,8 @@ public:
 
 	_bool	m_bCounter = false;
 
-
+public:
+	void	Set_Dead();
 
 private:
 	void	OutlineMaker();
