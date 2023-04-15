@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Tutorial.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 #include "PlayerInfoManager.h"
 #include "GameManager_Tutorial.h"
@@ -34,6 +35,8 @@ HRESULT CCanvas_Tutorial::Initialize(void* pArg)
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
+
+	CUI_Manager::GetInstance()->PlaySound("TABLarge");
 
 	return S_OK;
 }
@@ -250,6 +253,8 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL& eTUTORIAL, const _tchar* pChildT
 
 		if (true == dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Get_End())
 		{
+			CUI_Manager::GetInstance()->PlaySound("TABSmall");
+		
 			Find_ChildUI(pChildTag)->SetDelete();
 			dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_End();
 			dynamic_cast<CTutorial_CheckUI*>(Find_ChildUI(L"Tutorial_Check0"))->Set_End();

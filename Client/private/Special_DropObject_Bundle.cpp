@@ -40,6 +40,9 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 
 	m_eSpecialObejctType = SPECIAL_DROPOBJECT_BUNDLE;
 
+	m_SoundStore.CloneSound("Special_Drop_Success");
+	m_SoundStore.CloneSound("Special_Drop_Fail");
+
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
 		if (!m_bThrow)
@@ -50,15 +53,22 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 
 		if (auto pStatic = dynamic_cast<CMapObject*>(pGameObject))
 		{
+			if (m_bDecompose)
+				return;
+
 			m_bDecompose = true;
 			m_bDeadCheck = true;
 			m_fDeadTime = 3.f;
+
+			m_SoundStore.PlaySound("Special_Drop_Fail", m_pTransformCom);
 		}
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			if (m_bDecompose)
 				return;
+
+			m_SoundStore.PlaySound("Special_Drop_Success", m_pTransformCom);
 
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));

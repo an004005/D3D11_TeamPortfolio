@@ -67,6 +67,8 @@ HRESULT CAI_CH0500::Initialize(void* pArg)
 
 	m_pModel->FindMaterial(L"MI_ch0500_HOOD_0")->SetActive(false);
 
+	m_SoundStore.CloneSound("AI_gunshot");
+
 	return S_OK;
 }
 
@@ -677,6 +679,8 @@ void CAI_CH0500::Shoot()
 			}
 		}
 	}
+
+	m_SoundStore.PlaySound("AI_gunshot", m_pTransformCom);
 }
 
 HRESULT CAI_CH0500::Setup_Parts()

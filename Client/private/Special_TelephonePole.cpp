@@ -48,6 +48,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		}
 	});
 
+	m_SoundStore.CloneSound("fx_kine_super_telepole_imp");
 
 	return S_OK;
 }
@@ -272,6 +273,8 @@ void CSpecial_TelephonePole::TelephonePole_Collision_On()
 
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_TelephonePole_BreakMeshes")->
 			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
+
+		m_SoundStore.PlaySound("fx_kine_super_telepole_imp", m_pTransformCom);
 
 		m_bAddAble = true;
 	}

@@ -304,6 +304,8 @@ void CCamera_Manager::ActionCamTickByPlayTime(_float fRatio)
 
 void CCamera_Manager::ReleaseCameraFovCurve()
 {
+	if (nullptr == m_pFovCurve) return;
+
 	Safe_Release(m_pFovCurve);
 	m_pFovCurve = nullptr;
 	

@@ -58,7 +58,7 @@ void CAlarm_Trigger::LoadFromJson(const Json& json)
 		m_wsName = L"구 토벌군병원";
 		break;
 	case Client::LEVEL_FINAL_STAGE:	// 26
-		m_wsName = L"???";
+		m_wsName = L"????";
 		break;
 	default:
 		m_wsName = L"쥬신 게임아카데미";
