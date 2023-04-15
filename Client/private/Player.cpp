@@ -377,7 +377,7 @@ void CPlayer::Tick(_double TimeDelta)
 		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({ 0.f, 0.f, 1.f, 0.f }, 0.1f);
 	}
 
-	 if (m_pPlayerCam->IsMainCamera())
+	 if (m_pPlayerCam->IsMainCamera() || false == CPlayerInfoManager::GetInstance()->GetPlayerLock())
 		m_pController->Tick(TimeDelta);
 	 else
 		m_pController->Invalidate();
@@ -2615,6 +2615,33 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
 	*/
+
+	//m_pBrainCrashHandParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Brain_Crush_Hand_Particle");
+	//m_pBrainCrashHandParticle->Start_Attach(this, "LeftForeArmRoll1", true);
+
+	m_pModel->Add_EventCaller("BrainCrashHandParticle", [&]() {
+		m_pBrainCrashHandParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Brain_Crush_Hand_Particle");
+		m_pBrainCrashHandParticle->Start_Attach(this, "LeftForeArmRoll1", true);
+	});
+
+	m_pModel->Add_EventCaller("BrainCrashHandParticle_Delete", [&]() {
+
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+		{
+			m_pBrainCrashHandParticle->Delete_Particles();
+			m_pBrainCrashHandParticle = nullptr;
+		}
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionParticle))
+		{
+			m_pBrainCrashPositionParticle->Delete_Particles();
+			m_pBrainCrashPositionParticle = nullptr;
+		}
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionEffect))
+		{
+			m_pBrainCrashPositionEffect->SetDelete();
+			m_pBrainCrashPositionEffect = nullptr;
+		}
+	});
 
 	m_pModel->Add_EventCaller("HandGearEffect", [&]() {
 		_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(XMConvertToRadians(-90.f));
@@ -7742,6 +7769,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.Tick([&](double fTimeDelta) 
 		{
 			m_bBrainCrash = false;
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+			{
+				m_pBrainCrashHandParticle->Delete_Particles();
+				m_pBrainCrashHandParticle = nullptr;
+			}
 		})
 		.OnExit([&]()
 		{
@@ -7797,6 +7830,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		{
 			CGameObject* pTarget = nullptr;
 
+			m_pBrainCrashPositionParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Monster_Brain_Crush_Particle_A");
+			m_pBrainCrashPositionEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Distortion");
+
 			if (pTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
 				if (pTarget->GetPrototypeTag() == L"Monster_em210")
@@ -7806,13 +7842,13 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					fDistance = (vTargetPos - vPlayerPos).Length();
 
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
 					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
 					if (5.f >= fDistance)
 					{
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
 
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -7821,9 +7857,17 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					}
 					else
 					{
+						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
+						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+
+						m_pBrainCrashPositionParticle->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
+						m_pBrainCrashPositionEffect->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
 					}
 				}
 				else
@@ -7838,8 +7882,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
 					m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+
+					m_pBrainCrashPositionParticle->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
+					m_pBrainCrashPositionEffect->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
 				}
 			}
+
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7847,7 +7895,21 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+			{
+				m_pBrainCrashHandParticle->Delete_Particles();
+				m_pBrainCrashHandParticle = nullptr;
+			}
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionParticle))
+			{
+				m_pBrainCrashPositionParticle->Delete_Particles();
+				m_pBrainCrashPositionParticle = nullptr;
+			}
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionEffect))
+			{
+				m_pBrainCrashPositionEffect->SetDelete();
+				m_pBrainCrashPositionEffect = nullptr;
+			}
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })

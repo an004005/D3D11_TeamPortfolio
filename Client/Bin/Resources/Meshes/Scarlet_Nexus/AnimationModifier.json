@@ -130,6 +130,14 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "BrainCrashHandParticle",
+                "EventTime": 95.0
+            },
+            {
+                "EventName": "BrainCrashHandParticle_Delete",
+                "EventTime": 115.0
             }
         ]
     },

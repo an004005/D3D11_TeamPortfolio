@@ -49,7 +49,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_iMaxHP = 30000;
 		m_iHP = 30000; // ¡Ú
 		m_iMaxCrushGauge = m_iMaxHP * 1.1f;
-		m_iCrushGauge = 100; // m_iMaxCrushGauge;
+		m_iCrushGauge = m_iMaxCrushGauge;
 		m_bHasCrushGauge = true;
 
 		m_iAtkDamage = 50;
