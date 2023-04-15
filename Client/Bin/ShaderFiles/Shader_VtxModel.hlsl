@@ -296,6 +296,17 @@ PS_OUT PS_RIMLIGHT_6(PS_IN In)
 	
 	return Out;
 }
+
+PS_OUT_ALPHABLEND PS_GLASS_BRAIN_7(PS_IN In)
+{
+	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
+
+	Out.vColor.rgb = g_tex_0.Sample(LinearSampler, In.vTexUV).rgb * 1.8f;
+	Out.vColor.a = 0.5f;
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	// 0
@@ -394,6 +405,20 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_RIMLIGHT_6();
+	}
+
+	//7
+	pass GlassBrain
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_GLASS_BRAIN_7();
 	}
 
 }

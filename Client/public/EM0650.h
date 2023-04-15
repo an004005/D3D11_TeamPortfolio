@@ -41,7 +41,7 @@ private:
 	void Create_Bullet();
 	void Make_Decal(_double TimeDelta);
 	_bool PriorityCondition();
-
+	_bool HitHeavyCondition();
 private:
 	//충돌 관련 함수 정의
 	void	HeavyAttackPushStart();

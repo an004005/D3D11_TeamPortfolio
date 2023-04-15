@@ -16,7 +16,7 @@ CEM1100_Controller::CEM1100_Controller(const CEM1100_Controller & rhs)
 HRESULT CEM1100_Controller::Initialize(void * pArg)
 {
 	m_iNearOrder = CMathUtils::RandomUInt(1);
-	m_iFarOrder = CMathUtils::RandomUInt(2);
+	m_iFarOrder = CMathUtils::RandomUInt(3);
 	//Move함수 시 플레이어와 거리가 어느정도까지 가까워졌을때 멈출지를 정해줌
 	m_fNearestTargetDist = 5.5f;
 
@@ -73,25 +73,29 @@ void CEM1100_Controller::Tick_Near(_double TimeDelta)
 	case 0:
 		if (m_pCastedOwner->IsTargetFront(60.f))
 		{
-			//AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
 			AddCommand("WaterAttack", 0.f, &CAIController::Input, W);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
 			m_bAttack = true;
 		}
 		else
+		{
 			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+		}
 		break;
 
 	case 1:
 		if (m_pCastedOwner->IsTargetFront(60.f))
 		{
-			//AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
-			AddCommand("Wait", 1.f, &CAIController::Wait);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
 			m_bAttack = true;
 		}
 		else
+		{
 			AddCommand("TailSwing", 0.f, &CAIController::Input, T);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+		}
 		break;
 
 	}
@@ -117,13 +121,19 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 			switch (m_iFarOrder)
 			{
 			case 0:
+				AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, eMoveAxis, 1.f);
 			case 1:
 				AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
-				AddCommand("Run", 2.f, &CEM1100_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+				AddCommand("Run", 4.f, &CEM1100_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 				AddCommand("Wait", 0.3f, &CAIController::Wait);
 				break;
 			case 2:
 				AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, eMoveAxis, 1.f);
+				break;
+			case 3:
+				AddCommand("Turn", 2.f, &CAIController::TurnToTargetStop, 1.f);
+				AddCommand("Run", 4.f, &CEM1100_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
+				AddCommand("Wait", 0.3f, &CAIController::Wait);
 				break;
 			}
 
@@ -133,12 +143,17 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 			switch (m_iFarOrder)
 			{
 			case 0:
+				AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, eMoveAxis, 1.f);
 			case 1:
 				AddCommand("ElectricBall", 0.f, &CAIController::Input, E);
-				AddCommand("Wait", 1.5f, &CAIController::Wait);
+				AddCommand("Wait", 2.5f, &CAIController::Wait);
 				break;
 			case 2:
 				AddCommand("Walk", 2.f, &CAIController::Move_TurnToTarget, eMoveAxis, 1.f);
+				break;
+			case 3:
+				AddCommand("ElectricBall", 0.f, &CAIController::Input, E);
+				AddCommand("Wait", 2.5f, &CAIController::Wait);
 				break;
 			}
 		}
@@ -147,11 +162,11 @@ void CEM1100_Controller::Tick_Far(_double TimeDelta)
 	{
 		//rush하기전 준비동작이 길어서 거기서 Turn을 해줌
 		AddCommand("Rush", 0.f, &CAIController::Input, R);
-		AddCommand("Wait", 1.f, &CAIController::Wait);
+		AddCommand("Wait", 3.f, &CAIController::Wait);
 	}
 
 	
-	m_iFarOrder = (m_iFarOrder + 1) % 3;
+	m_iFarOrder = (m_iFarOrder + 1) % 4;
 }
 
 void CEM1100_Controller::Tick_Outside(_double TimeDelta)
