@@ -1,0 +1,27 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "MainClick",
+            "SoundFiles": [
+                "UI/UI_click_elements.1.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "UnableClick",
+            "SoundFiles": [
+                "UI/UI_click_elements_unable.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        }
+    ]
+}
