@@ -167,6 +167,7 @@ HRESULT CLevel_GamePlay::Ready_Prototypes()
 
 	CFactoryMethod::MakeUIPrototypes(m_pDevice, m_pContext);
 	CFactoryMethod::MakeEffectPrototypes(m_pDevice, m_pContext);
+	CFactoryMethod::MakeNPCPrototypes(m_pDevice, m_pContext);
 	FAILED_CHECK(CFactoryMethod::MakeKineticPrototypes(m_pDevice, m_pContext));
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));

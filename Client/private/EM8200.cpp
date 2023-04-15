@@ -56,6 +56,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
+	m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
@@ -871,8 +872,8 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
 		.Predicator([this]
 		{
-			return CGameInstance::GetInstance()->KeyDown(DIK_P);
-				// return m_eInput == CController::CTRL;
+			// return CGameInstance::GetInstance()->KeyDown(DIK_P);
+				return m_eInput == CController::CTRL;
 		})
 
 	.AddTransition("Idle to Hit_Mid", "Hit_Mid_Heavy")
@@ -2222,7 +2223,15 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				for (auto pMtrl : m_pModelCom->GetMaterials())
 					pMtrl->GetParam().Floats[0] = 0.f;
 			}
+			if (fPlayRatio > 0.9f && m_ItemSpawn.IsNotDo())
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/FinalItem.json");
+				_float4x4 WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				json["Transform"]["WorldMatrix"] = WorldMatrix;
+				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
+			}
 		})
+		
 	;
 
 }
