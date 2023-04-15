@@ -198,6 +198,9 @@ void CCanvas_Main::KeyInput()
 {
 	if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
 	{
+		if(false == m_bMainUI)	CUI_Manager::GetInstance()->PlaySound("MainIn");
+		else									CUI_Manager::GetInstance()->PlaySound("MainOut");
+
 		m_bAlpha = true;
 		m_pShaderUI->SetVisible(true);
 	}

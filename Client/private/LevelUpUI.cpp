@@ -2,6 +2,7 @@
 #include "..\public\LevelUpUI.h"
 #include "GameInstance.h"
 #include "FSMComponent.h"
+#include "UI_Manager.h"
 
 // LevelUp 글씨
 // g_vec2_0 : x 를 이용해서 Level 을 변경해준다.
@@ -87,6 +88,8 @@ void CLevelUpUI::LevelUp_Initialize()
 		.AddState("AlphaPlus")
 		.OnStart([this]
 	{
+		CUI_Manager::GetInstance()->PlaySound("Upgrade");
+		
 		m_tParams.Float2s[0].x = _float(m_iLevel);
 	})
 		.Tick([this](_double TimeDelta) {

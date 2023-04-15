@@ -30,7 +30,7 @@
                     "bKinematic": false,
                     "bTrigger": true
                 },
-                "Talk": false,
+                "Talk": true,
                 "TalkIndex": [
                     27,
                     28
