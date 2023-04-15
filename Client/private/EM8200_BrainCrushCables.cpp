@@ -94,6 +94,16 @@ HRESULT CEM8200_BrainCrushCables::Initialize(void* pArg)
 	}
 
 	SetUpFSM();
+	m_fPhysXDelay = 1.f;
+
+	for (int i = HEAD_1; i < CABLE_END; ++i)
+	{
+		for (auto pMtrl : m_CableModels[i]->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[1] = 1.f;
+			pMtrl->GetParam().Ints[0] = 0;		
+		}
+	}
 
 	return S_OK;
 }
@@ -219,18 +229,23 @@ void CEM8200_BrainCrushCables::SetUpFSM()
 			})
 			.Tick([this](_double TimeDelta)
 			{
-				if (m_CableModels[HEAD_1]->Find_Animation("AS_BC_em8300_c04_1_co0100_1")->IsFinished() 
+				if (m_CableModels[HEAD_1]->Find_Animation("AS_BC_em8300_c04_1_co0100_1")->IsFinished()
 					&& m_PhysxHeadOnce.IsNotDo())
 				{
 					for (int i = 0; i < BODY_1; ++i)
 						m_CableModels[i]->ActivatePhysX(true);
 				}
 
-				if (m_CableModels[BODY_1]->Find_Animation("AS_co0101_001_start03")->IsFinished() 
+
+				if (m_CableModels[BODY_1]->Find_Animation("AS_co0101_001_start03")->IsFinished() && m_fPhysXDelay < 0.f
 					&& m_PhysxBodyOnce.IsNotDo())
 				{
 					for (int i = BODY_1; i < CABLE_END; ++i)
 						m_CableModels[i]->ActivatePhysX(true);
+				}
+				else
+				{
+					m_fPhysXDelay -= TimeDelta;
 				}
 
 

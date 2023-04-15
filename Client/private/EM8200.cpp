@@ -57,7 +57,6 @@ HRESULT CEM8200::Initialize(void* pArg)
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
 	m_eEnemyName = EEnemyName::EM8200;
-	m_bHasCrushGauge = false;
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
@@ -66,12 +65,17 @@ HRESULT CEM8200::Initialize(void* pArg)
 
 	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
 
-	m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("KarenAnimCamaera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+	m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("KarenAnimCamaera"));
+	if (m_pKaren_AnimCam == nullptr)
+		m_pKaren_AnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("KarenAnimCamaera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
 	Safe_AddRef(m_pKaren_AnimCam);
 
 	m_pEMUI->SetWeakBoneName("Spine1");
 
 	m_bSpawnEffect = false;
+
+	m_fFireResist = 1.f;
+	m_fThunderResist = 1.f;
 
 	return S_OK;
 }
@@ -81,6 +85,8 @@ void CEM8200::SetUpComponents(void* pArg)
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"Model", (CComponent**)&m_pModelCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"KineticModel", (CComponent**)&m_pKineticModel));
+
+	m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(false);
 
 	// 컨트롤러, prototype안 만들고 여기서 자체생성하기 위함
 	m_pController = CEM8200_Controller::Create();
@@ -554,8 +560,11 @@ void CEM8200::Tick(_double TimeDelta)
 				pMtrl->GetParam().Floats[2] = fTPStartOut;
 			}
 			m_pKarenMaskEf->GetParams().Floats[1] = fTPStartOut;
+			if (m_pBrainField->IsOpen())
+			{
+				m_pBrainField->SetCableTP(fTPStartOut);
+			}
 		}
-
 	}
 
 	{
@@ -568,6 +577,10 @@ void CEM8200::Tick(_double TimeDelta)
 
 			}
 			m_pKarenMaskEf->GetParams().Floats[1] = fTPEndOut;
+			if (m_pBrainField->IsOpen())
+			{
+				m_pBrainField->SetCableTP(fTPEndOut);
+			}
 		}
 	}
 
@@ -738,7 +751,12 @@ void CEM8200::Imgui_RenderProperty()
 void CEM8200::SetUpUI()
 {
 	__super::SetUpUI();
-	m_pEMUI->SetShieldUIPivotBoneName("Spine1");
+	m_pEMUI->SetShieldUIPivotBoneName("HairRoot");
+	m_pEMUI->SetShieldUIPivot(_float4x4::CreateTranslation({0.f, 0.4f, 0.f}));
+
+
+	m_pEMUI->SetTargetBone("HairRoot");
+	// m_pEMUI->Create_BossUI();
 }
 
 _bool CEM8200::IsPlayingSocket() const
@@ -767,11 +785,6 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 				pMtrl->GetParam().Floats[2] = 0;
 			}
 		})
-				.AddTransition("to BrainCrushStart_1", "BrainCrushStart_1")
-					.Predicator([this]
-					{
-						return CGameInstance::GetInstance()->KeyDown(DIK_O);
-					})
 
 	.AddTransition("Idle to BrainCrushReady", "BrainCrushReady")
 		.Predicator([this]
@@ -1963,6 +1976,11 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
+			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(true);
+			m_pModelCom->FindMaterial(L"MI_em8200_HAIR_0")->SetActive(false);
+
+
+
 			m_pBrainField->OpenBrainField();
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
 
@@ -2032,6 +2050,9 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			m_pBrainField->CloseBrainField();
 			m_pASM->InputAnimSocketOne("FullBody",  "AS_em8300_485_AL_BCchance_start");
+
+			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(false);
+			m_pModelCom->FindMaterial(L"MI_em8200_HAIR_0")->SetActive(true);
 		})
 		.AddTransition("BrainCrushReady to BrainCrushReadyLoop", "BrainCrushReadyLoop")
 			.Predicator([this]
@@ -2103,6 +2124,8 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			if (fPlayRatio > 0.5f)
 			{
 				m_pBrainCrushCables->Activate(false);
+				for (auto pMtrl : m_pModelCom->GetMaterials())
+					pMtrl->GetParam().Floats[0] = 0.f;
 			}
 		})
 	;

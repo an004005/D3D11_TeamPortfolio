@@ -575,7 +575,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 	{
 	case EDeBuffType::DEBUFF_FIRE:
 		if (m_eDeBuff == EDeBuffType::DEBUFF_OIL
-			|| CGameUtils::GetRandFloat() >= m_fFireResist)
+			|| CGameUtils::GetRandFloat() > m_fFireResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
 		break;
 	case EDeBuffType::DEBUFF_OIL:
@@ -583,7 +583,7 @@ void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)
 		break;
 	case EDeBuffType::DEBUFF_THUNDER:
 		if (m_eDeBuff == EDeBuffType::DEBUFF_WATER
-			|| CGameUtils::GetRandFloat() >= m_fThunderResist)
+			|| CGameUtils::GetRandFloat() > m_fThunderResist)
 			m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
 		break;
 	case EDeBuffType::DEBUFF_WATER:

@@ -11098,7 +11098,7 @@ void CPlayer::Update_TargetUI()
 {
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
 
-	if (pTarget != nullptr && pTarget->Exclude() == true)
+	if (pTarget != nullptr && (pTarget->Exclude() == true || m_bBrainCrash))
 		pTarget = nullptr;
 
 	if (m_pSettedTarget != pTarget)
@@ -11111,8 +11111,8 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
-
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
+			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
 		}
 
 		//원래 타겟이 있었는데 사라진 경우
@@ -11128,7 +11128,8 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
+			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
 		}
 
 		//info bar 설정

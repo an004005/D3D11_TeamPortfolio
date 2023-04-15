@@ -72,6 +72,7 @@ private:
 
 	CDoOnce m_PhysxHeadOnce;
 	CDoOnce m_PhysxBodyOnce;
+	_float m_fPhysXDelay = 1.f;
 
 
 	CTransform* m_pTargetTransform = nullptr;

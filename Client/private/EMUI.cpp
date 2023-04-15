@@ -48,6 +48,7 @@ void CEMUI::Create_UIInfo()
 		m_pShieldUI->Set_Owner(m_pOwner);
 		m_pShieldUI->Set_MonsterInfo(m_pOwner->GetEnemyLevel(), m_pOwner->GetEnemyName());
 		m_pShieldUI->SetPivotBoneName(m_strShieldUIPivotBoneName);
+		m_pShieldUI->SetPivot(m_ShieldUIPivot);
 	}
 	else
 	{
