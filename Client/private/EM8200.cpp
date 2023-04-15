@@ -24,6 +24,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "BrainField.h"
+#include "Canvas_MainTalk.h"
 #include "EnvironmentEffect.h"
 #include "TestTarget.h"
 
@@ -2220,26 +2221,9 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 
 					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
 
-					// for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, L"Layer_FinalStage")->GetGameObjects())
-					// {
-					// 	if (auto pTestTarget = dynamic_cast<CTestTarget*>(iter))
-					// 	{
-					// 		// pTestTarget->GetTransform()->Rotation(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(180.f));
-					// 		// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), pTestTarget->GetTransform(), 0.f, 0.f);
-					//
-					//
-					// 	}
-					// }
 					m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 						_float4x4::Identity,
 						_float4x4::Identity);
-
-
-					// auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
-					// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
-
-
-					// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
 				})
 
 		.Tick([this](_double TimeDelta)
@@ -2274,17 +2258,15 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 
 		.Tick([this](_double TimeDelta)
 		{
+				if (false == m_pCanvas_MainTalk->Get_End())
+				{
+					m_bStoryEnd = true;
+				}
 		})
 
 		.OnExit([this]
 		{
 		})
-
-		// .AddTransition("Intro_01 to Intro_00", "Intro_00")
-		// 	.Predicator([this]
-		// 		{
-		// 			return m_pASM->isSocketPassby("FullBody", 0.95f);
-		// 		})
 
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
@@ -2296,19 +2278,28 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				m_pASM->InputAnimSocketOne("FullBody",  "AS_em8200_251_AL_atk_seethrough" );
+
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+				m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+				assert(m_pCanvas_MainTalk != nullptr && "Failed to Cloned : CCanvas_MainTalk");
+
+				m_pCanvas_MainTalk->Add_Talk(42);
 			})
 
+	
 		.OnExit([this]
 			{
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
+
+			// 루카 대사 
 			})
 
 				
-		.AddTransition("BattleStart to ImCombatIdle", "ImCombatIdle")
+		.AddTransition("BattleStart to Idle", "Idle")
 			.Predicator([this]
 				{
-					return m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_pASM->isSocketPassby("FullBody", 0.99f);
 				})
 
 				
@@ -2360,7 +2351,7 @@ _bool CEM8200::Check_PlayerDetected()
 		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		if (fDistance < 35.f && m_bStoryModeStart.IsNotDo())
+		if (fDistance < 25.f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
 
@@ -2378,8 +2369,21 @@ _bool CEM8200::Check_PlayerDetected_Near()
 		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		if (fDistance < 13.5f && m_DetectedOnce.IsNotDo())
+		if (fDistance < 5.f && m_DetectedOnce.IsNotDo())
 		{
+			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+			m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+			assert(m_pCanvas_MainTalk != nullptr && "Failed to Cloned : CCanvas_MainTalk");
+
+			m_pCanvas_MainTalk->Add_Talk(35);
+			m_pCanvas_MainTalk->Add_Talk(36);
+			m_pCanvas_MainTalk->Add_Talk(37);
+			// m_pCanvas_MainTalk->Add_Talk(38);
+			m_pCanvas_MainTalk->Add_Talk(39);
+			m_pCanvas_MainTalk->Add_Talk(40);
+			m_pCanvas_MainTalk->Add_Talk(41);
+			// m_pCanvas_MainTalk->Add_Talk(42);
+
 			return true;
 		}
 	}

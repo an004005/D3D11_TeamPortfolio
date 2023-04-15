@@ -210,6 +210,8 @@ private:
 	CCurveFloatImpl* m_pBrainCrushChromaticAberrationCrash = nullptr;
 	class CPostVFX_ChromaticAberration* m_pChromaticAberration = nullptr;
 
+	class CCanvas_MainTalk* m_pCanvas_MainTalk = nullptr;
+
 public:
 	static CEM8200*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg = nullptr) override;
