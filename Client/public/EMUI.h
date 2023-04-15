@@ -26,6 +26,10 @@ public:
 
 	void SetWeakBoneName(const string& strWeakBoneName) {m_strWeakBoneName = strWeakBoneName; }
 	void SetShieldUIPivotBoneName(const string& BoneName) {m_strShieldUIPivotBoneName = BoneName; }
+	void SetShieldUIPivot(_float4x4 Pivot) {m_ShieldUIPivot = Pivot; }
+	void SetTargetBone(const string& BoneName) { m_strTargetBoneName = BoneName; }
+
+	const string& GetTargetBoneName() { return m_strTargetBoneName; }
 
 private:
 	class CEnemy* m_pOwner = nullptr;
@@ -36,7 +40,11 @@ private:
 
 	class CEffectGroup*	 m_pNoticeNeon = nullptr;
 	string m_strWeakBoneName = "Weak01";
+
 	string m_strShieldUIPivotBoneName = "Target";
+	_float4x4 m_ShieldUIPivot = XMMatrixTranslation(0.f, 0.5f, 0.f);
+
+	string m_strTargetBoneName = "Target";
 
 	
 public:
