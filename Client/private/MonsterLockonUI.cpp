@@ -38,19 +38,15 @@ void CMonsterLockonUI::BeginTick()
 
 	//여기서 메니저 그룹에 내 이펙트를 넣어줌.
 	m_pTargetGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_Target", PLAYERTEST_LAYER_FRONTUI);
-	m_pTargetRhombusGroup = CVFX_Manager::GetInstance()->GetEffect(EF_UI, L"Lockon_TargetRhombus", PLAYERTEST_LAYER_FRONTUI);
 
 	Safe_AddRef(m_pTargetGroup);
-	Safe_AddRef(m_pTargetRhombusGroup);
 
 	Assert(m_pTargetGroup != nullptr);
-	Assert(m_pTargetRhombusGroup != nullptr);
 
 	//TimeLine 끝나고 유지 : 2
 	m_pTargetGroup->Start_Attach(m_pOwner, m_strBoneName, true, true);
 
 	//TimeLine 끝나고 삭제 : 4
-	m_pTargetRhombusGroup->Start_Attach(m_pOwner, "Target", true, true);
 }
 
 void CMonsterLockonUI::Tick(_double TimeDelta)
@@ -102,13 +98,6 @@ void CMonsterLockonUI::Free()
 			m_pTargetGroup->SetDelete();
 			Safe_Release(m_pTargetGroup);
 			m_pTargetGroup = nullptr;
-		}
-
-		if (m_pTargetRhombusGroup != nullptr)
-		{
-			m_pTargetRhombusGroup->SetDelete();
-			Safe_Release(m_pTargetRhombusGroup);
-			m_pTargetRhombusGroup = nullptr;
 		}
 	}
 	
