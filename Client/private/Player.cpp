@@ -79,6 +79,12 @@
 #include "Map_KineticBatchPreset.h"
 #include "Timeline.h"
 
+#include "UI_Manager.h"
+#include "Canvas_BrainField.h"
+#include "Canvas_DriveMove.h"
+
+#include "InvisibleWall.h"
+
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
 {
@@ -488,6 +494,9 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (m_bHit)
 	{
+		Event_collisionEnd();
+		Event_FinishFovActionCam();
+
 		m_pKineticComboStateMachine->SetState("KINETIC_COMBO_NOUSE");
 		m_pKineticStataMachine->SetState("NO_USE_KINETIC");
 		m_pJustDodgeStateMachine->SetState("JUSTDODGE_NONUSE");
@@ -639,7 +648,7 @@ void CPlayer::Tick(_double TimeDelta)
 
 			if (bCol)
 			{
-				m_fKineticCombo_Slash = 5.f;
+				m_fKineticCombo_Slash = 2.f;
 			}
 		}
 
@@ -657,7 +666,7 @@ void CPlayer::Tick(_double TimeDelta)
 
 		if (bCol)
 		{
-			m_fKineticCombo_Slash = 5.f;
+			m_fKineticCombo_Slash = 2.f;
 		}
 
 		m_vecSheath.front()->Tick(TimeDelta);
@@ -960,7 +969,32 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_DamageDesc.m_vHitDir = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) - XMLoadFloat4(&tDamageParams.vHitFrom);
 		m_DamageDesc.m_eHitDir = CClientUtils::GetDamageFromAxis(m_pTransformCom, tDamageParams.vHitFrom);
 
-		m_eDeBuff = tDamageParams.eDeBuff;
+		//Default_Hit_EF_TEX
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Hit_EF_TEX")->Start_Attach(this, "Waist", true);
+
+		switch (tDamageParams.eDeBuff)
+		{
+		case EDeBuffType::DEBUFF_FIRE:
+			if (m_eDeBuff == EDeBuffType::DEBUFF_OIL
+				|| CGameUtils::GetRandFloat() >= 0.6f)
+				m_eDeBuff = EDeBuffType::DEBUFF_FIRE;
+			break;
+		case EDeBuffType::DEBUFF_OIL:
+			m_eDeBuff = EDeBuffType::DEBUFF_OIL;
+			break;
+		case EDeBuffType::DEBUFF_THUNDER:
+			if (m_eDeBuff == EDeBuffType::DEBUFF_WATER
+				|| CGameUtils::GetRandFloat() >= 0.6f)
+				m_eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+			break;
+		case EDeBuffType::DEBUFF_WATER:
+			m_eDeBuff = EDeBuffType::DEBUFF_WATER;
+			break;
+		case EDeBuffType::DEBUFF_END:
+			break;
+		default:
+			NODEFAULT;
+		}
 
 		// ì²´ë ¥ ê¹Žì´??ë¶€ë¶?
 		CPlayerInfoManager::GetInstance()->Change_PlayerHP(CHANGE_DECREASE, tDamageParams.iDamage);
@@ -1855,6 +1889,9 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			{
 				CPlayerInfoManager::GetInstance()->Set_DriveMode(false);
 
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLATERTEST_LAYER_PLAYER);
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, LAYER_PLAYEREFFECT);
+
 				m_pModel->FindMaterial(L"MI_ch0100_HOOD_0")->SetActive(false);
 				m_pModel->FindMaterial(L"MI_ch0100_BODY_0")->GetParam().Ints[1] = 0;
 				m_pModel->FindMaterial(L"MI_ch0100_HAIR_0")->SetActive(true);
@@ -1863,7 +1900,10 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			}
 			else if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode)
 			{
+
 				CPlayerInfoManager::GetInstance()->Change_DriveEnergy(CHANGE_DECREASE, fTimeDelta);
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, PLATERTEST_LAYER_PLAYER);
+				CGameInstance::GetInstance()->SetLayerTimeRatio(1.3f, LAYER_PLAYEREFFECT);
 			}
 
 			//IM_LOG("DRIVE : %f", CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy);
@@ -1873,12 +1913,22 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 
 		})
 			.AddTransition("DRIVEMODE_NOUSE to DRIVEMODE_CAM_CLOSER", "DRIVEMODE_CAM_CLOSER")
-			.Predicator([&]()->_bool {return m_bDirveModeStart; })
+			.Predicator([&]()->_bool 
+			{
+				return (false == CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode) &&
+					(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy == CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxDriveEnergy) &&
+					m_bDirveModeStart;
+			})
 			.Priority(0)
 
 		.AddState("DRIVEMODE_CAM_CLOSER")
 		.OnStart([&]()
 		{
+			// µå¶óÀÌºê¸ðµå ÁøÀÔÀ» À§ÇØ Ä«¸Þ¶ó ´ç±è
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+			dynamic_cast<CCanvas_DriveMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove"))->
+				Set_OnDrive(CPlayerInfoManager::GetInstance()->Get_PlayerStat().fMaxBrainFieldMaintain);
+
 			m_bDriveMode_Activate = true;
 			m_bZoomIsFinish = false;
 		})
@@ -1897,6 +1947,11 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_ANIMCAM_START")
 		.OnStart([&]()
 		{
+			m_pASM->SetCurState("IDLE");
+			m_pASM->SetCurState_BrainField("IDLE");
+			m_bSeperateAnim = false;
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1911,7 +1966,6 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.OnExit([&]()
 		{
 			CPlayerInfoManager::GetInstance()->Set_DriveMode(true);
-			CPlayerInfoManager::GetInstance()->Set_DriveEnergy(10.f);
 		})
 			.AddTransition("DRIVEMODE_ANIMCAM_START to DRIVEMODE_CAM_AWAY", "DRIVEMODE_CAM_AWAY")
 			.Predicator([&]()->_bool {return m_pModel->Find_Animation("AS_DriveModeOpen_ch0100_ch0100")->IsFinished(); })
@@ -1920,6 +1974,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_AWAY")
 		.OnStart([&]()
 		{
+				// Ä«¸Þ¶ó ºüÁö¸é¼­ Æø¹ß
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
 			m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
@@ -1933,6 +1988,10 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.OnExit([&]()
 		{
 			DriveModeExplode.Reset();
+			
+			// ¿¬Ãâ ³¡
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -1976,6 +2035,13 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.OnStart([&]() 
 		{
 			m_bBrainField_Prod = true;
+
+			m_pASM->SetCurState("IDLE");
+			m_pASM->SetCurState_BrainField("IDLE");
+			m_bSeperateAnim = false;
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
+			CUI_Manager::GetInstance()->Set_TempOff(true);
 
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_BrainField_start"));
@@ -2022,6 +2088,18 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_ACTIONCAM_01")
 		.OnStart([&]() 
 		{
+			//LAYER_MAP_DECO
+			for(auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if (auto pWall = dynamic_cast<CInvisibleWall*>(iter))
+				{
+					pWall->SetVisible(false);
+				}
+			}
+
+			CPlayerInfoManager::GetInstance()->Hanabi_Active(false);
+			CPlayerInfoManager::GetInstance()->Tsugumi_Active(false);
+
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -2079,6 +2157,23 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
 		{
+			CPlayerInfoManager::GetInstance()->Hanabi_Active(true);
+			CPlayerInfoManager::GetInstance()->Tsugumi_Active(true);
+
+			// ºê·¹ÀÎ ÇÊµå°¡ ½ÃÀÛµÇ´Â ºÎºÐ
+			if (nullptr == m_pCanvas_BrainField)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BrainField.json");
+				m_pCanvas_BrainField = dynamic_cast<CCanvas_BrainField*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BrainField", &json));
+				assert(m_pCanvas_BrainField != nullptr && "Failed to Clone : CCanvas_BrainField");
+			}
+
+			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(true);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(true);
+
+			CPlayerInfoManager::GetInstance()->Set_BrainFieldMaintain(60.f);
+			m_bBrainField = true;
 		})
 			.AddTransition("BRAINFIELD_ACTIONCAM_02 to BRAINFIELD", "BRAINFIELD")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_BrainFieldOpen_c02_ch0100")->IsFinished(); })
@@ -2087,6 +2182,11 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.AddState("BRAINFIELD_FINISH_BF")
 		.OnStart([&]() 
 		{
+			m_pASM->SetCurState("IDLE");
+			m_pASM->SetCurState_BrainField("IDLE");
+			m_bSeperateAnim = false;
+			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
+
 			m_bBrainField_Prod = true;
 
 			list<CAnimation*> TestAnim;
@@ -2104,7 +2204,19 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 				m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
 			}
 		})
-		.OnExit([&]() { m_bBrainField = false; })
+
+		.OnExit([&]() 
+		{ 
+			m_bBrainField = false;
+			// ºê·¹ÀÎ ÇÊµå°¡ ²¨Áö´Â ºÎºÐ
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCanvas_BrainField))
+			{
+				m_pCanvas_BrainField->SetDelete();
+			}
+
+			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove")->TempOff(false);
+		})
 			.AddTransition("BRAINFIELD_FINISH_BF to BRAINFIELD_FINISH_NF", "BRAINFIELD_FINISH_NF")
 			.Predicator([&]()->_bool { return m_pModel->Find_Animation("AS_ch0100_BrainField_close_BF")->IsFinished(); })
 			.Priority(0)
@@ -2403,7 +2515,18 @@ HRESULT CPlayer::SetUp_EffectEvent()
 
 	m_pModel->Add_EventCaller("BrainField_MaskBright", [&]() {
 		//_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(0.f, 0.04f, 0.f);
-		//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_AttachPivot(this, EffectMatrix, "Mask", true, true);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_Attach(this, "Mask", true);
+	});
+
+	//m_pModel->Add_EventCaller("BrainField_MaskBright", [&]() {
+	//	//_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(0.f, 0.04f, 0.f);
+	//	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_End_InCombat_Attach_Face")->Start_AttachPivot(this, pivot1, "Mask", true, true);
+	//});
+
+	m_pModel->Add_EventCaller("BrainField_MaskNoise", [&]()
+	{
+		//_matrix matEffect = XMMatrixTranslation(0.f, 0.01f, -0.04f);
+		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_AttachPivot(this, pivot1, "Mask", true, true);
 	});
 
 
@@ -3324,6 +3447,9 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 		.AddState("NON_HIT")
 			.OnStart([&]() 
 			{ 
+				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
+				m_bHit = false;
+
 				//SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 				m_pModel->Reset_LocalMove(true);
 
@@ -3890,7 +4016,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 				Enemy_Targeting(true);
 
 			m_fKineticCombo_Kinetic = 0.f;
-			m_fKineticCombo_Slash = 10.f;
+			m_fKineticCombo_Slash = 2.f;
 
 			if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
@@ -4084,7 +4210,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 		{
 			m_bActionAble = true;
 			m_fKineticCombo_Kinetic = 0.f;
-			m_fKineticCombo_Slash = 10.f;
+			m_fKineticCombo_Slash = 2.f;
 
 			if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 				Enemy_Targeting(true);
@@ -4269,7 +4395,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			m_bActionAble = true;
 
 			m_fKineticCombo_Kinetic = 0.f;
-			m_fKineticCombo_Slash = 10.f;
+			m_fKineticCombo_Slash = 2.f;
 
 			if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 				Enemy_Targeting(true);
@@ -4459,7 +4585,7 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 			m_bActionAble = true;
 
 			m_fKineticCombo_Kinetic = 0.f;
-			m_fKineticCombo_Slash = 10.f;
+			m_fKineticCombo_Slash = 2.f;
 
 			if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 				Enemy_Targeting(true);
@@ -5547,6 +5673,7 @@ HRESULT CPlayer::SetUp_BrainFieldFallStateMachine()
 		{
 			BF_Fall_Throw.Reset();
 			m_pCenterObject = nullptr;
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 
 			for (auto& iter : m_GatherObjectList)
 			{
@@ -5679,6 +5806,8 @@ HRESULT CPlayer::SetUp_BrainFieldFallStateMachine()
 
 			m_GatherObjectList.clear();
 			m_vecGatherOverlap.clear();
+
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 		})
 			.AddTransition("BF_FALL_FIN_FINISH to BF_NO_USE_KINETIC_FALL", "BF_NO_USE_KINETIC_FALL")
 			.Predicator([&]()->_bool 
@@ -5798,54 +5927,43 @@ void CPlayer::Update_NoticeNeon()
 {
 	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.5f, 0.f);
 
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->SetDelete();
-		m_pNoticeNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticeNeon.first);
-		Safe_Release(m_pNoticeNeon.second);
-
-		m_pNoticeNeon.first = nullptr;
-		m_pNoticeNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
 	}
 
-	switch (this->GetDeBuffType())
+	switch (GetDeBuffType())
 	{
 	case Client::EDeBuffType::DEBUFF_FIRE:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_OIL:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
 		break;
-
 	default:
 		break;
 	}
 
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
-		m_pNoticeNeon.second->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
-		Safe_AddRef(m_pNoticeNeon.first);
-		Safe_AddRef(m_pNoticeNeon.second);
+		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Reference", true, true);
+		Safe_AddRef(m_pNoticeNeon);
 	}
+
 }
 
 void CPlayer::Update_CautionNeon()
@@ -5857,19 +5975,20 @@ void CPlayer::Update_CautionNeon()
 
 	if (0.2f >= fCurHP / fMaxHP)
 	{
-		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon))
 		{
-			m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
-			m_pCautionNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "String2", true, true);
+			m_pCautionNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
+			m_pCautionNeon->Start_AttachPivot(this, NoticeNeonPivot, "String2", true, true);
+			Safe_AddRef(m_pCautionNeon);
 		}
 	}
 	else
 	{
-		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon))
 		{
-			m_pCautionNeon.first->SetDelete();
-			Safe_Release(m_pNoticeNeon.first);
-			m_pCautionNeon.first = nullptr;
+			m_pCautionNeon->SetDelete();
+			Safe_Release(m_pCautionNeon);
+			m_pCautionNeon = nullptr;
 		}
 	}
 }
@@ -5963,9 +6082,10 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 			.Predicator([&]()->_bool {return GetDeBuffType() == EDeBuffType::DEBUFF_END; })
 			.Priority(100)
 
-				.AddState("DEBUFF_ELEC")
+		.AddState("DEBUFF_ELEC")
 		.OnStart([&]() 
 		{
+			m_bSeperateAnim = false;
 			m_pASM->SetCurState("IDLE");
 			m_pASM->SetCurState_BrainField("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
@@ -5986,6 +6106,7 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 		.AddState("DEBUFF_ELEC_END")
 		.OnStart([&]() 
 		{
+			m_bSeperateAnim = false;
 			m_pASM->AttachAnimSocket("Hit_AnimSocket", m_ElecShock_WakeUp);
 		})
 		.Tick([&](double fTimeDelta) { })
@@ -6201,7 +6322,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6210,7 +6333,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6219,7 +6344,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6228,7 +6355,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6237,7 +6366,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6246,7 +6377,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6255,7 +6388,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6264,7 +6399,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6273,7 +6410,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6282,7 +6421,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6291,7 +6432,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6300,7 +6443,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6309,7 +6454,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6320,7 +6467,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		{
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+			else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+			else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6329,7 +6478,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		{
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+			else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+			else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6339,7 +6490,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6348,7 +6501,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6357,16 +6512,20 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
-	m_mapCollisionEvent.emplace("AS_ch0100_216_AL_atk_dash1_start", [this]()
+	m_mapCollisionEvent.emplace("AS_ch0100_216_AL_atk_dash1_end", [this]()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6375,7 +6534,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6384,7 +6545,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6393,7 +6556,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6402,7 +6567,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6411,7 +6578,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6420,7 +6589,9 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
 		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -6900,7 +7071,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		})
 		.OnExit([&]()
 		{
-			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
+			static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 			m_fSpecialCharge = 0.f;
 			static_cast<CSpecial_Train*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Train_SetDeadTimer();
 		})
@@ -7310,84 +7481,48 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 			if (pTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
-				_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				/*_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				_float fDistance = vDistance.Length();
+				_float fDistance = vDistance.Length();*/
 
-				if (pTarget->GetPrototypeTag() == L"Monster_em210")
-				{
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
-					static_cast<CEM0210*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+				_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
+				_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+				pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
 
-					if (5.f >= fDistance)
-					{
-						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
-						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
-						//m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
-						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
-						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
-						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
-					}
-					else
-					{
-						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
-						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
-						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
-					}
-				}
-				else if (pTarget->GetPrototypeTag() == L"Monster_em700")
-				{
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_em0700);
-					static_cast<CEM0700*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+				static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
-					if (5.f >= fDistance)
-					{
-						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
-						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-						pTarget->GetTransform()->LookAt_NonY(BC_Pos);
-						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
-					}
-					else
-					{
-						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
-						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
-						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
-					}
-				}
-				else if (pTarget->GetPrototypeTag() == L"Monster_em800")
-				{
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_em0800);
-					static_cast<CEM0800*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
+				m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+				m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
 
-					_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.5f);
-					_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
-					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
-				}
+				//if (pTarget->GetPrototypeTag() == L"Monster_em210")
+				//{
+				//	m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
+				//	static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
-				else if (pTarget->GetPrototypeTag() == L"Monster_em1100")
-				{
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_em1100);
-					static_cast<CEM0800*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
+				//	if (5.f >= fDistance)
+				//	{
+				//		auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
+				//		m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+				//		//m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
-					_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 8.f);
-					BC_Pos += (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_RIGHT)) * 3.f);
-					_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
-					pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
-				}
-			}
-			else
-			{
-				//static_cast<CEM0210*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
-
-				/*auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush01");
-				m_pPlayer->m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayer->m_pPlayerCam, m_pPlayer->m_pTransformCom, 0.f, 0.f);
-				m_pPlayer->m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_pPlayer->m_BrainCrash_Activate);*/
-
-				//m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_em1100);
+				//		_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
+				//		_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				//		pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+				//		pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+				//	}
+				//	else
+				//	{
+				//		auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
+				//		m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+				//		m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+				//	}
+				//}
+				//else
+				//{
+				//}
 			}
 		})
 		.Tick([&](double fTimeDelta)
@@ -10831,6 +10966,7 @@ void CPlayer::HitCheck()
 		Event_collisionEnd();
 		m_bTeleport = false;
 		Event_FinishFovActionCam();
+		static_cast<CCamSpot*>(m_pCamSpot)->Reset_CamMod();
 	}
 
 	if (!m_pASM->isSocketEmpty("Hit_AnimSocket"))
@@ -12535,26 +12671,16 @@ void CPlayer::Free()
 //	Safe_Release(m_pContectRigidBody);
 
 	Safe_Release(m_pDeBuffStateMachine);
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->SetDelete();
-		m_pNoticeNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticeNeon.first);
-		Safe_Release(m_pNoticeNeon.second);
-
-		m_pNoticeNeon.first = nullptr;
-		m_pNoticeNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);	
+		m_pNoticeNeon = nullptr;
 	}
-	if (m_pCautionNeon.first != nullptr/* && m_pCautionNeon.second != nullptr*/)
+	if (m_pCautionNeon != nullptr)
 	{
-		m_pCautionNeon.first->SetDelete();
-		//m_pCautionNeon.second->Delete_Particles();
-
-		Safe_Release(m_pCautionNeon.first);
-		//Safe_Release(m_pCautionNeon.second);
-
-		m_pCautionNeon.first = nullptr;
-		//m_pCautionNeon.second = nullptr;
+		m_pCautionNeon->SetDelete();
+		Safe_Release(m_pCautionNeon);
+		m_pCautionNeon = nullptr;
 	}
 }

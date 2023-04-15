@@ -185,6 +185,7 @@
     <ClInclude Include="..\public\AI_CH0300_AnimInstance.h" />
     <ClInclude Include="..\public\AI_CH0500.h" />
     <ClInclude Include="..\public\AI_CH0500_AnimInstance.h" />
+    <ClInclude Include="..\public\Alarm_Trigger.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseAnimInstance.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -211,6 +212,8 @@
     <ClInclude Include="..\public\Canvas.h" />
     <ClInclude Include="..\public\Canvas_Acquisition.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h" />
+    <ClInclude Include="..\public\Canvas_BrainField.h" />
+    <ClInclude Include="..\public\Canvas_BrainFieldMove.h" />
     <ClInclude Include="..\public\Canvas_BrainMap.h" />
     <ClInclude Include="..\public\Canvas_Equipment.h" />
     <ClInclude Include="..\public\Canvas_ItemWindow.h" />
@@ -225,6 +228,7 @@
     <ClInclude Include="..\public\Canvas_MainItem.h" />
     <ClInclude Include="..\public\Canvas_MainItemKinds.h" />
     <ClInclude Include="..\public\Canvas_MainTalk.h" />
+    <ClInclude Include="..\public\Canvas_MapBar.h" />
     <ClInclude Include="..\public\Canvas_MouseCousor.h" />
     <ClInclude Include="..\public\Canvas_Party.h" />
     <ClInclude Include="..\public\Canvas_PlayerInfo.h" />
@@ -250,6 +254,7 @@
     <ClInclude Include="..\public\Canvas_Shop.h" />
     <ClInclude Include="..\public\Canvas_Purchase.h" />
     <ClInclude Include="..\public\Canvas_ShopListBar.h" />
+    <ClInclude Include="..\public\Canvas_WorldMap.h" />
     <ClInclude Include="..\public\CapsuleLight.h" />
     <ClInclude Include="..\public\ClientUtils.h" />
     <ClInclude Include="..\public\Client_Defines.h" />
@@ -536,6 +541,7 @@
     <ClCompile Include="..\private\AI_CH0300_AnimInstance.cpp" />
     <ClCompile Include="..\private\AI_CH0500.cpp" />
     <ClCompile Include="..\private\AI_CH0500_AnimInstance.cpp" />
+    <ClCompile Include="..\private\Alarm_Trigger.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseAnimInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -560,8 +566,11 @@
     <ClCompile Include="..\private\Canvas.cpp" />
     <ClCompile Include="..\private\Canvas_Acquisition.cpp" />
     <ClCompile Include="..\private\Canvas_Alarm.cpp" />
+    <ClCompile Include="..\private\Canvas_BrainField.cpp" />
+    <ClCompile Include="..\private\Canvas_BrainFieldMove.cpp" />
     <ClCompile Include="..\private\Canvas_BrainMap.cpp" />
     <ClCompile Include="..\private\Canvas_MainTalk.cpp" />
+    <ClCompile Include="..\private\Canvas_MapBar.cpp" />
     <ClCompile Include="..\private\Canvas_Quest.cpp" />
     <ClCompile Include="..\private\Canvas_SAContainer_Down.cpp" />
     <ClCompile Include="..\private\Canvas_Equipment.cpp" />
@@ -602,6 +611,7 @@
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\CamSpot.cpp" />
     <ClCompile Include="..\private\Canvas_SASSkillMove.cpp" />
+    <ClCompile Include="..\private\Canvas_WorldMap.cpp" />
     <ClCompile Include="..\private\CapsuleLight.cpp" />
     <ClCompile Include="..\private\ClientUtils.cpp" />
     <ClCompile Include="..\private\Consumption_Item.cpp" />

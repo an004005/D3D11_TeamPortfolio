@@ -10,6 +10,7 @@
 #include "CurveFloatMapImpl.h"
 #include "ImguiUtils.h"
 #include "Material.h"
+#include "GameManager.h"
 
 CEM0110::CEM0110(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -493,7 +494,7 @@ void CEM0110::SetUpFSM()
 void CEM0110::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_iArmorHp = m_iMaxHP * 0.3f;
+	m_iArmorHp = m_iMaxHP * 0.15f;
 
 	//Create BugParticle
 	m_pBugParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
@@ -578,7 +579,18 @@ void CEM0110::Imgui_RenderProperty()
 
 _bool CEM0110::IsWeak(CRigidBody* pHitPart)
 {
-	return pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(92);
+		}
+	}
+
+	return bisweak;
 }
 
 void CEM0110::HitEffect(DAMAGE_PARAM& tDamageParams)
@@ -597,6 +609,9 @@ void CEM0110::CheckHP(DAMAGE_PARAM& tDamageParams)
 	if (m_bHitWeak && m_iArmorHp > 0)
 	{
 		m_iArmorHp -= tDamageParams.iDamage;
+
+		//데미지 폰트 안띄우려고 
+		tDamageParams.iDamage = 1;
 
 		//hp가 0보다 작아지면 아머 삭제. 
 		if (m_iArmorHp <= 0)

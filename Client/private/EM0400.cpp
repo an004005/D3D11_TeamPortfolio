@@ -464,7 +464,7 @@ void CEM0400::SetUpFSM()
 				.Predicator([this]
 				{
 					return PriorityCondition()
-						|| m_eCurAttackType == EAttackType::ATK_TO_AIR
+						|| HitHeavyCondition()
 						|| m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -673,6 +673,11 @@ void CEM0400::HeavyAttackPushStart()
 _bool CEM0400::PriorityCondition()
 {
 	return m_bDead || m_eDeBuff == EDeBuffType::DEBUFF_THUNDER;
+}
+
+_bool CEM0400::HitHeavyCondition()
+{
+	return m_eCurAttackType == EAttackType::ATK_HEAVY || m_eCurAttackType == EAttackType::ATK_SPECIAL_LOOP || m_eCurAttackType == EAttackType::ATK_SPECIAL_END || m_eCurAttackType == EAttackType::ATK_TO_AIR;
 }
 
 

@@ -33,8 +33,8 @@ public:
 	}
 	
 	_float2	Get_ListPosititon();
-	_bool	Get_OnButton();
 
+	_bool	Get_OnButton();
 	void		Set_OnButton();
 	void		Set_OnAlpha();
 

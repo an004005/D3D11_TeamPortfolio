@@ -70,7 +70,7 @@ void CCanvas_ItemMove::Key_Input()
 	// 조명 Reset 하기
 	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_LightReset();
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
+	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_MB) || CGameInstance::GetInstance()->KeyDown(DIK_DOWN))
 	{
 		// 예외 처리.. 할까..? 체력이 가득 찼을 경우 체력 아이템을 사용하지 못 하게 한다... 이렇게 되면 조건문이 너무 많아져서..ㅜ
 

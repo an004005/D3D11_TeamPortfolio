@@ -60,8 +60,8 @@ private:
 	_float			m_fCamDistance = 4.f;
 
 private:
-	_bool			m_bHanabiActive = false;
-	_bool			m_bTsugumiActive = false;
+	_bool			m_bHanabiActive = true;
+	_bool			m_bTsugumiActive = true;
 
 public:
 	static CPlayerHotFixer* Create(CPlayer* pPlayer);

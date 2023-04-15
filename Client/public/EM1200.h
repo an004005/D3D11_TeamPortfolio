@@ -107,13 +107,16 @@ private:
 
 	_float4x4		pivot;
 
+	CDoOnce		m_bCableTalk;
+	CDoOnce		m_bFogTalk;
+
+	_bool	m_bWeakTalk = { false };
+
+
 	_bool			m_OnAnimCam = false;
 
 	_bool		m_bAlpha = { false };
 	_bool		m_bReverse = { false };
-
-	_int		m_iUseCound = 0;
-	_bool	m_bGetBright = false;
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

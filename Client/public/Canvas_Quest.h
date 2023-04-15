@@ -54,6 +54,10 @@ private:
 
 	_double	m_dMove_TimeAcc = { 0.0 };
 
+	// 퀘트트 에서 막쓰는 변수
+	_double	m_d3FMapMove_TimaAcc = { 0.0 };
+
+
 public:
 	static CCanvas_Quest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

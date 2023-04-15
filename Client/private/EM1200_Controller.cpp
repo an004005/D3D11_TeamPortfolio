@@ -101,6 +101,8 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Shout2", 0.f, &CAIController::Input, NUM_2);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+
 			m_dShoutCoolTime[CURTIME] = 0.0;
 		}
 		else if (m_dStampCoolTime[CURTIME] >= m_dStampCoolTime[MAXTIME])
@@ -108,6 +110,8 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Stamp", 0.f, &CAIController::Input, S);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+
 			m_dStampCoolTime[CURTIME] = 0.0;
 		}
 		else
@@ -115,6 +119,8 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 			AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 			AddCommand("Wait", 0.5f, &CAIController::Wait);
 			AddCommand("Rush", 0.f, &CAIController::Input, R);
+			AddCommand("Wait", 3.f, &CAIController::Wait);
+
 		}
 	}
 	else
@@ -122,9 +128,15 @@ void CEM1200_Controller::Tick_Near_2Phase(_double TimeDelta)
 		EBaseTurn eTurn = m_pCastedOwner->IsTargetRight() ? EBaseTurn::TURN_RIGHT : EBaseTurn::TURN_LEFT;
 
 		if (eTurn == EBaseTurn::TURN_RIGHT)
+		{
 			AddCommand("Swing_R", 0.f, &CAIController::Input, MOUSE_RB);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+		}
 		else
+		{
 			AddCommand("Swing_L", 0.f, &CAIController::Input, MOUSE_LB);
+			AddCommand("Wait", 2.f, &CAIController::Wait);
+		}
 	}
 
 
@@ -139,10 +151,13 @@ void CEM1200_Controller::Tick_Mid(_double TimeDelta)
 		AddCommand("Turn", 10.f, &CEM1200_Controller::Turn, 1.f);
 		AddCommand("Wait", 0.5f, &CAIController::Wait);
 		AddCommand("Rush", 0.f, &CAIController::Input, R);
+		AddCommand("Wait", 3.f, &CAIController::Wait);
+
 	}
 	else
 	{
 		AddCommand("Cable", 0.f, &CAIController::Input, C);
+		AddCommand("Wait", 3.f, &CAIController::Wait);
 	}
 }
 
@@ -150,6 +165,8 @@ void CEM1200_Controller::Tick_Far(_double TimeDelta)
 {
 	m_eDistance = DIS_FAR;
 	AddCommand("Cable", 0.f, &CAIController::Input, C);
+	AddCommand("Wait", 3.f, &CAIController::Wait);
+
 }
 
 void CEM1200_Controller::Tick_Outside(_double TimeDelta)

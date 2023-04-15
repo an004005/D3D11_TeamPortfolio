@@ -214,9 +214,6 @@
     <Filter Include="02.GameObjects\Monster\BuddyLumi\BdLm_Controller">
       <UniqueIdentifier>{7e82e54f-b5b7-4330-be57-352521a4f639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\Boss">
-      <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\3DUI">
       <UniqueIdentifier>{1b202ea8-4c32-4399-b17b-b9c184a5027f}</UniqueIdentifier>
     </Filter>
@@ -543,6 +540,15 @@
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\08.DownTown">
       <UniqueIdentifier>{d6ec4ca8-4855-43ad-b4b8-5e713bfc6600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\WorldMap">
+      <UniqueIdentifier>{6203072a-9451-4ae2-af0f-ea36161466dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Front\BrainField">
+      <UniqueIdentifier>{1d30249b-9b67-4d27-a2c2-abfa6b3db99e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Short\Boss">
+      <UniqueIdentifier>{dc1701f8-365a-4180-94c6-d3de20833679}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -954,7 +960,7 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHp.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
+      <Filter>02.GameObjects\UI\Short\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Shader_InGame.h" />
     <ClInclude Include="..\public\Canvas_Alarm.h">
@@ -1035,7 +1041,7 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_BossHpMove.h">
-      <Filter>02.GameObjects\UI\Boss</Filter>
+      <Filter>02.GameObjects\UI\Short\Boss</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Canvas_Main.h">
       <Filter>02.GameObjects\UI\Main\Canvas</Filter>
@@ -1574,6 +1580,21 @@
     <ClInclude Include="..\public\Level_DownTown.h">
       <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Canvas_WorldMap.h">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_MapBar.h">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BrainField.h">
+      <Filter>02.GameObjects\UI\Front\BrainField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Canvas_BrainFieldMove.h">
+      <Filter>02.GameObjects\UI\Front\BrainField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Alarm_Trigger.h">
+      <Filter>Trigger</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\EM8200_BrainCrushCables.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
@@ -1959,7 +1980,7 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHp.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
+      <Filter>02.GameObjects\UI\Short\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
@@ -2039,7 +2060,7 @@
       <Filter>02.GameObjects\UI\3DUI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_BossHpMove.cpp">
-      <Filter>02.GameObjects\UI\Boss</Filter>
+      <Filter>02.GameObjects\UI\Short\Boss</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Canvas_Main.cpp">
       <Filter>02.GameObjects\UI\Main\Canvas</Filter>
@@ -2583,6 +2604,21 @@
     <ClCompile Include="EnvironmentEffect.cpp" />
     <ClCompile Include="..\private\Level_DownTown.cpp">
       <Filter>01.Levels\02.GamePlay\08.DownTown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_WorldMap.cpp">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_MapBar.cpp">
+      <Filter>02.GameObjects\UI\WorldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BrainField.cpp">
+      <Filter>02.GameObjects\UI\Front\BrainField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Canvas_BrainFieldMove.cpp">
+      <Filter>02.GameObjects\UI\Front\BrainField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Alarm_Trigger.cpp">
+      <Filter>Trigger</Filter>
     </ClCompile>
     <ClCompile Include="..\private\EM8200_BrainCrushCables.cpp">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>

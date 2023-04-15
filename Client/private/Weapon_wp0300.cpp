@@ -127,6 +127,19 @@ void CWeapon_wp0300::ReleaseFire()
 {
 }
 
+void CWeapon_wp0300::FireEffect()
+{
+	_float4 vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK) * -1.f;
+	vLook.Normalize();
+	vLook *= 2.f;
+
+	_float4 vAttachPos = vPos + vLook;
+	vAttachPos.w = 1.f;
+
+	CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_FIRE_ATTACK, L"Ch0300_Attack_Particle")->Start_AttachPosition(this, vAttachPos, _float4(0.f, 1.f, 0.f, 0.f));
+}
+
 void CWeapon_wp0300::SetDissolve(_float fDissolve)
 {
 	for (auto& iter : m_pModel->GetMaterials())

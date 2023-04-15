@@ -87,9 +87,6 @@ void CCanvas_SASInfoRight::Imgui_RenderProperty()
 {
 	CCanvas::Imgui_RenderProperty();
 
-	static _float fPosition[2];
-	ImGui::DragFloat2("Font Position", fPosition);
-	m_vFontPos = { fPosition[0], fPosition[1] };
 }
 
 void CCanvas_SASInfoRight::SaveToJson(Json& json)
@@ -104,14 +101,13 @@ void CCanvas_SASInfoRight::LoadFromJson(const Json & json)
 
 void CCanvas_SASInfoRight::Set_Render()
 {
-	if (true == m_bVisible)
-		return;
+	//if (true == m_bVisible)
+	//	return;
 
 	m_bVisible = true;
 
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(true);
-
 }
 
 CCanvas_SASInfoRight * CCanvas_SASInfoRight::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

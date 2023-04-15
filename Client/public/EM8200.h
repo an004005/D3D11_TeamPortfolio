@@ -1,4 +1,6 @@
 #pragma once
+#include <AnimCam.h>
+
 #include "Client_Defines.h"
 #include "Enemy.h"
 #include "Controller.h"
@@ -77,12 +79,14 @@ protected:
 public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 
+
 protected:
 	virtual void CheckHP(DAMAGE_PARAM& tDamageParams) override;
 
 private:
 	void Play_MidHitAnim();
 	void Play_HeavyHitAnim();
+
 
 private:
 	//For Collision
@@ -157,6 +161,7 @@ private:
 
 	// For 2Phase
 	_bool	m_bSecondPhase = false;
+
 private:
 	CEffectGroup* m_pDashEF = nullptr;
 
@@ -166,6 +171,11 @@ private:
 		L"Sas_Teleport_Effect_C",
 		L"Sas_Teleport_Effect_D"
 	};
+
+
+private:
+	//For Karen BrainField
+	CAnimCam* m_pKaren_AnimCam = nullptr;
 
 private:
 	CSimpleTimeline			m_TPStart;

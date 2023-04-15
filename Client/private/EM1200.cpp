@@ -10,10 +10,13 @@
 #include "MathUtils.h"
 #include "Material.h"
 #include "EMCable.h"
-#include "PlayerInfoManager.h"
+
+#include "GameManager.h"
 #include "HelperClasses.h"
 #include "ShaderUI.h"
 #include "UI_Manager.h"
+#include "PlayerInfoManager.h"
+#include "Camera_Player.h"
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -35,13 +38,13 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 25000;
+		m_iMaxHP = 2500;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = 39;
+		iEemeyLevel = 34;
 		m_iAtkDamage = 200;
 
 		m_eEnemyName = EEnemyName::EM1200;
@@ -63,6 +66,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/ShaderUI.json");
 	m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
 	assert(m_pShaderUI != nullptr && "Failed to Clone : CFullUI");
+
 	return S_OK;
 }
 
@@ -862,6 +866,11 @@ void CEM1200::SetUpMainFSM()
 			.AddState("Cable_Start")
 				.OnStart([this]
 				{
+						m_bCableTalk.IsNotDo([]
+							{
+								CGameManager::GetInstance()->Set_LeftTalk(88);
+							});
+
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em1200_217_AL_atk_a5_motif2_start");
 					m_SoundStore.PlaySound("crawl_attack_tenta", m_pTransformCom);
 
@@ -982,12 +991,8 @@ void CEM1200::SetUpChangeFSM()
 				m_bAlpha = true;
 				m_pShaderUI->SetVisible(true);
 			})
-			.Tick([this](_double TimeDelta)
-			{
-					GetDark(TimeDelta);
-			})
 			.AddTransition("Dark to Change1", "Change1")
-				.Predicator([this] { return m_bAlpha == false; })
+				.Predicator([this] { return m_bReverse == true; })
 
 		.AddState("Change1")
 			.OnStart([this]
@@ -1010,11 +1015,6 @@ void CEM1200::SetUpChangeFSM()
 				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 			})
-			.OnExit([this]
-			{
-					m_bAlpha = true;
-					m_pShaderUI->SetVisible(true);
-			})
 			.AddTransition("Change2 to Idle", "Idle")
 				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.99f); })
 
@@ -1026,6 +1026,8 @@ void CEM1200::BeginTick()
 {
 	CEnemy::BeginTick();
 	SetUpIntro();
+
+	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(8.f);
 }
 
 void CEM1200::Tick(_double TimeDelta)
@@ -1065,7 +1067,7 @@ void CEM1200::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
-
+	GetDark(TimeDelta);
 	FogControl(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
@@ -1151,7 +1153,18 @@ void CEM1200::Imgui_RenderProperty()
 
 _bool CEM1200::IsWeak(CRigidBody* pHitPart)
 {
-	return 	pHitPart == GetRigidBody("Weak");
+	_bool bisweak = pHitPart == GetRigidBody("Weak");
+
+	if (false == m_bWeakTalk)
+	{
+		if (bisweak)
+		{
+			m_bWeakTalk = true;
+			CGameManager::GetInstance()->Set_LeftTalk(91);
+		}
+	}
+
+	return bisweak;
 }
 
 _float4 CEM1200::GetKineticTargetPos()
@@ -1289,7 +1302,14 @@ void CEM1200::FogControl(_double TimeDelta)
 		_float fMaxFogDensity = 0.8f;
 		_float FogGlobalDensity = m_pRendererCom->GetFogDesc().fGlobalDensity += TimeDelta * 0.5;
 		if (FogGlobalDensity >= fMaxFogDensity)
+		{
 			m_pRendererCom->GetFogDesc().fGlobalDensity = fMaxFogDensity;
+
+			m_bFogTalk.IsNotDo([]
+				{
+					CGameManager::GetInstance()->Set_LeftTalk(89);
+				});
+		}
 	}
 }
 
@@ -1324,7 +1344,7 @@ void CEM1200::GetDark(_double TimeDelta)
 
 	_float fSpeed = 0.3f;
 	if (m_bReverse == false)
-		fAlpha += _float(TimeDelta) * fSpeed;
+		fAlpha += _float(TimeDelta) * 1.2f;
 	else
 		fAlpha -= _float(TimeDelta) * fSpeed;
 	m_pShaderUI->Set_Float4s_W(fAlpha);
@@ -1481,6 +1501,7 @@ CGameObject * CEM1200::Clone(void * pArg)
 
 void CEM1200::Free()
 {
+	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(4.f);
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);

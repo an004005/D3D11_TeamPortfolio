@@ -70,11 +70,6 @@ void CCanvas_Alarm::Imgui_RenderProperty()
 	{
 		Set_OpenNextRoomName(L"천세의 방");
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Close Next Map Name UI"))
-	{
-		Set_CloseNextRoomName();
-	}
 
 	if (ImGui::Button("Boss Appeart"))
 	{
@@ -102,15 +97,10 @@ void CCanvas_Alarm::LoadFromJson(const Json& json)
 	CCanvas::LoadFromJson(json);
 }
 
-void CCanvas_Alarm::Set_OpenNextRoomName(const _tchar* pNextRoomName)
+void CCanvas_Alarm::Set_OpenNextRoomName(const wstring wsNextRoomName)
 {
-	dynamic_cast<CNextMapNameUI*>(Find_ChildUI(L"NextMapName"))->Set_NextRoolName(pNextRoomName);
+	dynamic_cast<CNextMapNameUI*>(Find_ChildUI(L"NextMapName"))->Set_NextRoolName(wsNextRoomName);
 
-}
-
-void CCanvas_Alarm::Set_CloseNextRoomName()
-{
-	Find_ChildUI(L"NextMapName")->SetVisible(false);
 }
 
 void CCanvas_Alarm::Set_LevelUp(const _uint iLevel)

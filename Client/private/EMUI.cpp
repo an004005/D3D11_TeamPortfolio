@@ -42,7 +42,7 @@ void CEMUI::Create_UIInfo()
 
 	if (m_pOwner->HasCrushGauge())
 	{
-		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterShield")));
+		m_pShieldUI = dynamic_cast<CMonsterShildUI*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_MonsterShield")));
 		assert(m_pShieldUI != nullptr);
 
 		m_pShieldUI->Set_Owner(m_pOwner);
@@ -51,7 +51,7 @@ void CEMUI::Create_UIInfo()
 	}
 	else
 	{
-		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_FrontUI"), TEXT("Prototype_GameObject_MonsterHP")));
+		m_pHPUI = dynamic_cast<CMonsterHpUI*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, TEXT("Prototype_GameObject_MonsterHP")));
 		assert(m_pHPUI != nullptr);
 
 		m_pHPUI->Set_Owner(m_pOwner);
@@ -93,9 +93,10 @@ void CEMUI::Create_BossUI()
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
 
-	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), L"Canvas_BossHpMove", &json));
+	json["Level"] = m_pOwner->GetEnemyLevel();
+	json["Name"] = m_pOwner->GetEnemyName();
+	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BossHpMove", &json));
 	assert(m_BossHp != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-
 }
 
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
@@ -119,6 +120,9 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 	}
 	else
 	{
+		//ÀÓ½Ã·Î ¸¸µé¾îµÐ°Çµ¥ °©¿Ê¸Â¾ÒÀ»¶© µ¥¹ÌÁö¸¦ 1·Î Áà¼­ ±×³É µ¥¹ÌÁö ÆùÆ®°¡ ¾È¶ß°Ô ÇÑ´Ù.
+		if (iDamage == 1)
+			iDamage = 0;
 		array<_int, 4> SaveNum;
 
 		//10À» ³Ö¾îÁÖ¸é ¼ýÀÚ°¡ ¾È¶á´Ù°í ÇÔ
@@ -154,38 +158,29 @@ void CEMUI::Update_NoticeNeon()
 {
 	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.f, 0.f);
 
-	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon.first->SetDelete();
-		m_pNoticNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticNeon.first);
-		Safe_Release(m_pNoticNeon.second);
-
-		m_pNoticNeon.first = nullptr;
-		m_pNoticNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
 	}
 
 	switch (m_pOwner->GetDeBuffType())
 	{
 	case Client::EDeBuffType::DEBUFF_FIRE:
-		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
-		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_OIL:
-		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
-		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
-		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
-		m_pNoticNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
@@ -194,12 +189,10 @@ void CEMUI::Update_NoticeNeon()
 		break;
 	}
 
-	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon.first->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
-		m_pNoticNeon.second->Start_NoAttach(m_pNoticNeon.first->GetFirstEffect(), true, true);
-		Safe_AddRef(m_pNoticNeon.first);
-		Safe_AddRef(m_pNoticNeon.second);
+		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Target", true, true);
+		Safe_AddRef(m_pNoticeNeon);
 	}
 
 }
@@ -243,15 +236,11 @@ void CEMUI::Free()
 		m_pCGEffect = nullptr;
 	}
 
-	if (m_pNoticNeon.first != nullptr && m_pNoticNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticNeon.first->SetDelete();
-		m_pNoticNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticNeon.first);
-		Safe_Release(m_pNoticNeon.second);
-
-		m_pNoticNeon.first = nullptr;
-		m_pNoticNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
+		
 	}
 }

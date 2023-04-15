@@ -180,7 +180,6 @@ void CCanvas_Shop::KeyInput()
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
 
 		dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Set_MainUIClose();
-
 	}
 }
 
@@ -252,7 +251,7 @@ CCanvas * CCanvas_Shop::Clone(void * pArg)
 void CCanvas_Shop::Free()
 {
 	CCanvas::Free();
-	
-	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pShaderUI))
+
+	if(true == CGameInstance::GetInstance()->Check_ObjectAlive(m_pShaderUI))
 		m_pShaderUI->SetDelete();
 }
