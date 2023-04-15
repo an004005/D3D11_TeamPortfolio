@@ -1,0 +1,28 @@
+{
+    "AchieveType": 5,
+    "ModelTypeCheck": false,
+    "ModelTypeEnum": 0,
+    "ObjectTag": "",
+    "Prototype_GameObject": "ConsumptionItem\u0000",
+    "RootType": 1,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            -7.956961631774902,
+            0.0,
+            1.7130126953125,
+            1.0
+        ]
+    }
+}

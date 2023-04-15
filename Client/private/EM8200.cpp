@@ -57,6 +57,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
+	m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
@@ -111,6 +112,7 @@ void CEM8200::SetUpComponents(void* pArg)
 
 	m_TPStart.SetCurve("Simple_Increase_0.2x");
 	m_TPEnd.SetCurve("Simple_Decrease_0.2x");
+
 
 	m_CounterStart.SetCurve("Simple_Increase_0.2x");
 	m_CounterEnd.SetCurve("Simple_Decrease_0.2x");
@@ -219,6 +221,22 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 void CEM8200::SetUpSound()
 {
 	CEnemy::SetUpSound();
+
+	m_SoundStore.CloneSound("move_walk");
+	m_SoundStore.CloneSound("karen_attack_elecball_ins");
+	m_SoundStore.CloneSound("karen_attack_elecball_shot");
+	m_SoundStore.CloneSound("karen_attack_kick1");
+	m_SoundStore.CloneSound("karen_attack_kick2");
+	m_SoundStore.CloneSound("karen_attack_spike");
+	m_SoundStore.CloneSound("karen_attack_stomp");
+	m_SoundStore.CloneSound("karen_fx_brainfield");
+	m_SoundStore.CloneSound("karen_fx_dash");
+	m_SoundStore.CloneSound("karen_fx_kinecounter");
+	m_SoundStore.CloneSound("karen_fx_tele");
+	m_SoundStore.CloneSound("karen_fx_thunder");
+
+
+	m_pModelCom->Add_EventCaller("move_walk", [this]{m_SoundStore.PlaySound("move_walk");});
 }
 
 void CEM8200::Create_Bullet()
@@ -250,6 +268,8 @@ void CEM8200::Create_Bullet()
 		// .Set_DeadBulletEffect({ L"" })
 		.Set_DeadBulletParticle(L"em8200_Elec_Bullet_Dead")
 		.Set_Position(vPrePos)
+		.Set_HitSound("karen_attack_elecball_hit")
+		.Set_LoopSound("karen_attack_elecball_loop")
 		.Build();
 }
 
@@ -287,6 +307,7 @@ void CEM8200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("KneeKick_A1_Start", [this]
 		{
+			m_SoundStore.PlaySound("karen_attack_kick1");
 			m_bMeleeCollStart = true;
 			_matrix Pivot;
 			Pivot = XMMatrixRotationX(XMConvertToRadians(-40.f)) * XMMatrixRotationY(XMConvertToRadians(90.f)) * XMMatrixTranslation(-0.5f, -0.5f, 0.f);
@@ -301,6 +322,7 @@ void CEM8200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("FrontKick_A2_Start", [this]
 		{
+			m_SoundStore.PlaySound("karen_attack_kick2");
 			_matrix Pivot;
 			Pivot = XMMatrixRotationX(XMConvertToRadians(125.f)) * XMMatrixRotationY(XMConvertToRadians(45.f)) * XMMatrixRotationZ(XMConvertToRadians(-30.f)) * XMMatrixTranslation(0.5f, 0.5f, 0.5f);
 
@@ -316,6 +338,7 @@ void CEM8200::SetUpAnimationEvent()
 
 	m_pModelCom->Add_EventCaller("TurnKick_A3_Start", [this]
 		{
+			m_SoundStore.PlaySound("karen_attack_kick1");
 			_matrix Pivot;
 			Pivot = XMMatrixRotationX(XMConvertToRadians(50.f)) * XMMatrixRotationY(XMConvertToRadians(-10.f)) * XMMatrixRotationZ(XMConvertToRadians(180.f)) * XMMatrixTranslation(-0.7f, -2.5f, -3.5f);
 
@@ -383,6 +406,7 @@ void CEM8200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("Chase_Elec_Start", [this]
 		{
 			Create_Bullet();
+		m_SoundStore.PlaySound("karen_attack_elecball_shot");
 
 			//총알 생성
 			// m_bRangeCollStart = true;
@@ -586,6 +610,7 @@ void CEM8200::Tick(_double TimeDelta)
 		_float fTPStartOut;
 		if (m_TPStart.Tick(TimeDelta, fTPStartOut))
 		{
+
 			for (auto pMtrl : m_pModelCom->GetMaterials())
 			{
 				pMtrl->GetParam().Floats[2] = fTPStartOut;
@@ -987,7 +1012,7 @@ void CEM8200::AddState_Teleport(CFSMComponentBuilder& Builder)
 	.AddState("Teleport_F_Start")
 		.OnStart([this]
 			{
-				m_TPStart.PlayFromStart();
+				TP_Start();
 
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_130_AL_dodge_F_start");
 				m_fTP_Range = CGameUtils::GetRandFloat(1.f, 2.5f);
@@ -1040,7 +1065,7 @@ void CEM8200::AddState_Teleport(CFSMComponentBuilder& Builder)
 	.AddState("Teleport_B_Start")
 		.OnStart([this]
 			{
-				m_TPStart.PlayFromStart();
+				TP_Start();
 
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_135_AL_dodge_B_start");
 				m_fTP_Range = CGameUtils::GetRandFloat(1.f, 2.5f);
@@ -1071,8 +1096,7 @@ void CEM8200::AddState_Teleport(CFSMComponentBuilder& Builder)
 	.AddState("Teleport_L_Start")
 		.OnStart([this]
 			{
-				m_TPStart.PlayFromStart();
-
+				TP_Start();
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_145_AL_dodge_L_start");
 				m_fTP_Range = CGameUtils::GetRandFloat(1.f, 2.5f);
 				wstring strTeleportEffectName = m_vecRandomTeleportEffect[CMathUtils::RandomUInt(m_vecRandomTeleportEffect.size() - 1)];
@@ -1138,8 +1162,7 @@ void CEM8200::AddState_Attack_Kick(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_130_AL_dodge_F_start");
 
-				m_TPStart.PlayFromStart();
-
+				TP_Start();
 				wstring strTeleportEffectName = m_vecRandomTeleportEffect[CMathUtils::RandomUInt(m_vecRandomTeleportEffect.size() - 1)];
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, strTeleportEffectName)->Start_Attach(this, "Spine", true);
 			})
@@ -1317,6 +1340,7 @@ void CEM8200::AddState_Attack_IceNeedle(CFSMComponentBuilder& Builder)
 	.AddState("Ice_Needle_Atk_Loop")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_attack_spike");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_232_AL_atk_fire_chg_loop");
 				// _matrix scale = XMMatrixScaling(0.5f, 1.f, 0.5f);
 
@@ -1399,7 +1423,7 @@ void CEM8200::AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder)
 		.AddState("Chase_Elec_Start_Before_TP")
 		.OnStart([this]
 			{
-				m_TPStart.PlayFromStart();
+				TP_Start();
 				wstring strTeleportEffectName = m_vecRandomTeleportEffect[CMathUtils::RandomUInt(m_vecRandomTeleportEffect.size() - 1)];
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, strTeleportEffectName)->Start_Attach(this, "Spine", true);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_135_AL_dodge_B_start");
@@ -1419,6 +1443,7 @@ void CEM8200::AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder)
 	.AddState("Chase_Elec_Start")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_attack_elecball_ins");
 				m_TPEnd.PlayFromStart();
 
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_241_AL_atk_chase_charge");
@@ -1455,7 +1480,8 @@ void CEM8200::AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder)
 	.AddState("Chase_Elec_Chase_Start_L")
 		.OnStart([this]
 			{
-				m_TPStart.PlayFromStart();
+
+				TP_Start();
 
 				wstring strTeleportEffectName = m_vecRandomTeleportEffect[CMathUtils::RandomUInt(m_vecRandomTeleportEffect.size() - 1)];
 				CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, strTeleportEffectName)->Start_Attach(this, "Spine", true);
@@ -1497,7 +1523,7 @@ void CEM8200::AddState_Attack_ChaseElec(CFSMComponentBuilder& Builder)
 	.AddState("Chase_Elec_Chase_Start_R")
 	.OnStart([this]
 		{
-			m_TPStart.PlayFromStart();
+			TP_Start();
 
 			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_248_AL_atk_chase_startR");
 
@@ -1547,7 +1573,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_130_AL_dodge_F_start");
 			// 손에 이펙트 달기
 			m_fGravity = 0.f;
-			m_TPStart.PlayFromStart();
+			TP_Start();
 
 			m_fTP_Range = CGameUtils::GetRandFloat(1.f, 2.5f);
 
@@ -1602,6 +1628,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Charge_Loop")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_fx_thunder");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_212_AL_atk_air_chg_loop");
 				ClearDamagedTarget();
 			})
@@ -1667,6 +1694,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Landing_Start")
 		.OnStart([this]
 			{
+				// m_SoundStore.PlaySound("");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_216_AL_atk_air_landing_start");
 			})
 
@@ -1720,7 +1748,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 	.AddState("Rush_Copy_Start_Before_TP")
 	.OnStart([this]
 		{
-			m_TPStart.PlayFromStart();
+			TP_Start();
 
 			m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_135_AL_dodge_B_start");
 		})
@@ -1817,6 +1845,7 @@ void CEM8200::AddState_Attack_Rush(CFSMComponentBuilder& Builder)
 	.AddState("Rush_Start")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_fx_dash");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_225_AL_atk_rush_start");
 				m_bMeleeCollStart = true;
 				m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
@@ -1924,6 +1953,7 @@ void CEM8200::AddState_Counter(CFSMComponentBuilder& Builder)
 		.AddState("Counter_Start")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_attack_stomp");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_261_AL_atk_counter_start");
 			})
 
@@ -2002,6 +2032,8 @@ void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
 		.AddState("Capture_Wait")
 		.OnStart([this]
 			{
+				m_SoundStore.PlaySound("karen_fx_kinecounter");
+
 				m_pASM->SetLerpDuration(0.3f);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_272_AL_atk_throw1_wait");
 
@@ -2037,6 +2069,7 @@ void CEM8200::AddState_CaptureKinetic(CFSMComponentBuilder& Builder)
 		.AddState("Capture_Start")
 			.OnStart([this]
 				{
+
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_281_AL_atk_psycounter");
 				})
 		.Tick([this](_double TimeDelta)
@@ -2068,6 +2101,8 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
+			m_SoundStore.PlaySound("karen_fx_brainfield");
+
 			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(true);
 			m_pModelCom->FindMaterial(L"MI_em8200_HAIR_0")->SetActive(false);
 
@@ -2231,7 +2266,15 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				for (auto pMtrl : m_pModelCom->GetMaterials())
 					pMtrl->GetParam().Floats[0] = 0.f;
 			}
+			if (fPlayRatio > 0.9f && m_ItemSpawn.IsNotDo())
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/FinalItem.json");
+				_float4x4 WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+				json["Transform"]["WorldMatrix"] = WorldMatrix;
+				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
+			}
 		})
+		
 	;
 
 }
@@ -2487,6 +2530,12 @@ void CEM8200::Play_HeavyHitAnim()
 	default:
 		NODEFAULT;
 	}
+}
+
+void CEM8200::TP_Start()
+{
+	m_TPStart.PlayFromStart();
+	m_SoundStore.PlaySound("karen_fx_tele");	
 }
 
 void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType)
