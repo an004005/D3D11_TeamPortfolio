@@ -1598,6 +1598,7 @@
     <ClInclude Include="..\public\EM8200_BrainCrushCables.h">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClInclude>
+    <ClInclude Include="PostVFX_Cinema.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2623,6 +2624,7 @@
     <ClCompile Include="..\private\EM8200_BrainCrushCables.cpp">
       <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
+    <ClCompile Include="PostVFX_Cinema.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

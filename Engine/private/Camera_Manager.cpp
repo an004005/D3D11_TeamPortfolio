@@ -135,6 +135,11 @@ CCamera* CCamera_Manager::Add_Camera(const string& strCamTag, _uint iLevelIdx, c
 	return pCamera;
 }
 
+void CCamera_Manager::DeleteCamera(const string& strCamTag)
+{
+	
+}
+
 void CCamera_Manager::SetMainCamera(const string& strCamTag)
 {
 	Assert(FindCamera(strCamTag) != nullptr);
