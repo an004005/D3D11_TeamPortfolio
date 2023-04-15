@@ -73,71 +73,28 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
 void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-	if (m_bMiddleBGM == false)
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					m_BGM.StopAllLoop();
-					m_bMiddleBGM = true;
-					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					break;
-				}
-			}
-			if (m_BGMChange.IsNotDo())
-			{
-				m_BGM.StopAllLoop();
-				m_BGM.PlaySound("A Sedated Heart");
-			}
-		}
-	}
+    if (m_BGMOnce.IsNotDo())
+        m_BGM.PlaySound(m_MainSound);
 
 
-	if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-	{
-		for (auto pObj : pMonsterLayer->GetGameObjects())
-		{
-			if (auto pBoss = dynamic_cast<CEM0110*>(pObj))
-			{
-				if (m_bBossBGM == false)
-				{
-					m_BGM.StopAllLoop();
-					m_bBossBGM = true;
-					m_BGM.PlaySound("em0110BGM");
-					break;
-				}
-			}
-			else
-			{
-				if (m_bBossBGM == true)
-				{
-					m_BGM.StopAllLoop();
-					m_bBossBGM = false;
-					m_BGM.PlaySound(m_MainSound);
-					break;
-				}
-			}
-		}
-	}
+    if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
+    {
+        if (m_bBossBGM == false)
+        {
+            m_BGM.StopAllLoop();
+            m_bBossBGM = true;
+            m_BGM.PlaySound("em0110BGM");
+        }
+    }
+    else
+    {
+        if (m_bBossBGM == true)
+        {
+            m_BGM.StopAllLoop();
+            m_bBossBGM = false;
+            m_BGM.PlaySound(m_MainSound);
+        }
+    }
 
     CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 	CLevel_StageDefault::Tick(TimeDelta);
@@ -157,5 +114,5 @@ CLevel_ConstructionSite2F* CLevel_ConstructionSite2F::Create(ID3D11Device* pDevi
 
 void CLevel_ConstructionSite2F::Free()
 {
-    CLevel::Free();
+	__super::Free();
 }
