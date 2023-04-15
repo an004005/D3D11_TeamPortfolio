@@ -110,7 +110,7 @@ void CEM8200_Controller::BeginTick()
 
 void CEM8200_Controller::AI_Tick(_double TimeDelta)
 {
-	
+	Check_SecondPhase();
 
 	Tick_TP_Cooltime(TimeDelta);
 	Tick_CoolTimeHelper(TimeDelta);
@@ -124,6 +124,7 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 	{
 
 		m_pFSM->Tick(TimeDelta);
+
 
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
 		// AddCommand("Air_Elec_Atk_Charge_Start", 0.f, &CAIController::Input, F);
@@ -243,6 +244,19 @@ void CEM8200_Controller::Tick_CoolTimeHelper(_double TimeDelta)
 	m_Counter_CoolTimeHelper.Tick(TimeDelta);
 
 	m_DetectedCoolTimeHelper.Tick(TimeDelta);
+}
+
+void CEM8200_Controller::Check_SecondPhase()
+{
+	if(m_pCastedOwner->Check_SecondPhase() == true && m_bSecondPhaseOnce == false)
+	{
+		m_pCastedOwner->Clear_Socket();
+
+		ClearCommands();
+
+		AddCommand("BrainField_Start", 0.f, &CAIController::Input, CController::CTRL);
+	}
+		
 }
 
 void CEM8200_Controller::CalcTeleport_Dir()

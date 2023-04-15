@@ -9088,6 +9088,10 @@
             {
                 "EventName": "See_Through_Start",
                 "EventTime": 68.0
+            },
+            {
+                "EventName": "BattleStart",
+                "EventTime": 68.0
             }
         ]
     },

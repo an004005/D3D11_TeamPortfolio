@@ -24,6 +24,9 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "BrainField.h"
+#include "Canvas_MainTalk.h"
+#include "EnvironmentEffect.h"
+#include "TestTarget.h"
 
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -62,6 +65,9 @@ HRESULT CEM8200::Initialize(void* pArg)
 	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
 	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
 	Safe_AddRef(m_pKarenMaskEf);
+
+	m_pKarenMaskEf->GetParams().Floats[1] = 1.f;
+
 
 	m_CounterEFCoolTimeHelper.Initialize(0.1f, true);
 
@@ -111,6 +117,8 @@ void CEM8200::SetUpComponents(void* pArg)
 	m_CaptureStart.SetCurve("Simple_Increase_0.2x");
 	m_CaptureEnd.SetCurve("Simple_Decrease_0.2x");
 
+	m_KarenMaskStart.SetCurve("Simple_Decrease_0.2x");
+
 	m_pLeftCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
 	m_pRightCopy = dynamic_cast<CEM8200_CopyRush*>(CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"Monster_em8200_CopyRush"));
 
@@ -131,6 +139,11 @@ void CEM8200::SetUpComponents(void* pArg)
 
 void CEM8200::Detected_Attack()
 {
+}
+
+void CEM8200::Clear_Socket()
+{
+	m_pASM->ClearSocketAnim("FullBody", 0.f);
 }
 
 void CEM8200::Set_KineticObject(CGameObject* pObject)
@@ -416,6 +429,7 @@ void CEM8200::SetUpAnimationEvent()
 		});
 
 
+
 	m_pModelCom->Add_EventCaller("Capture_Start", [this]
 		{
 			_float4 TargetPos = static_cast<CScarletCharacter*>(m_pTarget)->GetColliderPosition();
@@ -451,11 +465,21 @@ void CEM8200::SetUpAnimationEvent()
 	m_pModelCom->Add_EventCaller("See_Through_Start", [this]
 		{
 			// 번쩍 이펙트
-			CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
+			string CmpString = m_pFSM->GetCurStateName();
 
-			CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Seethrough"))->Start_Attach(this, "RightWeapon", false, true);
-			CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+			if (CmpString == "See_Through_Start")
+			{
+				CPlayerInfoManager::GetInstance()->Release_SasEnergy_All();
 
+				CVFX_Manager::GetInstance()->GetEffect(EF_MONSTER, TEXT("em8200_Seethrough"))->Start_Attach(this, "RightWeapon", false, true);
+				CGameInstance::GetInstance()->AddLifePointLight(1.f, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), 20.f, _float4(1.f, 1.f, 1.f, 1.f));
+			}
+
+			if(CmpString == "BattleStart")
+			{
+				m_KarenMaskStart.PlayFromStart();
+				m_pKarenMaskEf->GetParams().Ints[0] = 1;
+			}
 		});
 
 
@@ -486,8 +510,8 @@ void CEM8200::SetUpFSM()
 	CEnemy::SetUpFSM();
 
 	CFSMComponentBuilder Builder;
-	Builder.InitState("Idle");
-
+	Builder.InitState("Intro_00");
+	AddState_Intro(Builder);
 	AddState_Idle(Builder);
 	AddState_Teleport(Builder);
 	AddState_Attack_Kick(Builder);
@@ -521,6 +545,12 @@ void CEM8200::Tick(_double TimeDelta)
 		m_pFSM->SetState("Idle");
 		m_pController->SetActive(false);
 		m_pASM->ClearSocketAnim("FullBody");
+	}
+
+	if (GetHpRatio() < 0.7 && m_SecondPhase.IsNotDo())
+	{
+		m_bSecondPhase = true;
+		m_iHP = m_iMaxHP;
 	}
 
 	m_CounterEFCoolTimeHelper.Tick(TimeDelta);
@@ -624,6 +654,14 @@ void CEM8200::Tick(_double TimeDelta)
 	}
 
 	{
+		_float fKarenMaskStartOut;
+		if (m_KarenMaskStart.Tick(TimeDelta, fKarenMaskStartOut))
+		{
+			m_pKarenMaskEf->GetParams().Floats[1] = fKarenMaskStartOut;
+		}
+	}
+
+	{
 		_float fCaptureEndOut;
 		if (m_CaptureEnd.Tick(TimeDelta, fCaptureEndOut))
 		{
@@ -636,13 +674,7 @@ void CEM8200::Tick(_double TimeDelta)
 
 	string StateName = m_pFSM->GetCurStateName();
 
-	if(GetHpRatio() < 0.7 && m_SecondPhase.IsNotDo())
-	{
-		m_bSecondPhase = true;
-		m_iHP = m_iMaxHP;
-	}
 
-	m_bSecondPhase = true;
 
 	m_pLeftCopy->Tick(TimeDelta);
 	m_pRightCopy->Tick(TimeDelta);
@@ -689,6 +721,24 @@ HRESULT CEM8200::Render()
 void CEM8200::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
+
+	if(ImGui::Button("StoryEndBt"))
+	{
+		// m_bStoryEnd = true;
+
+		auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
+		// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+		
+			for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, L"Layer_FinalStage")->GetGameObjects())
+			{
+				if (auto pTestTarget = dynamic_cast<CTestTarget*>(iter))
+				{
+					pTestTarget->GetTransform()->Rotation(m_pTransformCom->Get_State(CTransform::STATE_UP), XMConvertToRadians(-180.f));
+					m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), pTestTarget->GetTransform(), 0.f, 0.f);
+				}
+			}
+	}
+
 	if (ImGui::CollapsingHeader("ASM"))
 	{
 		m_pASM->Imgui_RenderState();
@@ -797,7 +847,8 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
 		.Predicator([this]
 		{
-			return CGameInstance::GetInstance()->KeyDown(DIK_P);
+			// return CGameInstance::GetInstance()->KeyDown(DIK_P);
+				return m_eInput == CController::CTRL;
 		})
 
 	.AddTransition("Idle to Hit_Mid", "Hit_Mid_Heavy")
@@ -2008,12 +2059,22 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
 			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
 
+			for( auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if(auto pEnvEff = dynamic_cast<CEnvironmentEffect*>(iter))
+				{
+					pEnvEff->SetVisible(false);
+				}
+			}
 		})
 		.Tick([this](_double TimeDelta)
 		{
 			SocketLocalMove(m_pASM);
 		})
-
+		.OnExit([this]
+		{
+				m_pController->Set_SecondPhaseOnce();
+		})
 		.AddTransition("BrainFieldStart to InCombatIdle", "ImCombatIdle")
 		.Predicator([this]
 			{
@@ -2134,6 +2195,119 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 
 }
 
+void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
+{
+	Builder
+		.AddState("Intro_00")
+		.OnStart([this]
+			{
+				m_pASM->SetLerpDuration(0.3f);
+				m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_001_AL_wait01" ,"AS_em8200_001_AL_wait01" ,"AS_em8200_002_AL_wait02"});
+			})
+
+		.Tick([this](_double TimeDelta)
+			{
+				
+			})
+
+		.AddTransition("Intro_00 to StoryWalk", "StoryWalk")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketPassby("FullBody", 0.95f)  || Check_PlayerDetected();;
+				})
+
+		.AddState("StoryWalk")
+			.OnStart([this]
+				{
+					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_105_AL_walk" ,"AS_em8200_105_AL_walk" ,"AS_em8200_105_AL_walk", "AS_em8200_105_AL_walk"});
+
+					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
+
+					m_pKaren_AnimCam->StartCamAnim(pCamAnim,
+						_float4x4::Identity,
+						_float4x4::Identity);
+				})
+
+		.Tick([this](_double TimeDelta)
+		{
+				_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 ThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float3 Dir = XMVector3Normalize(TargetPos - ThisPos);
+
+
+				m_pTransformCom->LocalMove(Dir, 0.025f);
+		})
+
+		.AddTransition("StoryWalk to Intro_01", "Intro_01")
+			.Predicator([this]
+				{
+					return Check_PlayerDetected_Near();
+				})
+
+
+		
+		.AddState("Intro_01")
+			.OnStart([this]
+				{
+
+					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																							"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02" });
+				})
+
+		.Tick([this](_double TimeDelta)
+		{
+				if (false == m_pCanvas_MainTalk->Get_End())
+				{
+					m_bStoryEnd = true;
+				}
+		})
+
+		.OnExit([this]
+		{
+		})
+
+		.AddTransition("Intro_01 to BattleStart", "BattleStart")
+		.Predicator([this]
+			{
+				return m_bStoryEnd;
+			})
+
+		.AddState("BattleStart")
+		.OnStart([this]
+			{
+				m_pASM->InputAnimSocketOne("FullBody",  "AS_em8200_251_AL_atk_seethrough" );
+
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+				m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+				assert(m_pCanvas_MainTalk != nullptr && "Failed to Cloned : CCanvas_MainTalk");
+
+				m_pCanvas_MainTalk->Add_Talk(42);
+			})
+
+	
+		.OnExit([this]
+			{
+				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
+				m_pKarenMaskEf->GetParams().Ints[0] = 0;
+
+			// 루카 대사 
+			})
+
+				
+		.AddTransition("BattleStart to Idle", "Idle")
+			.Predicator([this]
+				{
+					return m_pASM->isSocketPassby("FullBody", 0.99f);
+				})
+
+				
+				;
+}
+
 
 void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 {
@@ -2169,6 +2343,63 @@ void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 				return m_pASM->isSocketEmpty("FullBody");
 			})
 				;
+}
+
+_bool CEM8200::Check_PlayerDetected()
+{
+	if (m_pGameInstance->Check_ObjectAlive(m_pTarget))
+	{
+		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
+
+		if (fDistance < 25.f && m_bStoryModeStart.IsNotDo())
+		{
+			// Cam Start && Story Start
+
+			return true;
+		}
+	}
+	return false;
+}
+
+_bool CEM8200::Check_PlayerDetected_Near()
+{
+	if (m_pGameInstance->Check_ObjectAlive(m_pTarget))
+	{
+		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
+
+		if (fDistance < 5.f && m_DetectedOnce.IsNotDo())
+		{
+			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+			m_pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+			assert(m_pCanvas_MainTalk != nullptr && "Failed to Cloned : CCanvas_MainTalk");
+
+			m_pCanvas_MainTalk->Add_Talk(35);
+			m_pCanvas_MainTalk->Add_Talk(36);
+			m_pCanvas_MainTalk->Add_Talk(37);
+			// m_pCanvas_MainTalk->Add_Talk(38);
+			m_pCanvas_MainTalk->Add_Talk(39);
+			m_pCanvas_MainTalk->Add_Talk(40);
+			m_pCanvas_MainTalk->Add_Talk(41);
+			// m_pCanvas_MainTalk->Add_Talk(42);
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+_bool CEM8200::Check_StoryEnd()
+{
+	// 스토리 엔드 체크하고 끝나면 연출 캠 종료와 인트로 전투 캠 시작
+
+
+
+		return false;
 }
 
 void CEM8200::Play_MidHitAnim()

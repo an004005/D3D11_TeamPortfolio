@@ -373,7 +373,7 @@ void CCanvas_WorldMap::MapBar_Tick()
 
 			if (2 == m_iInputCount)
 			{
-				m_iInputCount == 0;
+				m_iInputCount = 0;
 
 				// 여기서 맵 이동하기
 				if (0 == i)

@@ -14,6 +14,9 @@ HRESULT CLayer::Initialize()
 
 void CLayer::Tick(_double TimeDelta)
 {
+	if (m_bActive == false)
+		return;
+
 	if (m_bUseTimeRatio)
 		TimeDelta *= CGameTime_Manager::GetInstance()->GetTimeRatio();
 	TimeDelta *= m_fLayerTimeRatio;
@@ -37,6 +40,9 @@ void CLayer::Tick(_double TimeDelta)
 
 void CLayer::Late_Tick(_double TimeDelta)
 {
+	if (m_bActive == false)
+		return;
+
 	if (m_bUseTimeRatio)
 		TimeDelta *= CGameTime_Manager ::GetInstance()->GetTimeRatio();
 	TimeDelta *= (_float)m_fLayerTimeRatio;
@@ -47,6 +53,9 @@ void CLayer::Late_Tick(_double TimeDelta)
 
 void CLayer::AfterPhysX()
 {
+	if (m_bActive == false)
+		return;
+
 	for (const auto pGameObject : m_GameObjects)
 		pGameObject->AfterPhysX();
 }

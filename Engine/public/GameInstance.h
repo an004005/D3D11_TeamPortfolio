@@ -107,6 +107,9 @@ public: /* For.Object_Manager */
 	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
 	void Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag);
 
+	void Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGameObject* pGameObject);
+
+
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);
 	void Imgui_LayerCombo(_uint iLevel, OUT const _tchar*& pLayerName);
@@ -183,6 +186,7 @@ public: /* for CameraManager*/
 	void SetCameraFov(_float fFov);
 	class CCamAnimation* GetCamAnim(const string& strName);
 	void PlayShake(_float fDuration, _float fMagnitude);
+	void DeleteCamera(const string& strCamTag);
 
 public:/*for GameTimeManager */
 	void ResetTimeRatio();
@@ -210,6 +214,10 @@ public: // for RootAnimation
 	void		SetPeekingPos(_fvector vPeekingPos);
 private: // for RootAnimation
 	_vector		m_vecPeekingPos;
+
+public:
+	void LoadFogJson(const string& strJsonPath);
+	
 
 private:
 	static _uint					m_iStaticLevelIndex;

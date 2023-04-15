@@ -40,8 +40,12 @@ private:
 	void Tick_TP_Cooltime(_double TimeDelta);
 	void Tick_CoolTimeHelper(_double TimeDelta);
 
+	void	Check_SecondPhase();
+
 public:
-	void CalcTeleport_Dir();
+	void	CalcTeleport_Dir();
+	void	Set_SecondPhaseOnce() { m_bSecondPhaseOnce = true; }
+
 
 private:
 	void Initialize_CoolTimeHelper();
@@ -61,7 +65,9 @@ private:
 	_bool m_bRun = false;
 
 	CDoOnce m_KineticSet;
-	
+	CDoOnce m_SecondPhaseStart;
+
+	_bool	m_bSecondPhaseOnce = false;
 	
 	
 private:
