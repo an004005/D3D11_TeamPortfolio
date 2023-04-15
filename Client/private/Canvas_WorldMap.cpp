@@ -64,6 +64,7 @@ void CCanvas_WorldMap::Tick(_double TimeDelta)
 	CCanvas::Tick(TimeDelta);
 
 	MapBar_Tick();
+	CurrentLevelName_Tick();
 }
 
 void CCanvas_WorldMap::Late_Tick(_double TimeDelta)
