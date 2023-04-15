@@ -38,7 +38,7 @@ HRESULT CEM0800::Initialize(void * pArg)
 		m_iMaxHP = LEVEL_NOW * (300 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 10;
+		m_iMaxCrushGauge = m_iMaxHP * 0.8f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
 		if (LEVEL_NOW == LEVEL_TUTORIAL)

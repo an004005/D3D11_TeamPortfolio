@@ -487,12 +487,8 @@ void CEM0320::SetUpMainFSM()
 				m_bAlpha = true;
 				m_pShaderUI->SetVisible(true);
 			})
-			.Tick([this](_double TimeDelta)
-			{
-				GetDark(TimeDelta);
-			})
 			.AddTransition("Death to RealDeath", "RealDeath")
-				.Predicator([this] { return m_bAlpha == false; })
+				.Predicator([this] { return m_bReverse == true; })
 
 	.AddState("RealDeath")
 		.OnStart([this]
@@ -644,12 +640,8 @@ void CEM0320::Tick(_double TimeDelta)
 		m_pWaterMtrl->GetParam().Floats[1] = 1.f;
 	}
 
-	//if (m_pAnimCam != nullptr)
-	//{
-	//	if (m_pAnimCam->IsFinished())
-	//		
-	//}
 	// Tick의 제일 마지막에서 실행한다.
+	GetDark(TimeDelta);
 	ResetHitData();
 }
 

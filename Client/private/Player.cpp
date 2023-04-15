@@ -7485,6 +7485,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				_float fDistance = vDistance.Length();*/
 
+				_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
+				_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+				pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+
+
 				static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");

@@ -16,7 +16,7 @@
 #include "ShaderUI.h"
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
-
+#include "Camera_Player.h"
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -38,7 +38,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 25000;
+		m_iMaxHP = 2500;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
@@ -991,12 +991,8 @@ void CEM1200::SetUpChangeFSM()
 				m_bAlpha = true;
 				m_pShaderUI->SetVisible(true);
 			})
-			.Tick([this](_double TimeDelta)
-			{
-					GetDark(TimeDelta);
-			})
 			.AddTransition("Dark to Change1", "Change1")
-				.Predicator([this] { return m_bAlpha == false; })
+				.Predicator([this] { return m_bReverse == true; })
 
 		.AddState("Change1")
 			.OnStart([this]
@@ -1019,11 +1015,6 @@ void CEM1200::SetUpChangeFSM()
 				m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 			})
-			.OnExit([this]
-			{
-					m_bAlpha = true;
-					m_pShaderUI->SetVisible(true);
-			})
 			.AddTransition("Change2 to Idle", "Idle")
 				.Predicator([this] { return m_pASM->isSocketPassby("FullBody", 0.99f); })
 
@@ -1035,6 +1026,8 @@ void CEM1200::BeginTick()
 {
 	CEnemy::BeginTick();
 	SetUpIntro();
+
+	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(8.f);
 }
 
 void CEM1200::Tick(_double TimeDelta)
@@ -1074,7 +1067,7 @@ void CEM1200::Tick(_double TimeDelta)
 		m_pTransformCom->MoveVelocity(TimeDelta, vVelocity);
 	}
 
-
+	GetDark(TimeDelta);
 	FogControl(TimeDelta);
 	// Tick의 제일 마지막에서 실행한다.
 	ResetHitData();
@@ -1351,7 +1344,7 @@ void CEM1200::GetDark(_double TimeDelta)
 
 	_float fSpeed = 0.3f;
 	if (m_bReverse == false)
-		fAlpha += _float(TimeDelta) * fSpeed;
+		fAlpha += _float(TimeDelta) * 1.2f;
 	else
 		fAlpha -= _float(TimeDelta) * fSpeed;
 	m_pShaderUI->Set_Float4s_W(fAlpha);
@@ -1508,6 +1501,7 @@ CGameObject * CEM1200::Clone(void * pArg)
 
 void CEM1200::Free()
 {
+	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(4.f);
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);

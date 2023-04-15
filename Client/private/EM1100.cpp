@@ -723,11 +723,12 @@ void CEM1100::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
 
-	if (m_pAnimCam != nullptr && m_pAnimCam->IsFinished())
+	if (m_pAnimCam != nullptr && m_pAnimCam->IsFinished() && m_bIntroFinish == false)
 	{
 		m_pController->SetActive(true);
 		m_pEMUI->Create_BossUI();
 		CUI_Manager::GetInstance()->Set_TempOff(false);		
+		m_bIntroFinish = true;
 	}
 
 	//AIInstance tick
