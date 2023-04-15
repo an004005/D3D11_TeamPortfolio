@@ -47,7 +47,7 @@ void CMonsterLockonUI::BeginTick()
 	//Assert(m_pTargetRhombusGroup != nullptr);
 
 	//TimeLine 끝나고 유지 : 2
-	m_pTargetGroup->Start_Attach(m_pOwner, "Target", true, true);
+	m_pTargetGroup->Start_Attach(m_pOwner, m_strBoneName, true, true);
 
 	//TimeLine 끝나고 삭제 : 4
 	//m_pTargetRhombusGroup->Start_AttachPivot(m_pOwner, m_UI_PivotMatrix, "Target", true, true, true);

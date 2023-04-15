@@ -11109,12 +11109,14 @@ void CPlayer::Update_TargetUI()
 		CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 		//원래 타겟이 없다가 생긴 경우
-		if (m_pSettedTarget == nullptr && pTarget != nullptr)
+		if (m_pSettedTarget == nullptr && pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 		{
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
+			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
+
 			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 
@@ -11124,14 +11126,16 @@ void CPlayer::Update_TargetUI()
 			m_pUI_LockOn->SetDelete();
 		}
 
-		else if (m_pSettedTarget != nullptr && pTarget != nullptr)
+		else if (m_pSettedTarget != nullptr && pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 		{
 			m_pUI_LockOn->SetDelete();
 
 			m_pUI_LockOn = dynamic_cast<CMonsterLockonUI*>(pGameInstance->Clone_GameObject_Get(TEXT("Layer_UI"), TEXT("Prototype_GameObject_MonsterLockon")));
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
-			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
+			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix(pTarget->GetEnemyUI()->GetTargetBoneName()));
+			m_pUI_LockOn->SetBoneName(pTarget->GetEnemyUI()->GetTargetBoneName());
+
 			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 

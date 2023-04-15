@@ -1595,6 +1595,9 @@
     <ClInclude Include="..\public\Alarm_Trigger.h">
       <Filter>Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\EM8200_BrainCrushCables.h">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -2616,6 +2619,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Alarm_Trigger.cpp">
       <Filter>Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EM8200_BrainCrushCables.cpp">
+      <Filter>02.GameObjects\Enemy\EM8200</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
