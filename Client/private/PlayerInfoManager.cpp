@@ -9,6 +9,7 @@
 #include "JsonStorage.h"
 #include "Canvas_Alarm.h"
 #include "Camera.h"
+#include "Camera_Manager.h"
 
 IMPLEMENT_SINGLETON(CPlayerInfoManager)
 
@@ -192,6 +193,20 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	{
 		m_fRandomShakeMaintain = 0.f;
 		m_fRandomShakeForce = 0.f;
+	}
+
+	if (nullptr != CGameInstance::GetInstance()->FindCamera("PlayerCamera") && nullptr != CGameInstance::GetInstance()->GetMainCam())
+	{
+		if (CGameInstance::GetInstance()->GetMainCam() != CGameInstance::GetInstance()->FindCamera("PlayerCamera"))
+		{
+			m_tHanabiStat.bActivate = false;
+			m_tTsugumiStat.bActivate = false;
+		}
+		else
+		{
+			m_tHanabiStat.bActivate = true;
+			m_tTsugumiStat.bActivate = true;
+		}
 	}
 }
 

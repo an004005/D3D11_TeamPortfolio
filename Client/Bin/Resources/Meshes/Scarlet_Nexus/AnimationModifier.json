@@ -111,7 +111,12 @@
         "Duration": 137.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "HandGearEffect",
+                "EventTime": 60.0
+            }
+        ]
     },
     "AS_BC_em_common_ch0100_end": {
         "Duration": 207.0,
@@ -374,6 +379,29 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            }
+        ]
+    },
+    "AS_EnpcBC_dam_c02_em8200": {
+        "Duration": 56.0,
+        "TickPerSecond": 43.08000183105469,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_EnpcBC_dam_c03_em8200": {
+        "Duration": 171.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": []
+    },
+    "AS_EnpcBC_fin_c05_em8200": {
+        "Duration": 195.0,
+        "TickPerSecond": 50.0,
+        "bLooping": false,
+        "vecEvent": [
+            {
+                "EventName": "BrainCrash_Slow",
+                "EventTime": 20.0
             }
         ]
     },

@@ -596,6 +596,55 @@
             "Loop": false,
             "MinDistance": 5.0,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_impact_flesh",
+            "SoundFiles": [
+                "Impact/fx_impact_flesh_1.wav",
+                "Impact/fx_impact_flesh_2.wav",
+                "Impact/fx_impact_flesh_3.wav",
+                "Impact/fx_impact_flesh_4.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_impact_player_hit",
+            "SoundFiles": [
+                "Impact/fx_impact_player_hit_1.wav",
+                "Impact/fx_impact_player_hit_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_impact_player_hit_3",
+            "SoundFiles": [
+                "Impact/fx_impact_player_hit_3.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_plyr_hit_metalic",
+            "SoundFiles": [
+                "Impact/fx_plyr_hit_metalic_1.wav",
+                "Impact/fx_plyr_hit_metalic_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
         }
     ]
 }
