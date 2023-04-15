@@ -10,6 +10,8 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 
+#include "EM0320.h"
+#include "BronJon.h"
 
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel_StageDefault(pDevice, pContext)
@@ -23,6 +25,14 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	m_strLevelName = L"ConstructionSite3F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json";
+
+	m_BGM.CloneSound("Ambient_Bridge");
+	m_BGM.CloneSound("Attention Please");
+	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
+	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	//Boss
+	m_BGM.CloneSound("em0320BGM");
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -54,7 +64,64 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 
 void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("The OSF -Advance");
+
+	if (m_bMiddleBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bMiddleBGM = true;
+					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					break;
+				}
+			}
+			if (m_BGMChange.IsNotDo())
+			{
+				m_BGM.StopAllLoop();
+				m_BGM.PlaySound("A Sedated Heart");
+			}
+		}
+	}
+
+	if (m_bBossBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CEM0320*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bBossBGM = true;
+					m_BGM.PlaySound("em0320BGM");
+					break;
+				}
+			}
+		}
+	}
+
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+
+	CLevel::Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -5869,6 +5869,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("fx_kinetic_air");
 	m_SoundStore.CloneSound("fx_kinetic_backdash");
 
+	//MonsterUI
+	m_SoundStore.CloneSound("UI_monster_alert");
+
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
 	m_pModel->Add_EventCaller("attack_nor_3", [this] {Event_EffectSound("attack_nor_3"); });
@@ -11098,7 +11101,7 @@ void CPlayer::Update_TargetUI()
 {
 	CEnemy* pTarget = dynamic_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
 
-	if (pTarget != nullptr && pTarget->Exclude() == true)
+	if (pTarget != nullptr && (pTarget->Exclude() || m_bBrainCrash))
 		pTarget = nullptr;
 
 	if (m_pSettedTarget != pTarget)
@@ -11112,7 +11115,7 @@ void CPlayer::Update_TargetUI()
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
-
+			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 
 		//원래 타겟이 있었는데 사라진 경우
@@ -11129,13 +11132,12 @@ void CPlayer::Update_TargetUI()
 			assert(m_pUI_LockOn != nullptr);
 			m_pUI_LockOn->Set_Owner(pTarget);
 			m_pUI_LockOn->Set_UIPivotMatrix(pTarget->GetBoneMatrix("Target"));
+			m_SoundStore.PlaySound("UI_monster_alert");
 		}
 
 		//info bar 설정
-		if (pTarget != nullptr)
+		if (pTarget != nullptr && pTarget->GetEnemyUI() != nullptr)
 			pTarget->GetEnemyUI()->Create_UIInfo();
-
-		//Create_TargetInfoBar(pTarget);
 
 		m_pSettedTarget = pTarget;
 	}

@@ -19,6 +19,8 @@ HRESULT CEMUI::Initialize_Prototype(CEnemy* pEnemy)
 	assert(pEnemy != nullptr);
 	m_pOwner = pEnemy;
 
+	m_SoundStore.CloneSound("UI_NoDamage");
+
 	return S_OK;
 }
 
@@ -117,6 +119,8 @@ void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
 	{
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoDamage")
 		->Start_AttachOnlyPos(vHitPosition);
+
+		m_SoundStore.PlaySound("UI_NoDamage");
 	}
 	else
 	{
@@ -223,7 +227,7 @@ void CEMUI::Free()
 		m_pHPUI = nullptr;
 	}
 
-	if (m_BossHp != nullptr)
+	if (CGameInstance::GetInstance()->Check_ObjectAlive(m_BossHp))
 	{
 		m_BossHp->SetDelete();
 		m_BossHp = nullptr;

@@ -11,6 +11,9 @@
 #include "GameUtils.h"
 #include "JsonStorage.h"
 
+#include "EM1100.h"
+#include "BronJon.h"
+
 CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
 {
@@ -23,6 +26,14 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	m_strLevelName = L"Hospital1F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Hospital_1F_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Hospital_1F.json";
+
+	m_BGM.CloneSound("Ambient_Bridge");
+	m_BGM.CloneSound("Attention Please");
+	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
+	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+
+	//Boss
+	m_BGM.CloneSound("em1100BGM");
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -81,7 +92,65 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 void CLevel_Hospital_1F::Tick(_double TimeDelta)
 {
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound("The OSF -Advance");
+
+	if (m_bMiddleBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bMiddleBGM = true;
+					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+				{
+					break;
+				}
+			}
+			if (m_BGMChange.IsNotDo())
+			{
+				m_BGM.StopAllLoop();
+				m_BGM.PlaySound("A Sedated Heart");
+			}
+		}
+	}
+
+	if (m_bBossBGM == false)
+	{
+		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		{
+			for (auto pObj : pMonsterLayer->GetGameObjects())
+			{
+				if (auto pBoss = dynamic_cast<CEM1100*>(pObj))
+				{
+					m_BGM.StopAllLoop();
+					m_bBossBGM = true;
+					m_BGM.PlaySound("em1100BGM");
+					break;
+				}
+			}
+		}
+	}
+
+
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+
+	CLevel::Tick(TimeDelta);
 }
 
 CLevel_Hospital_1F * CLevel_Hospital_1F::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
