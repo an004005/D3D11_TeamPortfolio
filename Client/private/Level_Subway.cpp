@@ -23,7 +23,7 @@ HRESULT CLevel_Subway::Initialize()
 	//m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Subway";
-	m_strShadowCamJsonPath.clear();
+	m_strShadowCamJsonPath.clear();   
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Subway.json";
 
 	m_BGM.CloneSound("Ambient_Bridge");
@@ -53,6 +53,9 @@ HRESULT CLevel_Subway::Initialize()
 	
 	// Item Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Item_Batch.json");
+
+	// AchieveItem Batch
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/Achieve_Batch.json");
 
 	// RedString Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Subway/RedStringBatch.json");
