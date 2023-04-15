@@ -122,7 +122,7 @@ void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	CLevel::Tick(TimeDelta);
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

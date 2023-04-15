@@ -818,11 +818,13 @@ PS_OUT PS_LOADING_16(PS_IN In)
 
 	float4 vFlag = g_FlagTexture.Sample(LinearSampler, In.vTexUV);
 	float4 vFlagNonAlpha = g_FlagTextureNonAlpha.Sample(LinearSampler, In.vTexUV);
+	
 
 	if (vFlagNonAlpha.z == SHADER_TOON_GRAY_INGNORE)
 	{
 		float fGrain = g_tex_0.Sample(LinearSampler, TilingAndOffset(In.vTexUV, (float2)10.f, (float2)0.f));
 		Out.vColor.rgb = fGrain * float3(181.f/ 255.f, 173.f/ 255.f, 155.f/ 255.f);
+		
 	}
 	else if (vFlag.z == SHADER_TOON_GRAY_INGNORE)
 	{

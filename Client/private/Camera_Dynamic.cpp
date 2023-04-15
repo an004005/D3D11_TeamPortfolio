@@ -43,6 +43,9 @@ void CCamera_Dynamic::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 
+	if (m_bActive == false)
+		return;
+
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
 	if (IsMainCamera() == false)

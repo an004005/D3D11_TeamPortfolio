@@ -7,6 +7,7 @@
 #include "Material.h"
 #include "EffectSystem.h"
 #include "ImguiUtils.h"
+#include "Camera_Dynamic.h"
 
 CLoadingModel::CLoadingModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -177,8 +178,11 @@ void CLevel_Loading_Simple::Tick(_double TimeDelta)
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Loading/Cam.json");
 		pCam = CGameInstance::GetInstance()->Add_Camera("LoadingCam", LEVEL_LOADING, L"Layer_Loading", L"Prototype_GameObject_Camera_Dynamic", &json);
 		pCam->SetMainCamera();
+		dynamic_cast<CCamera_Dynamic*>(pCam)->SetActive(false);
 	}
-	
+
+	pCam->SetMainCamera();
+
 	if (CGameInstance::GetInstance()->Check_ObjectAlive(pRect))
 	{
 		pRect->GetShader()->Tick(TimeDelta);
