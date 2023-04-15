@@ -147,6 +147,7 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
             }
             // ★ 애니메이션 교체(Get)
             m_pModel->SetPlayAnimation("AS_co0700_002_get");
+            m_pModel->GetPlayAnimation()->SetTickPerSec(50.f);
             m_bGetItem = true;
         }
 
