@@ -25,7 +25,6 @@ public:
 	virtual void AfterPhysX() override;
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
-	virtual void PlayBC() override;
 
 public:
 	//행동 관련 함수 정의
@@ -37,7 +36,6 @@ private:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
-	_bool CanMove4BC(_float fMinDist);
 
 	void SelectRandomMoveAnim();
 	void Create_Bullet();
@@ -52,6 +50,7 @@ private:
 
 private:
 	_bool PriorityCondition();
+	_bool HitHeavyCondition();
 
 private:
 	class CEM0700_Controller*		m_pController = nullptr;
@@ -75,7 +74,6 @@ private:
 	CController::EHandleInput	m_eInput;
 
 	_double		m_BCLoopTime = 0.0;
-	_bool		m_CanFullBC = false;
 
 	//Heavy coll
 	CSimpleTimeline m_HeavyAttackPushTimeline;

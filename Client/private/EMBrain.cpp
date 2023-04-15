@@ -18,19 +18,18 @@ HRESULT CEMBrain::Initialize(void* pArg)
 
     FAILED_CHECK(SetUpComponents());
 
-    m_pDefaultParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
-    assert(m_pDefaultParticle != nullptr);
-    Safe_AddRef(m_pDefaultParticle);
-
-    m_pDefaultParticle->Start_NoAttach(this, true);
-
+    //bc할때 생성하면, FSM에서 생성을 안하고 넘어가때가 있어서
+    //여기서 어떤 함수든 호출이 되면 그때부터 랜더되게 함
+    m_bVisible = false;
     return S_OK;
 }
 
 void CEMBrain::Late_Tick(_double TimeDelta)
 {
     __super::Late_Tick(TimeDelta);
-    FAILED_CHECK(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this));
+
+    if(m_bVisible)
+       FAILED_CHECK(m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND, this));
 }
 
 HRESULT CEMBrain::Render()
@@ -42,19 +41,27 @@ HRESULT CEMBrain::Render()
 
 }
 
-void CEMBrain::Imgui_RenderProperty()
-{
-}
-
 HRESULT CEMBrain::Render_ShadowDepth()
 {
     m_pModelCom->Render_ShadowDepth(m_pTransformCom);
     return S_OK;
 }
 
+void CEMBrain::InitBC()
+{
+    m_bVisible = true;
+    m_pDefaultParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em0110_Bug_Particle");
+    assert(m_pDefaultParticle != nullptr);
+    Safe_AddRef(m_pDefaultParticle);
+
+    m_pDefaultParticle->Start_NoAttach(this, true);
+}
+
 void CEMBrain::BeginBC()
 {
     //particle
+    m_bVisible = true;
+
     m_pStartParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Monster_Brain_Crush_Enemy_Light_Particle");
     assert(m_pStartParticle != nullptr);
     Safe_AddRef(m_pStartParticle);
@@ -67,14 +74,16 @@ void CEMBrain::BeginBC()
     Safe_AddRef(m_DistortionEffect);
     m_DistortionEffect->Start_NoAttach(this, true);
 
-    m_pLoopEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light_Loop");
-    assert(m_pLoopEffect != nullptr);
-    Safe_AddRef(m_pLoopEffect);
-    m_pLoopEffect->Start_NoAttach(this, true);
+    //m_pLoopEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light_Loop");
+    //assert(m_pLoopEffect != nullptr);
+    //Safe_AddRef(m_pLoopEffect);
+    //m_pLoopEffect->Start_NoAttach(this, true);
 }
 
 void CEMBrain::EndBC()
 {
+    m_bVisible = true;
+
     //Delete LoofEffect 
     if (m_pLoopEffect != nullptr)
     {

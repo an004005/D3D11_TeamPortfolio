@@ -12,6 +12,9 @@
 #include "EMBrain.h"
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
+#include "AnimCam.h"
+#include "UI_Manager.h"
+#include "PlayerInfoManager.h"
 #include "GameManager.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -51,7 +54,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
-
+	m_pController->SetActive(false);
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	m_fGravity = 20.f;
@@ -62,6 +65,15 @@ void CEM1100::SetUpComponents(void * pArg)
 {
 	CEnemy::SetUpComponents(pArg);
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em1100", L"Model", (CComponent**)&m_pModelCom));
+
+	m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->FindCamera("EnemyAnimCamera"));
+	Safe_AddRef(m_pAnimCam);
+
+	if (m_pAnimCam == nullptr)
+	{
+		m_pAnimCam = dynamic_cast<CAnimCam*>(m_pGameInstance->Add_Camera("EnemyAnimCamera", LEVEL_NOW, L"Layer_Camera", L"Prototype_AnimCam"));
+		Safe_AddRef(m_pAnimCam);
+	}
 
 	m_pWeak = m_pModelCom->FindMaterial(L"MI_em1100_WEAK_0");
 	assert(m_pWeak != nullptr);
@@ -701,12 +713,23 @@ void CEM1100::SetUpFSM()
 void CEM1100::BeginTick()
 {
 	CEnemy::BeginTick();
-	m_pEMUI->Create_BossUI();
+
+	CUI_Manager::GetInstance()->Set_TempOff(true);
+	auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1100Intro");
+	m_pAnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 }
 
 void CEM1100::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	if (m_pAnimCam != nullptr && m_pAnimCam->IsFinished() && m_bIntroFinish == false)
+	{
+		m_pController->SetActive(true);
+		m_pEMUI->Create_BossUI();
+		CUI_Manager::GetInstance()->Set_TempOff(false);		
+		m_bIntroFinish = true;
+	}
 
 	//AIInstance tick
 	m_pController->SetTarget(m_pTarget);
@@ -1106,7 +1129,7 @@ void CEM1100::Adjust_MoveAxis(_double TimeDelta)
 		//뛸때는 방향을 보면서 뛰어야하고 걸을때는 안보고 걸어야 함
 		if (m_bRun)
 		{
-			fMoveSpeed = 8.f;
+			fMoveSpeed = 10.f;
 			const _float fYaw = m_pTransformCom->GetYaw_Radian();
 			XMStoreFloat3(&vVelocity, fMoveSpeed * XMVector3TransformNormal(XMVector3Normalize(m_vMoveAxis), XMMatrixRotationY(fYaw)));
 		}
@@ -1167,4 +1190,5 @@ void CEM1100::Free()
 	CEnemy::Free();
 	Safe_Release(m_pASM);
 	Safe_Release(m_pController);
+	Safe_Release(m_pAnimCam);
 }

@@ -6038,54 +6038,43 @@ void CPlayer::Update_NoticeNeon()
 {
 	_float4x4	NoticeNeonPivot = XMMatrixTranslation(0.f, 2.5f, 0.f);
 
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->SetDelete();
-		m_pNoticeNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticeNeon.first);
-		Safe_Release(m_pNoticeNeon.second);
-
-		m_pNoticeNeon.first = nullptr;
-		m_pNoticeNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);
+		m_pNoticeNeon = nullptr;
 	}
 
-	switch (this->GetDeBuffType())
+	switch (GetDeBuffType())
 	{
 	case Client::EDeBuffType::DEBUFF_FIRE:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"NoticeNeon_Fire_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_fire");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_OIL:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Oil_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_oil");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_THUNDER:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Thunder_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_thunder");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_WATER:
-		m_pNoticeNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
-		m_pNoticeNeon.second = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_HIT, L"Notice_Neon_Water_Particle");
+		m_pNoticeNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_water");
 		break;
 
 	case Client::EDeBuffType::DEBUFF_END:
 		break;
-
 	default:
 		break;
 	}
 
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
-		m_pNoticeNeon.second->Start_AttachPivot(this, NoticeNeonPivot, "Reference", true, true);
-		Safe_AddRef(m_pNoticeNeon.first);
-		Safe_AddRef(m_pNoticeNeon.second);
+		m_pNoticeNeon->Start_AttachPivot(m_pOwner, NoticeNeonPivot, "Reference", true, true);
+		Safe_AddRef(m_pNoticeNeon);
 	}
+
 }
 
 void CPlayer::Update_CautionNeon()
@@ -6097,19 +6086,20 @@ void CPlayer::Update_CautionNeon()
 
 	if (0.2f >= fCurHP / fMaxHP)
 	{
-		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		if (!CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon))
 		{
-			m_pCautionNeon.first = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
-			m_pCautionNeon.first->Start_AttachPivot(this, NoticeNeonPivot, "String2", true, true);
+			m_pCautionNeon = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_UI, L"NoticeNeon_HP");
+			m_pCautionNeon->Start_AttachPivot(this, NoticeNeonPivot, "String2", true, true);
+			Safe_AddRef(m_pCautionNeon);
 		}
 	}
 	else
 	{
-		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon.first))
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pCautionNeon))
 		{
-			m_pCautionNeon.first->SetDelete();
-			Safe_Release(m_pNoticeNeon.first);
-			m_pCautionNeon.first = nullptr;
+			m_pCautionNeon->SetDelete();
+			Safe_Release(m_pCautionNeon);
+			m_pCautionNeon = nullptr;
 		}
 	}
 }
@@ -6443,8 +6433,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.8f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6452,8 +6444,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.9f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6461,8 +6455,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.5f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6470,8 +6466,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.6f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6479,8 +6477,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 2.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6488,8 +6488,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6497,8 +6499,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.7f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6506,8 +6510,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.2f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6515,8 +6521,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.5f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6524,8 +6532,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_MIDDLE;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.8f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6533,8 +6543,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6542,8 +6554,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6551,8 +6565,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.7f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6562,8 +6578,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		{
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.5f);
+			if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+			else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+			else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
@@ -6571,8 +6589,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 		{
 			m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 			m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
-			m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+			if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+			else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+			else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+			m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 			m_AttackDesc.pCauser = this;
 			m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		}
@@ -6581,8 +6601,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_DOWN;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6590,8 +6612,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6599,8 +6623,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.5f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6608,8 +6634,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.8f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6617,8 +6645,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6626,8 +6656,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 0.8f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6635,8 +6667,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6644,8 +6678,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6653,8 +6689,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_LIGHT;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -6662,8 +6700,10 @@ HRESULT CPlayer::SetUp_AttackDesc()
 	{
 		m_AttackDesc.eAttackSAS = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_eAttack_SAS_Type;
 		m_AttackDesc.eAttackType = EAttackType::ATK_TO_AIR;
-		m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
-		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 1.5f);
+		if (m_AttackDesc.eAttackSAS == ESASType::SAS_FIRE)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_FIRE;
+		else if (m_AttackDesc.eAttackSAS == ESASType::SAS_ELETRIC)m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_THUNDER;
+		else m_AttackDesc.eDeBuff = EDeBuffType::DEBUFF_END;
+		m_AttackDesc.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage * 1.f);
 		m_AttackDesc.pCauser = this;
 		m_AttackDesc.vHitFrom = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 	});
@@ -7557,6 +7597,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				/*_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 				_float4 vDistance = XMLoadFloat4(&vTargetPos) - m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 				_float fDistance = vDistance.Length();*/
+
+				_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
+				_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+				pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+
 
 				static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
@@ -12768,27 +12814,17 @@ void CPlayer::Free()
 //	Safe_Release(m_pContectRigidBody);
 
 	Safe_Release(m_pDeBuffStateMachine);
-	if (m_pNoticeNeon.first != nullptr && m_pNoticeNeon.second != nullptr)
+	if (m_pNoticeNeon != nullptr)
 	{
-		m_pNoticeNeon.first->SetDelete();
-		m_pNoticeNeon.second->Delete_Particles();
-
-		Safe_Release(m_pNoticeNeon.first);
-		Safe_Release(m_pNoticeNeon.second);
-
-		m_pNoticeNeon.first = nullptr;
-		m_pNoticeNeon.second = nullptr;
+		m_pNoticeNeon->SetDelete();
+		Safe_Release(m_pNoticeNeon);	
+		m_pNoticeNeon = nullptr;
 	}
-	if (m_pCautionNeon.first != nullptr/* && m_pCautionNeon.second != nullptr*/)
+	if (m_pCautionNeon != nullptr)
 	{
-		m_pCautionNeon.first->SetDelete();
-		//m_pCautionNeon.second->Delete_Particles();
-
-		Safe_Release(m_pCautionNeon.first);
-		//Safe_Release(m_pCautionNeon.second);
-
-		m_pCautionNeon.first = nullptr;
-		//m_pCautionNeon.second = nullptr;
+		m_pCautionNeon->SetDelete();
+		Safe_Release(m_pCautionNeon);
+		m_pCautionNeon = nullptr;
 	}
 }
 
