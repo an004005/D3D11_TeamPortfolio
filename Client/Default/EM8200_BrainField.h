@@ -40,6 +40,9 @@ public:
 	void SetTargetInfo(CGameObject* pTarget, CTransform* pTargetTransform, CModel* pTargetModel);
 	void OpenBrainField();
 	void CloseBrainField();
+	_bool IsOpen() const { return m_bOpen; }
+
+	void SetCableTP(_float fValue);
 
 private:
 	_bool m_bOpen = false;
@@ -131,6 +134,7 @@ public:
 
 	void SetCableNoise(_float fValue);
 	void SetCableYellow(_float fValue);
+	void SetCableTP(_float fValue);
 
 private:
 	void SetUpFSM();
@@ -161,5 +165,6 @@ public:
 	static CEM8200_BrainFieldCables* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr) override;
 };
+
 
 END

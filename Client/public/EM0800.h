@@ -31,7 +31,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
-	virtual void PlayBC() override;
 	virtual _float4 GetKineticTargetPos() override;
 	
 public:
@@ -45,7 +44,7 @@ public:
 	void Play_LightHitAnim();
 	void Play_MidHitAnim();
 	void HeavyAttackPushStart();
-	_bool CanMove4BC(_float fMinDist);
+
 
 	EBaseTurn FindTargetDirection();
 	void HitWeakProcess(_double TimeDelta);
@@ -89,7 +88,7 @@ private:
 
 	//Brain Crush
 	_double		m_BCLoopTime = 0.0;
-	_bool		m_CanFullBC = false;
+	
 
 public:
 	static CEM0800* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

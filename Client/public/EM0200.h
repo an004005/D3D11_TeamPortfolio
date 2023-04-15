@@ -54,6 +54,7 @@ private:
 
 private:
 	_bool PriorityCondition();
+	_bool HitHeavyCondition();
 
 private:
 	class CEM0200_Controller*		m_pController = nullptr;

@@ -66,7 +66,12 @@ typedef struct tagPlayerStatus
 
 	_bool bAir = false;
 
-	_float m_fBaseAttackDamage;
+	_float m_fFinalAttackDamage;		// 최종 공격력
+
+	_float m_fBaseAttackDamage;			// 기본 공격력
+	_float m_fWeaponDamage;				// 무기 공격력
+	_float m_fSasDamageRate;			// SAS 공격력 배율
+
 
 	_bool bBrainMap[3] = { true, true, true };
 
@@ -88,7 +93,7 @@ typedef struct tagHanabiStatus
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 
-	_bool bActivate = false;
+	_bool bActivate = true;
 
 }	HANABI_STAT;
 
@@ -104,7 +109,7 @@ typedef struct tagTsugumiStatus
 	_uint iAttack = { 0 };
 	_uint iDefense = { 0 };
 
-	_bool bActivate = false;
+	_bool bActivate = true;
 
 }	TSUGUMI_STAT;
 
@@ -211,6 +216,9 @@ public:	// Set
 
 	void			SetPlayerCamDistance(_float fCamDistance) { m_fCamDistance = fCamDistance; }
 	_float			GetPlayerCamDistance() { return m_fCamDistance; }
+
+	void			SetWeaponDamage(_float fDamage) { m_tPlayerStat.m_fWeaponDamage = fDamage; }
+	_float			GetFinalDamage() { return m_tPlayerStat.m_fFinalAttackDamage; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

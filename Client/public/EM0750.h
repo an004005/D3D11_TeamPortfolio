@@ -39,7 +39,7 @@ public:
 
 private:
 	_bool PriorityCondition();
-
+	_bool HitHeavyCondition();
 private:
 	//충돌 관련 함수 정의
 	void Rush_StaticCheckSweep();
