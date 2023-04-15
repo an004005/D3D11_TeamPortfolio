@@ -123,7 +123,7 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 	if (IsCommandRunning() == false && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 
-		// m_pFSM->Tick(TimeDelta);
+		m_pFSM->Tick(TimeDelta);
 
 
 		// AddCommand("Rush_Copy_Start", 0.f, &CAIController::Input, G);
@@ -135,7 +135,7 @@ void CEM8200_Controller::AI_Tick(_double TimeDelta)
 		// AddCommand("CaptureKinetic", 0.f, &CAIController::Input, B);
 
 		// AddCommand("Seethrough", 0.f, &CEM8200_Controller::Input, L);
-		AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
+		// AddCommand("Counter", 0.f, &CEM8200_Controller::Input, C);
 
 	}
 
@@ -248,8 +248,10 @@ void CEM8200_Controller::Tick_CoolTimeHelper(_double TimeDelta)
 
 void CEM8200_Controller::Check_SecondPhase()
 {
-	if(m_pCastedOwner->Check_SecondPhase() == true)
+	if(m_pCastedOwner->Check_SecondPhase() == true && m_bSecondPhaseOnce == false)
 	{
+		m_pCastedOwner->Clear_Socket();
+
 		ClearCommands();
 
 		AddCommand("BrainField_Start", 0.f, &CAIController::Input, CController::CTRL);

@@ -20,6 +20,8 @@
 #include "PlayerInfoManager.h"
 #include "EM8200_CopyRush.h"
 #include "EM8200_BrainField.h"
+#include "EnvironmentEffect.h"
+#include "TestTarget.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -116,6 +118,11 @@ void CEM8200::SetUpComponents(void* pArg)
 
 void CEM8200::Detected_Attack()
 {
+}
+
+void CEM8200::Clear_Socket()
+{
+	m_pASM->ClearSocketAnim("FullBody", 0.f);
 }
 
 void CEM8200::Set_KineticObject(CGameObject* pObject)
@@ -482,8 +489,8 @@ void CEM8200::SetUpFSM()
 	CEnemy::SetUpFSM();
 
 	CFSMComponentBuilder Builder;
-	Builder.InitState("Idle");
-
+	Builder.InitState("Intro_00");
+	AddState_Intro(Builder);
 	AddState_Idle(Builder);
 	AddState_Teleport(Builder);
 	AddState_Attack_Kick(Builder);
@@ -517,6 +524,12 @@ void CEM8200::Tick(_double TimeDelta)
 		m_pFSM->SetState("Idle");
 		m_pController->SetActive(false);
 		m_pASM->ClearSocketAnim("FullBody");
+	}
+
+	if (GetHpRatio() < 0.7 && m_SecondPhase.IsNotDo())
+	{
+		m_bSecondPhase = true;
+		m_iHP = m_iMaxHP;
 	}
 
 	m_CounterEFCoolTimeHelper.Tick(TimeDelta);
@@ -633,11 +646,7 @@ void CEM8200::Tick(_double TimeDelta)
 
 	string StateName = m_pFSM->GetCurStateName();
 
-	if(GetHpRatio() < 0.7 && m_SecondPhase.IsNotDo())
-	{
-		m_bSecondPhase = true;
-		m_iHP = m_iMaxHP;
-	}
+
 
 	m_pLeftCopy->Tick(TimeDelta);
 	m_pRightCopy->Tick(TimeDelta);
@@ -679,6 +688,24 @@ HRESULT CEM8200::Render()
 void CEM8200::Imgui_RenderProperty()
 {
 	CEnemy::Imgui_RenderProperty();
+
+	if(ImGui::Button("StoryEndBt"))
+	{
+		// m_bStoryEnd = true;
+
+		auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
+		// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+		
+			for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, L"Layer_FinalStage")->GetGameObjects())
+			{
+				if (auto pTestTarget = dynamic_cast<CTestTarget*>(iter))
+				{
+					pTestTarget->GetTransform()->Rotation(m_pTransformCom->Get_State(CTransform::STATE_UP), XMConvertToRadians(-180.f));
+					m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), pTestTarget->GetTransform(), 0.f, 0.f);
+				}
+			}
+	}
+
 	if (ImGui::CollapsingHeader("ASM"))
 	{
 		m_pASM->Imgui_RenderState();
@@ -1978,12 +2005,22 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
 			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
 
+			for( auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if(auto pEnvEff = dynamic_cast<CEnvironmentEffect*>(iter))
+				{
+					pEnvEff->SetVisible(false);
+				}
+			}
 		})
 		.Tick([this](_double TimeDelta)
 		{
 			SocketLocalMove(m_pASM);
 		})
-
+		.OnExit([this]
+		{
+				m_pController->Set_SecondPhaseOnce();
+		})
 		.AddTransition("BrainFieldStart to InCombatIdle", "ImCombatIdle")
 		.Predicator([this]
 			{
@@ -2092,34 +2129,85 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				
 			})
 
-		.AddTransition("Intro_00 to Intro_01", "Intro_01")
+		.AddTransition("Intro_00 to StoryWalk", "StoryWalk")
 			.Predicator([this]
 				{
 					return m_pASM->isSocketPassby("FullBody", 0.95f)  || Check_PlayerDetected();;
 				})
 
-		.AddTransition("Intro_00 to BattleStart", "BattleStart")
+		.AddState("StoryWalk")
+			.OnStart([this]
+				{
+					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_105_AL_walk" ,"AS_em8200_105_AL_walk" ,"AS_em8200_105_AL_walk", "AS_em8200_105_AL_walk"});
+
+					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
+
+					// for (auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, L"Layer_FinalStage")->GetGameObjects())
+					// {
+					// 	if (auto pTestTarget = dynamic_cast<CTestTarget*>(iter))
+					// 	{
+					// 		// pTestTarget->GetTransform()->Rotation(m_pTransformCom->Get_State(CTransform::STATE_RIGHT), XMConvertToRadians(180.f));
+					// 		// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), pTestTarget->GetTransform(), 0.f, 0.f);
+					//
+					//
+					// 	}
+					// }
+					m_pKaren_AnimCam->StartCamAnim(pCamAnim,
+						_float4x4::Identity,
+						_float4x4::Identity);
+
+
+					// auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Intro_Walk");
+					// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
+
+
+					// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
+				})
+
+		.Tick([this](_double TimeDelta)
+		{
+				_float4 TargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+				_float4 ThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				_float3 Dir = XMVector3Normalize(TargetPos - ThisPos);
+
+
+				m_pTransformCom->LocalMove(Dir, 0.025f);
+		})
+
+		.AddTransition("StoryWalk to Intro_01", "Intro_01")
 			.Predicator([this]
 				{
-					return m_bStoryEnd;
+					return Check_PlayerDetected_Near();
 				})
-		
+
+
 		
 		.AddState("Intro_01")
 			.OnStart([this]
 				{
-					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_002_AL_wait02" ,"AS_em8200_002_AL_wait02" ,"AS_em8200_001_AL_wait01"});
+
+					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																							"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
+																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02" });
 				})
+
+		.Tick([this](_double TimeDelta)
+		{
+		})
 
 		.OnExit([this]
 		{
 		})
 
-		.AddTransition("Intro_01 to Intro_00", "Intro_00")
-			.Predicator([this]
-				{
-					return m_pASM->isSocketPassby("FullBody", 0.95f);
-				})
+		// .AddTransition("Intro_01 to Intro_00", "Intro_00")
+		// 	.Predicator([this]
+		// 		{
+		// 			return m_pASM->isSocketPassby("FullBody", 0.95f);
+		// 		})
+
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
@@ -2139,12 +2227,13 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 			})
 
 				
-		.AddTransition("BattleStart to Idle", "Idle")
+		.AddTransition("BattleStart to ImCombatIdle", "ImCombatIdle")
 			.Predicator([this]
 				{
-					return m_bStoryEnd;
+					return m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
+				
 				;
 }
 
@@ -2187,17 +2276,34 @@ void CEM8200::AddState_Damaged(CFSMComponentBuilder& Builder)
 
 _bool CEM8200::Check_PlayerDetected()
 {
-	// _float4 PlayerPos = CPlayerInfoManager::GetInstance()->Get_PlayerWorldMatrix().r[3];
-
-	_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
-	_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-	_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
-
-	if(m_bStoryModeStart.IsNotDo() && fDistance < 30.f)
+	if (m_pGameInstance->Check_ObjectAlive(m_pTarget))
 	{
-		// Cam Start && Story Start
+		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		return true;
+		if (fDistance < 35.f && m_bStoryModeStart.IsNotDo())
+		{
+			// Cam Start && Story Start
+
+			return true;
+		}
+	}
+	return false;
+}
+
+_bool CEM8200::Check_PlayerDetected_Near()
+{
+	if (m_pGameInstance->Check_ObjectAlive(m_pTarget))
+	{
+		_vector vTargetPos = m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
+		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
+
+		if (fDistance < 13.5f && m_DetectedOnce.IsNotDo())
+		{
+			return true;
+		}
 	}
 
 	return false;

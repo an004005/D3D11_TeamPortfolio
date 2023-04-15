@@ -44,6 +44,7 @@ public:
 	_bool				IsRun() const { return m_bRun; }
 	_bool				Check_SecondPhase() { return m_bSecondPhase; }
 
+	void				Clear_Socket();
 	void				Set_KineticObject(CGameObject* pObject);
 	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
@@ -95,6 +96,7 @@ private:
 	void Range_Overlap(_float4 vPos, _uint iDamage, _float fRad, EAttackType eAtkType);
 
 	_bool Check_PlayerDetected();
+	_bool Check_PlayerDetected_Near();
 	_bool Check_StoryEnd();
 private:
 	class CEM8200_Controller* m_pController = nullptr;
@@ -103,7 +105,7 @@ private:
 	class CEffectSystem* m_pKarenMaskEf = nullptr;
 	// CParticleGroup* m_pFallRoseParticle = nullptr;
 	// CParticleGroup* m_pShootFlwParticle = nullptr;
-	_bool			m_bStoryEnd;
+	_bool			m_bStoryEnd = false;
 	CDoOnce			m_bStoryModeStart;
 	
 private:
@@ -150,6 +152,7 @@ private:
 	CDoOnce m_SetTPOnce;
 
 	CDoOnce m_SecondPhase;
+	CDoOnce m_DetectedOnce;
 
 	CCoolTimeHelper m_CounterEFCoolTimeHelper;
 

@@ -26,7 +26,7 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 m_bPlayerSpawn = false;
+	 // m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
@@ -35,11 +35,15 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	// 	return E_FAIL;
 
+
+	_matrix matTarget = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, 0.f, 0.f);
 	CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
-		->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 2.f, 0.f, 1.f));
+		->GetTransform()->Set_WorldMatrix(matTarget);
+
+	// Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 0.f, 0.f, 1.f));
 
 	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
@@ -55,12 +59,12 @@ HRESULT CLevel_FinalStage::Initialize()
 	// 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 	// }
 
-	Json PreviewData;
-	{
-		PreviewData["Model"] = "Prototype_Model_em8200";
-		PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
-		auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
-	}
+	// Json PreviewData;
+	// {
+	// 	PreviewData["Model"] = "Prototype_Model_em8200";
+	// 	PreviewData["RenderGroup"] = CRenderer::RENDER_NONALPHABLEND_TOON;
+	// 	auto pBoss = CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("ModelPreview"), &PreviewData);
+	// }
 
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_EffectBrowser::Create(m_pDevice, m_pContext));
 	CGameInstance::GetInstance()->Add_ImguiObject(CImgui_CameraManager::Create(m_pDevice, m_pContext));
