@@ -1,0 +1,41 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name" : "em0110BGM",
+            "SoundFiles" : ["SoundTrack/em0110BGM.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "em0320BGM",
+            "SoundFiles" : ["SoundTrack/em0320BGM.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "em1100BGM",
+            "SoundFiles" : ["SoundTrack/em1100BGM.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "em1200BGM",
+            "SoundFiles" : ["SoundTrack/em1200BGM.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.1,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        }
+    ]
+}

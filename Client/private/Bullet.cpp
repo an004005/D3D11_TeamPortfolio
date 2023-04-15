@@ -217,7 +217,7 @@ void CBullet::CollisionCheck_Bullet(CTransform* pTransform, DAMAGE_PARAM mParam,
 
 			if (pTarget == nullptr) // 건물, 염력이 적용되는 물체 등에 대한 예외 처리
 			{
-				if (m_bRotParticles == false)
+				if(m_bRotParticles == false)
 					m_bHitCheck = true;
 
 				return;

@@ -916,7 +916,7 @@ PS_OUT PS_RedAndGreen(PS_IN In)
 
 	float4 DefaultColor = float4(Emissive.g, Emissive.g, Emissive.g, 0.f);
 
-	float4 BlendColor = DefaultColor  * float4(0.506f, 0.451f, 0.345f, 1.0f)* 2.0f;
+	float4 BlendColor = DefaultColor  * float4(0.6f, 0.5f, 0.4f, 1.0f)/*float4(0.506f, 0.451f, 0.345f, 1.0f)*/* 2.0f;
 
 	float4 FinalColor = saturate(BlendColor);
 
