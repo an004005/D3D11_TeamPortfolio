@@ -169,7 +169,7 @@ void CEM8200_BrainField::Tick(_double TimeDelta)
 
 	if (bBlackInOut)
 	{
-		_float fRatio = m_pWhiteOut->GetParam().Floats[0];
+		_float fRatio = GetBlackOutRatio();
 		if (fRatio > 0.95f && blackOnce.IsNotDo())
 		{
 			m_pDefaultMap->SetVisible_MapObjects(false);
@@ -259,6 +259,11 @@ void CEM8200_BrainField::BlackInOut()
 {
 	m_pWhiteOut->BlackInOut();
 	bBlackInOut = true;
+}
+
+_float CEM8200_BrainField::GetBlackOutRatio()
+{
+	return m_pWhiteOut->GetParam().Floats[0];
 }
 
 void CEM8200_BrainField::Free()

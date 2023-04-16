@@ -2283,26 +2283,26 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 		{
 			m_pBrainField->BlackInOut();
-
-
-			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
-
-			m_pKaren_AnimCam->StartCamAnim(pCamAnim,
-				_float4x4::Identity,
-				_float4x4::Identity);
-		
-			m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
-			m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
 		})
 		.Tick([this](_double)
 		{
+			if (m_pBrainField->GetBlackOutRatio() > 0.95f && m_BlackOut.IsNotDo())
+			{
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
+
+				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
+					_float4x4::Identity,
+					_float4x4::Identity);
 			
+				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+			}
 		})
 	;
 

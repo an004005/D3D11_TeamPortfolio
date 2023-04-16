@@ -46,6 +46,8 @@ public:
 
 	void BlackInOut();
 
+	_float GetBlackOutRatio();
+
 private:
 	_bool m_bOpen = false;
 
