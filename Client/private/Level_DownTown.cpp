@@ -32,6 +32,9 @@ HRESULT CLevel_DownTown::Initialize()
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown1/PlayerSpawnPosition.json");
 
+	//AI
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown1/AI.json");
+
 	return S_OK;
 }
 
@@ -81,6 +84,8 @@ HRESULT CLevel_DownTown_Second::Initialize()
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
 
+
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_AI(LAYER_AI)))
@@ -90,6 +95,8 @@ HRESULT CLevel_DownTown_Second::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown2.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
 
+	//AI
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown2/AI.json");
 	return S_OK;
 }
 
@@ -146,7 +153,9 @@ HRESULT CLevel_DownTown_Third::Initialize()
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown3.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
-
+	
+	//AI
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown3/AI.json");
 	return S_OK;
 }
 
