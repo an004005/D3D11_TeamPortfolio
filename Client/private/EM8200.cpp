@@ -31,6 +31,8 @@
 #include "Imgui_Batch.h"
 #include "TestTarget.h"
 #include "UI_Manager.h"
+#include "Consumption_Item.h"
+#include "LastCheckUI.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -2277,8 +2279,8 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			{
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/FinalItem.json");
 				json["Transform"]["WorldMatrix"] = _float4x4::Identity;
-				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
-			
+				m_pLastItem = dynamic_cast<CConsumption_Item*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json));
+
 				// 마지막 대사
 				json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
 				CCanvas_MainTalk * pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
@@ -2288,11 +2290,18 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				pCanvas_MainTalk->Add_Talk(30);
 				pCanvas_MainTalk->Add_Talk(31);
 			}
+
+			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
+				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+				m_pLastItem = nullptr;
+			}
 		})
 		.AddTransition("to ending", "Ending")
 			.Predicator([this]
 			{
-				return CGameInstance::GetInstance()->KeyDown(DIK_P);
+				return m_pLastItem == nullptr && CGameInstance::GetInstance()->KeyDown(DIK_RETURN);
 			})
 
 	.AddState("Ending")

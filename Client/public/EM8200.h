@@ -216,6 +216,10 @@ private:
 	CDoOnce m_ItemSpawn;
 	CDoOnce m_BlackOut;
 
+	class CConsumption_Item* m_pLastItem = nullptr;
+
+
+
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }
 
