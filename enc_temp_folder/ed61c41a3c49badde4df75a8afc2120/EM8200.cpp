@@ -2174,9 +2174,6 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
-			
-				m_pEMUI->Delete_BossUI();
-
 			// 초기위치로 이동)
 			m_pTransformCom->RemoveRotation();
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
@@ -2202,9 +2199,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
 
-			m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -15.f, 1.f));
-			m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-
+			m_pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, -15.f, 1.f));
 		})
 		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
 			.Predicator([this]
@@ -2263,8 +2258,6 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			CGameManager::GetInstance()->Set_LeftTalk(115);
 
 			CPlayerInfoManager::GetInstance()->SetAILock(false);
-			m_pEMUI->Create_BossUI();
-
 
 	})
 		.AddTransition("ImCombatIdle to Idle", "Idle")
@@ -2309,8 +2302,6 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_1")
 		.OnStart([this]
 		{
-			m_pEMUI->Delete_BossUI();
-
 			// if (m_pTarget)
 				// m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 			m_pASM->InputAnimSocketOne("FullBody", "AS_EnpcBC_dam_c02_em8200");
