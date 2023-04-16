@@ -1,6 +1,8 @@
 #pragma once
 #include "Level_StageDefault.h"
 #include "Client_Defines.h"
+#include "SoundStore.h"
+#include "HelperClasses.h"
 
 BEGIN(Client)
 
@@ -15,6 +17,12 @@ public:
 	virtual HRESULT Ready_Lights() override;
 
 	virtual void Tick(_double TimeDelta) override;
+
+private:
+	CSoundStore m_BGM;
+	CDoOnce m_BGMOnce;
+
+	string m_MainSound = "Karen";
 
 public:
 	static CLevel_FinalStage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -211,6 +211,7 @@ void CCanvas::LoadFromJson(const Json & json)
 CUI * CCanvas::Find_ChildUI(const _tchar * pChildTag)
 {
 	auto	iter = m_mapChildUIs.find(pChildTag);
+
 	if (iter == m_mapChildUIs.end())
 		return nullptr;
 

@@ -101,7 +101,6 @@ void CEM0210::SetUpSound()
 	m_SoundStore.CloneSound("mon_5_step");
 	m_SoundStore.CloneSound("mon_5_rush");
 	m_SoundStore.CloneSound("mon_5_voice_laugh");
-	m_SoundStore.CloneSound("Break_Brain");
 
 	m_pModelCom->Add_EventCaller("voidflower_attack_spin", [this] {m_SoundStore.PlaySound("voidflower_attack_spin", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("voidflower_attack_upper", [this] {m_SoundStore.PlaySound("voidflower_attack_upper", m_pTransformCom); });
@@ -517,7 +516,6 @@ void CEM0210::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", fPlayRatio))
 						{
-							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;

@@ -24,7 +24,7 @@ private:
 	_bool m_bMiddleBGM = false;
 	CDoOnce m_BGMChange;
 
-	string m_MainSound = "The OSF -Advance";
+	string m_MainSound = "SubWay";
 public:
 	static CLevel_Subway* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;

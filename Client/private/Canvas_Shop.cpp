@@ -178,7 +178,11 @@ void CCanvas_Shop::KeyInput()
 		// m_bShopUI 와 반대로 동작한다.
 		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 			iter->second->SetVisible(m_bShopUI);
+
 		CUI_Manager::GetInstance()->Set_TempOff(m_bShopUI);
+
+		if (true == m_bShopUI)	CUI_Manager::GetInstance()->SetMouseActive(true);
+		else									CUI_Manager::GetInstance()->SetMouseActive(false);
 
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bShopUI);
 
