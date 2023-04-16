@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Canvas_PurchaseKinds.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
+
 #include "JsonStorage.h"
 #include "Item_Manager.h"
 #include "PlayerInfoManager.h"
@@ -233,6 +235,7 @@ void CCanvas_PurchaseKinds::CurrentList()
 
 		if (true == m_vecShopCanvass[i].second->Get_OnButton())
 		{
+			CUI_Manager::GetInstance()->PlaySound("MainClick");
 			m_vecShopCanvass[i].second->Set_OnButton();
 
 			m_iCanvasIndex = i;

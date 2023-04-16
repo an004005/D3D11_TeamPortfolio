@@ -156,7 +156,7 @@ public:	// Get
 	TSUGUMI_STAT&	Get_TsugumiStat() { 
 		return m_tTsugumiStat;
 	}
-	_bool					Get_SASMember(const SASMEET eSAS) { 
+	_bool		Get_SASMember(const SASMEET eSAS) { 
 		return m_bSASMember[eSAS];
 	}
 

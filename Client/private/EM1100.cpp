@@ -38,7 +38,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 30000;
+		m_iMaxHP = 300;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
@@ -471,8 +471,14 @@ void CEM1100::SetUpFSM()
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em1100_215_AL_atk_a5_drainage_end");		
 				m_dLoopTime = 1.0;
 
+				_matrix RainDrop = CImguiUtils::CreateMatrixFromImGuizmoData(
+					{ 0.f, 10.f, 0.f },
+					{ 180.f, -0.f, 0.f },
+					{ 1.f, 1.f, 1.f }
+				);
+
 				CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
-						->Start_Attach(this, "Eff02", false);
+					->Start_AttachPivot(this, RainDrop, "Eff02", true, false);
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -804,21 +810,20 @@ void CEM1100::Imgui_RenderProperty()
 		m_bCrushStart = true;
 	}
 
-	//static _bool tt = false;
-	//ImGui::Checkbox("Modify Pivot", &tt);
+	static _bool tt = false;
+	ImGui::Checkbox("Modify Pivot", &tt);
 
-	//if (tt)
-	//{
-	//	static GUIZMO_INFO tInfo;
-	//	CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
+	if (tt)
+	{
+		static GUIZMO_INFO tInfo;
+		CImguiUtils::Render_Guizmo(&pivot, tInfo, true, true);
 
-	//	if (ImGui::Button("TetsEffect"))
-	//	{
-
-	//		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"em1100_Elec_Bullet_Loop")
-	//		->Start_NoAttachPivot(this, pivot, true, true);
-	//	}
-	//}
+		if (ImGui::Button("TetsEffect"))
+		{
+			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"em1100_Rain_Attack_Particle")
+				->Start_AttachPivot(this, pivot, "Eff02", true, false);
+		}
+	}
 }
 
 _bool CEM1100::IsWeak(CRigidBody* pHitPart)

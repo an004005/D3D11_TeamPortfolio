@@ -39,13 +39,13 @@ HRESULT CEM0700::Initialize(void * pArg)
 	{
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
-		m_iMaxHP = LEVEL_NOW * (40 + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP = LEVEL_NOW * (50 + (CMathUtils::RandomUInt(10)));
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
+		m_iMaxCrushGauge = m_iMaxHP * 1.2f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
-		iEemeyLevel = (iBaseLevel * 4) + (CMathUtils::RandomUInt(3) + 1);
+		iEemeyLevel = (iBaseLevel * 2.5) + CMathUtils::RandomUInt(3) + 1;
 		m_iAtkDamage = iEemeyLevel * (CMathUtils::RandomUInt(4) + 8);
 
 		m_eEnemyName = EEnemyName::EM0700;
@@ -630,7 +630,7 @@ void CEM0700::Tick(_double TimeDelta)
 
 	const _float fMoveSpeed = 2.f;
 
-	if (m_vMoveAxis.LengthSquared() > 0.f)
+	if (m_bDown == false && m_vMoveAxis.LengthSquared() > 0.f)
 	{
 		const _float fYaw = m_pTransformCom->GetYaw_Radian();
 		_float3 vVelocity;

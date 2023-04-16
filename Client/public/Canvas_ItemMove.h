@@ -28,6 +28,7 @@ private:
 
 private:
 	_bool	m_bInput = { false };
+	_bool	m_bInputSound = { false };
 
 public:
 	static CCanvas_ItemMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

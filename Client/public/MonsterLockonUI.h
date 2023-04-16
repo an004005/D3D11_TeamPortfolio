@@ -25,7 +25,6 @@ public:
 	}
 private:
 	class CEffectGroup* m_pTargetGroup = nullptr;
-//	class CEffectGroup* m_pTargetRhombusGroup = nullptr;
 
 	_float4x4			m_UI_PivotMatrix = XMMatrixIdentity();
 	string m_strBoneName = "Target";

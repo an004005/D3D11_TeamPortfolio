@@ -60,6 +60,8 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 		m_bRushStart = false;
 	});
 
+	m_SoundStore.CloneSound("karen_fx_dash");
+
 
 
 	m_pFSM = CFSMComponentBuilder()
@@ -135,6 +137,7 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 		.AddState("Rush_Start")
 			.OnStart([this]
 				{
+					m_SoundStore.PlaySound("karen_fx_dash");
 					m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_225_AL_atk_rush_start");
 					m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));
 				})

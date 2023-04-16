@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Tutorial_TipsUI.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 // m_tParams.Floats[0] : ¾ËÆÄ°ª
 
@@ -28,6 +29,8 @@ HRESULT CTutorial_TipsUI::Initialize(void * pArg)
 		return E_FAIL;
 
 	m_fStartSizeX = m_fSizeX;
+
+	CUI_Manager::GetInstance()->PlaySound("TIP");
 
 	return S_OK;
 }

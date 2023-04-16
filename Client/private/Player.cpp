@@ -6626,7 +6626,9 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 
 
 		.AddState("DEBUFF_FIRE")
-		.OnStart([&]() {})
+		.OnStart([&]() {
+			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+			})
 		.Tick([&](double fTimeDelta) 
 		{
 			m_NoticeTick.Tick(fTimeDelta);
@@ -6653,7 +6655,9 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 			.Priority(100)
 
 		.AddState("DEBUFF_WATER")
-		.OnStart([&]() {})
+		.OnStart([&]() {
+			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+			})
 		.Tick([&](double fTimeDelta) { })
 		.OnExit([&]() {})
 
@@ -6666,7 +6670,9 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 			.Priority(100)
 
 		.AddState("DEBUFF_OIL")
-		.OnStart([&]() {})
+		.OnStart([&]() {
+			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+			})
 		.Tick([&](double fTimeDelta) { })
 		.OnExit([&]() {})
 
@@ -6681,6 +6687,8 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 		.AddState("DEBUFF_ELEC")
 		.OnStart([&]() 
 		{
+			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+				
 			m_bSeperateAnim = false;
 			m_pASM->SetCurState("IDLE");
 			m_pASM->SetCurState_BrainField("IDLE");
@@ -8087,7 +8095,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				if (nullptr == CPlayerInfoManager::GetInstance()->Get_TargetedMonster()) return false;
 				if (CPlayerInfoManager::GetInstance()->Get_TargetedMonster()->GetPrototypeTag() != L"Monster_em8200") return false;
 				return m_bBrainCrashInput && static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->CanBC();
-			})
+				})
 			.Priority(0)
 
 			.AddTransition("BRAINCRASH_NOUSE to BRAINCRASH_CUTSCENE", "BRAINCRASH_CUTSCENE")
@@ -8110,6 +8118,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 			m_bBrainCrash = true;
 			m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
+			CGameInstance::GetInstance()->Pop_InLayer(PLAYERTEST_LAYER_MONSTER, TEXT("Layer_EnemyTmp"), CPlayerInfoManager::GetInstance()->Get_TargetedMonster());
+			CGameInstance::GetInstance()->SetLayerTimeRatio(0.f, PLAYERTEST_LAYER_MONSTER);
 		})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -8208,6 +8218,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				m_pBrainCrashPositionEffect->SetDelete();
 				m_pBrainCrashPositionEffect = nullptr;
 			}
+			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLAYERTEST_LAYER_MONSTER);
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
@@ -8316,7 +8327,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
-
+				
 		})
 		.OnExit([&]()
 		{

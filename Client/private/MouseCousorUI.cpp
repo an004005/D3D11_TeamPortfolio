@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GameUtils.h"
 #include "JsonStorage.h"
+#include "UI_Manager.h"
 
 #include "MouseCousorLightUI.h"
 
@@ -50,6 +51,7 @@ void CMouseCousorUI::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
 	{
+		CUI_Manager::GetInstance()->PlaySound("Mouseover");
 		m_tParams.Ints[0] = 1;
 		m_pMouseLight->Set_MouseLight(true);
 	}

@@ -20,6 +20,7 @@ class CEnvironmentEffect : public CGameObject
 		EndingCredit_Suhyun,
 		EndingCredit_Team,
 		EndingCredit_Pic_RedRect,
+		EndingCredit_Sound,
 		ENVEFFECT_END
 	};
 private:

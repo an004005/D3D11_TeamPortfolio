@@ -29,7 +29,7 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	m_BGM.CloneSound("Ambient_Bridge");
 	m_BGM.CloneSound("Attention Please");
 	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
-	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss
 	m_BGM.CloneSound("em0320BGM");
@@ -69,57 +69,25 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 {
 	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound("The OSF -Advance");
+		m_BGM.PlaySound(m_MainSound);
 
-	if (m_bMiddleBGM == false)
+
+	if (FindGameObjectInLayer<CEM0320>(L"Layer_Monster"))
 	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		if (m_bBossBGM == false)
 		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					m_BGM.StopAllLoop();
-					m_bMiddleBGM = true;
-					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
-					break;
-				}
-			}
-		}
+			m_BGM.StopAllLoop();
+			m_bBossBGM = true;
+			m_BGM.PlaySound("em0320BGM");
+		}	
 	}
 	else
 	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+		if (m_bBossBGM == true)
 		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					break;
-				}
-			}
-			if (m_BGMChange.IsNotDo())
-			{
-				m_BGM.StopAllLoop();
-				m_BGM.PlaySound("A Sedated Heart");
-			}
-		}
-	}
-
-	if (m_bBossBGM == false)
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CEM0320*>(pObj))
-				{
-					m_BGM.StopAllLoop();
-					m_bBossBGM = true;
-					m_BGM.PlaySound("em0320BGM");
-					break;
-				}
-			}
+			m_BGM.StopAllLoop();
+			m_bBossBGM = false;
+			m_BGM.PlaySound(m_MainSound);
 		}
 	}
 
@@ -142,5 +110,5 @@ CLevel_ConstructionSite3F* CLevel_ConstructionSite3F::Create(ID3D11Device* pDevi
 
 void CLevel_ConstructionSite3F::Free()
 {
-	CLevel::Free();
+	__super::Free();
 }
