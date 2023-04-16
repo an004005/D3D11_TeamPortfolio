@@ -88,12 +88,14 @@ HRESULT CLevel_DownTown_Second::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	//	return E_FAIL;
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown2.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
+
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown2/PlayerSpawnPosition.json");
 
 	//AI
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown2/AI.json");
@@ -154,6 +156,8 @@ HRESULT CLevel_DownTown_Third::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/DownTown3.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Npc/DownTown1_Npc.json");
 	
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown3/PlayerSpawnPosition.json");
+
 	//AI
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown3/AI.json");
 	return S_OK;
