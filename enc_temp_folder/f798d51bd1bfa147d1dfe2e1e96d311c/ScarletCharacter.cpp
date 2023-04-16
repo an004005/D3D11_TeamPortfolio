@@ -142,13 +142,6 @@ void CScarletCharacter::SetWorldMatrix(_float4x4 WorldMatrix)
 		m_pCollider->SetFootPosition(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 }
 
-void CScarletCharacter::SetForcePos(_float4 vPos)
-{
-	m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, vPos);
-	if (m_pCollider && m_pCollider->IsOnPhysX())
-		m_pCollider->SetFootPosition(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
-}
-
 void CScarletCharacter::Update_DeBuff(_double TimeDelta)
 {
 	if (m_fDeBuffTime > 0.f)

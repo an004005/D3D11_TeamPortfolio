@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "PlayerHotFixer.h"
+
+#include <PhysX_Manager.h>
+
 #include "Player.h"
 #include "FSMComponent.h"
 #include "BaseAnimInstance.h"
@@ -91,6 +94,70 @@ void CPlayerHotFixer::Tick()
 		{
 			Player_Something_Update();
 		}
+
+		static vector<CGameObject*> objs;
+		if (ImGui::Button("Scan Px"))
+		{
+			objs.clear();
+
+			physx::PxOverlapHit hitBuffer[30];
+			physx::PxOverlapBuffer overlapOut(hitBuffer, 30);
+
+			SphereOverlapParams param;
+
+			param.fVisibleTime = 0.4f;
+			param.iTargetType = CTB_PLAYER;
+			param.fRadius = 3.f;
+			param.vPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+			param.overlapOut = &overlapOut;
+
+			if (CGameInstance::GetInstance()->OverlapSphere(param))
+			{
+				for (int i = 0; i < overlapOut.getNbAnyHits(); ++i)
+				{
+					if (auto pObj = CPhysXUtils::GetOnwer(overlapOut.getAnyHit(i).actor))
+					{
+						objs.push_back(pObj);
+					}
+				}
+			}
+		}
+
+		static _uint iScanedSelected = 0;
+		static _uint inullCnt = 0;
+		if (ImGui::BeginListBox("Scan List"))
+		{
+			inullCnt = 0;
+			for (int i = 0; i < objs.size(); ++i)
+			{
+				if (objs[i] == nullptr)
+				{
+					inullCnt++;
+					continue;
+				}
+
+				const bool bSelected = iScanedSelected == i;
+				if (bSelected)
+					ImGui::SetItemDefaultFocus();
+
+				char szAddressName[256];
+				sprintf_s(szAddressName, "%s[%p]", typeid(*objs[i]).name(), objs[i]);
+
+				if (ImGui::Selectable(szAddressName, bSelected))
+					iScanedSelected = i;
+			}
+			ImGui::EndListBox();
+		}
+
+		if (iScanedSelected < objs.size())
+		{
+			ImGui::Text("Null cnt : %d", inullCnt);
+			objs[iScanedSelected]->Imgui_RenderProperty();
+			objs[iScanedSelected]->Imgui_RenderComponentProperties();
+		}
+
+
+
 
 		if (ImGui::Button("wp0106"))
 		{

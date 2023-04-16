@@ -92,8 +92,6 @@ void CEMUI::Update_UIInfo()
 
 void CEMUI::Create_BossUI()
 {
-	if (m_BossHp != nullptr) return;
-
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
@@ -102,16 +100,6 @@ void CEMUI::Create_BossUI()
 	json["Name"] = m_pOwner->GetEnemyName();
 	m_BossHp = dynamic_cast<CCanvas_BossHpMove*>(pGameInstance->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_BossHpMove", &json));
 	assert(m_BossHp != nullptr && "Failed to Clone : CCanvas_BossHpMove");
-}
-
-void CEMUI::Delete_BossUI()
-{
-	if(m_BossHp != nullptr)
-	{
-		m_BossHp->SetDelete();
-		m_BossHp = nullptr;
-
-	}
 }
 
 void CEMUI::Create_DamageFont(DAMAGE_PARAM& tDamageParams)
