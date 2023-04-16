@@ -316,12 +316,19 @@ void CPlayer::Tick(_double TimeDelta)
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_NUMPAD7))
 	{
-		m_bBrainField = true;
+		list<CAnimation*> TestAnim;
+		TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_224_AL_atk_air_justdodge"));
+		m_pASM->InputAnimSocket("Common_AnimSocket", TestAnim);
 	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_NUMPAD8))
-	{
-		m_bBrainField = false;
-	}
+
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_NUMPAD7))
+	//{
+	//	m_bBrainField = true;
+	//}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_NUMPAD8))
+	//{
+	//	m_bBrainField = false;
+	//}
 
 	CPlayerInfoManager::GetInstance()->Set_BrainField(m_bBrainField);
 
@@ -5281,6 +5288,7 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 		.AddState("JUSTDODGE_USABLE")
 			.OnStart([&]()
 			{
+				m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom);
 				CGameInstance::GetInstance()->SetTimeRatioCurve("JustDodge_Income");	// ?¬ë¡œ??
 			})
 			.Tick([&](double fTimeDelta)
@@ -7325,9 +7333,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = true;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(true);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(true);
+			}
 
 			m_pSAS_Cable->SetVisible(true);
 
@@ -7371,9 +7383,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = false;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(false);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(false);
+			}
 
 			m_pSAS_Cable->SetVisible(false);
 
@@ -7439,9 +7455,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = true;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(true);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(true);
+			}
 
 			m_pSAS_Cable->SetVisible(true);
 
@@ -7456,9 +7476,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = true;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(true);
+			}
 			for (auto& iter : m_vecSheath)
-				iter->SetVisible(false);
+			{
+				iter->SetVisible(true);
+			}
 
 			m_pSAS_Cable->SetVisible(true);
 		})
@@ -7488,9 +7512,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = false;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(false);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(false);
+			}
 
 			m_pSAS_Cable->SetVisible(false);
 
@@ -7559,9 +7587,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = true;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(true);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(true);
+			}
 
 			m_pSAS_Cable->SetVisible(true);
 
@@ -7596,9 +7628,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(false);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(false);
+			}
 
 			m_pSAS_Cable->SetVisible(false);
 
@@ -7620,9 +7656,13 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_bVisible = true;
 
 			for (auto& iter : m_vecWeapon)
+			{
 				iter->SetVisible(true);
+			}
 			for (auto& iter : m_vecSheath)
+			{
 				iter->SetVisible(true);
+			}
 
 			m_pSAS_Cable->SetVisible(true);
 
