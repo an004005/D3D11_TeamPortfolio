@@ -106,7 +106,7 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 
 		//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MembersName.json");
 		//CShaderUI* pMembersName = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
-		//pMembersName->Set_Float2sX(0.0f); // 0.0f : ¾ÈÁßÈ¯ 1.0f ¹ÚÁ¾¿í 2.0f Á¤ÁöÈÆ 3.0f ±è±â¹ü 4.0f ÀüÀÎº¹ 5.0f ¿Á¼öÇö
+		//pMembersName->Set_Float2sX(0.0f); // 0.0f : ¾ÈÁßÈ¯ 1.0f ¹ÚÁ¾¿í 2.0f Á¤ÁöÈÆ 3.0f ±è±â¹ü 4.0f ÀüÀÎº¹ 5.0f ¿Á¼öÇö 6.0f °¨»çÇÕ´Ï´Ù. 7.0f ºóÄ­
 	
 		//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
 		//json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };

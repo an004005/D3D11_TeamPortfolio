@@ -2471,6 +2471,18 @@
             {
                 "EventName": "Elec_Attack_Justdodge_5_Particle",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "attack_nor_1",
+                "EventTime": 1.0
+            },
+            {
+                "EventName": "attack_nor_2",
+                "EventTime": 27.0
+            },
+            {
+                "EventName": "attack_nor_jumpattack_1",
+                "EventTime": 50.0
             }
         ]
     },

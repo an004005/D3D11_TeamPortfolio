@@ -34,6 +34,7 @@
 #include "Consumption_Item.h"
 #include "LastCheckUI.h"
 #include "ControlledRigidBody.h"
+#include "ShaderUI.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -232,6 +233,48 @@ void CEM8200::Spawn_Portrait(const string& strEventName)
 	CImgui_Batch::RunBatchFile(FilePath);
 
 	m_SoundStore.PlaySound("Photo");
+
+	if (false == m_bUIClone)
+	{
+		m_bUIClone = true;
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MembersName.json");
+		m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+		m_pShaderUI->Set_Float2sX(7.0f);
+		CUI_Manager::GetInstance()->Set_TempOff(true);
+	}
+
+	if (strEventName == "Spawn_Inbok")
+	{
+		m_pShaderUI->Set_Float2sX(4.0f); // 0.0f : ¾ÈÁßÈ¯ 1.0f ¹ÚÁ¾¿í 2.0f Á¤ÁöÈÆ 3.0f ±è±â¹ü 4.0f ÀüÀÎº¹ 5.0f ¿Á¼öÇö 6.0f °¨»çÇÕ´Ï´Ù. 7.0f ºóÄ­
+	}
+	else if (strEventName == "Spawn_Jihoon")
+	{
+		m_pShaderUI->Set_Float2sX(2.0f);
+	}
+	else if (strEventName == "Spawn_JongWook")
+	{
+		m_pShaderUI->Set_Float2sX(1.0f);
+	}
+	else if (strEventName == "Spawn_Junghwan")
+	{
+		m_pShaderUI->Set_Float2sX(0.0f);
+	}
+	else if (strEventName == "Spawn_Kibum")
+	{
+		m_pShaderUI->Set_Float2sX(3.0f);
+	}
+	else if (strEventName == "Spawn_Suhyun")
+	{
+		m_pShaderUI->Set_Float2sX(5.0f);
+	}
+	else if (strEventName == "Spawn_Sound")
+	{
+		m_pShaderUI->Set_Float2sX(7.0f);
+	}
+	else if (strEventName == "Spawn_Team")
+	{
+		m_pShaderUI->Set_Float2sX(6.0f);
+	}
 }
 
 void CEM8200::SetUpSound()
@@ -2203,6 +2246,8 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 
 			m_pController->SetActive(true);
+
+			CGameManager::GetInstance()->Set_LeftTalk(115);
 	})
 		.AddTransition("ImCombatIdle to Idle", "Idle")
 			.Predicator([this]
@@ -2313,10 +2358,12 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				pCanvas_MainTalk->Add_Talk(29);
 				pCanvas_MainTalk->Add_Talk(30);
 				pCanvas_MainTalk->Add_Talk(31);
+				CUI_Manager::GetInstance()->Set_TempOff(true);
 			}
 
 			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
 			{
+				CUI_Manager::GetInstance()->Set_TempOff(true);
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
 				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
 				m_pLastItem = nullptr;

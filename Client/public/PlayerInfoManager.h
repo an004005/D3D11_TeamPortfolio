@@ -160,6 +160,8 @@ public:	// Get
 		return m_bSASMember[eSAS];
 	}
 
+	class CScarletMap* m_pDefaultMap = nullptr;
+
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
@@ -240,7 +242,7 @@ public:	// Set
 	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP += iBP;	}
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
 
 	void			Set_Exp(const _uint iExp);
 	
