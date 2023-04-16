@@ -130,6 +130,14 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "BrainCrashHandParticle",
+                "EventTime": 95.0
+            },
+            {
+                "EventName": "BrainCrashHandParticle_Delete",
+                "EventTime": 115.0
             }
         ]
     },
@@ -637,7 +645,7 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "move_doubleJump",
+                "EventName": "move_jump",
                 "EventTime": 0.0
             }
         ]
@@ -710,7 +718,12 @@
         "Duration": 28.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_SAS_teleport_skill",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_051_AL_sas_dodge_F_stop_Telepo": {
         "Duration": 41.0,
@@ -786,7 +799,12 @@
         "Duration": 28.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_SAS_teleport_skill",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_055_AL_sas_dodge_B_stop_Telepo": {
         "Duration": 41.0,
@@ -824,7 +842,12 @@
         "Duration": 28.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_SAS_teleport_skill",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_057_AL_sas_dodge_L_stop_Telepo": {
         "Duration": 41.0,
@@ -1292,7 +1315,7 @@
         "bLooping": false,
         "vecEvent": [
             {
-                "EventName": "move_doubleJump",
+                "EventName": "move_jump",
                 "EventTime": 0.0
             }
         ]
@@ -1398,6 +1421,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_SAS_teleport_skill",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1452,6 +1479,10 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_SAS_teleport_skill",
                 "EventTime": 0.0
             }
         ]
@@ -1523,6 +1554,10 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_SAS_teleport_skill",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1577,6 +1612,10 @@
             },
             {
                 "EventName": "Trail_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_SAS_teleport_skill",
                 "EventTime": 0.0
             }
         ]
@@ -1893,10 +1932,6 @@
                 "EventTime": 25.0
             },
             {
-                "EventName": "Collision_End",
-                "EventTime": 45.0
-            },
-            {
                 "EventName": "attack_nor_3",
                 "EventTime": 3.0
             },
@@ -1927,6 +1962,10 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 100.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 40.0
             }
         ]
     },
@@ -2771,6 +2810,10 @@
             },
             {
                 "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_SAS_teleport_skill",
                 "EventTime": 0.0
             }
         ]
@@ -4148,6 +4191,18 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_pole_multi_lift",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_jail_sque",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_jail_lift",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4221,7 +4276,12 @@
         "Duration": 30.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_container_lift3",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_322_AL_cap_R_start180": {
         "Duration": 30.0,
@@ -4251,7 +4311,12 @@
         "Duration": 40.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_exp",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_325_AL_throw_LR_end": {
         "Duration": 50.0,
@@ -4311,13 +4376,23 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_lift2",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_330_AL_fall_start": {
         "Duration": 80.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_container_lift1",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_331_AL_swing_L": {
         "Duration": 140.0,
@@ -4365,7 +4440,12 @@
         "Duration": 125.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_crain_shot",
+                "EventTime": 30.0
+            }
+        ]
     },
     "AS_ch0100_334_AL_fall_loop": {
         "Duration": 95.0,
@@ -4384,6 +4464,10 @@
             },
             {
                 "EventName": "Bright_Off",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_crain_lift",
                 "EventTime": 0.0
             }
         ]
@@ -4428,7 +4512,12 @@
         "Duration": 75.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_lift3",
+                "EventTime": 10.0
+            }
+        ]
     },
     "AS_ch0100_348_AL_throw1_cansel": {
         "Duration": 75.0,
@@ -4458,19 +4547,34 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_exp",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_348_AL_throw4_start": {
         "Duration": 55.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_exp",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_348_AL_throw5_start": {
         "Duration": 190.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_jail_finish",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_372_AL_Cap_sLcLeL_end": {
         "Duration": 143.0,
@@ -4496,6 +4600,14 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_train_charge_1",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_train_lift",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4503,7 +4615,12 @@
         "Duration": 305.0,
         "TickPerSecond": 40.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_train_shot",
+                "EventTime": 40.0
+            }
+        ]
     },
     "AS_ch0100_372_AL_mg_train_R": {
         "Duration": 306.0,
@@ -8712,7 +8829,16 @@
         "Duration": 80.0,
         "TickPerSecond": 50.0,
         "bLooping": true,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_walk",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "move_walk",
+                "EventTime": 40.0
+            }
+        ]
     },
     "AS_em8200_106_AL_run": {
         "Duration": 30.0,

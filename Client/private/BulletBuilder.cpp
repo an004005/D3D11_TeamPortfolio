@@ -100,6 +100,18 @@ CBulletBuilder& CBulletBuilder::Set_Sound(_bool bSound)
 	return *this;
 }
 
+CBulletBuilder& CBulletBuilder::Set_LoopSound(const string& SoundTag)
+{
+	m_LoopSoundTag = SoundTag;
+	return *this;
+}
+
+CBulletBuilder& CBulletBuilder::Set_HitSound(const string& SoundTag)
+{
+	m_HitSoundTag = SoundTag;
+	return *this;
+}
+
 void CBulletBuilder::Build()
 {
 	CBullet* pBullet = dynamic_cast<CBullet*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Bullet"), TEXT("Prototype_Bullet")));
@@ -126,6 +138,9 @@ void CBulletBuilder::Build()
 	pBullet->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMLoadFloat4(&m_Position));
 	pBullet->GetTransform()->LookAt(XMLoadFloat4(&m_TargetPos));
 	pBullet->GetTransform()->Turn_Fixed(pBullet->GetTransform()->Get_State(CTransform::STATE_UP), XMConvertToRadians(m_fAngle));
+
+	pBullet->Set_LoopSound(m_LoopSoundTag);
+	pBullet->Set_HitSound(m_HitSoundTag);
 
 }
 

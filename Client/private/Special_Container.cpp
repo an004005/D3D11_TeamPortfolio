@@ -37,6 +37,9 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 
 	FAILED_CHECK(SetUp_Components(pArg));
 
+	m_SoundStore.CloneSound("fx_kine_super_container_imp");
+	m_SoundStore.CloneSound("fx_kine_super_container_finish");
+
 	m_pTransformCom->SetTransformDesc({ 1.f, XMConvertToRadians(90.f) });
 
 	m_eSpecialObejctType = SPECAIL_CONTAINER;
@@ -53,8 +56,6 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 		{
 			if (m_bCollision) return;
-
-			m_SoundStore.PlaySound("Special_Container_2", m_pTransformCom);
 
 			m_bCollision = true;
 			m_bAddAble = true;
@@ -82,12 +83,10 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 				->Start_AttachPosition(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + XMVectorSet(0.f, 3.f, 0.f, 0.f), XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
-			//CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
+
+			m_SoundStore.PlaySound("fx_kine_super_container_imp", m_pTransformCom);
 		}
 	});
-
-	m_SoundStore.CloneSound("Special_Container_2");
-	m_SoundStore.CloneSound("Special_Container_3");
 
 	return S_OK;
 }
@@ -182,8 +181,6 @@ void CSpecial_Container::Container_ChangeIndex(_uint iIndex)
 {
 	if (m_iModelIndex == iIndex) return;
 
-	m_SoundStore.PlaySound("Special_Container_3", m_pTransformCom);
-
 	m_iModelIndex = iIndex;
 
 	DAMAGE_PARAM tParam;
@@ -198,6 +195,7 @@ void CSpecial_Container::Container_ChangeIndex(_uint iIndex)
 	Container_Input_Damage(tParam);
 
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Kinetic_Dead_Effect_00")->Start_AttachPosition(this, tParam.vHitFrom, { 0.f, 1.f, 0.f, 0.f });
+	m_SoundStore.PlaySound("fx_kine_super_container_imp", m_pTransformCom);
 }
 
 void CSpecial_Container::Lerp_to_TargetPoint(_float4 vTargetPos, _float fRatio)
@@ -305,6 +303,8 @@ void CSpecial_Container::Container_Press_Finish()
 
 	m_bDeadCheck = true;
 	m_fDeadTime = 5.f;
+
+	m_SoundStore.PlaySound("fx_kine_super_container_finish", m_pTransformCom);
 }
 
 void CSpecial_Container::Container_Reposition(CTransform* pTransform, _float fRatio, _float fForce)

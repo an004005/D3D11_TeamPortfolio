@@ -87,7 +87,7 @@ private:
 
 	_bool	m_bDown = false;
 
-	CController::EHandleInput m_eInput;
+	CController::EHandleInput m_eInput = CController::EHandleInput::HANDLE_END;
 
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;

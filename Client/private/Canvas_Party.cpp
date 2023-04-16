@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "..\public\Canvas_Party.h"
-#include "GameInstance.h"
+#include <GameInstance.h>
 #include "PlayerInfoManager.h"
+#include "UI_Manager.h"
 
 #include "DefaultUI.h"
 #include "ShaderUI.h"
@@ -442,6 +443,7 @@ void CCanvas_Party::CurrentPick_Tick()
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
 		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 		Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_01_Leader_B")->Get_Position());
+		CUI_Manager::GetInstance()->PlaySound("PartyClick");
 	}
 
 	if (true == CPlayerInfoManager::GetInstance()->Get_SASMember(SASMEET::HANABI))
@@ -457,6 +459,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_02_Member_B")->Get_Position());
+			CUI_Manager::GetInstance()->PlaySound("PartyClick");
 		}
 	}
 	else
@@ -477,6 +480,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_03_Member_B")->Get_Position());
+			CUI_Manager::GetInstance()->PlaySound("PartyClick");
 		}
 	}
 	else
@@ -502,6 +506,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_XX0_ReserveB")->Get_Position());
+			CUI_Manager::GetInstance()->PlaySound("PartyClick");
 		}
 	}
 	else
@@ -527,6 +532,7 @@ void CCanvas_Party::CurrentPick_Tick()
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_03_Member_B"))->Set_OnAlpha();
 			dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
 			Find_ChildUI(L"Party_InfoPick")->Set_Position(Find_ChildUI(L"Party_XX1_ReserveB")->Get_Position());
+			CUI_Manager::GetInstance()->PlaySound("PartyClick");
 		}
 	}
 	else

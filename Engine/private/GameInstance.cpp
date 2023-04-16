@@ -580,6 +580,11 @@ void CGameInstance::Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGam
 	m_pObject_Manager->Add_InLayer(iLevelIndex, pLayerTag, pGameObject);
 }
 
+void CGameInstance::Pop_InLayer(const _tchar* pOutLayerTag, const _tchar* pInLayerTag, CGameObject* pGameObject)
+{
+	m_pObject_Manager->Pop_InLayer(pOutLayerTag, pInLayerTag, pGameObject);
+}
+
 void CGameInstance::Imgui_ProtoViewer(const _tchar*& szSelectedProto)
 {
 	m_pObject_Manager->Imgui_ProtoViewer(szSelectedProto);

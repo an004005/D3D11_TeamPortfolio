@@ -488,6 +488,33 @@ void CObject_Manager::Add_EmptyLayer(_uint iLevelIndex, const _tchar * pLayerTag
 	m_vecLayers[LEVEL_NOW].emplace(pLayerTagCopy, pLayer);
 }
 
+void CObject_Manager::Pop_InLayer(const _tchar* pOutLayerTag, const _tchar* pInLayerTag, CGameObject* pGameObject)
+{
+	CLayer* OutLayer = Find_Layer(LEVEL_NOW, pOutLayerTag);
+
+	assert(OutLayer != nullptr);
+
+	CGameObject* pObj = OutLayer->Pop_InLayer(pGameObject);
+	assert(pObj != nullptr);
+
+	CLayer* InLayer = Find_Layer(LEVEL_NOW, pInLayerTag);
+
+	if (nullptr == InLayer)
+	{
+		InLayer = CLayer::Create();
+		assert(InLayer != nullptr);
+
+		FAILED_CHECK(InLayer->Add_GameObject(pObj));
+
+		_tchar* pLayerTagCopy = new _tchar[lstrlen(pInLayerTag) + 1];
+		lstrcpy(pLayerTagCopy, pInLayerTag);
+
+		m_vecLayers[LEVEL_NOW].emplace(pLayerTagCopy, InLayer);
+	}
+	else
+		InLayer->Add_GameObject(pObj);
+}
+
 CLayer * CObject_Manager::Find_Layer(_uint iLevelIndex, const _tchar * pLayerTag)
 {
 	auto	iter = m_vecLayers[iLevelIndex].find(pLayerTag);

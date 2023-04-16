@@ -31,7 +31,7 @@ public:
 	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
 	void Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGameObject* pGameObject);
 	void Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag);
-
+	void Pop_InLayer(const _tchar* pOutLayerTag, const _tchar* pInLayerTag, CGameObject* pGameObject);
 	void Tick(_double TimeDelta);
 	void Late_Tick(_double TimeDelta);
 	void AfterPhysX();

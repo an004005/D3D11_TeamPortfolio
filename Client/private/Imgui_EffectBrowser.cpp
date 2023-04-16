@@ -195,6 +195,10 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 		FAILED_CHECK(CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_Work_ParticleGroup", TEXT("ProtoVFX_ParticleGroup")));
 	}
 
+	ImGui::Separator();
+	ImGui::Separator();
+
+
 }
 
 void CImgui_EffectBrowser::LoadEffects(const char* pEffectDir)
