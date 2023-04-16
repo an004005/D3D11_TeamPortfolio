@@ -1105,6 +1105,22 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 			}
 
 			m_GatherObjectList.clear();
+
+			m_bTeleport = false;
+			m_fTeleportDissolve = 0.f;
+			for (auto pMtrl : m_pModel->GetMaterials())
+			{
+				pMtrl->GetParam().Floats[2] = 0.f;
+			}
+			for (auto& iter : m_vecWeapon)
+			{
+				iter->SetVisible(true);
+			}
+			for (auto& iter : m_vecSheath)
+			{
+				iter->SetVisible(true);
+			}
+			m_bVisible = true;
 		}
 
 	}
@@ -7380,8 +7396,6 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_bSeperateAnim = false;
 
-			m_bVisible = false;
-
 			for (auto& iter : m_vecWeapon)
 			{
 				iter->SetVisible(false);
@@ -7509,8 +7523,6 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
 
-			m_bVisible = false;
-
 			for (auto& iter : m_vecWeapon)
 			{
 				iter->SetVisible(false);
@@ -7623,7 +7635,6 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 		.AddState("TELEPORTATTACK_AIR_LANDING_START")
 		.OnStart([&]()
 		{
-			m_bVisible = false;
 
 			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
 
