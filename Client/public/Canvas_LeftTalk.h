@@ -30,6 +30,9 @@ public:
 private:
 	void	Show_Talk();
 
+public:
+	_bool   Get_End() { return m_bRunning; }
+
 private:
 	std::list<TALKINFO>	m_qCurrentTalk;
 

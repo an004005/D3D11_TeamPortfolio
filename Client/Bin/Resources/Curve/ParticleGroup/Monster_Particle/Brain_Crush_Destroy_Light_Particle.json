@@ -1,1 +1,31 @@
-{"LifeTime":10.0,"ObjectTag":"Brain_Crush_Destroy_Light_Particle","Particles":[{"ObjectTag":"Brain_Crush_Destroy_Light_Particle","ParticleDirectory":"../Bin/Resources/VFX/ParticleSystem/Brain_Crush_Destroy_Light_Particle.json"}],"Prototype_GameObject":"ProtoVFX_ParticleGroup\u0000","Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]}}
+{
+    "LifeTime": 10.0,
+    "ObjectTag": "Brain_Crush_Destroy_Light_Particle",
+    "Particles": [
+        {
+            "ObjectTag": "Brain_Crush_Destroy_Light_Particle",
+            "ParticleDirectory": "../Bin/Resources/VFX/ParticleSystem/Brain_Crush_Destroy_Light_Particle.json"
+        }
+    ],
+    "Prototype_GameObject": "ProtoVFX_ParticleGroup\u0000",
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

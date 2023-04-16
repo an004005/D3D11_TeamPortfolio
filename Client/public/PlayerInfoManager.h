@@ -227,8 +227,8 @@ public:	// Set
 	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
 	_bool			GetAILock() { return m_bAILock; }
 
-	void			SetTeleportDissolve() { m_bDissolve = true; }
-	_float			GetTeleportDissolve() { return m_fDissolve; }
+	void			SetTeleportDissolve(_float fTimer) { m_bDissolve = true; m_fDissolve = fTimer; }
+	_float			GetTeleportDissolve();
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);

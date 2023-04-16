@@ -121,11 +121,11 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 	Ready_Layer_SASPortrait();
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("A Sedated Heart");
-	m_BGM.CloneSound("Attention Please"); 
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
-	m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
+	//m_BGM.CloneSound("Ambient_Bridge");
+	//m_BGM.CloneSound("A Sedated Heart");
+	//m_BGM.CloneSound("Attention Please"); 
+	//m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
+	//m_BGM.CloneSound("The OSF -Advance"); // 기본 bgm
 
 	// PJW add 0412
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/PlayerTestWall.json");
@@ -148,60 +148,60 @@ HRESULT CLevel_PlayerTest::Initialize()
 
 void CLevel_PlayerTest::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound("The OSF -Advance");
+	//if (m_BGMOnce.IsNotDo())
+	//	m_BGM.PlaySound("The OSF -Advance");
 
-	if (m_bMiddleBGM == false)
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					m_BGM.StopAllLoop();
-					m_bMiddleBGM = true;
-					m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
-				{
-					break;
-				}
-			}
-			if (m_BGMChange.IsNotDo())
-			{
-				m_BGM.StopAllLoop();
-				m_BGM.PlaySound("A Sedated Heart");
-			}
-		}
-	}
+	//if (m_bMiddleBGM == false)
+	//{
+	//	if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+	//	{
+	//		for (auto pObj : pMonsterLayer->GetGameObjects())
+	//		{
+	//			if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+	//			{
+	//				m_BGM.StopAllLoop();
+	//				m_bMiddleBGM = true;
+	//				m_BGM.PlaySound("Abandoned Subway to Suoh Line 9");
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+	//	{
+	//		for (auto pObj : pMonsterLayer->GetGameObjects())
+	//		{
+	//			if (auto pBoss = dynamic_cast<CBronJon*>(pObj))
+	//			{
+	//				break;
+	//			}
+	//		}
+	//		if (m_BGMChange.IsNotDo())
+	//		{
+	//			m_BGM.StopAllLoop();
+	//			m_BGM.PlaySound("A Sedated Heart");
+	//		}
+	//	}
+	//}
 
-	if (m_bBossBGM == false)
-	{
-		if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
-		{
-			for (auto pObj : pMonsterLayer->GetGameObjects())
-			{
-				if (auto pBoss = dynamic_cast<CBoss1*>(pObj))
-				{
-					m_BGM.StopAllLoop();
-					m_bBossBGM = true;
-					m_BGM.PlaySound("Attention Please");
-					break;
-				}
-			}
-		}
-	}
+	//if (m_bBossBGM == false)
+	//{
+	//	if (auto pMonsterLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster"))
+	//	{
+	//		for (auto pObj : pMonsterLayer->GetGameObjects())
+	//		{
+	//			if (auto pBoss = dynamic_cast<CBoss1*>(pObj))
+	//			{
+	//				m_BGM.StopAllLoop();
+	//				m_bBossBGM = true;
+	//				m_BGM.PlaySound("Attention Please");
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}
 
 
 	CLevel::Tick(TimeDelta);
