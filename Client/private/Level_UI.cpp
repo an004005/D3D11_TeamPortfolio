@@ -200,6 +200,9 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _tchar* pLayerTag)
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/HPlossUI.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"HPlossUI", &json));
 
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MembersName.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Shader_UI", &json));
+
 	// Ãß°¡
 	//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_LeftTalk.json");
 	//FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_LeftTalk", &json));

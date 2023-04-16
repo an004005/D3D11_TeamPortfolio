@@ -117,9 +117,9 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 				m_bEM1200Dead = true;
 
 				CGameManager::GetInstance()->Set_LeftTalk(32);
+				CGameManager::GetInstance()->Set_LeftTalk(33);
+				CGameManager::GetInstance()->Set_LeftTalk(34);
 				CGameManager::GetInstance()->Set_LeftTalk(35);
-				CGameManager::GetInstance()->Set_LeftTalk(36);
-				CGameManager::GetInstance()->Set_LeftTalk(37);
 			}
 		}
 
