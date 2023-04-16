@@ -516,6 +516,7 @@ void CEM8200::SetUpAnimationEvent()
 			{
 				m_KarenMaskStart.PlayFromStart();
 				m_pKarenMaskEf->GetParams().Ints[0] = 1;
+				m_pGameInstance->PlayShake(2.f, 0.01);
 			}
 		});
 
@@ -2131,7 +2132,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
 
-
+			m_pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, -15.f, 1.f));
 		})
 		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
 			.Predicator([this]
@@ -2342,7 +2343,6 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddState("Intro_01")
 			.OnStart([this]
 				{
-
 					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
@@ -2390,7 +2390,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
-				CUI_Manager::GetInstance()->Set_TempOff(true);
+				CUI_Manager::GetInstance()->Set_TempOff(false);
 			// 루카 대사
 
 				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
@@ -2455,7 +2455,7 @@ _bool CEM8200::Check_PlayerDetected()
 		if (fDistance < 25.f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
-			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CUI_Manager::GetInstance()->Set_TempOff(true);
 			CPlayerInfoManager::GetInstance()->SetPlayerLock(true);
 			return true;
 		}
@@ -2492,6 +2492,8 @@ _bool CEM8200::Check_PlayerDetected_Near()
 			m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 				_float4x4::Identity,
 				_float4x4::Identity);
+
+			m_pKaren_AnimCam->AddEvent("Shutup", [this]() {m_pGameInstance->PlayShake(0.2f, 0.02); });
 
 			return true;
 		}
