@@ -26,6 +26,9 @@ public:
 
 public:
 	void	Add_Talk(const _int iIndex, const _int iQuest = -1);
+	_bool	Get_End() {
+		return m_bRunning;
+	}
 
 private:
 	void	Show_Talk();

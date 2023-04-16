@@ -286,8 +286,6 @@ void CCanvas_SaleKinds::CurrentList()
 		// 2 : 현재 소지중인 아이템 중 버튼을 눌렀는지 확인한다.
 		if (true == m_vecShopCanvass[i].second->Get_OnButton())
 		{
-			CUI_Manager::GetInstance()->PlaySound("UnableClick");
-
 			m_vecShopCanvass[i].second->Set_OnButton();
 
 			m_iCanvasIndex = i;
