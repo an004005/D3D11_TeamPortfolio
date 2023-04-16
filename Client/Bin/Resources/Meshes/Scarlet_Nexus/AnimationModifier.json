@@ -8862,7 +8862,7 @@
             },
             {
                 "EventName": "move_walk",
-                "EventTime": 40.0
+                "EventTime": 60.0
             }
         ]
     },

@@ -44,6 +44,10 @@ public:
 
 	void SetCableTP(_float fValue);
 
+	void BlackInOut();
+
+	_float GetBlackOutRatio();
+
 private:
 	_bool m_bOpen = false;
 
@@ -68,6 +72,8 @@ private:
 	CDoOnce m_VisibleBrainFieldOnce;
 	class CEffectGroup* m_pBrainFieldFloor = nullptr;
 
+	_bool bBlackInOut = false;
+	CDoOnce blackOnce;
 
 public:
 	virtual void Free() override;

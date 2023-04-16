@@ -142,11 +142,11 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 
 	FAILED_CHECK(pGameInstance->Add_Prototype(LEVEL_NOW, L"Prototype_GameObject_SkyBox", CSkyBox::Create(m_pDevice, m_pContext)));
 
-	CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
-	{
-		Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
-		CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
-	});
+	// CGameUtils::ListFiles("../Bin/Resources/Restrings/BranFieldStrings/", [](const string& filePath)
+	// {
+	// 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(filePath);
+	// 	CGameInstance::GetInstance()->Clone_GameObject(LAYER_MAP_DECO, L"Prototype_CombinedRedString", &json);
+	// });
 
 	return S_OK;
 }
@@ -184,7 +184,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Test.json");					// Map_Test
 	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json");	// Map_ConstructionSite3F	
 	
-	//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
+	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_DownTown.json");
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_BrainField.json");				// Map_NaomiRoom
 	
 	json["Model_ProtoTypes"] = Json::array();
