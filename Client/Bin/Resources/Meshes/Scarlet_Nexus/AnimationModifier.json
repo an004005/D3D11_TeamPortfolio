@@ -26,6 +26,22 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "PlayShake",
+                "EventTime": 230.0
+            },
+            {
+                "EventName": "fx_kinetic_counter_trig",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "fx_kinetic_air_verylong",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Impact",
+                "EventTime": 230.0
             }
         ]
     },
@@ -99,7 +115,12 @@
         "Duration": 65.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_execute_karen_example",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_BC_em8220_2_c03_ch0100": {
         "Duration": 116.0,
@@ -138,6 +159,18 @@
             {
                 "EventName": "BrainCrashHandParticle_Delete",
                 "EventTime": 115.0
+            },
+            {
+                "EventName": "UI_ON",
+                "EventTime": 130.0
+            },
+            {
+                "EventName": "PlayShake",
+                "EventTime": 105.0
+            },
+            {
+                "EventName": "BrainCrash",
+                "EventTime": 10.0
             }
         ]
     },
@@ -167,7 +200,7 @@
     },
     "AS_BrainFieldOpen_c01_ch0100": {
         "Duration": 346.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": [
             {
@@ -341,17 +374,37 @@
             {
                 "EventName": "BrainField_MaskNoise",
                 "EventTime": 170.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.3",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.4",
+                "EventTime": 170.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.5",
+                "EventTime": 260.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.2",
+                "EventTime": 0.0
             }
         ]
     },
     "AS_BrainFieldOpen_c02_ch0100": {
         "Duration": 188.0,
-        "TickPerSecond": 60.0,
+        "TickPerSecond": 48.0,
         "bLooping": false,
         "vecEvent": [
             {
                 "EventName": "BrainField_MaskBright",
                 "EventTime": 110.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.6",
+                "EventTime": 100.0
             }
         ]
     },
@@ -410,6 +463,10 @@
             {
                 "EventName": "BrainCrash_Slow",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "fx_execute_karen_splited_6",
+                "EventTime": 0.0
             }
         ]
     },
@@ -2902,6 +2959,10 @@
             {
                 "EventName": "attack_elec_spin_fix",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_fire_spin",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4203,6 +4264,10 @@
             {
                 "EventName": "fx_kine_super_jail_lift",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_telepole_lift",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4315,6 +4380,10 @@
             {
                 "EventName": "fx_kine_super_jail_exp",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_telepole_imp",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4334,7 +4403,12 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_telepole_swing_1",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_326_AL_throw_RL_end": {
         "Duration": 50.0,
@@ -4398,7 +4472,12 @@
         "Duration": 140.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_telepole_swing_1",
+                "EventTime": 10.0
+            }
+        ]
     },
     "AS_ch0100_331_AL_swing_R": {
         "Duration": 140.0,
@@ -5099,6 +5178,10 @@
             {
                 "EventName": "BF_Swing_End",
                 "EventTime": 95.0
+            },
+            {
+                "EventName": "BrainField_Swing",
+                "EventTime": 20.0
             }
         ]
     },
@@ -5127,6 +5210,10 @@
             {
                 "EventName": "BF_Swing_Start",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "BrainField_Swing",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5134,7 +5221,12 @@
         "Duration": 144.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kinetic_lifting",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_641_AL_BF_throw1_wait": {
         "Duration": 165.0,
@@ -5224,6 +5316,10 @@
             {
                 "EventName": "Gravity_Enable",
                 "EventTime": 160.0
+            },
+            {
+                "EventName": "fx_kinetic_air_verylong",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5237,7 +5333,12 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kinetic_lifting",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_672_AL_BF_fall_loop": {
         "Duration": 120.0,
@@ -5249,7 +5350,12 @@
         "Duration": 175.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kinetic_air_verylong",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_674_AL_BF_fall_cancel": {
         "Duration": 70.0,
@@ -5301,6 +5407,10 @@
             {
                 "EventName": "BrainField_Gear_Effect",
                 "EventTime": 45.0
+            },
+            {
+                "EventName": "fx_kinetic_brainfield_in.1",
+                "EventTime": 30.0
             }
         ]
     },
@@ -8269,6 +8379,10 @@
             {
                 "EventName": "Throw_gift",
                 "EventTime": 37.0
+            },
+            {
+                "EventName": "Throw_gift_Sound",
+                "EventTime": 25.0
             }
         ]
     },
@@ -8836,7 +8950,7 @@
             },
             {
                 "EventName": "move_walk",
-                "EventTime": 40.0
+                "EventTime": 60.0
             }
         ]
     },

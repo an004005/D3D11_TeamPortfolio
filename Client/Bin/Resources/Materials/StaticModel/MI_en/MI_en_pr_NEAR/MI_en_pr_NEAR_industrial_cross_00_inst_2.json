@@ -1,18 +1,1 @@
-{
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/RD_T_BG_TST_T02_NEAR_industrial_cross_00_D.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/RD_T_BG_TST_T02_NEAR_industrial_cross_00_N.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_T02_NEAR_industrial_cross_00_M_RMA.dds"
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
-	"InstancingPass": 1
-}
+{"Active":true,"AlphaBlend":true,"InstancingPass":13,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[[0.0,0.0],[1.0,1.0]],"Float4s":[],"Float4x4s":[],"Floats":[1.0],"Ints":[1],"Pass":1,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/RD_T_BG_TST_T02_NEAR_industrial_cross_00_D.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/RD_T_BG_TST_T02_NEAR_industrial_cross_00_N.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_T02_NEAR_industrial_cross_00_M_RMA.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}

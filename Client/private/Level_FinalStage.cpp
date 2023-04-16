@@ -26,17 +26,19 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 
 HRESULT CLevel_FinalStage::Initialize()
 {
-	 m_bPlayerSpawn = false;
+	 // m_bPlayerSpawn = false;
 
 	m_strLevelName = L"FinalStage";
 
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_FinalBossStage.json";
 
+	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	 	return E_FAIL;
 
 
 	// _matrix matTarget = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, 0.f, 0.f);
@@ -101,7 +103,11 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
-	//CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+	CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Final_fog.json");
+
+	// CGameInstance::GetInstance()->LoadFogJson("");
 	return S_OK;
 }
 
@@ -126,10 +132,12 @@ HRESULT CLevel_FinalStage::Ready_Lights()
 
 void CLevel_FinalStage::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
-	// CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound(m_MainSound);
+
+	//CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+	__super::Tick(TimeDelta);
 }	
 
 CLevel_FinalStage * CLevel_FinalStage::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

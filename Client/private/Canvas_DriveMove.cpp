@@ -59,6 +59,15 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
 	CCanvas::UIHit(TimeDelta);
+	
+	if (true == CPlayerInfoManager::GetInstance()->Get_DriveGauge())
+	{
+		CPlayerInfoManager::GetInstance()->Set_DriveGauge(false);
+		Find_ChildUI(L"Drive_OnCircle")->SetVisible(true);
+		Find_ChildUI(L"Drive_LeftDot")->SetVisible(true);
+		Find_ChildUI(L"Dirve_RightDot")->SetVisible(true);
+		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
+	}
 
 	DriveGauge_Tikc();
 	DriveGaugeFull_Tick();
@@ -93,7 +102,6 @@ void CCanvas_DriveMove::Set_OnDrive(const _float & fDriveFullTime)
 	m_bOnDrive = true;
 
 	// 그냥 Drive 시간동안 출력하면 된다.
-	Find_ChildUI(L"Drive_LeftDot")->SetVisible(true);
 
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge_Use(fDriveFullTime);
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge_Use(fDriveFullTime);
@@ -123,8 +131,6 @@ void CCanvas_DriveMove::Drive_Tick()
 
 	// 드라이브를 사용하기 시작하면
 	_float fDriveGauge = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_CurrentDriveGauge();
-	
-	dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
 
 	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
 	{
@@ -132,19 +138,19 @@ void CCanvas_DriveMove::Drive_Tick()
 		m_fDriveGauge = 0.0f;
 		m_fRightDotCount = 1.0f;
 		m_fShaderRightDot = 0.0f;
-		Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bOnDrive);
-		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Reset_DriveRightDot();
-
+		Find_ChildUI(L"Drive_OnCircle")->SetVisible(false);
+		Find_ChildUI(L"Drive_LeftDot")->SetVisible(false);
+		Find_ChildUI(L"Dirve_RightDot")->SetVisible(false);
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
 	}
 
-	Find_ChildUI(L"Dirve_RightDot")->SetVisible(m_bOnDrive);
-
-	if (1.0f > fDriveGauge)
-	{
-		// 특정 시간에 출력해야한다. Gauge 를 0.5f 미만으로 있을 때 사용할 있다. ( UITODO : 언제 꺼줘야 하는지 잘 모르겠다 그래서 일단 드라이브가 꺼지면 꺼진다.)
-		Find_ChildUI(L"Drive_OnCircle")->SetVisible(m_bOnDrive);
-	}
+	//if (1.0f > fDriveGauge)
+	//{
+	//	// 특정 시간에 출력해야한다. Gauge 를 0.5f 미만으로 있을 때 사용할 있다. ( UITODO : 언제 꺼줘야 하는지 잘 모르겠다 그래서 일단 드라이브가 꺼지면 꺼진다.)
+	//	Find_ChildUI(L"Drive_OnCircle")->SetVisible(m_bOnDrive);
+	//	Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bOnDrive);
+	//	Find_ChildUI(L"Dirve_RightDot")->SetVisible(m_bOnDrive);
+	//}
 
 	if (m_fRightDotCount > fDriveGauge)
 	{

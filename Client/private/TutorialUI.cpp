@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\public\TutorialUI.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 // m_tParams.Floats[0] : Alpha
 

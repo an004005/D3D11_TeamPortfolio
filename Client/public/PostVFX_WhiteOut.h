@@ -1,6 +1,7 @@
 #pragma once
 #include "PostProcess.h"
 #include "Client_Defines.h"
+#include "Timeline.h"
 
 BEGIN(Client)
 class CPostVFX_WhiteOut : public CPostProcess
@@ -14,6 +15,10 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	void SetWhiteOutTime(_float fWhiteOutTime);
 
+	void BlackInOut();
+
+private:
+	CSimpleTimeline m_Timeline;
 
 public:
 	DECLARE_CREATE(CPostVFX_WhiteOut)

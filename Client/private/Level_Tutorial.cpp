@@ -4,6 +4,11 @@
 #include "GameManager_Tutorial.h"
 #include "Imgui_Batch.h"
 
+// PJW Add
+#include "Map_KineticBatchPreset.h"
+#include "PhysX_Manager.h"
+#include "GameUtils.h"
+#include "JsonStorage.h"
 
 CLevel_Tutorial::CLevel_Tutorial(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -18,6 +23,8 @@ HRESULT CLevel_Tutorial::Initialize()
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Tutorial_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
 
+	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -28,8 +35,19 @@ HRESULT CLevel_Tutorial::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Tutorial_NextMap.json");
 
 	CGameManager_Tutorial::SetGameManager(CGameManager_Tutorial::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Tutorial_fog.json");
 
 	return S_OK;
+}
+
+void CLevel_Tutorial::Tick(_double TimeDelta)
+{
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound(m_MainSound);
+
+	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+
+	CLevel_StageDefault::Tick(TimeDelta);
 }
 
 CLevel_Tutorial * CLevel_Tutorial::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

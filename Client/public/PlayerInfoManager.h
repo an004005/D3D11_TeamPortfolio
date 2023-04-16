@@ -224,6 +224,12 @@ public:	// Set
 	void			SetPlayerLock(_bool bLock) { m_tPlayerStat.m_bPlayerLock = bLock; }
 	_bool			GetPlayerLock() { return m_tPlayerStat.m_bPlayerLock; }
 
+	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
+	_bool			GetAILock() { return m_bAILock; }
+
+	void			SetTeleportDissolve(_float fTimer) { m_bDissolve = true; m_fDissolve = fTimer; }
+	_float			GetTeleportDissolve();
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -234,13 +240,20 @@ public:	// Set
 	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP += iBP;	}
 
 	void			Set_Exp(const _uint iExp);
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 
 		m_bSASMember[eSAS] = true; 
+	}
+
+	void		Set_DriveGauge(const _bool	bGaugeRender) {
+		m_bDriveGauge = bGaugeRender;
+	}
+	_bool		Get_DriveGauge() {
+		return m_bDriveGauge;
 	}
 
 public: // AI관련
@@ -283,9 +296,16 @@ private:
 	_float			m_fBaseAttackDamage;
 	_float			m_fCamDistance = 4.f;
 
+private:	// 스토리용 텔레포트 디졸브용
+	_bool	m_bDissolve = false;
+	_float	m_fDissolve = 0.f;
+
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
-	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+	_bool	m_bDriveGauge = { false };
+
+private:
+	_bool	m_bAILock = false;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

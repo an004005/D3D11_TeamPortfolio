@@ -49,6 +49,8 @@ public:
 	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
 
+
+	void				Spawn_Portrait(const string& strEventName);
 protected:
 	void				Detected_Attack();
 	void				AddState_Idle(CFSMComponentBuilder& Builder);
@@ -214,6 +216,11 @@ private:
 	class CCanvas_MainTalk* m_pCanvas_MainTalk = nullptr;
 
 	CDoOnce m_ItemSpawn;
+	CDoOnce m_BlackOut;
+
+	class CConsumption_Item* m_pLastItem = nullptr;
+
+
 
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }

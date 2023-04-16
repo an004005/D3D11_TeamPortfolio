@@ -11,7 +11,7 @@
 #include "JsonStorage.h"
 
 #include "EM0320.h"
-#include "BronJon.h"
+
 
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel_StageDefault(pDevice, pContext)
@@ -26,9 +26,6 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_ConstructionSite3F.json";
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("Attention Please");
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss
@@ -64,6 +61,7 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Construction3F_fog.json");
 	return S_OK;
 }
 

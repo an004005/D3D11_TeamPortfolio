@@ -9,6 +9,8 @@
 #include "DistanceUI.h"
 #include "Canvas_Alarm.h"
 
+#include "PlayerInfoManager.h"
+
 CGameManager* CGameManager::s_GameManager = nullptr;
 
 CGameManager::CGameManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -59,6 +61,22 @@ HRESULT CGameManager::Initialize()
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		pCanvas_Alarm->Set_MapName(0.0f);
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		json["ArrivalPoint"] = { -58.0f, 1.2f, -19.0f, 0.0f };
+		CDistanceUI* pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+	}
+	if (LEVEL_NOW == LEVEL_DOWNTOWN_2)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		json["ArrivalPoint"] = { 70.0f, 1.2f, 68.0f, 0.0f };
+		CDistanceUI* pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+	}
+	if (LEVEL_NOW == LEVEL_DOWNTOWN_3)
+	{
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		json["ArrivalPoint"] = { 89.0f, 1.2f, -18.0f, 0.0f };
+		CDistanceUI* pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
 	}
 	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_3F)
 	{
@@ -117,9 +135,11 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 				m_bEM1200Dead = true;
 
 				CGameManager::GetInstance()->Set_LeftTalk(32);
+				CGameManager::GetInstance()->Set_LeftTalk(33);
+				CGameManager::GetInstance()->Set_LeftTalk(34);
 				CGameManager::GetInstance()->Set_LeftTalk(35);
-				CGameManager::GetInstance()->Set_LeftTalk(36);
-				CGameManager::GetInstance()->Set_LeftTalk(37);
+
+				CPlayerInfoManager::GetInstance()->SetTeleportDissolve(-15.f);
 			}
 		}
 

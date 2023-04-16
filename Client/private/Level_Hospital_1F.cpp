@@ -14,6 +14,10 @@
 #include "EM1100.h"
 #include "BronJon.h"
 
+#include "Level_Loading_Simple.h"
+#include "Level_FinalStage.h"
+#include "PlayerInfoManager.h"
+
 CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
 {
@@ -24,12 +28,9 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Hospital1F";
-	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Hospital_1F_ShadowCam.json";
+	m_strShadowCamJsonPath = "";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Hospital_1F.json";
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("Attention Please");
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss
@@ -89,6 +90,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	// Story Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Hospital_1F.json");
 
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Hospital_fog.json");
+
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	return S_OK;
@@ -96,6 +99,13 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 void CLevel_Hospital_1F::Tick(_double TimeDelta)
 {
+	if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
+	{
+		CGameInstance::GetInstance()->Open_Loading(
+			LEVEL_FINAL_STAGE,
+			CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
+	}
+
 	if (m_BGMOnce.IsNotDo())
 		m_BGM.PlaySound(m_MainSound);
 

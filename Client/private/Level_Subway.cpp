@@ -10,6 +10,8 @@
 #include "JsonStorage.h"
 
 #include "BronJon.h"
+#include "MapInstance_Object.h"
+#include "Material.h"
 //#include "EM1200.h"
 
 
@@ -26,13 +28,7 @@ HRESULT CLevel_Subway::Initialize()
 	m_strShadowCamJsonPath.clear();   
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Subway.json";
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("Attention Please");
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound(m_MainSound); // 기본 bgm
-
-	////Boss
-	//m_BGM.CloneSound("em1200BGM");
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
@@ -65,6 +61,23 @@ HRESULT CLevel_Subway::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Subway.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Subway_fog.json");
+
+
+	for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapInstanceObject")->GetGameObjects())
+	{
+		if (auto mapInst = dynamic_cast<CMapInstance_Object*>(pObj))
+		{
+			for (auto pMtrl : mapInst->Get_Model_Instancing()->GetMaterials())
+			{
+				if (pMtrl->GetInstancePass() == 14)
+				{
+					pMtrl->SetInstancePass(1);
+				}
+			}
+		}
+	}
+
 
 	return S_OK;
 }
@@ -73,26 +86,6 @@ void CLevel_Subway::Tick(_double TimeDelta)
 {
 	if (m_BGMOnce.IsNotDo())
 		m_BGM.PlaySound(m_MainSound);
-
-
-	/*if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em0110BGM");
-		}
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}*/
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 

@@ -105,12 +105,12 @@ void CWeapon_Player::Tick(_double TimeDelta)
 
 			case ESASType::SAS_FIRE:
 				m_pModel->FindMaterial(strMtrlName.c_str())->GetParam().Ints[0] = 2;
-				SetLight({ 0.239f, 0.035f, 0.033f, 1.f });
+				SetLight({ 0.139f, 0.035f, 0.033f, 1.f });
 				break;
 
 			case ESASType::SAS_ELETRIC:
 				m_pModel->FindMaterial(strMtrlName.c_str())->GetParam().Ints[0] = 3;
-				SetLight({ 0.9686f, 1.f, 0.07451f, 1.f });
+				SetLight({ 0.48f, 0.5f, 0.07451f, 1.f });
 				break;
 
 			default:

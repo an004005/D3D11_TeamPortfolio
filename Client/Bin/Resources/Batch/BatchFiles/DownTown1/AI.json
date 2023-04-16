@@ -1,0 +1,157 @@
+{
+    "BatchObjs": [
+        {
+            "JsonData": {
+                "AnimName": "AS_ch0300_001_AL_wait01",
+                "ModelTag": "Model_Ch300_Portrait\u0000",
+                "ObjectTag": "",
+                "Prototype_GameObject": "ProtoType_LoadingModel\u0000",
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -58.35034942626953,
+                        0.2065107673406601,
+                        -19.489986419677734,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_MapDecorate",
+                "ProtoTag": "ProtoType_LoadingModel"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -58.35034942626953,
+                0.2065107673406601,
+                -19.489986419677734,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "AnimName": "AS_ch0400_101_AL_wait01",
+                "ModelTag": "Model_Ch400_Portrait\u0000",
+                "ObjectTag": "",
+                "Prototype_GameObject": "ProtoType_LoadingModel\u0000",
+                "Transform": {
+                    "WorldMatrix": [
+                        0.43103328347206116,
+                        0.0,
+                        0.9023358821868896,
+                        0.0,
+                        0.0,
+                        0.9999963045120239,
+                        0.0,
+                        0.0,
+                        -0.9023318886756897,
+                        0.0,
+                        0.43103137612342834,
+                        0.0,
+                        -59.89865493774414,
+                        0.1957150101661682,
+                        -20.189374923706055,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_MapDecorate",
+                "ProtoTag": "ProtoType_LoadingModel"
+            },
+            "WorldMatrix": [
+                0.43103328347206116,
+                0.0,
+                0.9023358821868896,
+                0.0,
+                0.0,
+                0.9999963045120239,
+                0.0,
+                0.0,
+                -0.9023318886756897,
+                0.0,
+                0.43103137612342834,
+                0.0,
+                -59.89865493774414,
+                0.1957150101661682,
+                -20.189374923706055,
+                1.0
+            ]
+        },
+        {
+            "JsonData": {
+                "AnimName": "AS_ch0500_001_AL_wait01",
+                "ModelTag": "Model_Ch500_Portrait\u0000",
+                "ObjectTag": "",
+                "Prototype_GameObject": "ProtoType_LoadingModel\u0000",
+                "Transform": {
+                    "WorldMatrix": [
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0,
+                        0.0,
+                        -57.926673889160156,
+                        0.24118000268936157,
+                        -19.49603843688965,
+                        1.0
+                    ]
+                }
+            },
+            "Preset": {
+                "JsonPath": "",
+                "Layer": "Layer_MapDecorate",
+                "ProtoTag": "ProtoType_LoadingModel"
+            },
+            "WorldMatrix": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                -57.926673889160156,
+                0.24118000268936157,
+                -19.49603843688965,
+                1.0
+            ]
+        }
+    ]
+}

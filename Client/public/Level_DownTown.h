@@ -1,7 +1,8 @@
 #pragma once
 #include "Level_StageDefault.h"
 #include "Client_Defines.h"
-
+#include "SoundStore.h"
+#include "HelperClasses.h"
 BEGIN(Client)
 
 /*********************
@@ -15,8 +16,13 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
+	virtual void Tick(_double TimeDelta) override;
 
-	
+private:
+	CSoundStore m_BGM;
+	CDoOnce m_BGMOnce;
+	string m_MainSound = "DownTown1";
+
 public:
 	static CLevel_DownTown* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;
@@ -33,7 +39,12 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
-	
+	virtual void Tick(_double TimeDelta) override;
+
+private:
+	CSoundStore m_BGM;
+	CDoOnce m_BGMOnce;
+	string m_MainSound = "DownTown2";
 public:
 	static CLevel_DownTown_Second* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;
@@ -50,7 +61,13 @@ private:
 
 public:
 	virtual HRESULT Initialize() override;
-	
+	virtual void Tick(_double TimeDelta) override;
+
+private:
+	CSoundStore m_BGM;
+	CDoOnce m_BGMOnce;
+	string m_MainSound = "DownTown3";
+
 public:
 	static CLevel_DownTown_Third* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;

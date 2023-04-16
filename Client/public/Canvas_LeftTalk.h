@@ -26,6 +26,9 @@ public:
 
 public:
 	void	Add_Talk(const _int iIndex, const _int iQuest = -1);
+	_bool	Get_End() {
+		return m_bRunning;
+	}
 
 private:
 	void	Show_Talk();
@@ -38,6 +41,8 @@ private:
 
 	_int		m_iQuestNum = { -1 };
 	_int		m_iMapMove = { -1 };
+
+	_bool	m_bSound = { false };
 
 public:
 	static CCanvas_LeftTalk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

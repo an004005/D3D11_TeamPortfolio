@@ -1,0 +1,45 @@
+{
+    "ObjectTag": "LastCheckUI",
+    "Pivot": 0,
+    "PositionX": 0.0,
+    "PositionY": 0.0,
+    "Priority": 0,
+    "Prototype_GameObject": "LastCheckUI\u0000",
+    "ScaleX": 1.0,
+    "ScaleY": 1.0,
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [],
+        "Float4x4s": [],
+        "Floats": [
+            0
+        ],
+        "Ints": [],
+        "Pass": 0,
+        "Textures": [
+            "..\\Bin\\Resources\\UI\\LastCheckUI.png\u0000"
+        ]
+    },
+    "SizeX": 420.0,
+    "SizeY": 200.0,
+    "Transform": {
+        "WorldMatrix": [
+            420.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            200.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    }
+}

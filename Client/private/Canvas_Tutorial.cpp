@@ -147,6 +147,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL& eTUTORIAL, const _tchar* pChildT
 	// 이제 위에서 Set 한 튜토리얼 타입을 Set 해준다.
 	if (false == m_bTutorialOpen)
 	{
+		CUI_Manager::GetInstance()->SetMouseActive(true);
 		m_bTutorialOpen = true;
 		dynamic_cast<CTutorialUI*>(Find_ChildUI(pChildTag))->Set_OnTutorial();
 
@@ -268,6 +269,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL& eTUTORIAL, const _tchar* pChildT
 
 			CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 			CGameObject::SetDelete();
+			CUI_Manager::GetInstance()->SetMouseActive(false);
 		}
 	}
 
@@ -599,4 +601,5 @@ CCanvas* CCanvas_Tutorial::Clone(void* pArg)
 void CCanvas_Tutorial::Free()
 {
 	CCanvas::Free();
+
 }

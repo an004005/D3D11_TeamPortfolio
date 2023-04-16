@@ -39,7 +39,7 @@ void CCanvas_SARebar::Tick(_double TimeDelta)
 {
 	CCanvas::Tick(TimeDelta);
 
-	//KeyInput();
+	KeyInput();
 	MouseLight_Tick(TimeDelta);
 	Action_Tick(TimeDelta);
 
@@ -49,7 +49,7 @@ void CCanvas_SARebar::Tick(_double TimeDelta)
 
 void CCanvas_SARebar::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(CInput_Device::DIM_LB))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F))
 	{
 		m_bInput = true;
 	}

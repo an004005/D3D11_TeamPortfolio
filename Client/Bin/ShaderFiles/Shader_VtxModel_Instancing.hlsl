@@ -214,7 +214,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 // g_float_1 : RMA.g
 // g_float_2 : RMA.b
 
-
+// 10
 PS_OUT PS_SANKOKU_A3(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -387,6 +387,136 @@ PS_OUT_ALPHABLEND PS_BRAIN_FIELD_HOLOGRAM_MONITOR_9(PS_IN In)
 	return Out;
 }
 
+
+// g_vec2_0 : x, y 움직임 속도
+// g_vec2_1 : x,y  타일링
+// g_vec4_0: rma 값(텍스쳐 없으면)
+// g_int_0 : 알파 테스트 여부
+// g_float_0 : 이미시브
+PS_OUT PS_ALL_11(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	
+	float2 vUV = TilingAndOffset(In.vTexUV, g_vec2_1, g_Time * g_vec2_0);
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, vUV);
+	if (g_int_0 == 1 && Out.vDiffuse.a < 0.01f)
+		discard;
+	else
+		Out.vDiffuse.a = 1.f;
+	
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, vUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, g_float_0, flags);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, vUV);
+	else
+		Out.vRMA = g_vec4_0;
+
+	return Out;
+}
+
+// g_vec4_0: rma 값(텍스쳐 없으면)as
+// g_int_0 : 알파 테스트 여부
+// //12
+PS_OUT PS_RMA(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+	
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (g_int_0 == 1 && Out.vDiffuse.a < 0.01f)
+		discard;
+	else
+		Out.vDiffuse.a = 1.f;
+	
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = g_vec4_0;
+
+	return Out;
+}
+
+// g_vec2_0 : x, y 움직임 속도
+// g_vec2_1 : x,y  타일링
+// g_int_0 : 알파 테스트 여부
+// g_float_0 : 이미시브
+PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND(PS_IN In) // 13
+{
+	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
+	
+	float2 vUV = TilingAndOffset(In.vTexUV, g_vec2_1, g_Time * g_vec2_0);
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, vUV);
+	if (g_int_0 == 1 && Out.vDiffuse.a < 0.01f)
+		discard;
+	
+	float flags = SHADER_DEFAULT;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	Out.vDiffuse.rgb *= g_float_0;
+
+	return Out;
+}
+
+// 14
+PS_OUT PS_ARM_14(PS_IN In)
+{
+	PS_OUT Out = CommonProcess(In);
+
+	if (g_tex_on_2)
+	{
+		float4 vARM = g_tex_2.Sample(LinearSampler, In.vTexUV);
+		Out.vRMA = float4(vARM.g * 0.5f, vARM.b, vARM.r,  0.f);
+	}
+	else
+		Out.vRMA = g_vec4_0;
+
+	return Out;
+}
+
+// 15
+PS_OUT_ALPHABLEND PS_BLOOD_ALPHA_15(PS_IN In)
+{
+	PS_OUT_ALPHABLEND Out = (PS_OUT_ALPHABLEND)0;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a = Out.vDiffuse.r;
+
+	return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 	// 0
@@ -541,5 +671,75 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_SANKOKU_A3();
+	}
+
+	// 11
+	pass ALL_OPTION
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALL_11();
+	}
+
+	// 12
+	pass RMA
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RMA();
+	}
+
+	// 13
+	pass AlphaBlend
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALL_ALPHABLEND();
+	}
+
+	// 14
+	pass ARM
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ARM_14();
+	}
+
+	//15
+	pass BloodAlpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BLOOD_ALPHA_15();
 	}
 }

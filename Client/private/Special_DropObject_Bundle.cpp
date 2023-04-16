@@ -96,8 +96,9 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_DEFAULT_ATTACK, m_vecRandomParticle[CMathUtils::RandomUInt(m_vecRandomParticle.size() - 1)])
 				->Start_AttachPosition_Scaling(this, m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION), _float4(0.f, 1.f, 0.f, 0.f), { 1.f, 1.f ,1.f, 0.f });
 
-			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
+			//CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
 			CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Special");
+			CGameInstance::GetInstance()->PlayShake(0.2f, 0.5f);
 		}
 	});
 
