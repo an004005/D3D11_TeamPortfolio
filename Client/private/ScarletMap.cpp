@@ -329,7 +329,7 @@ void CScarletMap::Imgui_RenderProperty()
 	//if (ImGui::Button("Clear Map"))
 	//	ClearMap();
 
-	ImGui::BeginChild("Selected Object", { 500.f, 200.f });
+	ImGui::BeginChild("Selected Object", { 800.f, 1200.f });
 
 	if (m_pGameObject)
 	{

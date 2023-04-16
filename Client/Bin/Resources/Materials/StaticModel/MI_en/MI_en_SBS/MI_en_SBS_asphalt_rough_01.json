@@ -1,17 +1,1 @@
-{
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_ALB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_RMA.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_GlayLinear.png"
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
-}
+{"Active":true,"AlphaBlend":false,"ShaderParams":{"Float2s":[[10.0,10.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":8,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_ALB.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_NML.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_SBSMI_Asphalt_Rough_01_RMA.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_cm_Fil_GlayLinear.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}

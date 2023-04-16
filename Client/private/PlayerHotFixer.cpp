@@ -50,6 +50,11 @@ void CPlayerHotFixer::Tick()
 		//CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
 		//CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
 
+		if (ImGui::Button("TeleportDissolve"))
+		{
+			CPlayerInfoManager::GetInstance()->SetTeleportDissolve();
+		}
+
 		if (ImGui::Button("MaskEffect"))
 		{
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_Attach(m_pPlayer, "Mask", true);
@@ -224,6 +229,11 @@ void CPlayerHotFixer::Tick()
 		//}
 
 		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
+
+
+		//static _bool bAiLock = false;
+		//ImGui::Checkbox("AILOCK", &bAiLock);
+		//CPlayerInfoManager::GetInstance()->SetAILock(bAiLock);
 
 	}
 	ImGui::CollapsingHeader("~HotFixer");

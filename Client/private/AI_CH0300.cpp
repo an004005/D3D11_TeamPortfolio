@@ -107,6 +107,30 @@ void CAI_CH0300::Tick(_double TimeDelta)
 	if (false == CPlayerInfoManager::GetInstance()->isHanabiActive())
 		return;
 
+	if (0.f != CPlayerInfoManager::GetInstance()->GetTeleportDissolve())
+	{
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = min(CPlayerInfoManager::GetInstance()->GetTeleportDissolve(), 1.f);
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		return;
+	}
+	else
+	{
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = 0.f;
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(true);
+		}
+	}
+
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
 
@@ -156,6 +180,14 @@ void CAI_CH0300::Late_Tick(_double TimeDelta)
 
 void CAI_CH0300::AfterPhysX()
 {
+	if (true == CPlayerInfoManager::GetInstance()->GetAILock())
+	{
+		m_pCollider->SetActive(true);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -100.f, 0.f, 0.f));
+		m_pCollider->SetFootPosition(XMVectorSet(0.f, -100.f, 0.f, 0.f));
+		m_pCollider->SetActive(false);
+	}
+
 	if (false == CPlayerInfoManager::GetInstance()->isHanabiActive())
 	{
 		m_pCollider->SetActive(false);

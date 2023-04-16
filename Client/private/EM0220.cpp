@@ -93,7 +93,6 @@ void CEM0220::SetUpSound()
 	m_SoundStore.CloneSound("wood_attack_spits");
 	m_SoundStore.CloneSound("wood_move_down");
 	m_SoundStore.CloneSound("wood_move_up");
-	m_SoundStore.CloneSound("Break_Brain");
 
 }
 
@@ -252,7 +251,6 @@ void CEM0220::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", 0.5f))
 						{
-							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;

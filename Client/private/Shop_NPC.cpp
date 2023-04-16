@@ -203,6 +203,7 @@ HRESULT CShop_NPC::SetUp_Components(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Model_NPC", L"Model", (CComponent**)&m_pModel));
 
+	m_pModel->FindMaterial(L"Proto_MtrlAnim_Empty")->SetActive(false);
 	/*if (pArg)
 	{
 		Json& json = *static_cast<Json*>(pArg);
