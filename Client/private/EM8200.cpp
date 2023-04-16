@@ -62,7 +62,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
-//	m_iCrushGauge = 100;
+	m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
@@ -2339,15 +2339,15 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 					_float4x4::Identity,
 					_float4x4::Identity);
-			
-				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+
+				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", [this]() {Spawn_Portrait("Spawn_Junghwan"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", [this]() {Spawn_Portrait("Spawn_JongWook"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", [this]() {Spawn_Portrait("Spawn_Jihoon"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", [this]() {Spawn_Portrait("Spawn_Kibum"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", [this]() {Spawn_Portrait("Spawn_Suhyun"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
 			}
 		})
 	;

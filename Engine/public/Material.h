@@ -37,6 +37,9 @@ public:
 	void SetAlphaBlend(_bool bGlass) { m_bAlphaBlend = bGlass; }
 	_bool IsAlphaBlend() const { return m_bAlphaBlend; }
 
+	_uint GetInstancePass() { return m_iInstancingPass; }
+	void SetInstancePass(_uint iPass) { m_iInstancingPass = iPass; }
+
 
 public:
 	static void LoadMaterialFilePathes(const string& MaterialJsonDir);

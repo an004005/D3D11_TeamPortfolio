@@ -35,6 +35,7 @@ HRESULT CLevel_DownTown::Initialize()
 	//AI
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown1/AI.json");
 
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Tutorial_fog.json");
 	return S_OK;
 }
 
@@ -99,6 +100,7 @@ HRESULT CLevel_DownTown_Second::Initialize()
 
 	//AI
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown2/AI.json");
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Tutorial_fog.json");
 	return S_OK;
 }
 
@@ -160,6 +162,7 @@ HRESULT CLevel_DownTown_Third::Initialize()
 
 	//AI
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/DownTown3/AI.json");
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Tutorial_fog.json");
 	return S_OK;
 }
 

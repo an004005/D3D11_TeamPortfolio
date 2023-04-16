@@ -1,18 +1,1 @@
-{
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_plazaYuka02_ALB_1.dds",
-			"",
-			""
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
-	"InstancingPass": 1
-}
+{"Active":true,"AlphaBlend":false,"InstancingPass":10,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[[0.40784314274787903,0.0,1.0,0.0]],"Float4x4s":[],"Floats":[0.4860000014305115],"Ints":[],"Pass":1,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_plazaYuka02_ALB_1.dds\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_Default_Material_Grid_N.png\u0000","","..\\Bin\\Resources\\Texture\\VFX\\T_Detail_N.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}

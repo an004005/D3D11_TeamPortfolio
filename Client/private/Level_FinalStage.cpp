@@ -104,6 +104,10 @@ HRESULT CLevel_FinalStage::Initialize()
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
 	CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER, L"Monster_em8200")->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Final_fog.json");
+
+	// CGameInstance::GetInstance()->LoadFogJson("");
 	return S_OK;
 }
 

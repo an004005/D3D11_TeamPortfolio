@@ -35,6 +35,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Tutorial_NextMap.json");
 
 	CGameManager_Tutorial::SetGameManager(CGameManager_Tutorial::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Tutorial_fog.json");
 
 	return S_OK;
 }

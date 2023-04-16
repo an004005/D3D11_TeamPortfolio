@@ -214,7 +214,7 @@ PS_OUT PS_DETAIL_N(PS_IN In)
 // g_float_1 : RMA.g
 // g_float_2 : RMA.b
 
-
+// 10
 PS_OUT PS_SANKOKU_A3(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -393,7 +393,7 @@ PS_OUT_ALPHABLEND PS_BRAIN_FIELD_HOLOGRAM_MONITOR_9(PS_IN In)
 // g_vec4_0: rma 값(텍스쳐 없으면)
 // g_int_0 : 알파 테스트 여부
 // g_float_0 : 이미시브
-PS_OUT PS_ALL(PS_IN In)
+PS_OUT PS_ALL_11(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 	
@@ -432,6 +432,7 @@ PS_OUT PS_ALL(PS_IN In)
 
 // g_vec4_0: rma 값(텍스쳐 없으면)as
 // g_int_0 : 알파 테스트 여부
+// //12
 PS_OUT PS_RMA(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
@@ -471,7 +472,7 @@ PS_OUT PS_RMA(PS_IN In)
 // g_vec2_1 : x,y  타일링
 // g_int_0 : 알파 테스트 여부
 // g_float_0 : 이미시브
-PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND(PS_IN In)
+PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND(PS_IN In) // 13
 {
 	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
 	
@@ -487,6 +488,34 @@ PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND(PS_IN In)
 
 	return Out;
 }
+
+// 14
+PS_OUT PS_ARM_14(PS_IN In)
+{
+	PS_OUT Out = CommonProcess(In);
+
+	if (g_tex_on_2)
+	{
+		float4 vARM = g_tex_2.Sample(LinearSampler, In.vTexUV);
+		Out.vRMA = float4(vARM.g * 0.5f, vARM.b, vARM.r,  0.f);
+	}
+	else
+		Out.vRMA = g_vec4_0;
+
+	return Out;
+}
+
+// 15
+PS_OUT_ALPHABLEND PS_BLOOD_ALPHA_15(PS_IN In)
+{
+	PS_OUT_ALPHABLEND Out = (PS_OUT_ALPHABLEND)0;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vDiffuse.a = Out.vDiffuse.r;
+
+	return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -655,7 +684,7 @@ technique11 DefaultTechnique
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_ALL();
+		PixelShader = compile ps_5_0 PS_ALL_11();
 	}
 
 	// 12
@@ -684,5 +713,33 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_ALL_ALPHABLEND();
+	}
+
+	// 14
+	pass ARM
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ARM_14();
+	}
+
+	//15
+	pass BloodAlpha
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_BLOOD_ALPHA_15();
 	}
 }

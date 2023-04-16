@@ -1,16 +1,1 @@
-{
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_ALB_2.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_NML.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_RMA.dds"
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel"
-}
+{"Active":true,"AlphaBlend":false,"ShaderParams":{"Float2s":[[10.0,10.0]],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[0],"Pass":8,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_ALB_2.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_NML.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_pr_Town_tile_b1_RMA.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}

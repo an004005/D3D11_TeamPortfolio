@@ -1,18 +1,1 @@
-{
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lc001_concrete01_ALB.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lc001_concrete01_NML.dds",
-			""
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel",
-	"InstancingPass": 1
-}
+{"Active":true,"AlphaBlend":false,"InstancingPass":10,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[[0.3803921639919281,0.0,1.0,0.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":1,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lc001_concrete01_ALB.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/T_lc001_concrete01_NML.dds\u0000",""]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel"}
