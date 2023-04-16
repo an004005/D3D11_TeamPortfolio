@@ -96,7 +96,6 @@ void CEM0900::SetUpSound()
 	m_SoundStore.CloneSound("santa_doubleswing");
 	m_SoundStore.CloneSound("santa_spin");
 	m_SoundStore.CloneSound("santa_throw_voice");
-	m_SoundStore.CloneSound("Break_Brain");
 	m_SoundStore.CloneSound("Metal_Sound_Effect");
 }
 
@@ -346,7 +345,6 @@ void CEM0900::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", 0.5f))
 						{
-							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;

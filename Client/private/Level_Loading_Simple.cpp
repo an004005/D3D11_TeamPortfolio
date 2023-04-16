@@ -8,6 +8,7 @@
 #include "EffectSystem.h"
 #include "ImguiUtils.h"
 #include "Camera_Dynamic.h"
+#include "Material.h"
 
 CLoadingModel::CLoadingModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -37,6 +38,9 @@ HRESULT CLoadingModel::Initialize(void* pArg)
 void CLoadingModel::Tick(_double TimeDelta)
 {
 	CGameObject::Tick(TimeDelta);
+
+	if (m_pModel == nullptr) return;
+
 	Assert(m_pModel->GetPlayAnimation() != nullptr);
 
     if (m_pModel->GetPlayAnimation()->IsFinished())
@@ -59,8 +63,101 @@ void CLoadingModel::Late_Tick(_double TimeDelta)
 
 HRESULT CLoadingModel::Render()
 {
+	if (m_pModel == nullptr) return S_OK;
+
 	m_pModel->Render(m_pTransformCom);
 	return CGameObject::Render();
+}
+
+void CLoadingModel::SaveToJson(OUT Json& json)
+{
+	__super::SaveToJson(json);
+
+	json["ModelTag"] = ws2s(m_wstrModelTag);
+	json["AnimName"] = m_strAnimName;
+}
+
+void CLoadingModel::LoadFromJson(const Json& json)
+{
+	__super::LoadFromJson(json);
+
+	if (json.contains("ModelTag") && json.contains("AnimName"))
+	{
+		const wstring wstrModelTag = s2ws(json["ModelTag"]);
+		Add_Component(LEVEL_STATIC, wstrModelTag.c_str(), L"Model", (CComponent**)&m_pModel);
+
+		const string strAnimName = json["AnimName"];
+		m_pModel->Find_Animation(strAnimName)->SetLooping(true);
+		m_pModel->SetPlayAnimation(strAnimName);
+
+		if (auto pMtrl  = m_pModel->FindMaterial(L"Proto_MtrlAnim_Empty"))
+		{
+			pMtrl->SetActive(false);
+		}
+	}
+
+}
+
+void CLoadingModel::Imgui_RenderProperty()
+{
+	__super::Imgui_RenderProperty();
+
+	const char* ModelTags[] = {
+		"Model_Ch300_Portrait", 
+		"Model_Ch400_Portrait", 
+		"Model_Ch500_Portrait",
+		"Model_Ch600_Portrait",
+		"Model_Ch800_Portrait",
+		"Model_Ch900_Portrait",
+		"Model_Ch1000_Portrait"
+	};
+
+	ImGui::Combo("Select_Model", &m_iModelIndex, ModelTags, IM_ARRAYSIZE(ModelTags));
+
+	switch (m_iModelIndex)
+	{
+	case 0:
+		m_strAnimName = "AS_ch0300_001_AL_wait01";
+		m_wstrModelTag = L"Model_Ch300_Portrait";
+		break;
+	case 1:
+		m_strAnimName = "AS_ch0400_102_AL_wait02";
+		m_wstrModelTag = L"Model_Ch400_Portrait";
+		break;
+	case 2:
+		m_strAnimName = "AS_ch0500_001_AL_wait01";
+		m_wstrModelTag = L"Model_Ch500_Portrait";
+		break;
+	case 3:
+		m_strAnimName = "AS_ch0600_101_AL_wait01";
+		m_wstrModelTag = L"Model_Ch600_Portrait";
+		break;
+	case 4:
+		m_strAnimName = "AS_ch0800_101_AL_wait01";
+		m_wstrModelTag = L"Model_Ch800_Portrait";
+		break;
+	case 5:
+		m_strAnimName = "AS_ch0900_101_AL_wait01";
+		m_wstrModelTag = L"Model_Ch900_Portrait";
+		break;
+	case 6:
+		m_strAnimName = "AS_ch1000_101_AL_wait01";
+		m_wstrModelTag = L"Model_Ch1000_Portrait";
+		break;
+	default:
+		break;
+	}
+
+
+	if (ImGui::Button("Create_Model"))
+	{
+		const wstring wstrModelTag = m_wstrModelTag;
+		Add_Component(LEVEL_STATIC, wstrModelTag.c_str(), L"Model", (CComponent**)&m_pModel);
+
+		const string strAnimName = m_strAnimName;
+		m_pModel->Find_Animation(strAnimName)->SetLooping(true);
+		m_pModel->SetPlayAnimation(strAnimName);
+	}
 }
 
 void CLoadingModel::SetModel(const wstring& strTag)
@@ -118,7 +215,11 @@ HRESULT CLevel_Loading_Simple::Initialize()
 	static _bool bOnce = true;
 	if (bOnce)
 	{
-		CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, L"ProtoType_LoadingModel", CLoadingModel::Create(m_pDevice, m_pContext));
+		if (CGameInstance::GetInstance()->Find_Prototype(LEVEL_STATIC, L"ProtoType_LoadingModel") == nullptr)
+		{
+			CGameInstance::GetInstance()->Add_Prototype(LEVEL_STATIC, L"ProtoType_LoadingModel", CLoadingModel::Create(m_pDevice, m_pContext));
+		}
+
 
 		auto pModel_ch100 = CModel::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Meshes/Scarlet_Nexus/AnimModels/Player/Player.anim_model");

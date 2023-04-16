@@ -23,6 +23,9 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void SaveToJson(OUT Json& json) override;
+	virtual void LoadFromJson(const Json& json) override;
+	virtual void Imgui_RenderProperty() override;
 
 	void SetModel(const wstring& strTag);
 	void SetPlayAnim(const string& strAnim);
@@ -35,6 +38,10 @@ private:
 	_float      m_fLerpTime = 0.f;
 	_float      m_fDuration = 0.f;
 
+private:
+	string		m_strAnimName = "";
+	wstring		m_wstrModelTag = L"";
+	_int			m_iModelIndex = 0;
 public:
 	static CLoadingModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
@@ -52,6 +59,7 @@ public:
 	virtual void Tick(_double TimeDelta) override;
 	virtual void Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
+
 
 private:
 	class CEffectSystem* pRect = nullptr;
