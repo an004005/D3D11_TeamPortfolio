@@ -59,6 +59,8 @@ void CLoadingModel::Late_Tick(_double TimeDelta)
 {
 	if (m_bVisible)
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+	if (CGameInstance::GetInstance()->IsLoading() == false)
+		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 }
 
 HRESULT CLoadingModel::Render()
@@ -68,6 +70,15 @@ HRESULT CLoadingModel::Render()
 	m_pModel->Render(m_pTransformCom);
 	return CGameObject::Render();
 }
+
+HRESULT CLoadingModel::Render_ShadowDepth()
+{
+	if (m_pModel == nullptr) return S_OK;
+
+	m_pModel->Render_ShadowDepth(m_pTransformCom);
+	return S_OK;
+}
+
 
 void CLoadingModel::SaveToJson(OUT Json& json)
 {
