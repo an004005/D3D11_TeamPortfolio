@@ -12196,6 +12196,8 @@ _bool CPlayer::Detector(_bool bComplusion)
 
 	if (false == m_DetectTimer.Use() && false == bComplusion) return false;
 
+	m_DetectList.clear();
+
 	_float4 vMyPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 
 	if (CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_Monster") == nullptr ||

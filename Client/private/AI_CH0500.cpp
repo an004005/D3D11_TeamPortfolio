@@ -602,6 +602,9 @@ void CAI_CH0500::MovePerSecondCheck()
 
 void CAI_CH0500::TeleportCheck()
 {
+	if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
+		return;
+
 	if (15.f <= m_fDistance_toPlayer)
 	{
 		TeleportToPlayerBack();
