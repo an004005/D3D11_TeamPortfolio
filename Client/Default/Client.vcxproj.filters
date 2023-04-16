@@ -493,9 +493,6 @@
     <Filter Include="02.GameObjects\UI\Short\Distance">
       <UniqueIdentifier>{acb15e4a-9898-43bc-b1a4-3c6073be1b44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\------------------------">
-      <UniqueIdentifier>{fc8942bc-2a2d-4c46-9702-82583d584ef5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC">
       <UniqueIdentifier>{d36f6922-8342-4949-be75-09e22a64981f}</UniqueIdentifier>
     </Filter>
@@ -549,6 +546,9 @@
     </Filter>
     <Filter Include="01.Levels\02.GamePlay\07.FinalStage">
       <UniqueIdentifier>{08a335be-2a18-4fe9-aa1d-bfeade7ef2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Last">
+      <UniqueIdentifier>{fc8942bc-2a2d-4c46-9702-82583d584ef5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1523,8 +1523,8 @@
     <ClInclude Include="..\public\DistanceUI.h">
       <Filter>02.GameObjects\UI\Short\Distance</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Drive_RightDotUI.h">
-      <Filter>02.GameObjects\UI\------------------------</Filter>
+    <ClInclude Include="..\public\LastCheckUI.h">
+      <Filter>02.GameObjects\UI\Last</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Shop_NPC.h">
       <Filter>02.GameObjects\NPC\SM_2300</Filter>
@@ -2549,8 +2549,8 @@
     <ClCompile Include="..\private\DistanceUI.cpp">
       <Filter>02.GameObjects\UI\Short\Distance</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Drive_RightDotUI.cpp">
-      <Filter>02.GameObjects\UI\------------------------</Filter>
+    <ClCompile Include="..\private\LastCheckUI.cpp">
+      <Filter>02.GameObjects\UI\Last</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Shop_NPC.cpp">
       <Filter>02.GameObjects\NPC\SM_2300</Filter>

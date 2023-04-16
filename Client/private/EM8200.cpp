@@ -2278,6 +2278,15 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				_float4x4 WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 				json["Transform"]["WorldMatrix"] = WorldMatrix;
 				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
+			
+				// 마지막 대사
+				json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
+				CCanvas_MainTalk * pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
+				assert(pCanvas_MainTalk != nullptr && "Failed to Cloned : CCanvas_MainTalk");
+
+				pCanvas_MainTalk->Add_Talk(29);
+				pCanvas_MainTalk->Add_Talk(30);
+				pCanvas_MainTalk->Add_Talk(31);
 			}
 		})
 		
@@ -2385,12 +2394,13 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
 				CUI_Manager::GetInstance()->Set_TempOff(true);
-			// 루카 대사 
-			CGameManager::GetInstance()->Set_LeftTalk(104);
-			CGameManager::GetInstance()->Set_LeftTalk(105);
-			CGameManager::GetInstance()->Set_LeftTalk(106);
-			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
-			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
+
+				// 루카 대사 
+				CGameManager::GetInstance()->Set_LeftTalk(104);
+				CGameManager::GetInstance()->Set_LeftTalk(105);
+				CGameManager::GetInstance()->Set_LeftTalk(106);
+				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
+				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
 			})
 
 				

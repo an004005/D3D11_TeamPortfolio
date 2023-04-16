@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "..\public\UI_Manager.h"
-
 #include <GameUtils.h>
-
 #include "Canvas.h"
 
 #include "Canvas_Acquisition.h"
@@ -119,12 +117,12 @@ void CUI_Manager::Tick(_double TimeDelta)
 	{
 		if (m_bMouseActive)
 		{
-			m_bMouseActive = false;
+			m_bMouseActive = false; // 플레이어 세계
 			CGameUtils::HideCursor();
 		}
 		else
 		{
-			m_bMouseActive = true;
+			m_bMouseActive = true; // UI 세계
 			CGameUtils::ShowCursor();
 		}
 	}

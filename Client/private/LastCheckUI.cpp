@@ -1,21 +1,18 @@
 #include "stdafx.h"
-#include "..\public\TutorialUI.h"
+#include "..\public\LastCheckUI.h"
 #include "GameInstance.h"
-#include "UI_Manager.h"
 
-// m_tParams.Floats[0] : Alpha
-
-CTutorialUI::CTutorialUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLastCheckUI::CLastCheckUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CTutorialUI::CTutorialUI(const CTutorialUI& rhs)
+CLastCheckUI::CLastCheckUI(const CLastCheckUI& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CTutorialUI::Initialize_Prototype()
+HRESULT CLastCheckUI::Initialize_Prototype()
 {
 	if (FAILED(CUI::Initialize_Prototype()))
 		return E_FAIL;
@@ -23,38 +20,44 @@ HRESULT CTutorialUI::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CTutorialUI::Initialize(void * pArg)
+HRESULT CLastCheckUI::Initialize(void * pArg)
 {
 	if (FAILED(CUI::Initialize(pArg)))
 		return E_FAIL;
 
-	m_fStartSizeX = m_fSizeX;
-	
-	//m_Timeline.SetCurve("sdfsdf");
-
 	return S_OK;
 }
 
-void CTutorialUI::Tick(_double TimeDelta)
+void CLastCheckUI::BeginTick()
+{
+
+
+}
+
+void CLastCheckUI::Tick(_double TimeDelta)
 {
 	CUI::Tick(TimeDelta);
 
 	Open(TimeDelta);
-	Shut(TimeDelta);
 
-	//_float fOut;
-	//if (m_Timeline.Tick(TimeDelta, fOut))
-	//{
-	//	m_tParams.Floats[0] = fOut;
-	//}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+	{
+		m_bInput = true;
+	}
+
+	if (true == m_bInput)
+	{
+		Shut(TimeDelta);
+
+	}
 }
 
-void CTutorialUI::Late_Tick(_double TimeDelta)
+void CLastCheckUI::Late_Tick(_double TimeDelta)
 {
 	CUI::Late_Tick(TimeDelta);
 }
 
-HRESULT CTutorialUI::Render()
+HRESULT CLastCheckUI::Render()
 {
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
@@ -62,26 +65,13 @@ HRESULT CTutorialUI::Render()
 	return S_OK;
 }
 
-void CTutorialUI::Imgui_RenderProperty()
+void CLastCheckUI::Imgui_RenderProperty()
 {
 	CUI::Imgui_RenderProperty();
-	//m_Timeline.Imgui_RenderEditor();
-	// m_Timeline.PlayFromStart(); ??
-}
-
-void CTutorialUI::SaveToJson(Json & json)
-{
-	CUI::SaveToJson(json);
 
 }
 
-void CTutorialUI::LoadFromJson(const Json & json)
-{
-	CUI::LoadFromJson(json);
-
-}
-
-void CTutorialUI::Open(const _double & dTImeDelta)
+void CLastCheckUI::Open(const _double& dTImeDelta)
 {
 	if (false == m_bOnTutorial)
 		return;
@@ -94,20 +84,22 @@ void CTutorialUI::Open(const _double & dTImeDelta)
 	}
 }
 
-void CTutorialUI::Shut(const _double & dTImeDelta)
+void CLastCheckUI::Shut(const _double& dTImeDelta)
 {
-	if (true == m_bOffTutorial)
+	if (false == m_bOffTutorial)
+		return;
+
+	if (true == Change(dTImeDelta, false))
 	{
-		if (true == Change(dTImeDelta, false))
-		{
-			m_bVisible = false;
-			m_bOffTutorial = false;
-			m_bEnd = true;
-		}
+		m_bVisible = false;
+		m_bOffTutorial = false;
+		m_bEnd = true;
+		m_bDelete = true;
+		CGameObject::SetDelete();
 	}
 }
 
-_bool CTutorialUI::Change(const _double & dTImeDelta, const _bool & bTutorial)
+_bool CLastCheckUI::Change(const _double& dTImeDelta, const _bool& bTutorial)
 {
 	// 알파값 변화
 	if (true == bTutorial) // 증가
@@ -170,31 +162,31 @@ _bool CTutorialUI::Change(const _double & dTImeDelta, const _bool & bTutorial)
 	return false;
 }
 
-CTutorialUI * CTutorialUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CLastCheckUI * CLastCheckUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
- 	CTutorialUI*		pInstance = new CTutorialUI(pDevice, pContext);
+ 	CLastCheckUI*		pInstance = new CLastCheckUI(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CTutorialUI");
+		MSG_BOX("Failed to Created : CLastCheckUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CUI * CTutorialUI::Clone(void * pArg)
+CUI * CLastCheckUI::Clone(void * pArg)
 {
-	CTutorialUI*		pInstance = new CTutorialUI(*this);
+	CLastCheckUI*		pInstance = new CLastCheckUI(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CTutorialUI");
+		MSG_BOX("Failed to Cloned : CLastCheckUI");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CTutorialUI::Free()
+void CLastCheckUI::Free()
 {
 	CUI::Free();
 
