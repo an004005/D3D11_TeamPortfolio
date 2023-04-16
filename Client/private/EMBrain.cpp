@@ -83,10 +83,10 @@ void CEMBrain::EndBC()
 
 
     //Create Particle
-    m_pDestroyParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Brain_Crush_Destroy_Light_Particle");
-    assert(m_pDestroyParticle != nullptr);
-    Safe_AddRef(m_pDestroyParticle);
-    m_pDestroyParticle->Start_NoAttach(this, false);
+    //m_pDestroyParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Brain_Crush_Destroy_Light_Particle");
+    //assert(m_pDestroyParticle != nullptr);
+    //Safe_AddRef(m_pDestroyParticle);
+    //m_pDestroyParticle->Start_NoAttach(this, false);
 
    //Create Effect
     //m_pDestroyEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light");
@@ -96,6 +96,9 @@ void CEMBrain::EndBC()
 
     _float4 vTransform = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
     CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light")->Start_AttachOnlyPos(vTransform, false);
+ //   CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Brain_Crush_Destroy_Light_Particle")->Start_NoOwnerOnlyPos(vTransform);
+
+    //Brain_Crush_Destroy_Light_Particle
 }
 
 
