@@ -57,7 +57,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
-	m_iCrushGauge = 100;
+//	m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 

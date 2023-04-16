@@ -197,7 +197,7 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 
 	if (nullptr != CGameInstance::GetInstance()->FindCamera("PlayerCamera") && nullptr != CGameInstance::GetInstance()->GetMainCam())
 	{
-		if (CGameInstance::GetInstance()->GetMainCam() != CGameInstance::GetInstance()->FindCamera("PlayerCamera"))
+		if (CGameInstance::GetInstance()->GetMainCam() != CGameInstance::GetInstance()->FindCamera("PlayerCamera") || true == m_bAILock)
 		{
 			m_tHanabiStat.bActivate = false;
 			m_tTsugumiStat.bActivate = false;

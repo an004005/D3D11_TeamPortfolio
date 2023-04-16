@@ -140,6 +140,14 @@ void CAI_CH0500::Late_Tick(_double TimeDelta)
 
 void CAI_CH0500::AfterPhysX()
 {
+	if (true == CPlayerInfoManager::GetInstance()->GetAILock())
+	{
+		m_pCollider->SetActive(true);
+		m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, -100.f, 0.f, 0.f));
+		m_pCollider->SetFootPosition(XMVectorSet(0.f, -100.f, 0.f, 0.f));
+		m_pCollider->SetActive(false);
+	}
+
 	if (false == CPlayerInfoManager::GetInstance()->isTsugumiActive())
 	{
 		m_pCollider->SetActive(false);

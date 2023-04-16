@@ -224,6 +224,9 @@ public:	// Set
 	void			SetPlayerLock(_bool bLock) { m_tPlayerStat.m_bPlayerLock = bLock; }
 	_bool			GetPlayerLock() { return m_tPlayerStat.m_bPlayerLock; }
 
+	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
+	_bool			GetAILock() { return m_bAILock; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -286,6 +289,9 @@ private:
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
 	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+
+private:
+	_bool	m_bAILock = false;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

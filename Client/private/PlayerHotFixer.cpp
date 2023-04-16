@@ -225,6 +225,11 @@ void CPlayerHotFixer::Tick()
 
 		m_pPlayer->m_pBrainFieldProductStateMachine->Imgui_RenderProperty();
 
+
+		static _bool bAiLock = false;
+		ImGui::Checkbox("AILOCK", &bAiLock);
+		CPlayerInfoManager::GetInstance()->SetAILock(bAiLock);
+
 	}
 	ImGui::CollapsingHeader("~HotFixer");
 }
