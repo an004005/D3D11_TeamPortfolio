@@ -117,6 +117,15 @@
             "Loop" : false,
             "MinDistance": 15.0,
             "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "Photo",
+            "SoundFiles" : ["PhotoSound.wav"],
+            "2DSound" : true,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 60.0
         }
     ]
 }

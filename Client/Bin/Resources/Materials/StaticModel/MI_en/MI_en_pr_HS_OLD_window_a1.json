@@ -1,18 +1,1 @@
-{
-	"ShaderInstancingProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"ShaderParams": {
-		"Float2s": [],
-		"Ints": [],
-		"Pass": 1,
-		"Float4x4s": [],
-		"Floats": [],
-		"Textures": [
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_BaseColor.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_Normal.dds",
-			"../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_OcclusionRoughnessMetallic.dds"
-		],
-		"Float4s": []
-	},
-	"ShaderProtoTag": "Prototype_Component_Shader_VtxModel_Instancing",
-	"InstancingPass": 1
-}
+{"Active":true,"AlphaBlend":false,"InstancingPass":14,"ShaderInstancingProtoTag":"Prototype_Component_Shader_VtxModel_Instancing","ShaderParams":{"Float2s":[],"Float4s":[],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":1,"Textures":["../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_BaseColor.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_Normal.dds\u0000","../Bin/Resources/Texture/MaterialTexture/StaticModelTextures/HS_window_a1_01__TEST2048_2048_OcclusionRoughnessMetallic.dds\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxModel_Instancing"}

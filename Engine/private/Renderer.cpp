@@ -471,9 +471,9 @@ void CRenderer::Imgui_RenderOtherWindow()
 	ImGui::Checkbox("bFog", &m_bFog);
 	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);
 	ImGui::ColorEdit4("FogHighlightColor", (float*)&m_tFogDesc.vHighlightColor, ImGuiColorEditFlags_PickerHueWheel);
-	ImGui::InputFloat("StartDepth", &m_tFogDesc.fStartDepth);
-	ImGui::InputFloat("Density", &m_tFogDesc.fGlobalDensity);
-	ImGui::InputFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff);
+	ImGui::InputFloat("StartDepth", &m_tFogDesc.fStartDepth, 0.f, 0.f, "%.6f");
+	ImGui::InputFloat("Density", &m_tFogDesc.fGlobalDensity, 0.f, 0.f, "%.6f");
+	ImGui::InputFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff, 0.f, 0.f, "%.6f");
 
 	CImguiUtils::FileDialog_FileSelector("Save Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
 	{

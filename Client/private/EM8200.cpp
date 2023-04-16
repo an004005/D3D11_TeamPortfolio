@@ -223,6 +223,17 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 	}
 }
 
+void CEM8200::Spawn_Portrait(const string& strEventName)
+{
+	static string strPath = "../Bin/Resources/Batch/BatchFiles/";
+
+	string FilePath = strPath + strEventName + ".json";
+
+	CImgui_Batch::RunBatchFile(FilePath);
+
+	m_SoundStore.PlaySound("Photo");
+}
+
 void CEM8200::SetUpSound()
 {
 	CEnemy::SetUpSound();
@@ -242,6 +253,8 @@ void CEM8200::SetUpSound()
 	m_SoundStore.CloneSound("karen_fx_thunder");
 	m_SoundStore.CloneSound("fx_execute_karen_splited_6");
 
+	m_SoundStore.CloneSound("Photo");
+	
 
 	m_pModelCom->Add_EventCaller("move_walk", [this]{m_SoundStore.PlaySound("move_walk");});
 	m_pModelCom->Add_EventCaller("fx_execute_karen_splited_6", [this] {m_SoundStore.PlaySound("fx_execute_karen_splited_6", m_pTransformCom); });
@@ -512,6 +525,7 @@ void CEM8200::SetUpAnimationEvent()
 			{
 				m_KarenMaskStart.PlayFromStart();
 				m_pKarenMaskEf->GetParams().Ints[0] = 1;
+				m_pGameInstance->PlayShake(2.f, 0.01);
 			}
 		});
 
@@ -802,14 +816,14 @@ void CEM8200::Imgui_RenderProperty()
 			_float4x4::Identity);
 
 	
-		m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
-		m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", [this]() {Spawn_Portrait("Spawn_Junghwan"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_JongWook", [this]() {Spawn_Portrait("Spawn_JongWook"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", [this]() {Spawn_Portrait("Spawn_Jihoon"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Kibum", [this]() {Spawn_Portrait("Spawn_Kibum"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", [this]() {Spawn_Portrait("Spawn_Suhyun"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
+		m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
 
 	}
 
@@ -2134,7 +2148,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
 
-
+			m_pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, -15.f, 1.f));
 		})
 		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
 			.Predicator([this]
@@ -2328,15 +2342,15 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 					_float4x4::Identity,
 					_float4x4::Identity);
-			
-				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
-				m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+
+				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", [this]() {Spawn_Portrait("Spawn_Junghwan"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", [this]() {Spawn_Portrait("Spawn_JongWook"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", [this]() {Spawn_Portrait("Spawn_Jihoon"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", [this]() {Spawn_Portrait("Spawn_Kibum"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", [this]() {Spawn_Portrait("Spawn_Suhyun"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
 			}
 		})
 	;
@@ -2394,7 +2408,6 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddState("Intro_01")
 			.OnStart([this]
 				{
-
 					m_pASM->InputAnimSocketMany("FullBody", { "AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
@@ -2434,7 +2447,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				m_pCanvas_MainTalk->Add_Talk(42);
 
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Mask_On");
-				m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 1.f);
+				m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 			})
 
 	
@@ -2442,14 +2455,15 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
-				CUI_Manager::GetInstance()->Set_TempOff(true);
+				CUI_Manager::GetInstance()->Set_TempOff(false);
 
 				// 루카 대사 
 				CGameManager::GetInstance()->Set_LeftTalk(104);
 				CGameManager::GetInstance()->Set_LeftTalk(105);
 				CGameManager::GetInstance()->Set_LeftTalk(106);
-				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
-				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(true);
+				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
+				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
+				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
 			})
 
 				
@@ -2511,7 +2525,8 @@ _bool CEM8200::Check_PlayerDetected()
 		if (fDistance < 25.f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
-			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+			CPlayerInfoManager::GetInstance()->SetPlayerLock(true);
 			return true;
 		}
 	}
@@ -2547,6 +2562,8 @@ _bool CEM8200::Check_PlayerDetected_Near()
 			m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 				_float4x4::Identity,
 				_float4x4::Identity);
+
+			m_pKaren_AnimCam->AddEvent("Shutup", [this]() {m_pGameInstance->PlayShake(0.2f, 0.02); });
 
 			return true;
 		}

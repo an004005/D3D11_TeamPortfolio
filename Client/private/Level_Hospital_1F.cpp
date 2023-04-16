@@ -28,7 +28,7 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	 //m_bPlayerSpawn = false;
 
 	m_strLevelName = L"Hospital1F";
-	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Hospital_1F_ShadowCam.json";
+	m_strShadowCamJsonPath = "";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Hospital_1F.json";
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
@@ -89,6 +89,8 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 	// Story Batch
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Hospital_1F.json");
+
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Hospital_fog.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
