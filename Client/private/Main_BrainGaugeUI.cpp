@@ -38,7 +38,9 @@ void CMain_BrainGaugeUI::Tick(_double TimeDelta)
 
 
 	if (CGameInstance::GetInstance()->KeyPressing(CInput_Device::MOUSEKEYSTATE::DIM_LB))
+	{
 		m_tParams.Floats[0] += _float(TimeDelta);
+	}
 	else
 	{
 		if (0.0f >= m_tParams.Floats[0])

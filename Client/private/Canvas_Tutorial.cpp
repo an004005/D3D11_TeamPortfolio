@@ -269,7 +269,7 @@ void CCanvas_Tutorial::Tutorial(const TUTORIAL& eTUTORIAL, const _tchar* pChildT
 
 			CGameInstance::GetInstance()->ResetDefaultTimeRatio();
 			CGameObject::SetDelete();
-			CUI_Manager::GetInstance()->SetMouseActive(true);
+			CUI_Manager::GetInstance()->SetMouseActive(false);
 		}
 	}
 
