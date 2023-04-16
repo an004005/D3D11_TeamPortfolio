@@ -2245,6 +2245,8 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 
 			m_pController->SetActive(true);
+
+			CGameManager::GetInstance()->Set_LeftTalk(115);
 	})
 		.AddTransition("ImCombatIdle to Idle", "Idle")
 			.Predicator([this]
