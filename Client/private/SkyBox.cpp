@@ -41,6 +41,7 @@ HRESULT CSkyBox::Initialize(void* pArg)
 	// 	(CComponent**)&m_pTexture));
 	
 	m_tParams.iPass = 0;
+	m_tParams.Ints.push_back(0);
 
 	return S_OK;
 }

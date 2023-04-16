@@ -35,6 +35,7 @@
 #include "LastCheckUI.h"
 #include "ControlledRigidBody.h"
 #include "ShaderUI.h"
+#include "Map_KineticBatchPreset.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -63,7 +64,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
-	m_iCrushGauge = 100;
+	// m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
@@ -71,7 +72,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 	m_pTransformCom->SetRotPerSec(XMConvertToRadians(180.f));
 
 	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
-	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
+	m_pKarenMaskEf = (CEffectSystem*) m_pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"ProtoVFX_EffectSystem", &KarenMask);
 	Safe_AddRef(m_pKarenMaskEf);
 
 	m_pKarenMaskEf->GetParams().Floats[1] = 1.f;
@@ -629,6 +630,11 @@ void CEM8200::BeginTick()
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+	if (m_bBattleStart)
+	{
+		CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+	}
+	m_pKarenMaskEf->Tick((TimeDelta));
 
 	if (m_bCrushStart && m_BrainCrushOnce.IsNotDo())
 	{
@@ -786,6 +792,7 @@ void CEM8200::Late_Tick(_double TimeDelta)
 	{
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_SHADOWDEPTH, this);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+		m_pKarenMaskEf->Late_Tick((TimeDelta));
 	}
 
 	m_pBrainField->Tick(TimeDelta);
@@ -793,6 +800,7 @@ void CEM8200::Late_Tick(_double TimeDelta)
 	m_pBrainCrushCables->Tick(TimeDelta);
 	m_pBrainCrushCables->Late_Tick(TimeDelta);
 	m_pChromaticAberration->Late_Tick(TimeDelta);
+
 }
 
 void CEM8200::AfterPhysX()
@@ -2205,7 +2213,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Trans");
 			// m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.5f);
-			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
+			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 
 			for( auto iter : m_pGameInstance->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
 			{
@@ -2248,6 +2256,9 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pController->SetActive(true);
 
 			CGameManager::GetInstance()->Set_LeftTalk(115);
+
+			CPlayerInfoManager::GetInstance()->SetAILock(false);
+
 	})
 		.AddTransition("ImCombatIdle to Idle", "Idle")
 			.Predicator([this]
@@ -2461,6 +2472,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 																							"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02",
 																						"AS_em8200_001_AL_wait01","AS_em8200_002_AL_wait02" });
+
+					m_pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, -5.f, 1.f));
 				})
 
 		.Tick([this](_double TimeDelta)
@@ -2502,7 +2515,6 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 			{
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
-				CUI_Manager::GetInstance()->Set_TempOff(false);
 
 				// 루카 대사 
 				CGameManager::GetInstance()->Set_LeftTalk(104);
@@ -2511,6 +2523,13 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
 				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
+
+
+				Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
+				CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
+				m_bBattleStart = true;
+
+				m_pEMUI->Create_BossUI();
 			})
 
 				
@@ -2610,7 +2629,7 @@ _bool CEM8200::Check_PlayerDetected_Near()
 				_float4x4::Identity,
 				_float4x4::Identity);
 
-			m_pKaren_AnimCam->AddEvent("Shutup", [this]() {m_pGameInstance->PlayShake(0.2f, 0.02); });
+			m_pKaren_AnimCam->AddEvent("Shutup", [this]() {m_pGameInstance->PlayShake(0.2f, 0.04); });
 
 			return true;
 		}

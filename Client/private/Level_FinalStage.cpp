@@ -18,6 +18,8 @@
 #include "InvisibleWall.h"
 #include "Imgui_CameraManager.h"
 #include "Imgui_CamAnimEditor.h"
+#include "PlayerInfoManager.h"
+#include "SkyBox.h"
 
 CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -40,6 +42,7 @@ HRESULT CLevel_FinalStage::Initialize()
 	if (FAILED(Ready_Layer_AI(LAYER_AI)))
 	 	return E_FAIL;
 
+	CPlayerInfoManager::GetInstance()->SetAILock(true);
 
 	// _matrix matTarget = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, 0.f, 0.f);
 	// CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_FinalStage"), TEXT("TestTarget"))
@@ -47,7 +50,7 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	// Set_State(CTransform::STATE_TRANSLATION, _float4(0.f, 0.f, 0.f, 1.f));
 
-	CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
+	// CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
 	//CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 
 	// CGameInstance::GetInstance()->Add_Prototype(L"ModelPreview", CModelPreviwer::Create(m_pDevice, m_pContext));
@@ -107,7 +110,17 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Final_fog.json");
 
-	// CGameInstance::GetInstance()->LoadFogJson("");
+
+	for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MAP)->GetGameObjects())
+	{
+		if (auto pSkyBox = dynamic_cast<CSkyBox*>(pObj))
+		{
+
+			pSkyBox->GetParams().Ints[0] = 1;
+		}
+	}
+
+
 	return S_OK;
 }
 
@@ -136,7 +149,6 @@ void CLevel_FinalStage::Tick(_double TimeDelta)
 	if (m_BGMOnce.IsNotDo())
 		m_BGM.PlaySound(m_MainSound);
 
-	//CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 	__super::Tick(TimeDelta);
 }	
 

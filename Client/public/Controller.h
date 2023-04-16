@@ -3,6 +3,7 @@
 #include "Client_Defines.h"
 #include "Component.h"
 #include "TimerHelper.h"
+#include "HelperClasses.h"
 
 BEGIN(Client)
 
@@ -125,6 +126,8 @@ protected:
 
 	_bool m_bCursorLock = false;
 	_bool m_bInputLock = false;
+
+	_bool m_bRejector = true;
 
 public:
 	virtual void Free() override;
