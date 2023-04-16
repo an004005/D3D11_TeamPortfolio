@@ -217,6 +217,9 @@ HRESULT CPlayer::Initialize(void * pArg)
 	if (FAILED(SetUp_DeBuffStateMachine()))
 		return E_FAIL;
 
+	if (FAILED(SetUp_SpecialSound()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_KINETIC);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, LAYER_PLAYEREFFECT);
 	m_pGameInstance->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
@@ -344,7 +347,7 @@ void CPlayer::Tick(_double TimeDelta)
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);
 
 	KineticObject_OutLineCheck();
-	//SpecialObject_OutLineCheck();
+	SpecialObject_OutLineCheck();
 	Update_TargetUI();
 
 	m_fKineticCombo_Slash -= TimeDelta;
@@ -377,7 +380,7 @@ void CPlayer::Tick(_double TimeDelta)
 		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({ 0.f, 0.f, 1.f, 0.f }, 0.1f);
 	}
 
-	 if (m_pPlayerCam->IsMainCamera())
+	 if (m_pPlayerCam->IsMainCamera() || false == CPlayerInfoManager::GetInstance()->GetPlayerLock())
 		m_pController->Tick(TimeDelta);
 	 else
 		m_pController->Invalidate();
@@ -854,6 +857,29 @@ void CPlayer::AfterPhysX()
 		m_vecSheath.at(0)->Setup_BoneMatrix(m_pModel, matWorld);
 	}
 
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+	{
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(false);
+		}
+	}
+	else
+	{
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(true);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(true);
+		}
+	}
+
 	m_pCamSpot->SetUp_BoneMatrix(m_pModel, m_pTransformCom->Get_WorldMatrix());
 	// m_pRange->Update_Tick(m_pTransformCom);
 
@@ -1070,6 +1096,8 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 				iter->GetParam().Floats[0] = 0.f;
 				iter->GetParam().Float4s[0] = { 0.f, 0.f, 0.f, 0.f };
 			}
+
+			m_GatherObjectList.clear();
 		}
 
 	}
@@ -1660,6 +1688,15 @@ void CPlayer::Visible_Check()
 				TeleportEffectMaker();
 			}
 		}
+
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(false);
+		}
 	}
 	else
 	{
@@ -1680,6 +1717,15 @@ void CPlayer::Visible_Check()
 			{
 				TeleportEffectMaker();
 			}
+		}
+
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(true);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(true);
 		}
 	}
 }
@@ -2227,11 +2273,6 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, PLAYERTEST_LAYER_MONSTER)->SetActive(false);
 
-		
-
-			CPlayerInfoManager::GetInstance()->Hanabi_Active(false);
-			CPlayerInfoManager::GetInstance()->Tsugumi_Active(false);
-
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_BrainFieldOpen_c01_ch0100"));
 			m_pASM->AttachAnimSocket("Common_AnimSocket", TestAnim);
@@ -2289,9 +2330,6 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.Tick([&](double fTimeDelta) {})
 		.OnExit([&]() 
 		{
-			CPlayerInfoManager::GetInstance()->Hanabi_Active(true);
-			CPlayerInfoManager::GetInstance()->Tsugumi_Active(true);
-
 			// 브레인 필드가 시작되는 부분
 			if (nullptr == m_pCanvas_BrainField)
 			{
@@ -2615,6 +2653,33 @@ HRESULT CPlayer::SetUp_EffectEvent()
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
 	*/
+
+	//m_pBrainCrashHandParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Brain_Crush_Hand_Particle");
+	//m_pBrainCrashHandParticle->Start_Attach(this, "LeftForeArmRoll1", true);
+
+	m_pModel->Add_EventCaller("BrainCrashHandParticle", [&]() {
+		m_pBrainCrashHandParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Brain_Crush_Hand_Particle");
+		m_pBrainCrashHandParticle->Start_Attach(this, "LeftForeArmRoll1", true);
+	});
+
+	m_pModel->Add_EventCaller("BrainCrashHandParticle_Delete", [&]() {
+
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+		{
+			m_pBrainCrashHandParticle->Delete_Particles();
+			m_pBrainCrashHandParticle = nullptr;
+		}
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionParticle))
+		{
+			m_pBrainCrashPositionParticle->Delete_Particles();
+			m_pBrainCrashPositionParticle = nullptr;
+		}
+		if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionEffect))
+		{
+			m_pBrainCrashPositionEffect->SetDelete();
+			m_pBrainCrashPositionEffect = nullptr;
+		}
+	});
 
 	m_pModel->Add_EventCaller("HandGearEffect", [&]() {
 		_matrix EffectMatrix = XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(XMConvertToRadians(-90.f));
@@ -5274,7 +5339,7 @@ HRESULT CPlayer::SetUp_BrainFieldKineticStateMachine()
 				return m_bKineticRB && 
 					!m_bAir && 
 					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
-					!m_bHit; 
+					!m_bHitLock;
 			})
 			.Priority(0)
 
@@ -5412,7 +5477,7 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 				return m_bLeftClick &&
 					!m_bAir && 
 					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
-					!m_bHit &&
+					!m_bHitLock &&
 					!m_pASM->isSocketEmpty("Kinetic_AnimSocket");
 			})
 			.Priority(0)
@@ -5423,7 +5488,7 @@ HRESULT CPlayer::SetUp_BrainFieldKineticComboStateMachine()
 				return m_bKineticRB &&
 					!m_bAir && 
 					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
-					!m_bHit &&
+					!m_bHitLock &&
 					   (m_pASM->GetCurStateName_BrainField() == "ATK_A1" ||
 						m_pASM->GetCurStateName_BrainField() == "ATK_A2" ||
 						m_pASM->GetCurStateName_BrainField() == "ATK_A3" ||
@@ -5760,7 +5825,7 @@ HRESULT CPlayer::SetUp_BrainFieldFallStateMachine()
 				return m_bKineticG &&
 					!m_bAir && 
 					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
-					!m_bHit;
+					!m_bHitLock;
 			})
 			.Priority(1)
 
@@ -5771,7 +5836,7 @@ HRESULT CPlayer::SetUp_BrainFieldFallStateMachine()
 					m_bKineticG &&
 					!m_bAir && 
 					(nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject()) && 
-					!m_bHit;
+					!m_bHitLock;
 			})
 			.Priority(0)
 			
@@ -6110,6 +6175,8 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("fx_plyr_hit_metalic");		// 중피격
 	m_SoundStore.CloneSound("fx_impact_player_hit_3");	// 강피격
 
+	m_SoundStore.CloneSound("fx_SAS_teleport_skill");
+
 	//MonsterUI
 	m_SoundStore.CloneSound("UI_monster_alert");
 
@@ -6185,17 +6252,269 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("fx_kinetic_backdash", [this] {m_SoundStore.PlaySound("fx_kinetic_backdash", m_pTransformCom); });
 	m_pModel->Add_EventCaller("BrainField_Swing", [this] {m_SoundStore.PlaySound("BrainField_Swing", m_pTransformCom); });
 
-	m_pModel->Add_EventCaller("move_doubleJump", [this] {m_SoundStore.PlaySound("move_doubleJump", m_pTransformCom); });
-	m_pModel->Add_EventCaller("move_Landing", [this] {m_SoundStore.PlaySound("move_Landing", m_pTransformCom); });
-	m_pModel->Add_EventCaller("move_stop", [this] {m_SoundStore.PlaySound("move_stop", m_pTransformCom); });
-
-	m_pModel->Add_EventCaller("Special_Train", [this] {m_SoundStore.PlaySound("Special_Train", m_pTransformCom); });
-	m_pModel->Add_EventCaller("Special_Container_1", [this] {m_SoundStore.PlaySound("Special_Container_1", m_pTransformCom); });
-	m_pModel->Add_EventCaller("Special_Container_2", [this] {m_SoundStore.PlaySound("Special_Container_2", m_pTransformCom); });
-	m_pModel->Add_EventCaller("Special_Container_3", [this] {m_SoundStore.PlaySound("Special_Container_3", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_SAS_teleport_skill", [this] {m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom); });
 
 	// 특수오브젝트
 	m_SoundStore.CloneSound("fx_kine_super_truck_example");
+
+	return S_OK;
+}
+
+HRESULT CPlayer::SetUp_SpecialSound()
+{
+	m_SoundStore.CloneSound("fx_kine_super_container_example");
+	m_SoundStore.CloneSound("fx_kine_super_container_finish");
+	m_SoundStore.CloneSound("fx_kine_super_container_imp");
+	m_SoundStore.CloneSound("fx_kine_super_container_lift1");
+	m_SoundStore.CloneSound("fx_kine_super_container_lift2");
+	m_SoundStore.CloneSound("fx_kine_super_container_lift3");
+	m_SoundStore.CloneSound("fx_kine_super_crain_example");
+	m_SoundStore.CloneSound("fx_kine_super_crain_imp");
+	m_SoundStore.CloneSound("fx_kine_super_crain_lift");
+	m_SoundStore.CloneSound("fx_kine_super_crain_shot");
+	m_SoundStore.CloneSound("fx_kine_super_jail_example");
+	m_SoundStore.CloneSound("fx_kine_super_jail_exp");
+	m_SoundStore.CloneSound("fx_kine_super_jail_finish");
+	m_SoundStore.CloneSound("fx_kine_super_jail_lift");
+	m_SoundStore.CloneSound("fx_kine_super_jail_lift2");
+	m_SoundStore.CloneSound("fx_kine_super_jail_lift3");
+	m_SoundStore.CloneSound("fx_kine_super_jail_sque");
+	m_SoundStore.CloneSound("fx_kine_super_pole_multi_example");
+	m_SoundStore.CloneSound("fx_kine_super_pole_multi_finish");
+	m_SoundStore.CloneSound("fx_kine_super_pole_multi_lift");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_example");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_finish_imp");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_imp");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_lift");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_noUI");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_swing_1");
+	m_SoundStore.CloneSound("fx_kine_super_train_charge_1");
+	m_SoundStore.CloneSound("fx_kine_super_train_example");
+	m_SoundStore.CloneSound("fx_kine_super_train_exp");
+	m_SoundStore.CloneSound("fx_kine_super_train_lift");
+	m_SoundStore.CloneSound("fx_kine_super_train_shot");
+	m_SoundStore.CloneSound("fx_kine_super_truck_charge");
+	m_SoundStore.CloneSound("fx_kine_super_truck_charge_2");
+	m_SoundStore.CloneSound("fx_kine_super_truck_example");
+	m_SoundStore.CloneSound("fx_kine_super_truck_exp");
+	m_SoundStore.CloneSound("fx_kine_super_truck_lift");
+
+	m_pModel->Add_EventCaller("fx_kine_super_container_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_container_finish", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_finish", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_container_imp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_container_lift1", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_lift1", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_container_lift2", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_lift2", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_container_lift3", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECAIL_CONTAINER != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_container_lift3", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_crain_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_crain_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_crain_imp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_crain_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_crain_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_crain_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_crain_shot", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_crain_shot", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_exp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_exp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_finish", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_finish", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_lift2", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_lift2", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_lift3", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_lift3", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_jail_sque", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_IRONBARS != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_jail_sque", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_pole_multi_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_HBEAM_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_pole_multi_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_pole_multi_finish", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_HBEAM_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_pole_multi_finish", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_pole_multi_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_HBEAM_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_pole_multi_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform());
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_finish_imp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_finish_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_imp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform());
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_noUI", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_noUI", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform());
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_telepole_swing_1", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TELEPHONEPOLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_telepole_swing_1", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_train_charge_1", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TRAIN != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_train_charge_1", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_train_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TRAIN != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_train_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_train_exp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TRAIN != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_train_exp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_train_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TRAIN != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_train_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_train_shot", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TRAIN != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_train_shot", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_truck_charge", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TANKLORRY != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_truck_charge", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_truck_charge_2", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TANKLORRY != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_truck_charge_2", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_truck_example", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TANKLORRY != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_truck_example", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform());
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_truck_exp", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TANKLORRY != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_truck_exp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("fx_kine_super_truck_lift", [this] 
+		{
+			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
+			if (SPECIAL_TANKLORRY != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
+			m_SoundStore.PlaySound("fx_kine_super_truck_lift", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
 
 	return S_OK;
 }
@@ -7072,6 +7391,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_pASM->AttachAnimSocket("SAS_Special_AnimSocket", m_Teleport_AirAttack_Start);
 
+			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
+
 			m_bVisible = false;
 
 			for (auto& iter : m_vecWeapon)
@@ -7180,6 +7501,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 		{
 			m_bVisible = false;
 
+			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
+
 			for (auto& iter : m_vecWeapon)
 				iter->SetVisible(false);
 			for (auto& iter : m_vecSheath)
@@ -7188,6 +7511,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 			m_pSAS_Cable->SetVisible(false);
 
 			TeleportEffectMaker();
+
+			m_fYSpeed = -30.f;
 
 		})
 		.Tick([&](double fTimeDelta) 
@@ -7289,7 +7614,7 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 		.AddState("TRAIN_LEFT_CHARGE")
 		.OnStart([&]() 
 		{
-			m_SoundStore.PlaySound("Special_Train", m_pTransformCom);
+			//m_SoundStore.PlaySound("Special_Train", m_pTransformCom);
 
 			m_bKineticSpecial = true;
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_Train_Charge_L);
@@ -7750,6 +8075,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.Tick([&](double fTimeDelta) 
 		{
 			m_bBrainCrash = false;
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+			{
+				m_pBrainCrashHandParticle->Delete_Particles();
+				m_pBrainCrashHandParticle = nullptr;
+			}
 		})
 		.OnExit([&]()
 		{
@@ -7807,6 +8138,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		{
 			CGameObject* pTarget = nullptr;
 
+			m_pBrainCrashPositionParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Monster_Brain_Crush_Particle_A");
+			m_pBrainCrashPositionEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Distortion");
+
 			if (pTarget = CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 			{
 				if (pTarget->GetPrototypeTag() == L"Monster_em210")
@@ -7816,13 +8150,13 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					_float4 vTargetPos = pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 					fDistance = (vTargetPos - vPlayerPos).Length();
 
-					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
 					static_cast<CEnemy*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())->PlayBC();
 
 					if (5.f >= fDistance)
 					{
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
+						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
 
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 3.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
@@ -7831,9 +8165,17 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					}
 					else
 					{
+						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
+						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
+						pTarget->GetTransform()->Set_State(CTransform::STATE_TRANSLATION, BC_Pos);
+
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+
+						m_pBrainCrashPositionParticle->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
+						m_pBrainCrashPositionEffect->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
 					}
 				}
 				else
@@ -7848,8 +8190,12 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("BrainCrush_DefaultCam");
 					m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 					m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrainCrash_Activate);
+
+					m_pBrainCrashPositionParticle->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
+					m_pBrainCrashPositionEffect->Start_AttachPosition(this, BC_Pos, _float4(0.f, 1.f, 0.f, 0.f), false);
 				}
 			}
+
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -7857,7 +8203,22 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
-				CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLAYERTEST_LAYER_MONSTER);
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashHandParticle))
+			{
+				m_pBrainCrashHandParticle->Delete_Particles();
+				m_pBrainCrashHandParticle = nullptr;
+			}
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionParticle))
+			{
+				m_pBrainCrashPositionParticle->Delete_Particles();
+				m_pBrainCrashPositionParticle = nullptr;
+			}
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pBrainCrashPositionEffect))
+			{
+				m_pBrainCrashPositionEffect->SetDelete();
+				m_pBrainCrashPositionEffect = nullptr;
+			}
+			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLAYERTEST_LAYER_MONSTER);
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
@@ -8703,7 +9064,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			m_bKineticSpecial = true;
 			m_pASM->InputAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Charge);
 
-			m_SoundStore.PlaySound("Special_IronBars_Start", m_pTransformCom);
+			//m_SoundStore.PlaySound("Special_IronBars_Start", m_pTransformCom);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -8796,7 +9157,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.OnStart([&]() 
 		{
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Start);
-			m_SoundStore.PlaySound("Special_IronBars_FirstHit", m_pTransformCom);
+			//m_SoundStore.PlaySound("Special_IronBars_FirstHit", m_pTransformCom);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -8927,7 +9288,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.OnStart([&]() 
 		{
 			ActiveSpecialUI(SPECIAL_IRONBARS, false);
-			m_SoundStore.PlaySound("Special_IronBars_Reload", m_pTransformCom);
+			//m_SoundStore.PlaySound("Special_IronBars_Reload", m_pTransformCom);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -9040,7 +9401,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 				if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_348_AL_throw1_loop")
 				{
 					m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Throw_02);
-					m_SoundStore.PlaySound("Special_IronBars_Shoot", m_pTransformCom);
+					//m_SoundStore.PlaySound("Special_IronBars_Shoot", m_pTransformCom);
 
 					static_cast<CSpecial_IronBars*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 						IronBars_Shooting_Single(vTargetPos, 0);
@@ -9094,7 +9455,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		{
 			m_pKineticAnimModel->SetPlayAnimation("AS_ch0100_348_AL_obj_rod");
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_IronBars_Finish);
-			m_SoundStore.PlaySound("Special_IronBars_Reload", m_pTransformCom);
+			//m_SoundStore.PlaySound("Special_IronBars_Reload", m_pTransformCom);
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -9130,7 +9491,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 				}
 				else if (0.6f <= fRatio && IronBars.IsNotDo())
 				{
-					m_SoundStore.PlaySound("Special_IronBars_Finish", m_pTransformCom);
+					//m_SoundStore.PlaySound("Special_IronBars_Finish", m_pTransformCom);
 
 					if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
 					{
@@ -9281,8 +9642,6 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 		{
 			m_bKineticSpecial_Activate = true;
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_Container_Start);
-
-			m_SoundStore.PlaySound("Special_Container_1", m_pTransformCom);
 
 			static_cast<CSpecial_Container*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->
 				Set_Used();

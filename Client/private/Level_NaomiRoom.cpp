@@ -47,8 +47,11 @@ HRESULT CLevel_NaomiRoom::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/RedString_2.json");
 
 	// AchieveItem Batch
-	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Achieve_Batch.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/NaomiRoom.json");
 
+	// UI
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Achieve_Batch.json");
+	
 	Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/NaomiRoom/Kinetic_Normal.json");
 	CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 

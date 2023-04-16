@@ -242,6 +242,9 @@ void CCanvas_Main::KeyInput()
 		}
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMainUI);
 
+		if (true == m_bMainUI)	CUI_Manager::GetInstance()->SetMouseActive(true);
+		else									CUI_Manager::GetInstance()->SetMouseActive(false);
+
 		// MainUI 들을 끄고 켜기를 한다.
 		m_arrCanvass[m_eMainCanvas]->SetVisible(m_bMainUI);
 

@@ -39,6 +39,14 @@ HRESULT CMouseCousorUI::Initialize(void * pArg)
 
 void CMouseCousorUI::Tick(_double TimeDelta)
 {
+	if (false == CUI_Manager::GetInstance()->IsMouseActive()) 
+	{
+		m_bVisible = false;
+		return;
+	}
+
+	m_bVisible = true;
+
 	CUI::Tick(TimeDelta);
 	m_pMouseLight->Tick(TimeDelta);
 

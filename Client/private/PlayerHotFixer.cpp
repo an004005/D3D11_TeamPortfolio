@@ -45,10 +45,10 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
-		ImGui::Checkbox("Hanabi", &m_bHanabiActive);
-		ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
-		CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
-		CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
+		//ImGui::Checkbox("Hanabi", &m_bHanabiActive);
+		//ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
+		//CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
+		//CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
 
 		if (ImGui::Button("MaskEffect"))
 		{
@@ -202,8 +202,10 @@ void CPlayerHotFixer::Tick()
 
 		if (ImGui::Button("ArmEffect"))
 		{
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
-			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
+			//CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
+
+			/*CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Gear_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);
+			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"BrainField_Before_Ring_EF")->Start_AttachPivot(m_pPlayer, m_Pivot, "LeftForeArmRoll1", true, true);*/
 		}
 
 		//LeftForeArmRoll1

@@ -79,8 +79,6 @@ HRESULT CAI_CH0300::Initialize(void* pArg)
 
 void CAI_CH0300::BeginTick()
 {
-	__super::BeginTick();
-
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	if (auto pStartPos = pGameInstance->Find_OneObjectByType<CHanabiStartPosition>(LEVEL_NOW, LAYER_TRIGGER))
@@ -88,6 +86,8 @@ void CAI_CH0300::BeginTick()
 		m_pTransformCom->CopyWorld(pStartPos->GetTransform());
 		pStartPos->SetDelete();
 	}
+
+	__super::BeginTick();
 
 	for (auto& iter : pGameInstance->GetLayer(LEVEL_NOW, PLATERTEST_LAYER_PLAYER)->GetGameObjects())
 	{
