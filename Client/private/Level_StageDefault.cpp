@@ -18,6 +18,8 @@
 #include "GameManager.h"
 #include "Imgui_Cheat.h"
 #include "Imgui_LightManager.h"
+#include "PlayerInfoManager.h"
+#include "ScarletMap.h"
 
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
@@ -236,7 +238,8 @@ HRESULT CLevel_StageDefault::Ready_Layer_Map(const _tchar* pLayerTag)
 	pSkyBox->GetParams().iPass = 0;
 
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(m_strMapJsonPath);
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
+
+	CPlayerInfoManager::GetInstance()->m_pDefaultMap = dynamic_cast<CScarletMap*>(pGameInstance->Clone_GameObject_Get(pLayerTag, TEXT("Prototype_GameObject_ScarletMap"), &json));
 
 	return S_OK;
 }

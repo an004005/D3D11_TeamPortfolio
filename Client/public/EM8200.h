@@ -51,6 +51,7 @@ public:
 
 
 	void				Spawn_Portrait(const string& strEventName);
+
 protected:
 	void				Detected_Attack();
 	void				AddState_Idle(CFSMComponentBuilder& Builder);
@@ -141,6 +142,8 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
+	class CShaderUI* m_pShaderUI = { nullptr };
+	_bool	m_bUIClone = { false };
 
 private:
 	_float4x4 pivot1 = XMMatrixIdentity();

@@ -102,9 +102,21 @@ void CLoadingModel::LoadFromJson(const Json& json)
 		m_pModel->SetPlayAnimation(strAnimName);
 
 		if (auto pMtrl  = m_pModel->FindMaterial(L"Proto_MtrlAnim_Empty"))
-		{
 			pMtrl->SetActive(false);
-		}
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0300_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0400_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0500_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0600_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0800_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch0900_HOOD_0"))
+			pMtrl->SetActive(false);
+		if (auto pMtrl = m_pModel->FindMaterial(L"MI_ch1000_HOOD_0"))
+			pMtrl->SetActive(false);
 	}
 
 }

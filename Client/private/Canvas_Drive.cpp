@@ -64,7 +64,7 @@ HRESULT CCanvas_Drive::Render()
 
 void CCanvas_Drive::Set_DriveB(const _bool DriveB)
 {
-	//Find_ChildUI(L"Drive_B")->SetVisible(DriveB);			// 드라이게이지를 사용하고 반 이하로 남았을 때
+	Find_ChildUI(L"Drive_B")->SetVisible(DriveB);			// 드라이게이지를 사용하고 반 이하로 남았을 때
 	Find_ChildUI(L"Drive_Circle1")->SetVisible(DriveB);
 }
 
