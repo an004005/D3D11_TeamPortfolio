@@ -7696,6 +7696,8 @@ HRESULT CPlayer::SetUp_TrainStateMachine()
 			.AddTransition("TRAIN_LEFT_THROW to TRAIN_LEFT_NOUSE", "TRAIN_LEFT_NOUSE")
 			.Predicator([&]()->_bool 
 			{ 
+				if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket") != m_pModel->Find_Animation("AS_ch0100_372_AL_mg_train_L")) return false;
+
 				return (m_pASM->isSocketAlmostFinish("Kinetic_Special_AnimSocket") || 
 					( ((m_pASM->isSocketPassby("Kinetic_Special_AnimSocket"), 0.8f) && (m_bWalk || m_bDash || m_bJump || m_bLeftClick || m_bKineticRB))));
 			})
