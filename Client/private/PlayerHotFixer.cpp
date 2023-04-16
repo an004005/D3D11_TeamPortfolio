@@ -45,10 +45,10 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
-		ImGui::Checkbox("Hanabi", &m_bHanabiActive);
-		ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
-		CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
-		CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
+		//ImGui::Checkbox("Hanabi", &m_bHanabiActive);
+		//ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
+		//CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
+		//CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
 
 		if (ImGui::Button("MaskEffect"))
 		{

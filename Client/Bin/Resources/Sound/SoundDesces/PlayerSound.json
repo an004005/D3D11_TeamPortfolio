@@ -645,6 +645,18 @@
             "Loop": false,
             "MinDistance": 5.0,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_SAS_teleport_skill",
+            "SoundFiles": [
+                "FX/fx_SAS_teleport_skill.wav",
+                "FX/fx_SAS_teleport_skill.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 40.0
         }
     ]
 }
