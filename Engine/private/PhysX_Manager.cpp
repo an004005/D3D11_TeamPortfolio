@@ -617,6 +617,20 @@ void CPhysX_Manager::Imgui_RenderProperty()
 
 }
 
+void CPhysX_Manager::ClearActors()
+{
+	PxActorTypeFlags flags = PxActorTypeFlag::eRIGID_STATIC | PxActorTypeFlag::eRIGID_DYNAMIC;
+	PxActor* pActors[3000];
+	_uint iSize = 3000;
+
+	_uint iActorNums = m_Scene->getActors(flags, pActors, iSize);
+
+	for (_uint i = 0; i < iActorNums; ++i)
+	{
+		m_Scene->removeActor(*pActors[i]);
+	}
+}
+
 ECOLLISION_TYPE CPhysX_Manager::CheckCollisionTable(ECOLLISION_TYPE e1, ECOLLISION_TYPE e2)
 {
 	return s_CollisionTable[static_cast<_uint>(e1)][static_cast<_uint>(e2)];
