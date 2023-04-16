@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\public\VIBuffer_Point_Instancing.h"
+#include "GameInstance.h"
 
 CVIBuffer_Point_Instancing::CVIBuffer_Point_Instancing(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer_Instancing(pDevice, pContext)
@@ -15,8 +16,12 @@ CVIBuffer_Point_Instancing::CVIBuffer_Point_Instancing(const CVIBuffer_Point_Ins
 
 HRESULT CVIBuffer_Point_Instancing::Initialize_Prototype(_uint iNumInstance)
 {
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
+	CONTEXT_LOCK;
+
+	FAILED_CHECK(__super::Initialize_Prototype());
+
+	//if (FAILED(__super::Initialize_Prototype()))
+	//	return E_FAIL;
 
 	m_iInitNumInstance = iNumInstance;
 	m_iNumInstance = iNumInstance;
@@ -51,8 +56,10 @@ HRESULT CVIBuffer_Point_Instancing::Initialize_Prototype(_uint iNumInstance)
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = pVertices;
 
-	if (FAILED(__super::Create_VertexBuffer()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Create_VertexBuffer());
+
+	//if (FAILED(__super::Create_VertexBuffer()))
+	//	return E_FAIL;
 
 	Safe_Delete_Array(pVertices);
 
@@ -75,8 +82,10 @@ HRESULT CVIBuffer_Point_Instancing::Initialize_Prototype(_uint iNumInstance)
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = pIndices;
 
-	if (FAILED(__super::Create_IndexBuffer()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Create_IndexBuffer());
+
+	//if (FAILED(__super::Create_IndexBuffer()))
+	//	return E_FAIL;
 
 	Safe_Delete_Array(pIndices);
 #pragma endregion
