@@ -249,6 +249,13 @@ public:	// Set
 		m_bSASMember[eSAS] = true; 
 	}
 
+	void		Set_DriveGauge(const _bool	bGaugeRender) {
+		m_bDriveGauge = bGaugeRender;
+	}
+	_bool		Get_DriveGauge() {
+		return m_bDriveGauge;
+	}
+
 public: // AI관련
 	void			Hanabi_Active(_bool bActive)	{ m_tHanabiStat.bActivate = bActive; }
 	void			Tsugumi_Active(_bool bActive)	{ m_tTsugumiStat.bActivate = bActive; }
@@ -295,7 +302,7 @@ private:	// 스토리용 텔레포트 디졸브용
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
-	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+	_bool	m_bDriveGauge = { false };
 
 private:
 	_bool	m_bAILock = false;

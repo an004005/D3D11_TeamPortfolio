@@ -2199,7 +2199,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			
 			// ¿¬Ãâ ³¡
 			CUI_Manager::GetInstance()->Set_TempOff(false);
-
+			CPlayerInfoManager::GetInstance()->Set_DriveGauge(true);
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
