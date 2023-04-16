@@ -76,7 +76,7 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 		else
 		{
 			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"),
-				(CComponent**)&m_pRendererCom)))[]
+				(CComponent**)&m_pRendererCom)))
 				return E_FAIL;
 
 			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPointInstance_Particle"), TEXT("Shader"),
