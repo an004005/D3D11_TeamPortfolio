@@ -170,6 +170,8 @@ public:/* for PhysX Manager*/
 	_bool SweepCapsule(const CapsuleSweepParams& params);
 	_bool PxSweepCapsule(const PxCapsuleSweepParams& params);
 
+	void ClearPx();
+
 public: /* for CameraManager*/
 	CCamera* Add_Camera(const string& strCamTag, _uint iLevelIdx, const wstring& pLayerTag, const wstring& pPrototypeTag, const Json* camJson = nullptr);
 	void SetMainCamera(const string& strCamTag);

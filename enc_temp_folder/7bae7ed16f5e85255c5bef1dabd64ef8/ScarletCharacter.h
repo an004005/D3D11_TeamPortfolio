@@ -42,7 +42,6 @@ public:
 
 	// 피직스 무시하는 강제 이동
 	void SetWorldMatrix(_float4x4 WorldMatrix);
-	void SetForcePos(_float4 vPos);
 
 public:
 	EDeBuffType GetDeBuffType() const { return m_eDeBuff; }

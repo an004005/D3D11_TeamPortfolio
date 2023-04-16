@@ -21,7 +21,7 @@ CEM0900::CEM0900(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CEM0900::CEM0900(const CEM0900 & rhs)
 	: CEnemy(rhs)
 {
-	m_bSpawnEffect = false;
+	m_SpawnEffectPivot = CImguiUtils::CreateMatrixFromImGuizmoData({ 0.f, 1.5f, 1.5f }, { 0.f, 0.f, 0.f }, { 1.5f,1.5f,1.5f });
 }
 
 HRESULT CEM0900::Initialize(void * pArg)
@@ -35,6 +35,7 @@ HRESULT CEM0900::Initialize(void * pArg)
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
 		m_iMaxHP = LEVEL_NOW * (250 + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP *= 2;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.9f;
@@ -57,6 +58,7 @@ HRESULT CEM0900::Initialize(void * pArg)
 	//브레인 생성
 	m_pBrain = dynamic_cast<CEMBrain*>(CGameInstance::GetInstance()->Clone_GameObject_Get(TEXT("Layer_Brain"), TEXT("Prototype_EMBrain")));
 	assert(m_pBrain != nullptr);
+	m_bSpawnEffect = true;
 
 	return S_OK;
 }

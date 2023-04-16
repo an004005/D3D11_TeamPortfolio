@@ -2483,6 +2483,30 @@
             {
                 "EventName": "attack_nor_jumpattack_1",
                 "EventTime": 50.0
+            },
+            {
+                "EventName": "attack_fire_1",
+                "EventTime": 1.0
+            },
+            {
+                "EventName": "attack_fire_2",
+                "EventTime": 27.0
+            },
+            {
+                "EventName": "attack_fire_jumpattack_1",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "attack_elec_1_fix",
+                "EventTime": 1.0
+            },
+            {
+                "EventName": "attack_elec_2_fix",
+                "EventTime": 27.0
+            },
+            {
+                "EventName": "attack_elec_jumpattack_1_fix",
+                "EventTime": 50.0
             }
         ]
     },

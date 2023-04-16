@@ -71,6 +71,8 @@ HRESULT CGameManager::Initialize()
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
 		json["ArrivalPoint"] = { 70.0f, 1.2f, 68.0f, 0.0f };
 		CDistanceUI* pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP = 250;
 	}
 	if (LEVEL_NOW == LEVEL_DOWNTOWN_3)
 	{

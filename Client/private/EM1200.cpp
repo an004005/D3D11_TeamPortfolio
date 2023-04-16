@@ -1046,6 +1046,8 @@ void CEM1200::BeginTick()
 	SetUpIntro();
 
 	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(8.f);
+
+	m_pRendererCom->SetFog(false);
 }
 
 void CEM1200::Tick(_double TimeDelta)
