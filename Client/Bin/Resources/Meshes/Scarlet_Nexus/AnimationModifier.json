@@ -8295,6 +8295,10 @@
             {
                 "EventName": "Throw_gift",
                 "EventTime": 37.0
+            },
+            {
+                "EventName": "Throw_gift_Sound",
+                "EventTime": 25.0
             }
         ]
     },
