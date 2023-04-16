@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\public\Main_BrainGaugeUI.h"
 #include "GameInstance.h"
-
+#include "UI_Manager.h"
 CMain_BrainGaugeUI::CMain_BrainGaugeUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -35,6 +35,7 @@ void CMain_BrainGaugeUI::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 
 	if (false == m_bChargeGauge) return;
+
 
 	if (CGameInstance::GetInstance()->KeyPressing(CInput_Device::MOUSEKEYSTATE::DIM_LB))
 		m_tParams.Floats[0] += _float(TimeDelta);

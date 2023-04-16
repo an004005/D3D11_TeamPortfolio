@@ -2,7 +2,11 @@
 #include "Level.h"
 #include "Client_Defines.h"
 #include "HelperClasses.h"
+#include "GameInstance.h"
 
+BEGIN(Engine)
+class CGameObject;
+END
 BEGIN(Client)
 
 class CLevel_StageDefault : public CLevel
@@ -27,6 +31,23 @@ protected:
 	virtual HRESULT Ready_Layer_SASPortrait(const _tchar* pLayerTag);
 	virtual HRESULT Ready_Layer_AI(const _tchar* pLayerTag);
 
+	template <typename T>
+	T* FindGameObjectInLayer(const _tchar* pLayerTag)
+	{
+		if (auto pLayer = CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, pLayerTag))
+		{
+			for (auto pObj : pLayer->GetGameObjects())
+			{
+				if (auto pType = dynamic_cast<T*>(pObj))
+				{
+					return pType;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
 protected:
 	wstring m_strLevelName;
 	string m_strShadowCamJsonPath;
@@ -38,3 +59,4 @@ protected:
 };
 
 END
+

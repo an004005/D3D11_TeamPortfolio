@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Consumption_Item.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
+
 #include "Shader.h"
 #include "Animation.h"
 #include "Model.h"
@@ -122,7 +124,9 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                 vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
                 auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
                     return pair.first == m_strName;
-                    });
+
+                    CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
+            });
 
             if (iter != vecItemInfo.end())
             {
@@ -143,6 +147,7 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                 if (iter != vecItemInfo.end())
                 {
                     CGameManager::GetInstance()->Set_AddlItem(m_AchieveName);
+                    CUI_Manager::GetInstance()->PlaySound("MainIn");
                 }
             }
             // ★ 애니메이션 교체(Get)

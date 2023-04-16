@@ -40,8 +40,7 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 
 	m_eSpecialObejctType = SPECIAL_DROPOBJECT_BUNDLE;
 
-	m_SoundStore.CloneSound("Special_Drop_Success");
-	m_SoundStore.CloneSound("Special_Drop_Fail");
+	m_SoundStore.CloneSound("fx_kine_super_crain_imp");
 
 	m_pCollider->SetOnTriggerIn([this](CGameObject* pGameObject)
 	{
@@ -60,7 +59,7 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 			m_bDeadCheck = true;
 			m_fDeadTime = 3.f;
 
-			m_SoundStore.PlaySound("Special_Drop_Fail", m_pTransformCom);
+			m_SoundStore.PlaySound("fx_kine_super_crain_imp", m_pTransformCom);
 		}
 
 		if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
@@ -68,7 +67,7 @@ HRESULT CSpecial_DropObject_Bundle::Initialize(void * pArg)
 			if (m_bDecompose)
 				return;
 
-			m_SoundStore.PlaySound("Special_Drop_Success", m_pTransformCom);
+			m_SoundStore.PlaySound("fx_kine_super_crain_imp", m_pTransformCom);
 
 			DAMAGE_PARAM tParam;
 			ZeroMemory(&tParam, sizeof(DAMAGE_PARAM));

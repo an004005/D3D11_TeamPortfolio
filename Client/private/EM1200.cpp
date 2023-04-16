@@ -40,7 +40,7 @@ HRESULT CEM1200::Initialize(void * pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
-		m_iMaxHP = 2500;
+		m_iMaxHP = 25000;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10.f;
@@ -501,6 +501,10 @@ void CEM1200::SetUpMainFSM()
 					CGameManager::GetInstance()->Set_LeftTalk(112);
 					CGameManager::GetInstance()->Set_LeftTalk(113);
 					CGameManager::GetInstance()->Set_LeftTalk(114);
+				
+					m_pController->SetActive(false);
+					m_pASM->InputAnimSocketOne("FullBody", "AS_em1200_803_AL_wait03");
+					m_pModelCom->Find_Animation("AS_em1200_803_AL_wait03")->SetLooping(true);
 				})
 
 
@@ -1195,6 +1199,25 @@ _bool CEM1200::Exclude()
 		return false;
 	else
 		return true;
+}
+
+void CEM1200::CheckHP(DAMAGE_PARAM& tDamageParams)
+{
+	if (m_bCrushStart == true) return;
+
+	_int iDamage = tDamageParams.iDamage;
+
+	if (m_bHitWeak)
+		iDamage *= 1.2f;
+
+	m_iHP -= iDamage;
+	if (m_iHP < 0)
+	{
+		m_bDead = true;
+		Safe_Release(m_pEMUI);
+		m_pRendererCom->SetFog(false);
+		m_iHP = 0;
+	}
 }
 
 _bool CEM1200::IsPlayingSocket() const

@@ -150,7 +150,7 @@ void CSpawnTrigger::LoadFromJson(const Json& json)
 	if (json.contains("InvisibleWall"))
 	{
 		Json wallJson = json["InvisibleWall"];
-		m_pWall = dynamic_cast<CInvisibleWall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, LAYER_TRIGGER, L"Prototype_InvisibleWall", &wallJson));
+		m_pWall = dynamic_cast<CInvisibleWall*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, LAYER_MAP_DECO, L"Prototype_InvisibleWall", &wallJson));
 	}
 }
 

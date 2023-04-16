@@ -106,9 +106,8 @@ public: /* For.Object_Manager */
 	class CGameObject* Find_Prototype(_uint iLevelIndex, const _tchar* pPrototypeTag);
 	void Add_InLayer(const _tchar* pLayerTag, CGameObject* pGameObject);
 	void Add_EmptyLayer(_uint iLevelIndex, const _tchar* pLayerTag);
-
 	void Add_InLayer(_uint iLevelIndex, const _tchar* pLayerTag, CGameObject* pGameObject);
-
+	void Pop_InLayer(const _tchar* pOutLayerTag, const _tchar* pInLayerTag, CGameObject* pGameObject);
 
 	void Imgui_ProtoViewer(const _tchar*& szSelectedProto);
 	void Imgui_ObjectViewer(_uint iLevel, CGameObject*& pSelectedObject);

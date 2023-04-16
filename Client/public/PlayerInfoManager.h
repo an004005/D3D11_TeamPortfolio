@@ -72,6 +72,7 @@ typedef struct tagPlayerStatus
 	_float m_fWeaponDamage;				// 무기 공격력
 	_float m_fSasDamageRate;			// SAS 공격력 배율
 
+	_bool m_bPlayerLock = false;
 
 	_bool bBrainMap[3] = { true, true, true };
 
@@ -155,7 +156,7 @@ public:	// Get
 	TSUGUMI_STAT&	Get_TsugumiStat() { 
 		return m_tTsugumiStat;
 	}
-	_bool					Get_SASMember(const SASMEET eSAS) { 
+	_bool		Get_SASMember(const SASMEET eSAS) { 
 		return m_bSASMember[eSAS];
 	}
 
@@ -219,6 +220,9 @@ public:	// Set
 
 	void			SetWeaponDamage(_float fDamage) { m_tPlayerStat.m_fWeaponDamage = fDamage; }
 	_float			GetFinalDamage() { return m_tPlayerStat.m_fFinalAttackDamage; }
+
+	void			SetPlayerLock(_bool bLock) { m_tPlayerStat.m_bPlayerLock = bLock; }
+	_bool			GetPlayerLock() { return m_tPlayerStat.m_bPlayerLock; }
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
