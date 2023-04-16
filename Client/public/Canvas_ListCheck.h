@@ -42,6 +42,8 @@ private:
 	_bool	m_bTransferring = { false };
 	_float	m_fTransferringBar = { 0.0f };
 
+	_bool	m_bSound = { false };
+
 public:
 	static CCanvas_ListCheck* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCanvas* Clone(void* pArg = nullptr) override;

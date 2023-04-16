@@ -166,6 +166,37 @@ void CEM8200_BrainField::Tick(_double TimeDelta)
 	{
 		m_CloseTimeline.Tick(TimeDelta, m_pPostProcess->GetParam().Floats[0]);
 	}
+
+	if (bBlackInOut)
+	{
+		_float fRatio = GetBlackOutRatio();
+		if (fRatio > 0.95f && blackOnce.IsNotDo())
+		{
+			m_pDefaultMap->SetVisible_MapObjects(false);
+			m_pBrainFieldMap->SetVisible_MapObjects(true);
+			m_pSkyBox->GetParams().iPass = 1;
+			m_pBrainFieldRedString->SetVisible(false);
+
+			for (auto pMapObj : m_pBrainFieldMap->GetMapObjects())
+			{
+				if (auto pInstanceMapObj = dynamic_cast<CMapInstance_Object*>(pMapObj))
+				{
+					for (auto pMtrl : pInstanceMapObj->Get_Model_Instancing()->GetMaterials())
+					{
+						if (pMtrl->GetParam().iPass == 6 || pMtrl->GetParam().iPass == 9)
+						{
+							pInstanceMapObj->SetVisible(false);
+						}
+					}
+				}
+			}
+
+			for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				pObj->SetVisible(false);
+			}
+		}
+	}
 }
 
 void CEM8200_BrainField::Late_Tick(_double TimeDelta)
@@ -222,6 +253,17 @@ void CEM8200_BrainField::CloseBrainField()
 void CEM8200_BrainField::SetCableTP(_float fValue)
 {
 	m_pCables->SetCableTP(fValue);
+}
+
+void CEM8200_BrainField::BlackInOut()
+{
+	m_pWhiteOut->BlackInOut();
+	bBlackInOut = true;
+}
+
+_float CEM8200_BrainField::GetBlackOutRatio()
+{
+	return m_pWhiteOut->GetParam().Floats[0];
 }
 
 void CEM8200_BrainField::Free()

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "PlayerInfoManager.h"
 #include "Item_Manager.h"
+#include "UI_Manager.h"
 
 #include "Tutorial_YesNoUI.h"
 #include "ShaderUI.h"
@@ -89,7 +90,15 @@ HRESULT CCanvas_ListCheck::Render()
 
 	if (m_bTransferring == true) {
 		if (1.0f < m_fTransferringBar)
+		{
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 완료", vPosition + _float2(195.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
+
+			if (false == m_bSound)
+			{
+				m_bSound = true;
+				CUI_Manager::GetInstance()->PlaySound("MainClick");
+			}
+		}
 		else
 			pGameInstance->Render_Font(L"Pretendard32", L"전송 중", vPosition + _float2(205.0f, 245.0f), 0.f, vFontSmaillSize, vColor);
 		return S_OK;
@@ -197,6 +206,8 @@ void CCanvas_ListCheck::KeyInput_No()
 
 void CCanvas_ListCheck::Purchase()
 {
+	CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
+
 	m_bTransferring = true;
 	Find_ChildUI(L"Purchase_Window_Color")->SetVisible(false);
 	
@@ -221,13 +232,16 @@ void CCanvas_ListCheck::TransferringBar_Tick(const _double& TimeDelta)
 
 	m_fTransferringBar += _float(TimeDelta) * 0.5f;
 
-	if(1.0f > m_fTransferringBar)
+	if (1.0f > m_fTransferringBar)
+	{
 		dynamic_cast<CShaderUI*>(Find_ChildUI(L"ListCheck_Bar"))->Set_Floats0(m_fTransferringBar);
+	}
 
 	if (1.3f < m_fTransferringBar)
 	{
 		m_fTransferringBar = 0.0f;
 		m_bVisible = false;
+		m_bSound = false;
 	}
 }
 

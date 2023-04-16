@@ -95,7 +95,8 @@ void CEM0900::SetUpSound()
 
 	m_SoundStore.CloneSound("santa_doubleswing");
 	m_SoundStore.CloneSound("santa_spin");
-	m_SoundStore.CloneSound("santa_throw_voice");
+	m_SoundStore.CloneSound("mon_santa_throw_splited");
+	m_SoundStore.CloneSound("mon_santa_throw_voice_splited");
 	m_SoundStore.CloneSound("Metal_Sound_Effect");
 }
 
@@ -173,7 +174,10 @@ void CEM0900::SetUpAnimationEvent()
 		m_pGift = nullptr;
 	});
 
-
+	m_pModelCom->Add_EventCaller("Throw_gift_Sound", [this]
+	{
+		m_SoundStore.PlaySound("mon_santa_throw_splited", m_pTransformCom);
+	});
 
 	m_pModelCom->Add_EventCaller("Dead_Flower", [this]
 	{
@@ -465,6 +469,7 @@ void CEM0900::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_220_AL_atk_a1_start");
+				m_SoundStore.PlaySound("mon_santa_throw_voice_splited", m_pTransformCom);
 			})
 			.Tick([this](_double)
 			{
@@ -496,7 +501,6 @@ void CEM0900::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0900_222_AL_atk_a1_end");
-				m_SoundStore.PlaySound("santa_throw_voice", m_pTransformCom);
 			})
 			.AddTransition("Throw_End to Idle", "Idle")
 				.Predicator([this]

@@ -591,6 +591,28 @@ PS_OUT PS_em1200_Weak_13(PS_IN In)
 	return Out;
 }
 
+PS_OUT_NONLIGHT PS_ConsumeItem14(PS_IN In)
+{
+	PS_OUT_NONLIGHT			Out = (PS_OUT_NONLIGHT)0;
+
+	if (g_int_0 == 0)
+	{
+		float noise = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.5f, g_Time * 0.1f)), g_Time, 0.05f, 2,2)).r;
+		Out.vColor.rgb = float3(0.1f, 0.233f, 0.086f) * saturate(noise + 0.5f) * 6.f;
+
+		Out.vColor.a = 0.8f;
+	}
+	else
+	{
+		float noise = g_tex_1.Sample(LinearSampler, Get_FlipBookUV(TilingAndOffset(In.vTexUV, 1.f, float2(g_Time * 0.5f, g_Time * 0.1f)), g_Time, 0.05f, 2,2)).r;
+		Out.vColor.rgb = CalcHDRColor(float4(0.789f, 0.439f, 0.205f, 1.f), saturate(noise) * 4.f).rgb;
+			 
+		Out.vColor.a = 1.f;
+	}
+
+	return Out;
+}
+
 technique11 DefaultTechnique
 {
 	//0
@@ -786,5 +808,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_em1200_Weak_13();
+	}
+
+	//14
+	pass consumeItem_14
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ConsumeItem14();
 	}
 }

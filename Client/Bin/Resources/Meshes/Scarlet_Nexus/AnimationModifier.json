@@ -8363,6 +8363,10 @@
             {
                 "EventName": "Throw_gift",
                 "EventTime": 37.0
+            },
+            {
+                "EventName": "Throw_gift_Sound",
+                "EventTime": 25.0
             }
         ]
     },
@@ -8930,7 +8934,7 @@
             },
             {
                 "EventName": "move_walk",
-                "EventTime": 40.0
+                "EventTime": 60.0
             }
         ]
     },

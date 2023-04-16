@@ -118,7 +118,9 @@ void CEM0320::SetUpSound()
 	CEnemy::SetUpSound();
 
 	m_SoundStore.CloneSound("boss1_attack_cannon");
-	m_SoundStore.CloneSound("boss1_attack_dive");
+	m_SoundStore.CloneSound("boss1_attack_dive_jump_splited");
+	m_SoundStore.CloneSound("boss1_attack_dive_stomp_splited");
+	m_SoundStore.CloneSound("boss1_attack_dive_struggle_splited");
 	m_SoundStore.CloneSound("boss1_attack_hook");
 	m_SoundStore.CloneSound("boss1_attack_spin");
 	m_SoundStore.CloneSound("boss1_move");
@@ -375,7 +377,7 @@ void CEM0320::SetUpMainFSM()
 			{
 				m_pController->SetActive(false);
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0300_204_AL_atk_a3_start");
-				m_SoundStore.PlaySound("boss1_attack_dive", m_pTransformCom);
+				m_SoundStore.PlaySound("boss1_attack_dive_jump_splited", m_pTransformCom);
 			})
 			.Tick([this](_double TimeDelta)
 			{
@@ -391,6 +393,8 @@ void CEM0320::SetUpMainFSM()
 				m_fJumpMoveTime = 0.f;
 				m_fGravity = 25.f;
 				m_pController->SetActive(true);
+				m_SoundStore.PlaySound("boss1_attack_dive_stomp_splited", m_pTransformCom);
+
 			})
 			.AddTransition("JumpAtk to Jitabata", "Jitabata")
 				.Predicator([this]
@@ -405,6 +409,8 @@ void CEM0320::SetUpMainFSM()
 		.AddState("Jitabata")
 			.OnStart([this]
 			{
+				m_SoundStore.PlaySound("boss1_attack_dive_struggle_splited", m_pTransformCom);
+
 				m_bCanSpecial = true;
 				m_pASM->InputAnimSocketMany("FullBody", 
 				{  "AS_em0300_205_AL_atk_a3_landing",

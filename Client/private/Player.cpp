@@ -8697,7 +8697,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.AddState("HBEAM_LEFT_ROTATION")
 		.OnStart([&]() 
 		{
-			ActiveSpecialUI(SPECIAL_HBEAM_BUNDLE);
+				// 돌리기 시작
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Catch();
 		})
 		.Tick([&](double fTimeDelta)
@@ -8725,13 +8725,12 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.AddState("HBEAM_LEFT_FINISH")
 		.OnStart([&]() 
 		{
+			ActiveSpecialUI(SPECIAL_HBEAM_BUNDLE);
+				 //다 돌리고 막타
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Finish_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
 
-			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
-			{
-				m_pSpecialUI->SetDelete();
-			}
+
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -8745,6 +8744,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			HBeam.Reset();
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fSpecialCharge = 0.f;
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 			.AddTransition("HBEAM_LEFT_FINISH to HBEAM_LEFT_NOUSE", "HBEAM_LEFT_NOUSE")
 			.Predicator([&]()->_bool 

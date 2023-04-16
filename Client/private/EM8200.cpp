@@ -31,6 +31,9 @@
 #include "Imgui_Batch.h"
 #include "TestTarget.h"
 #include "UI_Manager.h"
+#include "Consumption_Item.h"
+#include "LastCheckUI.h"
+#include "ControlledRigidBody.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -223,8 +226,9 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 void CEM8200::SetUpSound()
 {
 	CEnemy::SetUpSound();
-
+	
 	m_SoundStore.CloneSound("move_walk");
+	m_SoundStore.CloneSound("move_Landing");
 	m_SoundStore.CloneSound("karen_attack_elecball_ins");
 	m_SoundStore.CloneSound("karen_attack_elecball_shot");
 	m_SoundStore.CloneSound("karen_attack_kick1");
@@ -917,7 +921,7 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
 		.Predicator([this]
 		{
-			 //return CGameInstance::GetInstance()->KeyDown(DIK_P);
+			 // return CGameInstance::GetInstance()->KeyDown(DIK_P);
 				return m_eInput == CController::CTRL;
 		})
 
@@ -1698,7 +1702,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Landing_Start")
 		.OnStart([this]
 			{
-				// m_SoundStore.PlaySound("");
+				m_SoundStore.PlaySound("move_Landing");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_216_AL_atk_air_landing_start");
 			})
 
@@ -2105,6 +2109,13 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
+			// 초기위치로 이동)
+			m_pTransformCom->RemoveRotation();
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 20.f, 1.f));
+			m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				
+
 			m_SoundStore.PlaySound("karen_fx_brainfield");
 
 			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(true);
@@ -2175,7 +2186,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	{
 			// UI 보이기
 			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
-			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 
 			m_pController->SetActive(true);
 	})
@@ -2277,10 +2288,9 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			if (fPlayRatio > 0.9f && m_ItemSpawn.IsNotDo())
 			{
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/FinalItem.json");
-				_float4x4 WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-				json["Transform"]["WorldMatrix"] = WorldMatrix;
-				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
-			
+				json["Transform"]["WorldMatrix"] = _float4x4::Identity;
+				m_pLastItem = dynamic_cast<CConsumption_Item*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json));
+
 				// 마지막 대사
 				json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MainTalk.json");
 				CCanvas_MainTalk * pCanvas_MainTalk = dynamic_cast<CCanvas_MainTalk*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, PLAYERTEST_LAYER_FRONTUI, L"Canvas_MainTalk", &json));
@@ -2290,8 +2300,45 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				pCanvas_MainTalk->Add_Talk(30);
 				pCanvas_MainTalk->Add_Talk(31);
 			}
+
+			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
+				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+				m_pLastItem = nullptr;
+			}
 		})
-		
+		.AddTransition("to ending", "Ending")
+			.Predicator([this]
+			{
+				return m_pLastItem == nullptr && CGameInstance::GetInstance()->KeyDown(DIK_RETURN);
+			})
+
+	.AddState("Ending")
+		.OnStart([this]
+		{
+			m_pBrainField->BlackInOut();
+		})
+		.Tick([this](_double)
+		{
+			if (m_pBrainField->GetBlackOutRatio() > 0.95f && m_BlackOut.IsNotDo())
+			{
+				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
+
+				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
+					_float4x4::Identity,
+					_float4x4::Identity);
+			
+				m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
+				m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+			}
+		})
 	;
 
 }
@@ -2371,8 +2418,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				// return m_bStoryEnd;
-				return false;
+				return m_bStoryEnd;
+				// return false;
 			})
 
 		.AddState("BattleStart")
@@ -2402,7 +2449,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CGameManager::GetInstance()->Set_LeftTalk(105);
 				CGameManager::GetInstance()->Set_LeftTalk(106);
 				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
-				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
+				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(true);
 			})
 
 				
