@@ -38,6 +38,7 @@ HRESULT CEM0110::Initialize(void * pArg)
 
 		//5000
 		m_iMaxHP = LEVEL_NOW * (300  + (CMathUtils::RandomUInt(10)));
+		m_iMaxHP *= 2;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 10;

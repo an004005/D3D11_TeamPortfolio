@@ -33,7 +33,7 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 	m_pASM = CEM8200_CopyRushAnimInstance::Create(m_pModelCom, this);
 
 	Json KarenMask = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/EffectSystem/Monster_Effect/Karen_Mask.json");
-	m_pKarenMaskEf = (CEffectSystem*) CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_KarenMask", L"ProtoVFX_EffectSystem", &KarenMask);
+	m_pKarenMaskEf = (CEffectSystem*) CGameInstance::GetInstance()->Clone_GameObject_NoLayer(LEVEL_NOW, L"ProtoVFX_EffectSystem", &KarenMask);
 	Safe_AddRef(m_pKarenMaskEf);
 
 
@@ -221,6 +221,7 @@ void CEM8200_CopyRush::Tick(_double TimeDelta)
 	CGameObject::Tick(TimeDelta);
 	m_pFSM->Tick(TimeDelta);
 	m_pASM->Tick(TimeDelta);
+	m_pKarenMaskEf->Tick(TimeDelta);
 
 	{
 		_float fTPStartOut;
@@ -258,6 +259,7 @@ void CEM8200_CopyRush::Late_Tick(_double TimeDelta)
 		_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("FacialRoot") * m_pTransformCom->Get_WorldMatrix();
 		m_pKarenMaskEf->GetTransform()->Set_WorldMatrix(SocketMatrix);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+		m_pKarenMaskEf->Late_Tick(TimeDelta);
 	}
 	else
 	{

@@ -23,8 +23,8 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma region 플레이어 기본 스탯 초기화
 
-	m_tPlayerStat.m_iHP = 1000;
-	m_tPlayerStat.m_iMaxHP = 1000;
+	m_tPlayerStat.m_iHP = 2000;
+	m_tPlayerStat.m_iMaxHP = 2000;
 
 	m_tPlayerStat.m_iKineticEnergy = 100;
 	m_tPlayerStat.m_iMaxKineticEnergy = 100;
@@ -62,8 +62,8 @@ HRESULT CPlayerInfoManager::Initialize()
 
 #pragma region	멤버 기본 스탯 초기화
 
-	m_tHanabiStat.iHP = 1700;
-	m_tHanabiStat.iMaxHP = 1700;
+	m_tHanabiStat.iHP = 1200;
+	m_tHanabiStat.iMaxHP = 1200;
 	m_tHanabiStat.iExp = 50;
 	m_tHanabiStat.iMaxExp = 100;
 	m_tHanabiStat.iLevel = 1;
@@ -73,8 +73,8 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tHanabiStat.iDefense = 20;
 	m_tHanabiStat.bActivate = true;
 
-	m_tTsugumiStat.iHP = 1300;
-	m_tTsugumiStat.iMaxHP = 1300;
+	m_tTsugumiStat.iHP = 1100;
+	m_tTsugumiStat.iMaxHP = 1100;
 	m_tTsugumiStat.iExp = 0;
 	m_tTsugumiStat.iMaxExp = 100;
 	m_tTsugumiStat.iLevel = 1;
@@ -547,7 +547,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		++m_tPlayerStat.iLevel;
 		m_tPlayerStat.iMaxExp += 400;
 		m_tPlayerStat.iExp = 0;
-		m_tPlayerStat.m_iMaxHP += 50;
+		m_tPlayerStat.m_iMaxHP += 200;
 		m_tPlayerStat.m_iHP = m_tPlayerStat.m_iMaxHP;
 		m_tPlayerStat.m_fBaseAttackDamage += 20.f;/*static_cast<_float>(m_tPlayerStat.iLevel);*/
 		m_tPlayerStat.iBP = m_tPlayerStat.iLevel * 2;

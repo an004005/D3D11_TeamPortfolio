@@ -726,7 +726,7 @@ void CCanvas_BrainMap::Brain_Intiialize()
 	tBrainInfo.vOnIconIndex = { 1.0f, 0.0f };
 	tBrainInfo.vOffIconIndex = { 0.0f, 3.0f };
 	tBrainInfo.arrNeighbor = { 33, 37, -1 };
-	tBrainInfo.szBrainName = L"공궁 점프";
+	tBrainInfo.szBrainName = L"공중 점프";
 	tBrainInfo.szBrainEx[0] = L"공중 [스페이스바]로 한번 더 점프할 수 있다.";
 	tBrainInfo.szBrainEx[1] = L"";
 	tBrainInfo.szBrainEx[2] = L"";

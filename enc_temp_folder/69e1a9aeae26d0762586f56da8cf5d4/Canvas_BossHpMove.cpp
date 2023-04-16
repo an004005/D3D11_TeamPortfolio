@@ -137,16 +137,13 @@ void CCanvas_BossHpMove::Partner_Initialize()
 	else if (EEnemyName::EM1100 == m_eEnemyName) fIndex = { 0.0f, 12.0f };
 	else if (EEnemyName::EM1200 == m_eEnemyName) fIndex = { 0.0f, 11.0f };
 	else if (EEnemyName::EM8200 == m_eEnemyName) fIndex = { 0.0f, 13.0f };
-
+	
 	m_pCanvas_BossHp->Set_LevelName(fIndex.x, fIndex.y);
 
-	if (EEnemyName::EM8200 != m_eEnemyName)
-	{
-		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
-		m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));
-		assert(m_pUI_Alarm != nullptr && "Failed to Clone : CCanvas_Alarm");
-		m_pUI_Alarm->Set_Appeart();
-	}
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
+	m_pUI_Alarm = dynamic_cast<CCanvas_Alarm*>(pGameInstance->Clone_GameObject_NoLayer(LEVEL_NOW, L"Canvas_Alarm", &json));
+	assert(m_pUI_Alarm != nullptr && "Failed to Clone : CCanvas_Alarm");
+	m_pUI_Alarm->Set_Appeart();
 }
 
 CCanvas_BossHpMove * CCanvas_BossHpMove::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
