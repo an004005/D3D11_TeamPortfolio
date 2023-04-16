@@ -13,37 +13,91 @@
             "MaxDistance": 30.0
         },
         {
-            "Name" : "A Sedated Heart",
-            "SoundFiles" : ["SoundTrack/1-07 - A Sedated Heart.mp3"],
+            "Name" : "Tutorial",
+            "SoundFiles" : ["SoundTrack/Tutorial.mp3"],
             "2DSound" : true,
-            "Volume" : 0.1,
+            "Volume" : 0.06,
             "Loop" : true,
             "MinDistance": 2.0,
             "MaxDistance" : 30.0
         },
         {
-            "Name" : "Attention Please",
-            "SoundFiles" : ["SoundTrack/1-12 - Attention Please.mp3"],
+            "Name" : "ConstructionSite2F",
+            "SoundFiles" : ["SoundTrack/ConstructionSite2F.mp3"],
             "2DSound" : true,
-            "Volume" : 0.1,
+            "Volume" : 0.06,
             "Loop" : true,
             "MinDistance": 2.0,
             "MaxDistance" : 30.0
         },
         {
-            "Name" : "Abandoned Subway to Suoh Line 9",
-            "SoundFiles" : ["SoundTrack/1-33 - Abandoned Subway to Suoh Line 9 -the other-.mp3"],
+            "Name" : "ConstructionSite3F",
+            "SoundFiles" : ["SoundTrack/ConstructionSite3F.mp3"],
             "2DSound" : true,
-            "Volume" : 0.1,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        }, 
+        {
+            "Name" : "NaomiRoomBGM",
+            "SoundFiles" : ["SoundTrack/NaomiRoomBGM.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
             "Loop" : true,
             "MinDistance": 2.0,
             "MaxDistance" : 30.0
         },
         {
-            "Name" : "The OSF -Advance",
-            "SoundFiles" : ["SoundTrack/1-04 - The OSF -Advance!-.mp3"],
+            "Name" : "SubWay",
+            "SoundFiles" : ["SoundTrack/SubWay.mp3"],
             "2DSound" : true,
-            "Volume" : 0.1,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "Hospital1F",
+            "SoundFiles" : ["SoundTrack/Hospital1F.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "Karen",
+            "SoundFiles" : ["SoundTrack/Karen.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "DownTown1",
+            "SoundFiles" : ["SoundTrack/DownTown1.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "DownTown2",
+            "SoundFiles" : ["SoundTrack/DownTown2.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
+            "Loop" : true,
+            "MinDistance": 2.0,
+            "MaxDistance" : 30.0
+        },
+        {
+            "Name" : "DownTown3",
+            "SoundFiles" : ["SoundTrack/DownTown3.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.06,
             "Loop" : true,
             "MinDistance": 2.0,
             "MaxDistance" : 30.0

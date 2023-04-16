@@ -399,6 +399,11 @@
             "Layer": "Layer_MapDecorate",
             "JsonPath": "",
             "ProtoTag": "Prototype_EnvironmentEffect"
+        },
+        {
+            "Layer": "Layer_MapDecorate",
+            "JsonPath": "",
+            "ProtoTag": "ProtoType_LoadingModel"
         }
     ]
 }
