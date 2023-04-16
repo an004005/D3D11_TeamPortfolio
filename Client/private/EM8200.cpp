@@ -241,6 +241,7 @@ void CEM8200::Spawn_Portrait(const string& strEventName)
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MembersName.json");
 		m_pShaderUI = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
 		m_pShaderUI->Set_Float2sX(7.0f);
+		CUI_Manager::GetInstance()->Set_TempOff(true);
 	}
 
 	if (strEventName == "Spawn_Inbok")
@@ -2368,10 +2369,12 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				pCanvas_MainTalk->Add_Talk(29);
 				pCanvas_MainTalk->Add_Talk(30);
 				pCanvas_MainTalk->Add_Talk(31);
+				CUI_Manager::GetInstance()->Set_TempOff(true);
 			}
 
 			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
 			{
+				CUI_Manager::GetInstance()->Set_TempOff(true);
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
 				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
 				m_pLastItem = nullptr;
