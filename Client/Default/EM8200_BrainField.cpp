@@ -17,6 +17,7 @@
 #include "CurveFloatMapImpl.h"
 #include "Player.h"
 #include "PostVFX_WhiteOut.h"
+#include "EnvironmentEffect.h"
 
 
 CEM8200_BrainField::CEM8200_BrainField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -142,6 +143,12 @@ void CEM8200_BrainField::Tick(_double TimeDelta)
 				m_pBrainFieldMap->SetVisible_MapObjects(true);
 				m_pSkyBox->GetParams().iPass = 1;
 				m_pBrainFieldRedString->SetVisible(true);
+
+				for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+				{
+					if (auto pEnv = dynamic_cast<CEnvironmentEffect*>(pObj))
+						pEnv->SetVisible(false);
+				}
 			}
 
 
@@ -248,6 +255,12 @@ void CEM8200_BrainField::CloseBrainField()
 	m_pDefaultMap->SetVisible_MapObjects(true);
 	m_pBrainFieldMap->SetVisible_MapObjects(false);
 	m_pBrainFieldRedString->SetVisible(false);
+
+	for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+	{
+		if (auto pEnv = dynamic_cast<CEnvironmentEffect*>(pObj))
+			pEnv->SetVisible(true);
+	}
 }
 
 void CEM8200_BrainField::SetCableTP(_float fValue)

@@ -220,7 +220,7 @@ private:
 
 	class CConsumption_Item* m_pLastItem = nullptr;
 
-
+	_bool m_bBattleStart = false;
 
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }

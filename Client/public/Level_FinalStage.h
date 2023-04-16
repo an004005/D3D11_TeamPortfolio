@@ -24,6 +24,7 @@ private:
 
 	string m_MainSound = "Karen";
 
+
 public:
 	static CLevel_FinalStage* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free() override;

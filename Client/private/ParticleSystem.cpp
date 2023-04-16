@@ -21,7 +21,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& rhs)
 	: CGameObject(rhs)
 {
 	m_ModelProtoTag = "";
-	m_iInstanceNum = 30000;
+	m_iInstanceNum = 10000;
 }
 
 _int CParticleSystem::GetLiveParticleCnt()
@@ -83,10 +83,10 @@ HRESULT CParticleSystem::Initialize(void* pArg)
 				(CComponent**)&m_pShader)))
 				return E_FAIL;
 
-			if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Point_Instance_Particle"), TEXT("Com_PointInstance"),
-				(CComponent**)&m_pPointInstanceBuffer)))
-				return E_FAIL;
-			//m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
+			// if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Point_Instance_Particle"), TEXT("Com_PointInstance"),
+			// 	(CComponent**)&m_pPointInstanceBuffer)))
+			// 	return E_FAIL;
+			m_pPointInstanceBuffer = CVIBuffer_Point_Instancing::Create(m_pDevice, m_pContext, m_iInstanceNum);
 		}
 	}
 
