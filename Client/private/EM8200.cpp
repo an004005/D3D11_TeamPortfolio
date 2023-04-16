@@ -2366,8 +2366,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				// return m_bStoryEnd;
-				return false;
+				return m_bStoryEnd;
+				// return false;
 			})
 
 		.AddState("BattleStart")
@@ -2382,7 +2382,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				m_pCanvas_MainTalk->Add_Talk(42);
 
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_Mask_On");
-				m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 1.f);
+				m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, CPlayerInfoManager::GetInstance()->Get_PlayerCam(), m_pTransformCom, 0.f, 0.f);
 			})
 
 	
@@ -2391,7 +2391,9 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				m_pASM->SetLerpDuration(m_fDefault_LerpTime);
 				m_pKarenMaskEf->GetParams().Ints[0] = 0;
 				CUI_Manager::GetInstance()->Set_TempOff(true);
-			// 루카 대사 
+			// 루카 대사
+
+				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
 			})
 
 				
@@ -2454,6 +2456,7 @@ _bool CEM8200::Check_PlayerDetected()
 		{
 			// Cam Start && Story Start
 			CUI_Manager::GetInstance()->Set_TempOff(false);
+			CPlayerInfoManager::GetInstance()->SetPlayerLock(true);
 			return true;
 		}
 	}
