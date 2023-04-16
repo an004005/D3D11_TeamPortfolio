@@ -221,8 +221,9 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 void CEM8200::SetUpSound()
 {
 	CEnemy::SetUpSound();
-
+	
 	m_SoundStore.CloneSound("move_walk");
+	m_SoundStore.CloneSound("move_Landing");
 	m_SoundStore.CloneSound("karen_attack_elecball_ins");
 	m_SoundStore.CloneSound("karen_attack_elecball_shot");
 	m_SoundStore.CloneSound("karen_attack_kick1");
@@ -1694,7 +1695,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Landing_Start")
 		.OnStart([this]
 			{
-				// m_SoundStore.PlaySound("");
+				m_SoundStore.PlaySound("move_Landing");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_216_AL_atk_air_landing_start");
 			})
 
