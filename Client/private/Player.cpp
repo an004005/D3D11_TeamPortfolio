@@ -7396,6 +7396,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_bSeperateAnim = false;
 
+			m_bVisible = false;
+
 			for (auto& iter : m_vecWeapon)
 			{
 				iter->SetVisible(false);
@@ -7523,6 +7525,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 
 			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
 
+			m_bVisible = false;
+
 			for (auto& iter : m_vecWeapon)
 			{
 				iter->SetVisible(false);
@@ -7637,6 +7641,8 @@ HRESULT CPlayer::SetUp_TeleportStateMachine()
 		{
 
 			m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom);
+
+			m_bVisible = false;
 
 			for (auto& iter : m_vecWeapon)
 			{

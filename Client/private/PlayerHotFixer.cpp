@@ -106,7 +106,7 @@ void CPlayerHotFixer::Tick()
 			SphereOverlapParams param;
 
 			param.fVisibleTime = 0.4f;
-			param.iTargetType = CTB_PLAYER;
+			param.iTargetType = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_PLAYER_RANGE | CTB_TELEPORT_OBJ;
 			param.fRadius = 3.f;
 			param.vPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			param.overlapOut = &overlapOut;

@@ -132,9 +132,10 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                 vector<pair<wstring, CItem_Manager::ITEMINFO>> vecItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo();
                 auto iter = find_if(vecItemInfo.begin(), vecItemInfo.end(), [&](pair<wstring, CItem_Manager::ITEMINFO> pair) {
                     return pair.first == m_strName;
+				});
 
-                    CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
-            });
+                CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
+
 
             if (iter != vecItemInfo.end())
             {
