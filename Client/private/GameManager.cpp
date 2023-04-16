@@ -9,6 +9,8 @@
 #include "DistanceUI.h"
 #include "Canvas_Alarm.h"
 
+#include "PlayerInfoManager.h"
+
 CGameManager* CGameManager::s_GameManager = nullptr;
 
 CGameManager::CGameManager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -137,11 +139,7 @@ void CGameManager::ConsumeEnemyDamageReport(ENEMY_DAMAGE_REPORT tReport)
 				CGameManager::GetInstance()->Set_LeftTalk(34);
 				CGameManager::GetInstance()->Set_LeftTalk(35);
 
-				if (false == m_pCanvas_LeftTalk->Get_End())
-				{
-					// LeftTalk ³¡³µÀ» ¶§
-
-				}
+				CPlayerInfoManager::GetInstance()->SetTeleportDissolve(-15.f);
 			}
 		}
 

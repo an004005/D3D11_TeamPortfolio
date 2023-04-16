@@ -527,6 +527,14 @@ HRESULT CPlayerInfoManager::Set_SpecialObject(CGameObject * pSpecialObject)
 	return S_OK;
 }
 
+_float CPlayerInfoManager::GetTeleportDissolve()
+{
+	if (0.f >= m_fDissolve)
+		return 0.f;
+	else
+		return m_fDissolve;
+}
+
 void CPlayerInfoManager::Set_Exp(const _uint iExp)
 {
 	_uint iAllExp = m_tPlayerStat.iExp + iExp;
