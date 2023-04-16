@@ -227,6 +227,9 @@ public:	// Set
 	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
 	_bool			GetAILock() { return m_bAILock; }
 
+	void			SetTeleportDissolve() { m_bDissolve = true; }
+	_float			GetTeleportDissolve() { return m_fDissolve; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -285,6 +288,10 @@ private:
 private:
 	_float			m_fBaseAttackDamage;
 	_float			m_fCamDistance = 4.f;
+
+private:	// 스토리용 텔레포트 디졸브용
+	_bool	m_bDissolve = false;
+	_float	m_fDissolve = 0.f;
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };

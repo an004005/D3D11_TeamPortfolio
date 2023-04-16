@@ -102,6 +102,30 @@ void CAI_CH0500::Tick(_double TimeDelta)
 	if (false == CPlayerInfoManager::GetInstance()->isTsugumiActive())
 		return;
 
+	if (0.f != CPlayerInfoManager::GetInstance()->GetTeleportDissolve())
+	{
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = min(CPlayerInfoManager::GetInstance()->GetTeleportDissolve(), 1.f);
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		return;
+	}
+	else
+	{
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = 0.f;
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(true);
+		}
+	}
+
 	__super::Tick(TimeDelta);
 	m_pModel->Tick(TimeDelta);
 

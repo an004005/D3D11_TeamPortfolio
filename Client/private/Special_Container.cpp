@@ -85,6 +85,8 @@ HRESULT CSpecial_Container::Initialize(void * pArg)
 			CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.3f);
 
 			m_SoundStore.PlaySound("fx_kine_super_container_imp", m_pTransformCom);
+
+			CGameInstance::GetInstance()->PlayShake(0.2f, 0.5f);
 		}
 	});
 

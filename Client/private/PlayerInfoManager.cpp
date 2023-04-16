@@ -208,6 +208,17 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 			m_tTsugumiStat.bActivate = true;
 		}
 	}
+
+	if (m_bDissolve)
+	{
+		m_fDissolve += (_float)TimeDelta;
+
+		if (5.f <= m_fDissolve)
+		{
+			m_bDissolve = false;
+			m_fDissolve = 0.f;
+		}
+	}
 }
 
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)

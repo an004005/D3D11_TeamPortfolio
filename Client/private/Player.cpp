@@ -1649,6 +1649,61 @@ void CPlayer::SasMgr()
 
 void CPlayer::Visible_Check()
 {
+	if (0.f != CPlayerInfoManager::GetInstance()->GetTeleportDissolve())
+	{
+		m_bTeleport = false;
+		m_fTeleportDissolve = 0.f;
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = min(CPlayerInfoManager::GetInstance()->GetTeleportDissolve(), 1.f);
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(false);
+		}
+		return;
+	}
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+	{
+		m_bTeleport = false;
+		m_fTeleportDissolve = 0.f;
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = 0.f;
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(false);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(false);
+		}
+		return;
+	}
+
+	{
+		m_bTeleport = false;
+		m_fTeleportDissolve = 0.f;
+		for (auto pMtrl : m_pModel->GetMaterials())
+		{
+			pMtrl->GetParam().Floats[2] = 0.f;
+		}
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->SetVisible(true);
+		}
+		for (auto& iter : m_vecSheath)
+		{
+			iter->SetVisible(true);
+		}
+		return;
+	}
+
 	if (m_pModel->GetPlayAnimation() == nullptr) return;
 	if (m_pTeleportStateMachine->GetCurStateName() != "TELEPORTATTACK_NOUSE") return;
 
@@ -2548,6 +2603,11 @@ HRESULT CPlayer::SetUp_RigidBody()
 
 HRESULT CPlayer::SetUp_Event()
 {
+	m_pModel->Add_EventCaller("PlayShake", [&]() {CGameInstance::GetInstance()->PlayShake(0.2f, 0.5f);});
+
+	m_pModel->Add_EventCaller("UI_ON", [&]() {CUI_Manager::GetInstance()->Set_TempOff(false); });
+	m_pModel->Add_EventCaller("UI_OFF", [&]() {CUI_Manager::GetInstance()->Set_TempOff(true); });
+
 	m_pModel->Add_EventCaller("Turn_Enable", [&]() {Event_SetCanTurn(true); });
 	m_pModel->Add_EventCaller("Turn_Disable", [&]() {Event_SetCanTurn(false); });
 
@@ -8111,6 +8171,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.AddState("BRAINCRASH_CUTSCENE")
 		.OnStart([&]()
 		{
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLATERTEST_LAYER_PLAYER);
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, LAYER_PLAYEREFFECT);
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, L"Layer_Camera");
@@ -8201,7 +8263,6 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.Tick([&](double fTimeDelta)
 		{
-
 		})
 		.OnExit([&]()
 		{
@@ -8221,6 +8282,9 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				m_pBrainCrashPositionEffect = nullptr;
 			}
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLAYERTEST_LAYER_MONSTER);
+
+
+			CUI_Manager::GetInstance()->Set_TempOff(false);
 		})
 			.AddTransition("BRAINCRASH_ACTIVATE to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 			.Predicator([&]()->_bool { return m_pASM->isSocketEmpty("BrainCrash_AnimSocket"); })
@@ -8230,6 +8294,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		.AddState("BRAINCRASH_EM8200_CUTSCENE")
 		.OnStart([&]()
 		{
+			CUI_Manager::GetInstance()->Set_TempOff(true);
+
 			m_bBrainCrash = true;
 			m_pSasPortrait->Start_SAS(ESASType::SAS_NOT);
 
@@ -8329,10 +8395,11 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.Tick([&](double fTimeDelta) 
 		{
-				
+			
 		})
 		.OnExit([&]()
 		{
+			CUI_Manager::GetInstance()->Set_TempOff(false);
 		})
 		.AddTransition("BRAINCRASH_EM8200_SCENE04 to BRAINCRASH_NOUSE", "BRAINCRASH_NOUSE")
 		.Predicator([&]()->_bool { return CGameInstance::GetInstance()->GetCamAnim("em8200_BrainCrash_Boss2")->IsFinished(); })
