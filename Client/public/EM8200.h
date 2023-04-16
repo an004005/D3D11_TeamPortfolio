@@ -49,6 +49,9 @@ public:
 	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
 
+
+	void				Spawn_Portrait(const string& strEventName);
+
 protected:
 	void				Detected_Attack();
 	void				AddState_Idle(CFSMComponentBuilder& Builder);
@@ -139,6 +142,8 @@ private:
 	CSimpleTimeline m_HeavyAttackPushTimeline;
 	_float4 m_vPushVelocity;
 
+	class CShaderUI* m_pShaderUI = { nullptr };
+	_bool	m_bUIClone = { false };
 
 private:
 	_float4x4 pivot1 = XMMatrixIdentity();

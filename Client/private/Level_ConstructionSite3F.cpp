@@ -60,6 +60,7 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
 
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Construction3F_fog.json");
 	return S_OK;
 }
 

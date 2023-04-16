@@ -48,7 +48,15 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
 
-	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (g_int_0 == 0)
+	{
+		Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	}
+	else
+	{
+		Out.vColor = saturate(g_tex_0.Sample(LinearSampler, In.vTexUV) * float4(0.102f, 0.092f, 0.091, 1.f));
+	}
+
 	return Out;
 }
 

@@ -10,6 +10,8 @@
 #include "JsonStorage.h"
 
 #include "BronJon.h"
+#include "MapInstance_Object.h"
+#include "Material.h"
 //#include "EM1200.h"
 
 
@@ -59,6 +61,23 @@ HRESULT CLevel_Subway::Initialize()
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Alarm/Subway.json");
 
 	CGameManager::SetGameManager(CGameManager::Create(m_pDevice, m_pContext));
+	CGameInstance::GetInstance()->LoadFogJson("../Bin/Resources/Batch/Subway_fog.json");
+
+
+	for (auto pObj : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, L"Layer_MapInstanceObject")->GetGameObjects())
+	{
+		if (auto mapInst = dynamic_cast<CMapInstance_Object*>(pObj))
+		{
+			for (auto pMtrl : mapInst->Get_Model_Instancing()->GetMaterials())
+			{
+				if (pMtrl->GetInstancePass() == 14)
+				{
+					pMtrl->SetInstancePass(1);
+				}
+			}
+		}
+	}
+
 
 	return S_OK;
 }

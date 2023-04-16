@@ -400,8 +400,6 @@ void CEnemy::SetDead()
 	//UI 삭제
 	Safe_Release(m_pEMUI);
 
-	//안개 삭제
-	m_pRendererCom->SetFog(false);
 }
 
 void CEnemy::FindTarget(_double TimeDelta)

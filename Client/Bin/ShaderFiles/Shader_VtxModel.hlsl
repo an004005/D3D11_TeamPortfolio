@@ -358,6 +358,51 @@ PS_OUT PS_TPWALL_9(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_RMA_10(PS_IN In)
+{
+	PS_OUT			Out = (PS_OUT)0;
+
+	Out.vDiffuse = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	if (g_int_0 == 1 && Out.vDiffuse.a < 0.01f)
+		discard;
+
+	float3 vNormal;
+	if (g_tex_on_1)
+	{
+		vector		vNormalDesc = g_tex_1.Sample(LinearSampler, In.vTexUV);
+		vNormal = vNormalDesc.xyz * 2.f - 1.f;
+		float3x3	WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+		vNormal = normalize(mul(vNormal, WorldMatrix));
+	}
+	else
+		vNormal = In.vNormal.xyz;
+
+	float flags = SHADER_DEFAULT;
+
+	Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	if (g_tex_on_2)
+		Out.vRMA = g_tex_2.Sample(LinearSampler, In.vTexUV);
+	else
+		Out.vRMA = g_vec4_0;
+
+	return Out;
+}
+
+PS_OUT_ALPHABLEND PS_ALPHABLEND_11(PS_IN In)
+{
+	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
+
+	Out.vColor = g_tex_0.Sample(LinearSampler, In.vTexUV);
+	Out.vColor.rgb *= g_float_0;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	if (Out.vColor.a < 0.01f)
+		discard;
+
+	return Out;
+}
 technique11 DefaultTechnique
 {
 	// 0
@@ -498,5 +543,32 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_TPWALL_9();
+	}
+
+	//10
+	pass RMA_10
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_Default, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_RMA_10();
+	}
+	//11
+	pass ALPHABLEND_11
+	{
+		SetRasterizerState(RS_Default);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALPHABLEND_11();
 	}
 }
