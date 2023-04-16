@@ -2250,7 +2250,7 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			if (m_bBrainField)
 			{
-				//CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
 			}
 		})
 		.OnExit([&]() {})

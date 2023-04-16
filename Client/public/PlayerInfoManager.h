@@ -160,6 +160,8 @@ public:	// Get
 		return m_bSASMember[eSAS];
 	}
 
+	class CScarletMap* m_pDefaultMap = nullptr;
+
 public:	// Set
 	void			Set_PlayerHP(_uint iHP) { m_tPlayerStat.m_iHP = iHP; }
 	void			Change_PlayerHP(CHANGETYPE eType, _uint ChangeHP);
