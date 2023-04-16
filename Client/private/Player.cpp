@@ -1503,6 +1503,8 @@ void CPlayer::SasMgr()
 
 				SasGearEffect();
 
+				m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
+
 				if (ESASType::SAS_FIRE == InputSas)
 				{
 					m_pSasPortrait->Start_SAS(InputSas);
@@ -6241,6 +6243,10 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("fx_kine_super_UI_button_long");
 	m_SoundStore.CloneSound("fx_kine_super_UI_button_short");
 
+	m_SoundStore.CloneSound("BrainCrash");
+
+	m_SoundStore.CloneSound("fx_SAS_trig");
+
 	//MonsterUI
 	m_SoundStore.CloneSound("UI_monster_alert");
 
@@ -6332,6 +6338,9 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("fx_plyr_drive_splited_3", [this] {m_SoundStore.PlaySound("fx_plyr_drive_splited_3", m_pTransformCom); });
 
 	m_pModel->Add_EventCaller("fx_kinetic_air_verylong", [this] {m_SoundStore.PlaySound("fx_kinetic_air_verylong", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_counter_trig", [this] {m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom); });
+	m_pModel->Add_EventCaller("BrainCrash", [this] {m_SoundStore.PlaySound("BrainCrash", m_pTransformCom); });
 
 	// 특수오브젝트
 	m_SoundStore.CloneSound("fx_kine_super_truck_example");
@@ -6425,6 +6434,10 @@ HRESULT CPlayer::SetUp_SpecialSound()
 			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
 			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
 			m_SoundStore.PlaySound("fx_kine_super_crain_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("Impact", [this]
+		{
+			m_SoundStore.PlaySound("fx_kine_super_crain_imp", m_pTransformCom);
 		});
 	m_pModel->Add_EventCaller("fx_kine_super_crain_lift", [this] 
 		{
@@ -8197,6 +8210,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, LAYER_PLAYEREFFECT);
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, L"Layer_Camera");
 
+			m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
+
 			m_bSeperateAnim = false;
 			m_bKineticMove = false;
 
@@ -8238,6 +8253,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 					if (5.f >= fDistance)
 					{
+						//m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom);
+
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
@@ -8249,6 +8266,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					}
 					else
 					{
+						//m_SoundStore.PlaySound("BrainCrash", m_pTransformCom);
+
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
@@ -8264,6 +8283,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				}
 				else
 				{
+					//m_SoundStore.PlaySound("BrainCrash", m_pTransformCom);
+
 					_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
 					_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);

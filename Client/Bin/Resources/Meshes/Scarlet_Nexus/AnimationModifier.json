@@ -30,6 +30,18 @@
             {
                 "EventName": "PlayShake",
                 "EventTime": 230.0
+            },
+            {
+                "EventName": "fx_kinetic_counter_trig",
+                "EventTime": 20.0
+            },
+            {
+                "EventName": "fx_kinetic_air_verylong",
+                "EventTime": 50.0
+            },
+            {
+                "EventName": "Impact",
+                "EventTime": 230.0
             }
         ]
     },
@@ -155,6 +167,10 @@
             {
                 "EventName": "PlayShake",
                 "EventTime": 105.0
+            },
+            {
+                "EventName": "BrainCrash",
+                "EventTime": 10.0
             }
         ]
     },

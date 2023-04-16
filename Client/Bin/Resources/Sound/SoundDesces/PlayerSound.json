@@ -824,6 +824,29 @@
             "Loop": false,
             "MinDistance": 0.01,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name": "BrainCrash",
+            "SoundFiles": [
+                "FX/BrainCrash.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_SAS_trig",
+            "SoundFiles": [
+                "FX/fx_SAS_trig_1.wav",
+                "FX/fx_SAS_trig_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
         }
     ]
 }
