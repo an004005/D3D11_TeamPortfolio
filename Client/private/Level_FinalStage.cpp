@@ -33,6 +33,8 @@ HRESULT CLevel_FinalStage::Initialize()
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/FinalStage_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_FinalBossStage.json";
 
+	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
@@ -126,10 +128,12 @@ HRESULT CLevel_FinalStage::Ready_Lights()
 
 void CLevel_FinalStage::Tick(_double TimeDelta)
 {
-	__super::Tick(TimeDelta);
-	// CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
-	
+	if (m_BGMOnce.IsNotDo())
+		m_BGM.PlaySound(m_MainSound);
+
+	//CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
+	__super::Tick(TimeDelta);
 }	
 
 CLevel_FinalStage * CLevel_FinalStage::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

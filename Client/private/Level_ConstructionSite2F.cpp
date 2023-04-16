@@ -26,9 +26,6 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     //m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite2F_ShadowCam.json"; // 아직 없음
     m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_ConstructionSite2F.json";
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("Attention Please");
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss

@@ -27,9 +27,6 @@ HRESULT CLevel_NaomiRoom::Initialize()
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/NaomiRoom_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_NaomiRoom.json";
 
-	m_BGM.CloneSound("Ambient_Bridge");
-	m_BGM.CloneSound("Attention Please");
-	m_BGM.CloneSound("Abandoned Subway to Suoh Line 9"); // 몬스터 조우
 	m_BGM.CloneSound(m_MainSound); // 기본 bgm
 
 	//Boss
