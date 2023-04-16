@@ -1,0 +1,339 @@
+{
+    "SoundFilePath": "../Bin/Resources/Sound/Sounds/",
+    "Sounds": [
+        {
+            "Name": "fx_kine_super_container_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_container_finish",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_finish.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_container_imp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_imp1.wav",
+                            "SpecialObject/fx_kine_super_container_imp2.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_container_lift1",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_lift1.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_container_lift2",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_lift2.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_container_lift3",
+            "SoundFiles": ["SpecialObject/fx_kine_super_container_lift3.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_crain_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_crain_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_crain_imp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_crain_imp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_crain_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_crain_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_crain_shot",
+            "SoundFiles": ["SpecialObject/fx_kine_super_crain_shot.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_exp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_exp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_finish",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_finish.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_lift2",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_lift2.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_lift3",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_lift3.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_jail_sque",
+            "SoundFiles": ["SpecialObject/fx_kine_super_jail_sque.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_pole_multi_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_finish",
+            "SoundFiles": ["SpecialObject/fx_kine_super_pole_multi_finish.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_imp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_pole_multi_imp1.wav", "SpecialObject/fx_kine_super_pole_multi_imp2.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_pole_multi_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_pole_multi_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_finish_imp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_finish_imp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_imp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_imp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_noUI",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_noUI.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_telepole_swing_1",
+            "SoundFiles": ["SpecialObject/fx_kine_super_telepole_swing_1.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_train_charge_1",
+            "SoundFiles": ["SpecialObject/fx_kine_super_train_charge_1.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_train_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_train_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_train_exp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_train_exp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_train_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_train_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_train_shot",
+            "SoundFiles": ["SpecialObject/fx_kine_super_train_shot.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_truck_charge",
+            "SoundFiles": ["SpecialObject/fx_kine_super_truck_charge.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_truck_charge_2",
+            "SoundFiles": ["SpecialObject/fx_kine_super_truck_charge_2.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_truck_example",
+            "SoundFiles": ["SpecialObject/fx_kine_super_truck_example.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_truck_exp",
+            "SoundFiles": ["SpecialObject/fx_kine_super_truck_exp.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "fx_kine_super_truck_lift",
+            "SoundFiles": ["SpecialObject/fx_kine_super_truck_lift.wav"],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance": 30.0
+        }
+    ]
+}

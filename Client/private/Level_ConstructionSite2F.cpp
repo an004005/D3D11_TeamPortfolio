@@ -44,6 +44,7 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Item_Batch.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Special_2F.json");
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Story/Flower.json");
+	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/StartPosition.json");
 
     // Monster Trigger(with Invisible Wall)
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Trigger_Monster1stWave.json");
