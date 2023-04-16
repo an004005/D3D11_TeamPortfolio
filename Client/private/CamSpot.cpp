@@ -274,6 +274,7 @@ void CCamSpot::Arrange_Cam()
 
 _bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
 {
+	if (0.f == fRatio) fRatio = TimeDelta;
 	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() - (TimeDelta / fRatio);
 	fMag = max(fMag, fLimit);
 
@@ -290,6 +291,7 @@ _bool CCamSpot::Cam_Closer(_double TimeDelta, _float fRatio, _float fLimit)
 
 _bool CCamSpot::Cam_Away(_double TimeDelta, _float fRatio, _float fLimit)
 {
+	if (0.f == fRatio) fRatio = TimeDelta;
 	_float fMag = static_cast<CCamera_Player*>(m_pPlayerCamera)->Get_Magnification() + (TimeDelta / fRatio);
 	fMag = min(fMag, fLimit);
 
