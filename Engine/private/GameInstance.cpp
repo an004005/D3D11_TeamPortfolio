@@ -851,6 +851,11 @@ _bool CGameInstance::PxSweepCapsule(const PxCapsuleSweepParams & params)
 	return m_pPhysX_Manager->PxSweepCapsule(params);
 }
 
+void CGameInstance::ClearPx()
+{
+	m_pPhysX_Manager->ClearActors();
+}
+
 /*************************
  *	CCamera_Manager
  *************************/

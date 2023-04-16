@@ -47,6 +47,8 @@ HRESULT CLevel_StageDefault::Initialize()
 	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
+	CGameInstance::GetInstance()->ClearPx();
+
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
 

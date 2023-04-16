@@ -49,6 +49,8 @@ public:
 
 	void Imgui_RenderProperty();
 
+	void ClearActors();
+
 	static ECOLLISION_TYPE CheckCollisionTable(ECOLLISION_TYPE e1, ECOLLISION_TYPE e2);
 
 #ifdef _DEBUG
