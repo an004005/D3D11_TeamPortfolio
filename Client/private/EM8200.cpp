@@ -33,6 +33,7 @@
 #include "UI_Manager.h"
 #include "Consumption_Item.h"
 #include "LastCheckUI.h"
+#include "ControlledRigidBody.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -61,7 +62,7 @@ HRESULT CEM8200::Initialize(void* pArg)
 		m_bBoss = true;
 		iEemeyLevel = 42;
 	}
-	m_iCrushGauge = 100;
+	// m_iCrushGauge = 100;
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
 
@@ -918,7 +919,7 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 	.AddTransition("Idle to BrainFieldStart", "BrainFieldStart")
 		.Predicator([this]
 		{
-			 //return CGameInstance::GetInstance()->KeyDown(DIK_P);
+			 // return CGameInstance::GetInstance()->KeyDown(DIK_P);
 				return m_eInput == CController::CTRL;
 		})
 
@@ -2106,6 +2107,13 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	.AddState("BrainFieldStart")
 		.OnStart([this]
 		{
+			// 초기위치로 이동)
+			m_pTransformCom->RemoveRotation();
+			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
+			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 20.f, 1.f));
+			m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+				
+
 			m_SoundStore.PlaySound("karen_fx_brainfield");
 
 			m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(true);
@@ -2176,7 +2184,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	{
 			// UI 보이기
 			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
-			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 
 			m_pController->SetActive(true);
 	})
@@ -2439,7 +2447,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CGameManager::GetInstance()->Set_LeftTalk(105);
 				CGameManager::GetInstance()->Set_LeftTalk(106);
 				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
-				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
+				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(true);
 			})
 
 				
