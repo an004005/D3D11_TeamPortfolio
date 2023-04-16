@@ -108,9 +108,9 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		CShaderUI* pMembersName = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
 		pMembersName->Set_Float2sX(0.0f); // 0.0f : 안중환 1.0f 박종욱 2.0f 정지훈 3.0f 김기범 4.0f 전인복 5.0f 옥수현
 	
-		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
-		json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		CDistanceUI * pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+		//json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		//json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		//CDistanceUI * pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
 	
 	
 	}

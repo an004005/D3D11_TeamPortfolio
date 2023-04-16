@@ -234,7 +234,7 @@ public:	// Set
 	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP += iBP;	}
 
 	void			Set_Exp(const _uint iExp);
 	

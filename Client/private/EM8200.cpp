@@ -2173,7 +2173,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 	{
 			// UI º¸ÀÌ±â
 			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(false);
-			CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(false);
+			CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 
 			m_pController->SetActive(true);
 	})
@@ -2400,7 +2400,7 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CGameManager::GetInstance()->Set_LeftTalk(105);
 				CGameManager::GetInstance()->Set_LeftTalk(106);
 				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item")->TempOff(true);
-				CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_ItemMove")->TempOff(true);
+				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(true);
 			})
 
 				
