@@ -16,6 +16,7 @@
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
+#include "Player.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -862,7 +863,8 @@ void CEM1100::CheckHP(DAMAGE_PARAM& eParam)
 
 	m_iHP -= iDamage;
 
-	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField
+		&& dynamic_cast<CPlayer*>(eParam.pCauser))
 		m_SoundStore.PlaySound("boss1_attack_dive_jump_splited", m_pTransformCom);
 
 	if (m_iHP < 0)
