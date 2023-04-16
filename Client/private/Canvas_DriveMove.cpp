@@ -60,29 +60,14 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 	m_pUIMoveFSM->Tick(TimeDelta);	// UI 의 움직임
 	CCanvas::UIHit(TimeDelta);
 	
-	//if (true == m_bTempOff)
-	//{
-	//	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-	//	{
-	//		iter->second->SetVisible(false);
-	//	}
-	//	m_bRender = false;
-	//}
-	//else
-	//{
-	//	if (false == m_bRender)
-	//	{
-	//		for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
-	//		{
-	//			if ((*iter).first == L"Drive_Gauge" ||
-	//				(*iter).first == L"Drive_GaugeBack")
-	//				continue;
-
-	//			iter->second->SetVisible(true);
-	//		}
-	//		m_bRender = true;
-	//	}
-	//}
+	if (true == CPlayerInfoManager::GetInstance()->Get_DriveGauge())
+	{
+		CPlayerInfoManager::GetInstance()->Set_DriveGauge(false);
+		Find_ChildUI(L"Drive_OnCircle")->SetVisible(true);
+		Find_ChildUI(L"Drive_LeftDot")->SetVisible(true);
+		Find_ChildUI(L"Dirve_RightDot")->SetVisible(true);
+		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
+	}
 
 	DriveGauge_Tikc();
 	DriveGaugeFull_Tick();
@@ -137,19 +122,6 @@ void CCanvas_DriveMove::DriveGaugeFull_Tick()
 	// 드라이브 게이지가 가득 찼을 때 오른쪽 점 전체가 채워지고 일정시간 뒤 다시 원래대로 돌아간다.
 	_bool GaugeFull = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_GaugeFull();
 	Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(GaugeFull);
-
-	if (true == GaugeFull)
-	{
-		if (false == m_bRender)
-		{
-			m_bRender = true;
-
-			Find_ChildUI(L"Drive_OnCircle")->SetVisible(true);
-			Find_ChildUI(L"Drive_LeftDot")->SetVisible(true);
-			Find_ChildUI(L"Dirve_RightDot")->SetVisible(true);
-			dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
-		}
-	}
 }
 
 void CCanvas_DriveMove::Drive_Tick()
@@ -162,16 +134,13 @@ void CCanvas_DriveMove::Drive_Tick()
 
 	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
 	{
-		m_bRender = false;
 		m_bOnDrive = false;	// 아래로 내려가면서 객체를들 모두다 끈다.
 		m_fDriveGauge = 0.0f;
 		m_fRightDotCount = 1.0f;
 		m_fShaderRightDot = 0.0f;
-		Find_ChildUI(L"Drive_OnCircle")->SetVisible(m_bOnDrive);
-		Find_ChildUI(L"Drive_LeftDot")->SetVisible(m_bOnDrive);
-		Find_ChildUI(L"Dirve_RightDot")->SetVisible(m_bOnDrive);
-		//dynamic_cast<CDrive_RightDotUI*>(Find_ChildUI(L"Dirve_RightDot"))->Reset_DriveRightDot();
-
+		Find_ChildUI(L"Drive_OnCircle")->SetVisible(false);
+		Find_ChildUI(L"Drive_LeftDot")->SetVisible(false);
+		Find_ChildUI(L"Dirve_RightDot")->SetVisible(false);
 		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(false);
 	}
 
