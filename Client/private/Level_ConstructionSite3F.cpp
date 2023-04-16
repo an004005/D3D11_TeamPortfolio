@@ -34,10 +34,11 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 	//Boss
 	m_BGM.CloneSound("em0320BGM");
 
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+		return E_FAIL; 
 
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Boss_HBeams.json");
 	CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite3F/Monster_PlayerStart.json");
