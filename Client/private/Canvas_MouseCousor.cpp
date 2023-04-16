@@ -16,6 +16,10 @@
 #include "Item_Manager.h"
 #include "Canvas_BossHpMove.h"
 
+#include "LastCheckUI.h"
+#include "ShaderUI.h"
+#include "DistanceUI.h"
+
 CCanvas_MouseCousor::CCanvas_MouseCousor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCanvas(pDevice, pContext)
 {
@@ -89,13 +93,26 @@ void CCanvas_MouseCousor::Tick(_double TimeDelta)
 		//m_pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		//m_pCanvas_Alarm->Set_MapName();
 
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 8000;
+		//CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_fBaseAttackDamage = 8000;
 
 
 		//Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_BossHpMove.json");
 		//CCanvas_BossHpMove* pBossHpMove = dynamic_cast<CCanvas_BossHpMove*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_BossHpMove", &json));
 		//pBossHpMove->Set_BossHp(1.0f);
 		//pBossHpMove->Set_BossShild(1.0f);
+
+		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
+		CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/MembersName.json");
+		CShaderUI* pMembersName = dynamic_cast<CShaderUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Shader_UI", &json));
+		pMembersName->Set_Float2sX(0.0f); // 0.0f : 안중환 1.0f 박종욱 2.0f 정지훈 3.0f 김기범 4.0f 전인복 5.0f 옥수현
+	
+		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/DistanceUI.json");
+		json["ArrivalPoint"] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		CDistanceUI * pDistanceUI = dynamic_cast<CDistanceUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"DistanceUI", &json));
+	
+	
 	}
 
 	// 생성후 재사용 하는 애들

@@ -345,6 +345,9 @@ void CCanvas_WorldMap::KeyInput()
 			vecMapBar[i]->SetVisible(m_bMapUI);
 
 		CUI_Manager::GetInstance()->Set_TempOff(m_bMapUI);
+
+		if (true == m_bMapUI)		CUI_Manager::GetInstance()->SetMouseActive(true);
+		else									CUI_Manager::GetInstance()->SetMouseActive(false);
 	
 		if (true == m_bMapUI)
 		{

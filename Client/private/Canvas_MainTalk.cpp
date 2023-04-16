@@ -368,28 +368,28 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 	}
 	break;
 
-	//******************************************************** [3] 29 ~ 34
+	//******************************************************** 마지막 대사 29 ~ 31
 	case 29:
 	{
 		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"다들 멈춰!!!!!" };
-		tTalkInfo.wsTalk1 = { L"" };
+		tTalkInfo.wsTalk0 = { L"윽... 으윽...." };
+		tTalkInfo.wsTalk1 = { L"나오미... 우리 나오미..." };
 	}
 	break;
 
 	case 30:
 	{
-		tTalkInfo.wsName = { L"중대장" };
-		tTalkInfo.wsTalk0 = { L"지금 나도 믿기지 않지만 뒤에 있는 아이는 내 딸이다." };
-		tTalkInfo.wsTalk1 = { L"내 딸이야... 도대체 무슨 일 이 있었던 거지..." };
+		tTalkInfo.wsName = { L"유이토" };
+		tTalkInfo.wsTalk0 = { L"중대장님 정말 죄송합니다." };
+		tTalkInfo.wsTalk1 = { L"모두를 위해서 시간역행을 도와드릴 수가 없었습니다." };
 	}
 	break;
 
 	case 31:
 	{
-		tTalkInfo.wsName = { L"츠구미" };
-		tTalkInfo.wsTalk0 = { L"나오미 라구요...?" };
-		tTalkInfo.wsTalk1 = { L"" };
+		tTalkInfo.wsName = { L"중대장" };
+		tTalkInfo.wsTalk0 = { L"다들 내가 미안하네... 욕심 때문에 이렇게 되었어." };
+		tTalkInfo.wsTalk1 = { L"앞으로의 미래를 잘 부탁하네." };
 	}
 	break;
 
