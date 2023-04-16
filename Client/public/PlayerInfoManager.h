@@ -224,6 +224,12 @@ public:	// Set
 	void			SetPlayerLock(_bool bLock) { m_tPlayerStat.m_bPlayerLock = bLock; }
 	_bool			GetPlayerLock() { return m_tPlayerStat.m_bPlayerLock; }
 
+	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
+	_bool			GetAILock() { return m_bAILock; }
+
+	void			SetTeleportDissolve() { m_bDissolve = true; }
+	_float			GetTeleportDissolve() { return m_fDissolve; }
+
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
 	HRESULT	Set_SpecialObject(CGameObject* pSpecialObject);
@@ -283,9 +289,16 @@ private:
 	_float			m_fBaseAttackDamage;
 	_float			m_fCamDistance = 4.f;
 
+private:	// 스토리용 텔레포트 디졸브용
+	_bool	m_bDissolve = false;
+	_float	m_fDissolve = 0.f;
+
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
 	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+
+private:
+	_bool	m_bAILock = false;
 
 private:	// 기능 정리 함수
 	void			SAS_Checker();

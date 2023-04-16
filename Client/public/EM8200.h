@@ -216,6 +216,11 @@ private:
 	class CCanvas_MainTalk* m_pCanvas_MainTalk = nullptr;
 
 	CDoOnce m_ItemSpawn;
+	CDoOnce m_BlackOut;
+
+	class CConsumption_Item* m_pLastItem = nullptr;
+
+
 
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }

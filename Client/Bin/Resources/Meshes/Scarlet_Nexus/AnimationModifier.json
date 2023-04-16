@@ -26,6 +26,10 @@
             {
                 "EventName": "Trail_Off",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "PlayShake",
+                "EventTime": 230.0
             }
         ]
     },
@@ -138,6 +142,14 @@
             {
                 "EventName": "BrainCrashHandParticle_Delete",
                 "EventTime": 115.0
+            },
+            {
+                "EventName": "UI_ON",
+                "EventTime": 130.0
+            },
+            {
+                "EventName": "PlayShake",
+                "EventTime": 105.0
             }
         ]
     },
@@ -4315,6 +4327,10 @@
             {
                 "EventName": "fx_kine_super_jail_exp",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "fx_kine_super_telepole_imp",
+                "EventTime": 0.0
             }
         ]
     },
@@ -4334,7 +4350,12 @@
         "Duration": 50.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_telepole_swing_1",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_326_AL_throw_RL_end": {
         "Duration": 50.0,
@@ -4398,7 +4419,12 @@
         "Duration": 140.0,
         "TickPerSecond": 50.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "fx_kine_super_telepole_swing_1",
+                "EventTime": 10.0
+            }
+        ]
     },
     "AS_ch0100_331_AL_swing_R": {
         "Duration": 140.0,
@@ -8836,7 +8862,7 @@
             },
             {
                 "EventName": "move_walk",
-                "EventTime": 40.0
+                "EventTime": 60.0
             }
         ]
     },

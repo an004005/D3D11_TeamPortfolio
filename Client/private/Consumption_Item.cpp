@@ -112,6 +112,14 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
 {
     __super::Late_Tick(TimeDelta);
 
+    if (m_eTypeInfo == TYPE_ACHIEVE)
+    {
+	    if (auto pMtrl = m_pModel->FindMaterial(L"MI_ef_Treasure"))
+	    {
+		    pMtrl->GetParam().Ints[0] = 1;
+	    }
+    }
+
     if (!m_bItemModel)
     {
         if (m_bOverlapCheck && !m_bGetItem)  // Player가 Item을 먹었을 경우 Item_Manager에게 정보 전달

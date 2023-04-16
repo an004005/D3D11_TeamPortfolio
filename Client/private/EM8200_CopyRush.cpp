@@ -254,9 +254,14 @@ void CEM8200_CopyRush::Late_Tick(_double TimeDelta)
 	CGameObject::Late_Tick(TimeDelta);
 	if (m_bActive)
 	{
+		m_pKarenMaskEf->SetVisible(true);
 		_matrix	SocketMatrix = m_pModelCom->GetBoneMatrix("FacialRoot") * m_pTransformCom->Get_WorldMatrix();
 		m_pKarenMaskEf->GetTransform()->Set_WorldMatrix(SocketMatrix);
 		m_pRendererCom->Add_RenderGroup(CRenderer::RENDER_NONALPHABLEND_TOON, this);
+	}
+	else
+	{
+		m_pKarenMaskEf->SetVisible(false);
 	}
 }
 

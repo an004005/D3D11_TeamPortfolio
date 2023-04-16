@@ -197,7 +197,7 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 
 	if (nullptr != CGameInstance::GetInstance()->FindCamera("PlayerCamera") && nullptr != CGameInstance::GetInstance()->GetMainCam())
 	{
-		if (CGameInstance::GetInstance()->GetMainCam() != CGameInstance::GetInstance()->FindCamera("PlayerCamera"))
+		if (CGameInstance::GetInstance()->GetMainCam() != CGameInstance::GetInstance()->FindCamera("PlayerCamera") || true == m_bAILock)
 		{
 			m_tHanabiStat.bActivate = false;
 			m_tTsugumiStat.bActivate = false;
@@ -206,6 +206,17 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 		{
 			m_tHanabiStat.bActivate = true;
 			m_tTsugumiStat.bActivate = true;
+		}
+	}
+
+	if (m_bDissolve)
+	{
+		m_fDissolve += (_float)TimeDelta;
+
+		if (5.f <= m_fDissolve)
+		{
+			m_bDissolve = false;
+			m_fDissolve = 0.f;
 		}
 	}
 }

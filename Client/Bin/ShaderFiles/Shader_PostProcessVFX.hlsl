@@ -150,11 +150,21 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_MAIN_WHITE_OUT(PS_IN In)
 {
 	PS_OUT			Out = (PS_OUT)0;
+	if (g_int_0 == 0)
+	{
+		float WhiteRatio = saturate(g_float_0);
+		float4 vColor =  (float4)1.f;
 
-	float WhiteRatio = saturate(g_float_0);
-	float4 vColor =  (float4)1.f;
+		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV) * (1.f - WhiteRatio) + vColor * WhiteRatio;
+	}
+	else
+	{
+		float blackratio = saturate(g_float_0);
+		float4 vColor =  (float4)0.f;
 
-	Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV) * (1.f - WhiteRatio) + vColor * WhiteRatio;
+		Out.vColor = g_LDRTexture.Sample(LinearSampler, In.vTexUV) * (1.f - blackratio) + vColor * blackratio;
+	}
+
 	return Out;
 }
 
