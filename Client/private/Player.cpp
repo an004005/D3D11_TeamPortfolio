@@ -363,7 +363,7 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		Enemy_Targeting(false);
 	}
-	if (CGameInstance::GetInstance()->KeyPressing(DIK_E))
+	/*if (CGameInstance::GetInstance()->KeyPressing(DIK_E))
 	{
 		CPlayerInfoManager::GetInstance()->Camera_Random_Shake(0.1f);
 	}
@@ -378,7 +378,7 @@ void CPlayer::Tick(_double TimeDelta)
 	if (CGameInstance::GetInstance()->KeyPressing(DIK_NUMPAD3))
 	{
 		CPlayerInfoManager::GetInstance()->Camera_Axis_Sliding({ 0.f, 0.f, 1.f, 0.f }, 0.1f);
-	}
+	}*/
 
 	 if (m_pPlayerCam->IsMainCamera() || false == CPlayerInfoManager::GetInstance()->GetPlayerLock())
 		m_pController->Tick(TimeDelta);
@@ -1503,6 +1503,8 @@ void CPlayer::SasMgr()
 
 				SasGearEffect();
 
+				m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
+
 				if (ESASType::SAS_FIRE == InputSas)
 				{
 					m_pSasPortrait->Start_SAS(InputSas);
@@ -1682,24 +1684,6 @@ void CPlayer::Visible_Check()
 		for (auto& iter : m_vecSheath)
 		{
 			iter->SetVisible(false);
-		}
-		return;
-	}
-
-	{
-		m_bTeleport = false;
-		m_fTeleportDissolve = 0.f;
-		for (auto pMtrl : m_pModel->GetMaterials())
-		{
-			pMtrl->GetParam().Floats[2] = 0.f;
-		}
-		for (auto& iter : m_vecWeapon)
-		{
-			iter->SetVisible(true);
-		}
-		for (auto& iter : m_vecSheath)
-		{
-			iter->SetVisible(true);
 		}
 		return;
 	}
@@ -2143,6 +2127,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_CLOSER")
 		.OnStart([&]()
 		{
+			m_SoundStore.PlaySound("fx_plyr_drive_splited_1", m_pTransformCom);
+
 			// 드라이브모드 진입을 위해 카메라 당김
 			CUI_Manager::GetInstance()->Set_TempOff(true);
 			dynamic_cast<CCanvas_DriveMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_DriveMove"))->
@@ -2166,6 +2152,8 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_ANIMCAM_START")
 		.OnStart([&]()
 		{
+			m_SoundStore.PlaySound("fx_plyr_drive_splited_2", m_pTransformCom);
+
 			m_pASM->SetCurState("IDLE");
 			m_pASM->SetCurState_BrainField("IDLE");
 			m_bSeperateAnim = false;
@@ -2193,6 +2181,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 		.AddState("DRIVEMODE_CAM_AWAY")
 		.OnStart([&]()
 		{
+			m_SoundStore.PlaySound("fx_plyr_drive_splited_3", m_pTransformCom);
 				// 카메라 빠지면서 폭발
 			list<CAnimation*> TestAnim;
 			TestAnim.push_back(m_pModel->Find_Animation("AS_ch0100_299_AL_enpc_drive_mode"));
@@ -2210,7 +2199,7 @@ HRESULT CPlayer::SetUp_DriveModeProductionStateMachine()
 			
 			// 연출 끝
 			CUI_Manager::GetInstance()->Set_TempOff(false);
-
+			CPlayerInfoManager::GetInstance()->Set_DriveGauge(true);
 		})
 			.AddTransition("DRIVEMODE_CAM_AWAY to DRIVEMODE_NOUSE", "DRIVEMODE_NOUSE")
 			.Predicator([&]()->_bool {return m_bZoomIsFinish; })
@@ -2238,7 +2227,7 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 
 			if (m_bBrainField)
 			{
-				CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
+				//CPlayerInfoManager::GetInstance()->Change_BrainFieldMaintain(CHANGE_DECREASE, (_float)fTimeDelta);
 			}
 		})
 		.OnExit([&]() {})
@@ -2254,8 +2243,6 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 		.OnStart([&]() 
 		{
 			m_bBrainField_Prod = true;
-
-			m_SoundStore.PlaySound("fx_kinetic_brainfield_in", m_pTransformCom);
 
 			m_pASM->SetCurState("IDLE");
 			m_pASM->SetCurState_BrainField("IDLE");
@@ -6237,6 +6224,29 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_SoundStore.CloneSound("fx_SAS_teleport_skill");
 
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.1");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.2");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.3");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.4");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.5");
+	m_SoundStore.CloneSound("fx_kinetic_brainfield_in.6");
+
+	m_SoundStore.CloneSound("fx_execute_karen_example");
+	m_SoundStore.CloneSound("fx_execute_karen_splited_6");
+	m_SoundStore.CloneSound("fx_plyr_drive_splited_1");
+	m_SoundStore.CloneSound("fx_plyr_drive_splited_2");
+	m_SoundStore.CloneSound("fx_plyr_drive_splited_3");
+
+	m_SoundStore.CloneSound("fx_kinetic_air_verylong");
+	m_SoundStore.CloneSound("fx_kinetic_counter_trig");
+
+	m_SoundStore.CloneSound("fx_kine_super_UI_button_long");
+	m_SoundStore.CloneSound("fx_kine_super_UI_button_short");
+
+	m_SoundStore.CloneSound("BrainCrash");
+
+	m_SoundStore.CloneSound("fx_SAS_trig");
+
 	//MonsterUI
 	m_SoundStore.CloneSound("UI_monster_alert");
 
@@ -6313,6 +6323,24 @@ HRESULT CPlayer::SetUp_Sound()
 	m_pModel->Add_EventCaller("BrainField_Swing", [this] {m_SoundStore.PlaySound("BrainField_Swing", m_pTransformCom); });
 
 	m_pModel->Add_EventCaller("fx_SAS_teleport_skill", [this] {m_SoundStore.PlaySound("fx_SAS_teleport_skill", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.1", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.1", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.2", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.2", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.3", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.3", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.4", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.4", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.5", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.5", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_kinetic_brainfield_in.6", [this] {m_SoundStore.PlaySound("fx_kinetic_brainfield_in.6", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_execute_karen_example", [this] {m_SoundStore.PlaySound("fx_execute_karen_example", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_execute_karen_splited_6", [this] {m_SoundStore.PlaySound("fx_execute_karen_splited_6", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_plyr_drive_splited_1", [this] {m_SoundStore.PlaySound("fx_plyr_drive_splited_1", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_plyr_drive_splited_2", [this] {m_SoundStore.PlaySound("fx_plyr_drive_splited_2", m_pTransformCom); });
+	m_pModel->Add_EventCaller("fx_plyr_drive_splited_3", [this] {m_SoundStore.PlaySound("fx_plyr_drive_splited_3", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_air_verylong", [this] {m_SoundStore.PlaySound("fx_kinetic_air_verylong", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("fx_kinetic_counter_trig", [this] {m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom); });
+	m_pModel->Add_EventCaller("BrainCrash", [this] {m_SoundStore.PlaySound("BrainCrash", m_pTransformCom); });
 
 	// 특수오브젝트
 	m_SoundStore.CloneSound("fx_kine_super_truck_example");
@@ -6406,6 +6434,10 @@ HRESULT CPlayer::SetUp_SpecialSound()
 			if (nullptr == CPlayerInfoManager::GetInstance()->Get_SpecialObject()) return;
 			if (SPECIAL_DROPOBJECT_BUNDLE != dynamic_cast<CSpecialObject*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->Get_SpecialType()) return;
 			m_SoundStore.PlaySound("fx_kine_super_crain_imp", CPlayerInfoManager::GetInstance()->Get_SpecialObject()->GetTransform()); 
+		});
+	m_pModel->Add_EventCaller("Impact", [this]
+		{
+			m_SoundStore.PlaySound("fx_kine_super_crain_imp", m_pTransformCom);
 		});
 	m_pModel->Add_EventCaller("fx_kine_super_crain_lift", [this] 
 		{
@@ -8146,6 +8178,7 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 		})
 		.OnExit([&]()
 		{
+			m_pCamSpot->Reset_CamMod();
 			m_pASM->SetCurState("IDLE");
 			SetAbleState({ false, false, false, false, false, true, true, true, true, false });
 		})
@@ -8176,6 +8209,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, PLATERTEST_LAYER_PLAYER);
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, LAYER_PLAYEREFFECT);
 			CGameInstance::GetInstance()->SetLayerTimeRatio(1.f, L"Layer_Camera");
+
+			m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
 
 			m_bSeperateAnim = false;
 			m_bKineticMove = false;
@@ -8218,6 +8253,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 
 					if (5.f >= fDistance)
 					{
+						//m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom);
+
 						auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em0210_brainCrash");
 						m_pPlayer_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pPlayerCam, m_pTransformCom, 0.f, 0.f);
 						m_pASM->InputAnimSocket("BrainCrash_AnimSocket", m_BrandCrash_em0200);
@@ -8229,6 +8266,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 					}
 					else
 					{
+						//m_SoundStore.PlaySound("BrainCrash", m_pTransformCom);
+
 						_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
 						_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 						pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
@@ -8244,6 +8283,8 @@ HRESULT CPlayer::SetUp_BrainCrashStateMachine()
 				}
 				else
 				{
+					//m_SoundStore.PlaySound("BrainCrash", m_pTransformCom);
+
 					_vector BC_Pos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION) + (XMVector3Normalize(m_pTransformCom->Get_State(CTransform::STATE_LOOK)) * 5.f);
 					_vector vPlayerPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 					pTarget->GetTransform()->LookAt_NonY(vPlayerPos);
@@ -8677,7 +8718,7 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.AddState("HBEAM_LEFT_ROTATION")
 		.OnStart([&]() 
 		{
-			ActiveSpecialUI(SPECIAL_HBEAM_BUNDLE);
+				// 돌리기 시작
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Catch();
 		})
 		.Tick([&](double fTimeDelta)
@@ -8685,6 +8726,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
 
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Collision();
+
+			if (m_bLeftClick)
+			{
+				m_SoundStore.PlaySound("fx_kine_super_UI_button_short", m_pTransformCom);
+			}
 		})
 		.OnExit([&]()
 		{
@@ -8700,13 +8746,12 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 		.AddState("HBEAM_LEFT_FINISH")
 		.OnStart([&]() 
 		{
+			ActiveSpecialUI(SPECIAL_HBEAM_BUNDLE);
+				 //다 돌리고 막타
 			m_pASM->AttachAnimSocket("Kinetic_Special_AnimSocket", m_HBeam_Finish_L);
 			static_cast<CSpecial_HBeam_Bundle*>(CPlayerInfoManager::GetInstance()->Get_SpecialObject())->HBeam_Single_Turn();
 
-			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
-			{
-				m_pSpecialUI->SetDelete();
-			}
+
 		})
 		.Tick([&](double fTimeDelta)
 		{
@@ -8720,6 +8765,11 @@ HRESULT CPlayer::SetUp_HBeamStateMachine()
 			HBeam.Reset();
 			static_cast<CCamSpot*>(m_pCamSpot)->Switch_CamMod();
 			m_fSpecialCharge = 0.f;
+
+			if (CGameInstance::GetInstance()->Check_ObjectAlive(m_pSpecialUI))
+			{
+				m_pSpecialUI->SetDelete();
+			}
 		})
 			.AddTransition("HBEAM_LEFT_FINISH to HBEAM_LEFT_NOUSE", "HBEAM_LEFT_NOUSE")
 			.Predicator([&]()->_bool 
@@ -9466,6 +9516,7 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 			if (m_bLeftClick && m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio() >= 0.2f)
 			{
 				ActiveSpecialUI(SPECIAL_IRONBARS, true);
+				m_SoundStore.PlaySound("fx_kine_super_UI_button_short", m_pTransformCom);
 
 				if (m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetName() == "AS_ch0100_348_AL_throw1_loop")
 				{
@@ -9834,6 +9885,7 @@ HRESULT CPlayer::SetUp_ContainerStateMachine()
 				if (m_bLeftClick)
 				{
 					ActiveSpecialUI(SPECAIL_CONTAINER, true);
+					m_SoundStore.PlaySound("fx_kine_super_UI_button_short", m_pTransformCom);
 				}
 
 				_float4 vTargetPos = static_cast<CScarletCharacter*>(CPlayerInfoManager::GetInstance()->Get_TargetedMonster())
@@ -13263,6 +13315,7 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 
 		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAMouseLeft.json");
 		m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAMouseLeft", &json);
+		m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 
 		break;
 
@@ -13270,6 +13323,7 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 
 		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SARebar.json");
 		m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SARebar", &json);
+		m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 
 		break;
 
@@ -13279,11 +13333,14 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_Go.json");
 			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_Go", &json);
+
+			m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 		}
 		else
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+			m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 		}
 
 		break;
@@ -13294,11 +13351,13 @@ void CPlayer::CreateSpecialUI(ESpecialType eType, _bool bAdditional)
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAContainer_Down.json");
 			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAContainer_Down", &json);
+			m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 		}
 		else
 		{
 			json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_SAGragting_S.json");
 			m_pSpecialUI = CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_SAGragting_S", &json);
+			m_SoundStore.PlaySound("fx_kine_super_UI_button_long", m_pTransformCom);
 		}
 
 		break;

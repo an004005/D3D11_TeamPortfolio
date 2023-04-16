@@ -14,6 +14,10 @@
 #include "EM1100.h"
 #include "BronJon.h"
 
+#include "Level_Loading_Simple.h"
+#include "Level_FinalStage.h"
+#include "PlayerInfoManager.h"
+
 CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
 {
@@ -95,6 +99,13 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 void CLevel_Hospital_1F::Tick(_double TimeDelta)
 {
+	if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
+	{
+		CGameInstance::GetInstance()->Open_Loading(
+			LEVEL_FINAL_STAGE,
+			CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
+	}
+
 	if (m_BGMOnce.IsNotDo())
 		m_BGM.PlaySound(m_MainSound);
 

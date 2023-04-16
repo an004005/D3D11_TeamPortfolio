@@ -12,9 +12,29 @@
             "MaxDistance" : 40.0
         },
         {
-            "Name" : "boss1_attack_dive",
+            "Name" : "boss1_attack_dive_jump_splited",
             "SoundFiles" : [
-                "Monsters/em0320/boss1_attack_dive.wav"],
+                "Monsters/em0320/boss1_attack_dive_jump_splited.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 25.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "boss1_attack_dive_stomp_splited",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_dive_stomp_splited.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 25.0,
+            "MaxDistance" : 60.0
+        },
+        {
+            "Name" : "boss1_attack_dive_struggle_splited",
+            "SoundFiles" : [
+                "Monsters/em0320/boss1_attack_dive_struggle_splited.wav"],
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,

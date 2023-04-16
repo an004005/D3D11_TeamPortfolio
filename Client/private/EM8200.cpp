@@ -251,10 +251,13 @@ void CEM8200::SetUpSound()
 	m_SoundStore.CloneSound("karen_fx_kinecounter");
 	m_SoundStore.CloneSound("karen_fx_tele");
 	m_SoundStore.CloneSound("karen_fx_thunder");
+	m_SoundStore.CloneSound("fx_execute_karen_splited_6");
+
 	m_SoundStore.CloneSound("Photo");
 	
 
 	m_pModelCom->Add_EventCaller("move_walk", [this]{m_SoundStore.PlaySound("move_walk");});
+	m_pModelCom->Add_EventCaller("fx_execute_karen_splited_6", [this] {m_SoundStore.PlaySound("fx_execute_karen_splited_6", m_pTransformCom); });
 }
 
 void CEM8200::Create_Bullet()

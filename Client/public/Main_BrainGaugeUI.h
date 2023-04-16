@@ -22,7 +22,7 @@ public:
 	}
 
 	void	Set_ChargeGauge(const _bool bGauge);
-	
+
 private:
 	_bool	m_bChargeGauge = { false };
 	_bool	m_bGaugeFull = { false };

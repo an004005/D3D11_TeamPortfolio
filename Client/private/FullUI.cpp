@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\public\FullUI.h"
 #include "GameInstance.h"
+#include "Level_Loading_Simple.h"
+#include "Level_Tutorial.h"
 
 CFullUI::CFullUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -34,6 +36,17 @@ void CFullUI::Tick(_double TimeDelta)
 
 	m_fSizeX = _float(g_iWinSizeX);
 	m_fSizeY = _float(g_iWinSizeY);
+
+
+	if (LEVEL_NOW == LEVEL_LOGO)
+	{
+		if (CGameInstance::GetInstance()->KeyDown(DIK_RETURN))
+		{
+			CGameInstance::GetInstance()->Open_Loading(
+				LEVEL_TUTORIAL,
+				CLevel_Loading_Simple::Create<CLevel_Tutorial>(m_pDevice, m_pContext));
+		}
+	}
 }
 
 CFullUI * CFullUI::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

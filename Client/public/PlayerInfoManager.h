@@ -227,8 +227,8 @@ public:	// Set
 	void			SetAILock(_bool bLock) { m_bAILock = bLock; }
 	_bool			GetAILock() { return m_bAILock; }
 
-	void			SetTeleportDissolve() { m_bDissolve = true; }
-	_float			GetTeleportDissolve() { return m_fDissolve; }
+	void			SetTeleportDissolve(_float fTimer) { m_bDissolve = true; m_fDissolve = fTimer; }
+	_float			GetTeleportDissolve();
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
@@ -240,13 +240,20 @@ public:	// Set
 	// HRESULT			Set_TargetedMonster(CGameObject* pTargetedMonster);
 	// HRESULT			Set_SpecialObject(CGameObject* pSpecialObject);
 
-	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP = iBP;	}
+	void			Set_BP(const _uint iBP) { m_tPlayerStat.iBP += iBP;	}
 
 	void			Set_Exp(const _uint iExp);
 	
 	// SAS
 	void			Set_SASMember(const SASMEET eSAS) { 
 		m_bSASMember[eSAS] = true; 
+	}
+
+	void		Set_DriveGauge(const _bool	bGaugeRender) {
+		m_bDriveGauge = bGaugeRender;
+	}
+	_bool		Get_DriveGauge() {
+		return m_bDriveGauge;
 	}
 
 public: // AI관련
@@ -295,7 +302,7 @@ private:	// 스토리용 텔레포트 디졸브용
 
 private:
 	_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { false, false, false, false, false, false, false };
-	//_bool	m_bSASMember[SASMEET::SASMEMBER_END] = { true, true, true, true, true, true, true };
+	_bool	m_bDriveGauge = { false };
 
 private:
 	_bool	m_bAILock = false;

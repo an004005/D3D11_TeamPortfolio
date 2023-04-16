@@ -50,10 +50,10 @@ void CPlayerHotFixer::Tick()
 		//CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);
 		//CPlayerInfoManager::GetInstance()->Tsugumi_Active(m_bTsugumiActive);
 
-		if (ImGui::Button("TeleportDissolve"))
-		{
-			CPlayerInfoManager::GetInstance()->SetTeleportDissolve();
-		}
+		//if (ImGui::Button("TeleportDissolve"))
+		//{
+		//	CPlayerInfoManager::GetInstance()->SetTeleportDissolve(0.f);
+		//}
 
 		if (ImGui::Button("MaskEffect"))
 		{

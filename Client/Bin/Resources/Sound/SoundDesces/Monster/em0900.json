@@ -41,8 +41,17 @@
             "MaxDistance" : 40.0
         },
         {
-            "Name" : "santa_throw_voice",
-            "SoundFiles" : ["Monsters/em0900/santa_throw_voice.wav"],
+            "Name" : "mon_santa_throw_splited",
+            "SoundFiles" : ["Monsters/em0900/mon_santa_throw_splited.wav"],
+            "2DSound" : false,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "mon_santa_throw_voice_splited",
+            "SoundFiles" : ["Monsters/em0900/mon_santa_throw_voice_splited.wav"],
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,

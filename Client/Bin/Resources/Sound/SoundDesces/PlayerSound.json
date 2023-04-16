@@ -657,6 +657,196 @@
             "Loop": false,
             "MinDistance": 5.0,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.1",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.2",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.3",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.3.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.4",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.4.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.5",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.5.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_brainfield_in.6",
+            "SoundFiles": [
+                "BrainField/fx_kinetic_brainfield_in.6.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_execute_karen_example",
+            "SoundFiles": [
+                "FX/fx_execute_karen_example.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_execute_karen_splited_6",
+            "SoundFiles": [
+                "FX/fx_execute_karen_splited_6.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 1.0,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_plyr_drive_splited_1",
+            "SoundFiles": [
+                "FX/fx_plyr_drive_splited_1.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_plyr_drive_splited_2",
+            "SoundFiles": [
+                "FX/fx_plyr_drive_splited_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_plyr_drive_splited_3",
+            "SoundFiles": [
+                "FX/fx_plyr_drive_splited_3.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_air_verylong",
+            "SoundFiles": [
+                "Kinetic/fx_kinetic_air_verylong.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kinetic_counter_trig",
+            "SoundFiles": [
+                "Kinetic/fx_kinetic_counter_trig.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kine_super_UI_button_long",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_UI_button_long_1.wav",
+                "Kinetic/fx_kine_super_UI_button_long_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_kine_super_UI_button_short",
+            "SoundFiles": [
+                "Kinetic/fx_kine_super_UI_button_short_1.wav",
+                "Kinetic/fx_kine_super_UI_button_short_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "BrainCrash",
+            "SoundFiles": [
+                "FX/BrainCrash.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_SAS_trig",
+            "SoundFiles": [
+                "FX/fx_SAS_trig_1.wav",
+                "FX/fx_SAS_trig_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
         }
     ]
 }
