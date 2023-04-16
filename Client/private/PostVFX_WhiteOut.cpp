@@ -20,6 +20,9 @@ HRESULT CPostVFX_WhiteOut::Initialize(void* pArg)
 	// m_bBeforeUI = false; // after ui
 	m_tParam.iPass = 1;
 	m_tParam.Floats.push_back(0.f);
+	m_tParam.Ints.push_back(0);
+
+	m_Timeline.SetCurve("RiseDown");
 	return S_OK;
 }
 
@@ -31,9 +34,18 @@ void CPostVFX_WhiteOut::Tick(_double TimeDelta)
 		m_bVisible = false;
 	else
 		m_bVisible = true;
+
+
+	m_Timeline.Tick(TimeDelta, m_tParam.Floats[0]);
 }
 
 void CPostVFX_WhiteOut::SetWhiteOutTime(_float fWhiteOutTime)
 {
 	m_tParam.Floats[0] = fWhiteOutTime;
+}
+
+void CPostVFX_WhiteOut::BlackInOut()
+{
+	m_Timeline.PlayFromStart();
+	m_tParam.Ints[0] = 1;
 }

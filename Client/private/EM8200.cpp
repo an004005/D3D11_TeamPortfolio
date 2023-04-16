@@ -2269,12 +2269,41 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			if (fPlayRatio > 0.9f && m_ItemSpawn.IsNotDo())
 			{
 				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/FinalItem.json");
-				_float4x4 WorldMatrix = m_pTransformCom->Get_WorldMatrix();
-				json["Transform"]["WorldMatrix"] = WorldMatrix;
+				json["Transform"]["WorldMatrix"] = _float4x4::Identity;
 				CGameInstance::GetInstance()->Clone_GameObject(LEVEL_NOW, L"Layer_ITEM", L"ConsumptionItem", &json);
 			}
 		})
+		.AddTransition("to ending", "Ending")
+			.Predicator([this]
+			{
+				return CGameInstance::GetInstance()->KeyDown(DIK_P);
+			})
+
+	.AddState("Ending")
+		.OnStart([this]
+		{
+			m_pBrainField->BlackInOut();
+
+
+			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
+
+			m_pKaren_AnimCam->StartCamAnim(pCamAnim,
+				_float4x4::Identity,
+				_float4x4::Identity);
 		
+			m_pKaren_AnimCam->AddEvent("Spawn_Junghwan", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Junghwan.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_JongWook", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_JongWook.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Jihoon", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Jihoon.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Kibum", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Kibum.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Suhyun", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Suhyun.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Inbok", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Inbok.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Sound", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Sound.json"); });
+			m_pKaren_AnimCam->AddEvent("Spawn_Team", []() {CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/Spawn_Team.json"); });
+		})
+		.Tick([this](_double)
+		{
+			
+		})
 	;
 
 }
@@ -2354,8 +2383,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				// return m_bStoryEnd;
-				return false;
+				return m_bStoryEnd;
+				// return false;
 			})
 
 		.AddState("BattleStart")
