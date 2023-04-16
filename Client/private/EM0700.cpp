@@ -438,7 +438,6 @@ void CEM0700::SetUpFSM()
 
 						if (m_pASM->isSocketPassby("FullBody", 0.5f))
 						{
-							m_SoundStore.PlaySound("Break_Brain", m_pTransformCom);
 							m_pBrain->EndBC();
 							m_pBrain->SetDelete();
 							m_pBrain = nullptr;
