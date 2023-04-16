@@ -48,7 +48,7 @@ HRESULT CSpecial_TelephonePole::Initialize(void * pArg)
 		}
 	});
 
-	m_SoundStore.CloneSound("fx_kine_super_telepole_imp");
+	m_SoundStore.CloneSound("fx_kine_super_telepole_finish_imp");
 
 	return S_OK;
 }
@@ -274,7 +274,9 @@ void CSpecial_TelephonePole::TelephonePole_Collision_On()
 		CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, L"Special_G_TelephonePole_BreakMeshes")->
 			Start_AttachPosition(this, vColPos, XMVectorSet(0.f, 1.f, 0.f, 0.f), false);
 
-		m_SoundStore.PlaySound("fx_kine_super_telepole_imp", m_pTransformCom);
+		m_SoundStore.PlaySound("fx_kine_super_telepole_finish_imp", m_pTransformCom);
+
+		CGameInstance::GetInstance()->PlayShake(0.2f, 0.5f);
 
 		m_bAddAble = true;
 	}

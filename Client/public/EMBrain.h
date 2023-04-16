@@ -41,14 +41,6 @@ private:
 	class CEffectGroup* m_DistortionEffect = nullptr;
 	class CParticleGroup* m_pStartParticle = nullptr;
 
-	//브레인 크러쉬 시작할때 생성, 전구 깨질때 삭제
-	class CEffectGroup* m_pLoopEffect = nullptr;
-
-	//브레인 크러쉬 전구 깨질때 생성
-	class CParticleGroup* m_pDestroyParticle = nullptr;
-	class CEffectGroup* m_pDestroyEffect = nullptr;
-private:
-
 
 public:
 	static CEMBrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -37,8 +37,8 @@ HRESULT CLevel_FinalStage::Initialize()
 
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
-	// if (FAILED(Ready_Layer_AI(LAYER_AI)))
-	// 	return E_FAIL;
+	if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	 	return E_FAIL;
 
 
 	// _matrix matTarget = XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixTranslation(0.f, 0.f, 0.f);

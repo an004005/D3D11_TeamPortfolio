@@ -74,23 +74,13 @@ void CEMBrain::BeginBC()
     Safe_AddRef(m_DistortionEffect);
     m_DistortionEffect->Start_NoAttach(this, true);
 
-    //m_pLoopEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light_Loop");
-    //assert(m_pLoopEffect != nullptr);
-    //Safe_AddRef(m_pLoopEffect);
-    //m_pLoopEffect->Start_NoAttach(this, true);
+
 }
 
 void CEMBrain::EndBC()
 {
     m_bVisible = true;
 
-    //Delete LoofEffect 
-    if (m_pLoopEffect != nullptr)
-    {
-        m_pLoopEffect->SetDelete();
-        Safe_Release(m_pLoopEffect);
-        m_pLoopEffect = nullptr;
-    }
 
     //Create Particle
     m_pDestroyParticle = CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_MONSTER, L"Brain_Crush_Destroy_Light_Particle");
@@ -99,10 +89,13 @@ void CEMBrain::EndBC()
     m_pDestroyParticle->Start_NoAttach(this, false);
 
    //Create Effect
-    m_pDestroyEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light");
-    assert(m_pDestroyEffect != nullptr);
-    Safe_AddRef(m_pDestroyEffect);
-    m_pDestroyEffect->Start_NoAttach(this, false);
+    //m_pDestroyEffect = CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light");
+    //assert(m_pDestroyEffect != nullptr);
+    //Safe_AddRef(m_pDestroyEffect);
+    //m_pDestroyEffect->Start_NoAttach(this, false);
+
+    _float4 vTransform = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+    CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Brain_Crush_Destroy_Light")->Start_AttachOnlyPos(vTransform, false);
 }
 
 
@@ -171,27 +164,6 @@ void CEMBrain::Free()
             m_pStartParticle->SetDelete();
             Safe_Release(m_pStartParticle);
             m_pStartParticle = nullptr;
-        }
-
-        if (m_pLoopEffect != nullptr)
-        {
-            m_pLoopEffect->SetDelete();
-            Safe_Release(m_pLoopEffect);
-            m_pLoopEffect = nullptr;
-        }
-
-        if (m_pDestroyParticle != nullptr)
-        {
-            m_pDestroyParticle->SetDelete();
-            Safe_Release(m_pDestroyParticle);
-            m_pDestroyParticle = nullptr;
-        }
-
-        if (m_pDestroyEffect != nullptr)
-        {
-            m_pDestroyEffect->SetDelete();
-            Safe_Release(m_pDestroyEffect);
-            m_pDestroyEffect = nullptr;
         }
     }
 }
