@@ -36,7 +36,6 @@ HRESULT CEM0800::Initialize(void * pArg)
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{
 		m_iMaxHP = LEVEL_NOW * (300 + (CMathUtils::RandomUInt(10)));
-		m_iMaxHP *= 2;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 1.2f;

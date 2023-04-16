@@ -2528,8 +2528,6 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 				CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
 				m_bBattleStart = true;
-
-				m_pEMUI->Create_BossUI();
 			})
 
 				

@@ -111,9 +111,6 @@ void CGameObject::Imgui_RenderProperty()
 	if (ImGui::Button("Visibie"))
 		m_bVisible = !m_bVisible;
 
-	if (ImGui::Button("Delete"))
-		m_bDelete = true;
-
 	CImguiUtils::FileDialog_FileSelector("Save Object to", ".json", "../Bin/Resources/Objects/",
 	[this](const string& filePath)
 	{

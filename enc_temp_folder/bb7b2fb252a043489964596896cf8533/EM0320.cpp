@@ -44,7 +44,7 @@ HRESULT CEM0320::Initialize(void* pArg)
 
 	// 초기값 지정. LEVEL_NOW 에 따라
 	{ 
-		m_iMaxHP =  15000;
+		m_iMaxHP =  20000;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.7f;

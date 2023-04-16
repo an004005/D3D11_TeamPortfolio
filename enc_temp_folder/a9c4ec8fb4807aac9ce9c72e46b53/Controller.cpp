@@ -30,15 +30,6 @@ void CController::Tick(_double TimeDelta)
 {
 	auto pGameInstance = CGameInstance::GetInstance();
 
-	if (m_bRejector)
-	{
-		if (pGameInstance->KeyDown(CInput_Device::DIM_LB))
-			m_bRejector = false;
-
-		Invalidate();
-		return;
-	}
-
 	m_vMouseAxis = _float2::Zero;
 	m_vMoveAxis = _float3::Zero;
 
