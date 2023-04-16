@@ -17,6 +17,7 @@
 #include "CurveFloatMapImpl.h"
 #include "Player.h"
 #include "PostVFX_WhiteOut.h"
+#include "PlayerInfoManager.h"
 
 
 CEM8200_BrainField::CEM8200_BrainField(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -108,11 +109,12 @@ void CEM8200_BrainField::BeginTick()
 	{
 		if (auto pSkyBox = dynamic_cast<CSkyBox*>(pObj))
 			m_pSkyBox = pSkyBox;
-		else if (auto pScarletMap = dynamic_cast<CScarletMap*>(pObj))
-		{
-			if (pScarletMap != m_pBrainFieldMap)
-				m_pDefaultMap = pScarletMap;
-		}
+		//else if (auto pScarletMap = dynamic_cast<CScarletMap*>(pObj))
+		//{
+		//	if (pScarletMap != m_pBrainFieldMap)
+		//		m_pDefaultMap = pScarletMap;
+		//}
+		m_pDefaultMap = CPlayerInfoManager::GetInstance()->m_pDefaultMap;
 	}
 }
 

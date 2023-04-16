@@ -17,6 +17,7 @@
 #include "RedString.h"
 #include "VFX_Manager.h"
 #include "MapInstance_Object.h"
+#include "PlayerInfoManager.h"
 
 /**********************
  * CBrainField
@@ -108,11 +109,13 @@ void CBrainField::BeginTick()
 	{
 		if (auto pSkyBox = dynamic_cast<CSkyBox*>(pObj))
 			m_pSkyBox = pSkyBox;
-		else if (auto pScarletMap = dynamic_cast<CScarletMap*>(pObj))
-		{
-			if (pScarletMap != m_pBrainFieldMap)
-				m_pDefaultMap = pScarletMap;
-		}
+		//else if (auto pScarletMap = dynamic_cast<CScarletMap*>(pObj))
+		//{
+		//	if (pScarletMap != m_pBrainFieldMap)
+		//		m_pDefaultMap = pScarletMap;
+		//}
+
+		m_pDefaultMap = CPlayerInfoManager::GetInstance()->m_pDefaultMap;
 	}
 
 
