@@ -13,6 +13,8 @@
 
 #include "EM1200.h"
 #include "BronJon.h"
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
 
 CLevel_NaomiRoom::CLevel_NaomiRoom(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -22,6 +24,10 @@ CLevel_NaomiRoom::CLevel_NaomiRoom(ID3D11Device * pDevice, ID3D11DeviceContext *
 HRESULT CLevel_NaomiRoom::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+	// CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+	// CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");
+
 
 	m_strLevelName = L"NaomiRoom";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/NaomiRoom_ShadowCam.json";

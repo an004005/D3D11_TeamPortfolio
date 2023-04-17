@@ -225,6 +225,103 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	}
 }
 
+void CPlayerInfoManager::Save(const string& path)
+{
+	Json json;
+
+	json["PlayerStat"]["m_iHP"] = m_tPlayerStat.m_iHP;
+	json["PlayerStat"]["m_iMaxHP"] = m_tPlayerStat.m_iMaxHP;
+	json["PlayerStat"]["m_iKineticEnergy"] = m_tPlayerStat.m_iKineticEnergy;
+	json["PlayerStat"]["m_iMaxKineticEnergy"] = m_tPlayerStat.m_iMaxKineticEnergy;
+	json["PlayerStat"]["m_iKineticEnergyLevel"] = m_tPlayerStat.m_iKineticEnergyLevel;
+	json["PlayerStat"]["m_iKineticEnergyType"] = m_tPlayerStat.m_iKineticEnergyType;
+
+	json["PlayerStat"]["iExp"] = m_tPlayerStat.iExp;
+	json["PlayerStat"]["iMaxExp"] = m_tPlayerStat.iMaxExp;
+	json["PlayerStat"]["iLevel"] = m_tPlayerStat.iLevel;
+	json["PlayerStat"]["iSprbrPower"] = m_tPlayerStat.iSprbrPower;
+	json["PlayerStat"]["iDefense"] = m_tPlayerStat.iDefense;
+	json["PlayerStat"]["iBP"] = m_tPlayerStat.iBP;
+	json["PlayerStat"]["iCoin"] = m_tPlayerStat.iCoin;
+	json["PlayerStat"]["iWeaponType"] = m_tPlayerStat.iWeaponType;
+
+	json["SasMember"] = m_bSASMember;
+
+	json["Hanabi"]["iHP"] = m_tHanabiStat.iHP;
+	json["Hanabi"]["iMaxHP"] = m_tHanabiStat.iMaxHP;
+	json["Hanabi"]["iExp"] = m_tHanabiStat.iExp;
+	json["Hanabi"]["iMaxExp"] = m_tHanabiStat.iMaxExp;
+	json["Hanabi"]["iLevel"] = m_tHanabiStat.iLevel;
+	json["Hanabi"]["iBondLevel"] = m_tHanabiStat.iBondLevel;
+	json["Hanabi"]["iSprbrPower"] = m_tHanabiStat.iSprbrPower;
+	json["Hanabi"]["iAttack"] = m_tHanabiStat.iAttack;
+	json["Hanabi"]["iDefense"] = m_tHanabiStat.iDefense;
+
+
+	json["Tsugumi"]["iHP"] = m_tTsugumiStat.iHP;
+	json["Tsugumi"]["iMaxHP"] = m_tTsugumiStat.iMaxHP;
+	json["Tsugumi"]["iExp"] = m_tTsugumiStat.iExp;
+	json["Tsugumi"]["iMaxExp"] = m_tTsugumiStat.iMaxExp;
+	json["Tsugumi"]["iLevel"] = m_tTsugumiStat.iLevel;
+	json["Tsugumi"]["iBondLevel"] = m_tTsugumiStat.iBondLevel;
+	json["Tsugumi"]["iSprbrPower"] = m_tTsugumiStat.iSprbrPower;
+	json["Tsugumi"]["iAttack"] = m_tTsugumiStat.iAttack;
+	json["Tsugumi"]["iDefense"] = m_tTsugumiStat.iDefense;
+
+
+	std::ofstream file(path);
+	file << json;
+
+}
+
+void CPlayerInfoManager::Load(const string& path)
+{
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson(path);
+
+	m_tPlayerStat.m_iHP = json["PlayerStat"]["m_iHP"];
+	m_tPlayerStat.m_iMaxHP = json["PlayerStat"]["m_iMaxHP"];
+	m_tPlayerStat.m_iKineticEnergy = json["PlayerStat"]["m_iKineticEnergy"];
+	m_tPlayerStat.m_iMaxKineticEnergy = json["PlayerStat"]["m_iMaxKineticEnergy"];
+	m_tPlayerStat.m_iKineticEnergyLevel = json["PlayerStat"]["m_iKineticEnergyLevel"];
+	m_tPlayerStat.m_iKineticEnergyType = json["PlayerStat"]["m_iKineticEnergyType"];
+
+	m_tPlayerStat.iExp = json["PlayerStat"]["iExp"];
+	 m_tPlayerStat.iMaxExp = json["PlayerStat"]["iMaxExp"];
+	m_tPlayerStat.iLevel = json["PlayerStat"]["iLevel"];
+	m_tPlayerStat.iSprbrPower = json["PlayerStat"]["iSprbrPower"];
+	m_tPlayerStat.iDefense = json["PlayerStat"]["iDefense"];
+	m_tPlayerStat.iBP = json["PlayerStat"]["iBP"];
+	m_tPlayerStat.iCoin = json["PlayerStat"]["iCoin"];
+	 m_tPlayerStat.iWeaponType = json["PlayerStat"]["iWeaponType"];
+
+
+	for (int i = 0; i < json["SasMember"].size(); ++i)
+	{
+		m_bSASMember[i] = json["SasMember"][i];
+	}
+
+	m_tHanabiStat.iHP = json["Hanabi"]["iHP"];
+	m_tHanabiStat.iMaxHP = json["Hanabi"]["iMaxHP"];
+	m_tHanabiStat.iExp = json["Hanabi"]["iExp"];
+	m_tHanabiStat.iMaxExp = json["Hanabi"]["iMaxExp"];
+	m_tHanabiStat.iLevel = json["Hanabi"]["iLevel"];
+	m_tHanabiStat.iBondLevel = json["Hanabi"]["iBondLevel"];
+	m_tHanabiStat.iSprbrPower = json["Hanabi"]["iSprbrPower"];
+	m_tHanabiStat.iAttack = json["Hanabi"]["iAttack"];
+	m_tHanabiStat.iDefense =json["Hanabi"]["iDefense"];
+
+
+	m_tTsugumiStat.iHP = json["Tsugumi"]["iHP"] ;
+	m_tTsugumiStat.iMaxHP = json["Tsugumi"]["iMaxHP"] ;
+	m_tTsugumiStat.iExp = json["Tsugumi"]["iExp"]  ;
+	m_tTsugumiStat.iMaxExp = json["Tsugumi"]["iMaxExp"] ;
+	m_tTsugumiStat.iLevel = json["Tsugumi"]["iLevel"] ;
+	m_tTsugumiStat.iBondLevel = json["Tsugumi"]["iBondLevel"] ;
+	m_tTsugumiStat.iSprbrPower = json["Tsugumi"]["iSprbrPower"] ;
+	m_tTsugumiStat.iAttack = json["Tsugumi"]["iAttack"] ;
+	m_tTsugumiStat.iDefense = json["Tsugumi"]["iDefense"] ;
+}
+
 _bool CPlayerInfoManager::Get_isSasUsing(ESASType eType)
 {
 	for (auto& iter : m_PlayerSasTypeList)
@@ -576,7 +673,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tHanabiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+		_uint iOverExp = iAllExp - m_tHanabiStat.iMaxExp;
 
 		++m_tHanabiStat.iLevel;
 		m_tHanabiStat.iMaxExp += 1000;
@@ -593,7 +690,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tTsugumiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+		_uint iOverExp = iAllExp - m_tTsugumiStat.iMaxExp;
 
 		++m_tTsugumiStat.iLevel;
 		m_tTsugumiStat.iMaxExp += 1000;
