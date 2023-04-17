@@ -25,8 +25,7 @@ HRESULT CLevel_NaomiRoom::Initialize()
 {
 	 //m_bPlayerSpawn = false;
 
-	// CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
-	// CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");
+
 
 
 	m_strLevelName = L"NaomiRoom";
