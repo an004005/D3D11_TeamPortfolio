@@ -1,5 +1,6 @@
 #pragma once
 #include "MapObject.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CRigidBody;
@@ -149,6 +150,10 @@ private:
 
 private:
 	_float				m_fRefloatTime = 0.f;
+
+	_float3				m_fToque;
+	_float3				m_fForce;
+	CDoOnce m_Once;
 
 private:
 	vector<wstring>		m_vecRandomParticle{

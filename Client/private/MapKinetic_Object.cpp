@@ -257,6 +257,11 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	if (m_bThrow)
 	{
 		m_pCollider->Set_ColliderType(CT_PLAYER_ATTACK);
+		if (m_Once.IsNotDo())
+		{
+			m_pCollider->AddVelocity(m_fForce);
+			m_pCollider->AddTorque(m_fToque);
+		}
 	}
 	else
 	{
@@ -443,8 +448,11 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 	m_pCollider->Set_Trigger(false);
 	//m_pCollider->UpdateChange();
 
-	m_pCollider->AddVelocity(vForce);
-	m_pCollider->AddTorque(vTorque);
+	m_fForce = vForce;
+	m_fToque = vTorque;
+
+	// m_pCollider->AddVelocity(vForce);
+	// m_pCollider->AddTorque(vTorque);
 }
 
 void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)
