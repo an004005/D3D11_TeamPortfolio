@@ -91,6 +91,11 @@ HRESULT CGameManager::Initialize()
 		json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		pCanvas_Alarm->Set_MapName(3.0f);
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+
 	}
 	else if (LEVEL_NOW == LEVEL_CONSTRUCTIONSITE_2F)
 	{
@@ -98,6 +103,10 @@ HRESULT CGameManager::Initialize()
 		CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
 		assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
 		pCanvas_Quest->Add_Quest(2, false);
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
 	}
 	else if (LEVEL_NOW == LEVEL_SUBWAY)
 	{
@@ -105,6 +114,14 @@ HRESULT CGameManager::Initialize()
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		pCanvas_Alarm->Set_MapName(1.0f);
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
 	else if (LEVEL_NOW == LEVEL_HOSPITAL_1F)
 	{
@@ -112,6 +129,24 @@ HRESULT CGameManager::Initialize()
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");
 		CCanvas_Alarm* pCanvas_Alarm = dynamic_cast<CCanvas_Alarm*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Test", L"Canvas_Alarm", &json));
 		pCanvas_Alarm->Set_MapName(2.0f);
+
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
+	}
+	else if(LEVEL_NOW == LEVEL_FINAL_STAGE)
+	{
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
 
 	return S_OK;
