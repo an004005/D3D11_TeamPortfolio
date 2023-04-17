@@ -278,6 +278,8 @@ void CEM8200::Spawn_Portrait(const string& strEventName)
 	{
 		m_pShaderUI->Set_Float2sX(6.0f);
 	}
+	
+	
 }
 
 void CEM8200::SetUpSound()
@@ -877,7 +879,7 @@ void CEM8200::Imgui_RenderProperty()
 		m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
 		m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
 		m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
-
+		m_pKaren_AnimCam->AddEvent("No_Spawn", [this]() {m_pShaderUI->Set_Float2sX(7.0f); });
 	}
 
 	if (ImGui::CollapsingHeader("ASM"))
@@ -2509,8 +2511,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				return m_bStoryEnd;
-				// return false;
+				//return m_bStoryEnd;
+				 return false;
 			})
 
 		.AddState("BattleStart")
