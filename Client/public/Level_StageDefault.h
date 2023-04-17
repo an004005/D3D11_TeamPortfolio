@@ -57,10 +57,6 @@ protected:
 	_bool m_bPlayerSpawn = true;
 
 	CDoOnce m_SetMainCamOnce;
-
-	class CPostVFX_WhiteOut* m_pBlack = nullptr;
-
-
 };
 
 END

@@ -20,7 +20,6 @@
 #include "Imgui_LightManager.h"
 #include "PlayerInfoManager.h"
 #include "ScarletMap.h"
-#include "PostVFX_WhiteOut.h"
 
 CLevel_StageDefault::CLevel_StageDefault(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CLevel(pDevice, pContext)
@@ -81,21 +80,12 @@ HRESULT CLevel_StageDefault::Initialize()
 
 	m_SetMainCamOnce.Reset();
 
-	m_pBlack = dynamic_cast<CPostVFX_WhiteOut*>(CGameInstance::GetInstance()->Clone_GameObject_Get(LEVEL_NOW, L"Layer_BlackLoad", L"ProtoPostVFX_WhiteOut"));
-	m_pBlack->GetParam().Ints[0] = 1;
-	m_pBlack->GetParam().Floats[0] = 1.f;
-
 	return S_OK;
 }
 
 void CLevel_StageDefault::Tick(_double TimeDelta)
 {
 	CLevel::Tick(TimeDelta);
-
-	if (m_pBlack->GetParam().Floats[0] > 0.f)
-	{
-		m_pBlack->GetParam().Floats[0] -= TimeDelta * 0.5;
-	}
 
 	if (auto pLoadingCam = CGameInstance::GetInstance()->FindCamera("LoadingCam"))
 	{
