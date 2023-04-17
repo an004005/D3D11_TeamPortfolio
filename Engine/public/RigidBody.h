@@ -40,7 +40,7 @@ public:
 
 	void Set_Kinetic(_bool bKinematic);
 	void Set_Trigger(_bool bTrigger);
-	void Set_ColliderType(ECOLLIDER_TYPE eType) { m_eColliderType = eType; }
+	void Set_ColliderType(ECOLLIDER_TYPE eType);
 
 	_bool IsKinematic() const { return m_bKinematic; }
 	_bool IsTrigger() const { return m_bTrigger; }
