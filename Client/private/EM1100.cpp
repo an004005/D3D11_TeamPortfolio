@@ -16,6 +16,7 @@
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
 #include "GameManager.h"
+#include "Player.h"
 
 CEM1100::CEM1100(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CEnemy(pDevice, pContext)
@@ -106,6 +107,8 @@ void CEM1100::SetUpSound()
 	m_SoundStore.CloneSound("tree_attack_whip");
 	m_SoundStore.CloneSound("tree_backstep");
 	m_SoundStore.CloneSound("tree_move");
+	m_SoundStore.CloneSound("boss1_attack_dive_jump_splited");
+
 
 	m_pModelCom->Add_EventCaller("tree_attack_elecball", [this] {m_SoundStore.PlaySound("tree_attack_elecball", m_pTransformCom); });
 	m_pModelCom->Add_EventCaller("tree_attack_smash", [this]{m_SoundStore.PlaySound("tree_attack_smash", m_pTransformCom);});
@@ -845,6 +848,30 @@ _bool CEM1100::IsWeak(CRigidBody* pHitPart)
 _float4 CEM1100::GetKineticTargetPos()
 {
 	return XMLoadFloat4x4(&GetRigidBody("Weak")->GetPxWorldMatrix()).r[3];
+}
+
+void CEM1100::CheckHP(DAMAGE_PARAM& eParam)
+{
+	//true가 됐다는건 플레이어가 G키를 눌러 브레인 크러쉬를 실행했다는거.
+//브레인 크러쉬 애니메이션에 맞춰서 SetDead 함수를 실행시켜 줌
+	if (m_bCrushStart == true) return;
+
+	_int iDamage = eParam.iDamage;
+
+	if (m_bHitWeak)
+		iDamage *= 1.2f;
+
+	m_iHP -= iDamage;
+
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField
+		&& dynamic_cast<CPlayer*>(eParam.pCauser))
+		m_SoundStore.PlaySound("boss1_attack_dive_jump_splited", m_pTransformCom);
+
+	if (m_iHP < 0)
+	{
+		SetDead();
+		m_iHP = 0;
+	}
 }
 
 _bool CEM1100::IsPlayingSocket() const

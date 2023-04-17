@@ -388,7 +388,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iAttack = 153;
 	tPickInfo.iDefense = 76;
 	tPickInfo.fShaderInfoIndex = { 5.0f };
-	tPickInfo.iSasMember = 3;
+	tPickInfo.iSasMember = 7;
 	m_arrSASInfo[4] = tPickInfo;
 }
 
