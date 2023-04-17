@@ -2534,6 +2534,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
 
+				CUI_Manager::GetInstance()->Set_TempOff(false);
+
 
 				Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 				CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
