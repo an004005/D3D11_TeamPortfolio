@@ -39,6 +39,7 @@ public:
 	virtual void TakeDamage(DAMAGE_PARAM tDamageParams) override;
 	virtual void SetEnemyBatchDataStat(ENEMY_STAT tStat);
 	virtual ENEMY_STAT GetEnemyBatchDataStat();
+	virtual void SetDelete() override;
 	
 public:
 	//0 ~ 1 사이값
@@ -187,6 +188,7 @@ protected:
 
 	//플레이어와 전투중인지 확인
 	_double	m_dCombetTime = 0.0;
+
 public:
 	virtual void Free() override;
 };

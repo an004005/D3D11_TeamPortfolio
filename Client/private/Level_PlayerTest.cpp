@@ -210,10 +210,10 @@ void CLevel_PlayerTest::Tick(_double TimeDelta)
 void CLevel_PlayerTest::Late_Tick(_double TimeDelta)
 {
 	CLevel::Late_Tick(TimeDelta);
-	if (CGameInstance::GetInstance()->KeyDown(DIK_9))
+	/*if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 	{
 		CGameInstance::GetInstance()->Clone_GameObject(L"test", L"Indicator");
-	}
+	}*/
 }
 
 HRESULT CLevel_PlayerTest::Render()

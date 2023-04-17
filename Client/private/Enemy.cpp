@@ -92,7 +92,7 @@ HRESULT CEnemy::Initialize(void* pArg)
 	FAILED_CHECK(CScarletCharacter::Initialize(pArg));
 	m_DeathTimeline.SetFinishFunction([this]
 	{
-		m_bDelete = true;
+		SetDelete();
 	});
 	m_DeathTimeline.SetCurve("Simple_Increase");
 
@@ -126,7 +126,7 @@ void CEnemy::Tick(_double TimeDelta)
 	m_pModelCom->Tick(TimeDelta);
 
 	//if (GetKeyState('K') & 0x8000)
-	//	SetDead(); 
+	//	SetDead();
 	
 }
 
@@ -143,6 +143,8 @@ void CEnemy::Late_Tick(_double TimeDelta)
 void CEnemy::Imgui_RenderProperty()
 {
 	CScarletCharacter::Imgui_RenderProperty();
+
+	ImGui::InputInt("HP", &m_iHP);
 
 	if (ImGui::Button("KBRecompiler"))
 		SetUpFSM();
@@ -288,7 +290,7 @@ void CEnemy::TakeDamage(DAMAGE_PARAM tDamageParams)
 		tReport.eBeDeBuff = m_eDeBuff;
 	tReport.eKineticAtkType = tDamageParams.eKineticAtkType;
 	tReport.eAttackType = tDamageParams.eAttackType;
-	tReport.bDead = m_bDead;
+	tReport.bDead = false;
 	tReport.bHitWeak = m_bHitWeak;
 
 	CGameManager::GetInstance()->ConsumeEnemyDamageReport(tReport);
@@ -315,6 +317,25 @@ ENEMY_STAT CEnemy::GetEnemyBatchDataStat()
 	tStat.iAtkDamage = m_iAtkDamage;
 	tStat.iLevel = iEemeyLevel;
 	return tStat;
+}
+
+void CEnemy::SetDelete()
+{
+	CScarletCharacter::SetDelete();
+
+	ENEMY_DAMAGE_REPORT tReport;
+	tReport.pCauser = m_pTarget;
+	tReport.pTaker = this;
+	tReport.eName = m_eEnemyName;
+	tReport.eStat = GetEnemyBatchDataStat();
+	tReport.iTakeDamage = 1;
+	tReport.eAttackSAS = ESASType::SAS_END;
+	tReport.eKineticAtkType = EKineticAttackType::KINETIC_ATTACK_END;
+	tReport.eAttackType = EAttackType::ATK_END;
+	tReport.bDead = true;
+	tReport.bHitWeak = false;
+
+	CGameManager::GetInstance()->ConsumeEnemyDamageReport(tReport);
 }
 
 void CEnemy::Add_RigidBody(const string & KeyName, void * pArg)

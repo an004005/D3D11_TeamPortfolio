@@ -36,8 +36,6 @@ HRESULT CCamera_Player::Initialize(void * pArg)
 
 	m_pTransformCom->SetTransformDesc(desc);
 
-	m_fNear = 0.2f;
-
 	//FAILED_CHECK(Add_Component(LEVEL_NOW, L"Prototype_Component_ControlledRigidBody",
 	//	L"Collider", (CComponent**)&m_pCollider, pArg));
 	//SetMainCamera(this);
