@@ -232,15 +232,6 @@ void CRigidBody::Set_Trigger(_bool bTrigger)
 	}
 }
 
-void CRigidBody::Set_ColliderType(ECOLLIDER_TYPE eType)
-{
-	if (eType == m_eColliderType) return;
-
-	m_eColliderType = eType;
-	CreateActor();
-	UpdateChange();
-}
-
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)
 {
 	m_OriginTransformMatrix = OriginMatrix;

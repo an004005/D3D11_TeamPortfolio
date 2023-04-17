@@ -254,15 +254,6 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 
 	OutlineMaker();
 
-	if (m_bThrow)
-	{
-		m_pCollider->Set_ColliderType(CT_PLAYER_ATTACK);
-	}
-	else
-	{
-		m_pCollider->Set_ColliderType(CT_PSYCHICK_OBJ);
-	}
-
 	if (0.f <= m_fRefloatTime)
 	{
 		m_fRefloatTime -= (_float)TimeDelta;

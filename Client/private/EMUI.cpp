@@ -86,11 +86,8 @@ void CEMUI::Update_UIInfo()
 	else if (m_pHPUI != nullptr)
 		m_pHPUI->Set_HpRatio(m_pOwner->GetHpRatio());
 
-	if (m_BossHp != nullptr)
-	{
+	if(m_BossHp != nullptr)
 		m_BossHp->Set_BossHp(m_pOwner->GetHpRatio());
-		m_BossHp->Set_BossShild(m_pOwner->GetCrushGageRatio());
-	}
 }
 
 void CEMUI::Create_BossUI()
