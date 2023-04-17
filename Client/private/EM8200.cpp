@@ -24,6 +24,7 @@
 #include "CurveManager.h"
 #include "CurveFloatMapImpl.h"
 #include "BrainField.h"
+#include "CamSpot.h"
 #include "UI_Manager.h"
 #include "GameManager.h"
 #include "Canvas_MainTalk.h"
@@ -36,6 +37,7 @@
 #include "ControlledRigidBody.h"
 #include "ShaderUI.h"
 #include "Map_KineticBatchPreset.h"
+#include "Player.h"
 
 CEM8200::CEM8200(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -54,8 +56,8 @@ HRESULT CEM8200::Initialize(void* pArg)
 	pArg = &em0200_json;
 
 	{
-		m_iMaxHP = 30000;
-		m_iHP = 30000; // ★
+		m_iMaxHP = 40000;
+		m_iHP = 40000; // ★
 		m_iMaxCrushGauge = m_iMaxHP * 1.1f;
 		m_iCrushGauge = m_iMaxCrushGauge;
 		m_bHasCrushGauge = true;
@@ -2175,14 +2177,10 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 		{
 			
-				m_pEMUI->Delete_BossUI();
+			m_pEMUI->Delete_BossUI();
 
 			// 초기위치로 이동)
 			m_pTransformCom->RemoveRotation();
-			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 20.f, 1.f));
-			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 20.f, 1.f));
-			m_vPrePos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
-				
 
 			m_SoundStore.PlaySound("karen_fx_brainfield");
 
@@ -2199,11 +2197,13 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pKaren_AnimCam->StartCamAnim_Return_Update(pCamAnim, m_pGameInstance->FindCamera("DynamicCamera"), m_pTransformCom, 0.f, 0.f);
 
 			m_pTransformCom->Set_State(CTransform::STATE_TRANSLATION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
 
 			m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -15.f, 1.f));
 			m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			dynamic_cast<CPlayer*>(m_pTarget)->m_pCamSpot->Arrange_Cam();
 
 		})
 		.AddTransition("BrainFieldStart to BrainFieldTrans", "BrainFieldTrans")
@@ -2260,9 +2260,9 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 
 			m_pController->SetActive(true);
 
-			CGameManager::GetInstance()->Set_LeftTalk(115);
-
-			CPlayerInfoManager::GetInstance()->SetAILock(false);
+			// CGameManager::GetInstance()->Set_LeftTalk(115);
+			// CPlayerInfoManager::GetInstance()->SetAILock(false);
+		if (m_pEMUI)
 			m_pEMUI->Create_BossUI();
 
 
