@@ -113,19 +113,19 @@ void CUI_Manager::Clear()
 void CUI_Manager::Tick(_double TimeDelta)
 {
 	
-	// if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
-	// {
-	// 	if (m_bMouseActive)
-	// 	{
-	// 		m_bMouseActive = false; // 플레이어 세계
-	// 		CGameUtils::HideCursor();
-	// 	}
-	// 	else
-	// 	{
-	// 		m_bMouseActive = true; // UI 세계
-	// 		CGameUtils::ShowCursor();
-	// 	}
-	// }
+	 //if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
+	 //{
+	 //	if (m_bMouseActive)
+	 //	{
+	 //		m_bMouseActive = false; // 플레이어 세계
+	 //		CGameUtils::HideCursor();
+	 //	}
+	 //	else
+	 //	{
+	 //		m_bMouseActive = true; // UI 세계
+	 //		CGameUtils::ShowCursor();
+	 //	}
+	 //}
 }
 
 void CUI_Manager::PlaySound(const string& SoundName)

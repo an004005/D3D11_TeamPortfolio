@@ -2456,6 +2456,9 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 					m_pKaren_AnimCam->StartCamAnim(pCamAnim,
 						_float4x4::Identity,
 						_float4x4::Identity);
+
+					m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -5.5f, 1.f));
+					m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
 				})
 
 		.Tick([this](_double TimeDelta)
@@ -2466,6 +2469,11 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 
 				m_pTransformCom->LocalMove(Dir, 0.025f);
 		})
+		.OnExit([this]
+			{
+			m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -5.5f, 1.f));
+			m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
+			})
 
 		.AddTransition("StoryWalk to Intro_01", "Intro_01")
 			.Predicator([this]
@@ -2534,6 +2542,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 				CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_ItemMove")->TempOff(false);
 				CPlayerInfoManager::GetInstance()->SetPlayerLock(false);
 
+				CUI_Manager::GetInstance()->Set_TempOff(false);
+
 
 				Json kineticJson = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Batch/BatchFiles/FinalStage/Kinetic_Normal.json");
 				CMap_KineticBatchPreset::GetInstance()->Initialize(kineticJson);
@@ -2598,7 +2608,7 @@ _bool CEM8200::Check_PlayerDetected()
 		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		if (fDistance < 25.f && m_bStoryModeStart.IsNotDo())
+		if (fDistance < 25.5f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
 			CUI_Manager::GetInstance()->Set_TempOff(true);
