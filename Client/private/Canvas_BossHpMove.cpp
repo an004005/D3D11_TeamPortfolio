@@ -53,7 +53,8 @@ void CCanvas_BossHpMove::Tick(_double TimeDelta)
 	CCanvas::UIHit(TimeDelta);
 
 	m_pCanvas_BossHp->Tick(TimeDelta);
-	m_pUI_Alarm->Tick(TimeDelta);
+	if (m_pUI_Alarm)
+		m_pUI_Alarm->Tick(TimeDelta);
 }
 
 void CCanvas_BossHpMove::Late_Tick(_double TimeDelta)
@@ -61,7 +62,8 @@ void CCanvas_BossHpMove::Late_Tick(_double TimeDelta)
 	CCanvas::Late_Tick(TimeDelta);
 
 	m_pCanvas_BossHp->Late_Tick(TimeDelta);
-	m_pUI_Alarm->Late_Tick(TimeDelta);
+	if (m_pUI_Alarm)
+		m_pUI_Alarm->Late_Tick(TimeDelta);
 }
 
 HRESULT CCanvas_BossHpMove::Render()

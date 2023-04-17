@@ -17,6 +17,8 @@
 #include "UI_Manager.h"
 #include "PlayerInfoManager.h"
 #include "Camera_Player.h"
+#include "Player.h"
+#include "CamSpot.h"
 
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -1008,6 +1010,8 @@ void CEM1200::SetUpChangeFSM()
 			{
 				m_bAlpha = true;
 				m_pShaderUI->SetVisible(true);
+
+
 			})
 			.AddTransition("Dark to Change1", "Change1")
 				.Predicator([this] { return m_bReverse == true; })
@@ -1015,6 +1019,14 @@ void CEM1200::SetUpChangeFSM()
 		.AddState("Change1")
 			.OnStart([this]
 			{
+					SetForcePos(_float4(0.f, 0.f, 0.f, 1.f));
+					m_pTransformCom->RemoveRotation();
+
+					m_pTarget->SetForcePos({ -31.f, 1.f, 3.f, 1.f });
+					m_pTarget->GetTransform()->LookAt_NonY(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+					dynamic_cast<CPlayer*>(m_pTarget)->m_pCamSpot->Arrange_Cam();
+
+
 				m_pASM->AttachAnimSocketOne("FullBody",  "AS_m02c00920c01_em1200");
 
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("em1200Change");
@@ -1048,6 +1060,8 @@ void CEM1200::BeginTick()
 	CPlayerInfoManager::GetInstance()->SetPlayerCamDistance(8.f);
 
 	m_pRendererCom->SetFog(false);
+
+	m_OriginWorld = m_pTransformCom->Get_WorldMatrix();
 }
 
 void CEM1200::Tick(_double TimeDelta)

@@ -2309,7 +2309,8 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 	.AddState("BrainCrushStart_1")
 		.OnStart([this]
 		{
-			m_pEMUI->Delete_BossUI();
+			// if (m_pEMUI)
+				// m_pEMUI->Delete_BossUI();
 
 			// if (m_pTarget)
 				// m_pTransformCom->LookAt_NonY(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION));

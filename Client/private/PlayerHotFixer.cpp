@@ -159,7 +159,7 @@ void CPlayerHotFixer::Tick()
 
 
 
-		if (ImGui::Button("wp0106"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_8))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{
@@ -170,7 +170,7 @@ void CPlayerHotFixer::Tick()
 				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0106);
 			}
 		}
-		if (ImGui::Button("wp0126"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{
@@ -181,7 +181,7 @@ void CPlayerHotFixer::Tick()
 				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0126);
 			}
 		}
-		if (ImGui::Button("wp0190"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{

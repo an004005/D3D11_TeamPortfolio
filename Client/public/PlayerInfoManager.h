@@ -231,6 +231,7 @@ public:	// Set
 
 	void			SetTeleportDissolve(_float fTimer) { m_bDissolve = true; m_fDissolve = fTimer; }
 	_float			GetTeleportDissolve();
+	void			ReleaseTeleportDissolve();
 
 	HRESULT	Set_KineticObject(CGameObject* pKineticObject);
 	HRESULT	Set_TargetedMonster(CGameObject* pTargetedMonster);
