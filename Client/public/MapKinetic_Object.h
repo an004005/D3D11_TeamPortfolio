@@ -148,6 +148,8 @@ private:
 
 	_matrix				m_PreMatrix;
 
+	_float				m_fCollisionCoolTime = 0.f;
+
 private:
 	_float				m_fRefloatTime = 0.f;
 

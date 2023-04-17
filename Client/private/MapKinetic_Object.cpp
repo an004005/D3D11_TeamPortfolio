@@ -73,6 +73,8 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 			{
 				if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 				{
+					if (0.f < m_fCollisionCoolTime) return;
+
 					DAMAGE_PARAM tParam;
 					tParam.eAttackType = EAttackType::ATK_HEAVY;
 					tParam.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 5.f);
@@ -87,6 +89,8 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 					ReleaseParticle();
+
+					m_fCollisionCoolTime = 1.f;
 				}
 
 				return;
@@ -251,6 +255,8 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	__super::Tick(TimeDelta);
 	if (m_eCurModelTag != Tag_End)
 		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
+
+	m_fCollisionCoolTime -= g_fTimeDelta;
 
 	OutlineMaker();
 

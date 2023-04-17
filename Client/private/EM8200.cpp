@@ -300,6 +300,7 @@ void CEM8200::SetUpSound()
 	m_SoundStore.CloneSound("karen_fx_tele");
 	m_SoundStore.CloneSound("karen_fx_thunder");
 	m_SoundStore.CloneSound("fx_execute_karen_splited_6");
+	m_SoundStore.CloneSound("EndingCredit");
 
 	m_SoundStore.CloneSound("Photo");
 	
@@ -2407,6 +2408,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			if (m_pBrainField->GetBlackOutRatio() > 0.95f && m_BlackOut.IsNotDo())
 			{
+				m_SoundStore.PlaySound("EndingCredit");
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
 
 				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
@@ -2511,8 +2513,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				//return m_bStoryEnd;
-				 return false;
+				return m_bStoryEnd;
+				// return false;
 			})
 
 		.AddState("BattleStart")
@@ -2608,7 +2610,7 @@ _bool CEM8200::Check_PlayerDetected()
 		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		if (fDistance < 25.5f && m_bStoryModeStart.IsNotDo())
+		if (fDistance < 25.2f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
 			CUI_Manager::GetInstance()->Set_TempOff(true);
