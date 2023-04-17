@@ -32,7 +32,7 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.m_iKineticEnergyLevel = 0;
 	m_tPlayerStat.m_iKineticEnergyType = 2;
 
-	m_tPlayerStat.m_fBaseAttackDamage = 100.f;
+	m_tPlayerStat.m_fBaseAttackDamage = 170.f;
 	m_tPlayerStat.m_fWeaponDamage = 0.f;
 	m_tPlayerStat.m_fSasDamageRate = 1.f;
 	m_tPlayerStat.m_fFinalAttackDamage = (m_tPlayerStat.m_fBaseAttackDamage + m_tPlayerStat.m_fWeaponDamage) * m_tPlayerStat.m_fSasDamageRate;
@@ -54,6 +54,10 @@ HRESULT CPlayerInfoManager::Initialize()
 	m_tPlayerStat.bCopy = false;
 
 	m_tPlayerStat.bAir = false;
+
+	m_tPlayerStat.bBrainMap[BRAINMAP_KINETIC_COMBO_4] = true;
+	m_tPlayerStat.bBrainMap[BRAINMAP_KINETIC_COMBO_AIR] = true;
+	m_tPlayerStat.bBrainMap[BRAINMAP_BRAINFIELD_HARDBODY] = true;
 		
 #pragma endregion 플레이어 기본 스탯 초기화
 
@@ -535,6 +539,12 @@ _float CPlayerInfoManager::GetTeleportDissolve()
 		return m_fDissolve;
 }
 
+void CPlayerInfoManager::ReleaseTeleportDissolve()
+{
+	m_bDissolve = false;
+	m_fDissolve = 0.f;
+}
+
 void CPlayerInfoManager::Set_Exp(const _uint iExp)
 {
 	_uint iAllExp = m_tPlayerStat.iExp + iExp;
@@ -569,9 +579,9 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tHanabiStat.iLevel;
-		m_tHanabiStat.iMaxExp += 100;
+		m_tHanabiStat.iMaxExp += 1000;
 		m_tHanabiStat.iExp = 0;
-		m_tHanabiStat.iMaxHP += 50;
+		m_tHanabiStat.iMaxHP += 10;
 		m_tHanabiStat.iHP = m_tHanabiStat.iMaxHP;
 		m_tHanabiStat.iAttack += m_tHanabiStat.iLevel;
 
@@ -586,9 +596,9 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
 
 		++m_tTsugumiStat.iLevel;
-		m_tTsugumiStat.iMaxExp += 100;
+		m_tTsugumiStat.iMaxExp += 1000;
 		m_tTsugumiStat.iExp = 0;
-		m_tTsugumiStat.iMaxHP += 50;
+		m_tTsugumiStat.iMaxHP += 10;
 		m_tTsugumiStat.iHP = m_tTsugumiStat.iMaxHP;
 		m_tTsugumiStat.iAttack += m_tTsugumiStat.iLevel;
 

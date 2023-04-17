@@ -32,7 +32,6 @@ HRESULT CEM0750::Initialize(void * pArg)
 		_uint iBaseLevel = max(0, _int(LEVEL_NOW - 20));
 
 		m_iMaxHP = LEVEL_NOW * (50 + (CMathUtils::RandomUInt(10)));
-		m_iMaxHP *= 2;
 		m_iHP = m_iMaxHP;
 
 		m_iMaxCrushGauge = m_iMaxHP * 0.7f;
@@ -87,6 +86,19 @@ void CEM0750::SetUpSound()
 void CEM0750::SetUpAnimationEvent()
 {
 	CEnemy::SetUpAnimationEvent();
+
+	// 공중에서 추가타 맞을 때
+	m_pModelCom->Add_EventCaller("Successive", [this]
+		{
+			m_fGravity = 3.f;
+			m_fYSpeed = 1.5f;
+		});
+	// 공중에서 추가타 맞고 다시 떨어지는 순간
+	m_pModelCom->Add_EventCaller("AirDamageReset", [this]
+		{
+			m_fGravity = 20.f;
+			m_fYSpeed = 0.f;
+		});
 
 	m_pModelCom->Add_EventCaller("DeadFlower", [this]
 		{

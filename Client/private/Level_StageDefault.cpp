@@ -47,6 +47,8 @@ HRESULT CLevel_StageDefault::Initialize()
 	CUI_Manager::GetInstance()->Clear();
 	CGameInstance::GetInstance()->Add_EmptyLayer(LEVEL_NOW, L"Layer_MapKineticObject");
 
+	CGameInstance::GetInstance()->ClearPx();
+
 	if (FAILED(Ready_Prototypes()))
 		return E_FAIL;
 
@@ -92,6 +94,19 @@ void CLevel_StageDefault::Tick(_double TimeDelta)
 			if (m_bPlayerSpawn)
 				CGameInstance::GetInstance()->FindCamera("PlayerCamera")->SetMainCamera();
 		}
+	}
+
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F1))
+	{
+		CPlayerInfoManager::GetInstance()->Set_Exp(85);
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F2))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += 25;
+	}
+	if (CGameInstance::GetInstance()->KeyDown(DIK_F3))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP += 25;
 	}
 }
 

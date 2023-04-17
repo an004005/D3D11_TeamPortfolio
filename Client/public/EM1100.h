@@ -34,6 +34,8 @@ public:
 	virtual void Imgui_RenderProperty() override;
 	virtual _bool IsWeak(CRigidBody* pHitPart);
 	virtual _float4	GetKineticTargetPos() override;
+	virtual void CheckHP(DAMAGE_PARAM& eParam) override;
+
 public:
 	void	Set_RunStart(_bool bRunStart) { m_bRun_Start = bRunStart; }
 	_bool	Get_RunStart() { return m_bRun_Start; }

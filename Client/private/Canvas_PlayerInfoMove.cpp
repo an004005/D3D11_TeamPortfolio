@@ -137,6 +137,7 @@ void CCanvas_PlayerInfoMove::Set_PsychokinesisType()
 {
 	_uint iLevel = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel;
 
+	
 	dynamic_cast<CPlayerInfo_PsychokinesisUI*>(Find_ChildUI(L"PlayerInfo_Psychokinesis"))->Set_Type(iLevel);
 	dynamic_cast<CPlayerInfo_PsychokinesisBackUI*>(Find_ChildUI(L"PlayerInfo_PsychokinesisBack"))->Set_Type(iLevel);
 	dynamic_cast<CCanvas_PlayerInfo*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_PlayerInfo"))->Set_Type(iLevel);

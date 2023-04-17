@@ -106,7 +106,7 @@ void CPlayerHotFixer::Tick()
 			SphereOverlapParams param;
 
 			param.fVisibleTime = 0.4f;
-			param.iTargetType = CTB_PLAYER;
+			param.iTargetType = CTB_PLAYER | CTB_MONSTER | CTB_PSYCHICK_OBJ | CTB_STATIC | CTB_PLAYER_RANGE | CTB_TELEPORT_OBJ;
 			param.fRadius = 3.f;
 			param.vPos = m_pPlayer->m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 			param.overlapOut = &overlapOut;
@@ -159,7 +159,7 @@ void CPlayerHotFixer::Tick()
 
 
 
-		if (ImGui::Button("wp0106"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_8))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{
@@ -170,7 +170,7 @@ void CPlayerHotFixer::Tick()
 				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0106);
 			}
 		}
-		if (ImGui::Button("wp0126"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_9))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{
@@ -181,7 +181,7 @@ void CPlayerHotFixer::Tick()
 				static_cast<CSheath_Player*>(iter)->Change_Sheath(WP_0126);
 			}
 		}
-		if (ImGui::Button("wp0190"))
+		if (CGameInstance::GetInstance()->KeyDown(DIK_0))
 		{
 			for (auto& iter : m_pPlayer->m_vecWeapon)
 			{
