@@ -352,7 +352,7 @@ void CEM0210::SetUpFSM()
 			.AddTransition("Hit_ToAir to Landing", "Landing")
 				.Predicator([this]
 			{
-				return !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
+				return m_bCrushStart || !m_bPreOnFloor && m_bOnFloor && m_bHitAir;
 			})
 		.AddState("Landing")
 			.OnStart([this]
