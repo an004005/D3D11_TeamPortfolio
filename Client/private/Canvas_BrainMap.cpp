@@ -1593,8 +1593,10 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 			m_vecIconUI[iIndex]->Set_BrainUse();
 			CItem_Manager::GetInstance()->Set_Brain(iIndex);
 
-			_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
-			CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+			//_uint iResultBP = CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP - m_vecIconUI[iIndex]->Get_BrainInfo().iBP;
+			//CPlayerInfoManager::GetInstance()->Set_BP(iResultBP);	 // 플레이어 BP 감소하기
+
+			CPlayerInfoManager::GetInstance()->Set_MinusBP(m_vecIconUI[iIndex]->Get_BrainInfo().iBP);	 // 플레이어 BP 감소하기
 
 			// 다 찍는데 206 필요 (새로 찍어야 하는 BP 는 25 필요)
 			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가 5, 5

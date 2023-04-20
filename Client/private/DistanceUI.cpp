@@ -2,8 +2,12 @@
 #include "..\public\DistanceUI.h"
 #include "GameInstance.h"
 #include "JsonStorage.h"
+#include "UI_Manager.h"
 
 #include "Player.h"
+#include "Canvas_Main.h"
+#include "Canvas_Shop.h"
+#include "Canvas_WorldMap.h"
 
 CDistanceUI::CDistanceUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
@@ -42,16 +46,6 @@ HRESULT CDistanceUI::Initialize(void * pArg)
 			m_pPlayer = dynamic_cast<CPlayer*>(*iter);
 			Assert(m_pPlayer != nullptr);
 		}
-		
-		//for (auto iter : plsGameObject)
-		//{
-		//	if (iter->GetPrototypeTag() == L"Player")
-		//	{
-		//		m_pPlayer = dynamic_cast<CPlayer*>(iter);
-		//		Assert(m_pPlayer != nullptr);
-		//		break;
-		//	}
-		//}
 	}
 
 	return S_OK;
@@ -59,6 +53,18 @@ HRESULT CDistanceUI::Initialize(void * pArg)
 
 void CDistanceUI::Tick(_double TimeDelta)
 {
+	if (dynamic_cast<CCanvas_Main*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Main"))->Get_BeSeen() ||
+		dynamic_cast<CCanvas_Shop*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_Shop"))->Get_BeSeen() ||
+		dynamic_cast<CCanvas_WorldMap*>(CUI_Manager::GetInstance()->Find_WindowCanvas(L"CCanvas_WorldMap"))->Get_BeSeen())
+	{
+		m_bVisible = false;
+		return;
+	}
+	else
+	{
+		m_bVisible = true;
+	}
+
 	__super::Tick(TimeDelta);
 
 	_vector vPlayerPos = m_pPlayer->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);

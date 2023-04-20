@@ -45,6 +45,8 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 		iter->second->SetVisible(false);
 	}
 
+
+
 	return S_OK;
 }
 
@@ -62,11 +64,11 @@ void CCanvas_DriveMove::Tick(_double TimeDelta)
 	
 	if (true == CPlayerInfoManager::GetInstance()->Get_DriveGauge())
 	{
-		CPlayerInfoManager::GetInstance()->Set_DriveGauge(false);
-		Find_ChildUI(L"Drive_OnCircle")->SetVisible(true);
+		CPlayerInfoManager::GetInstance()->Set_DriveGauge(false);		
+
 		Find_ChildUI(L"Drive_LeftDot")->SetVisible(true);
 		Find_ChildUI(L"Dirve_RightDot")->SetVisible(true);
-		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
+		Find_ChildUI(L"Drive_OnCircle")->SetVisible(true);
 	}
 
 	DriveGauge_Tikc();
@@ -88,21 +90,21 @@ void CCanvas_DriveMove::Imgui_RenderProperty()
 		//m_fDriveGauge = fGauge[0] / fGauge[1];
 	}
 	ImGui::SameLine();
+	if (ImGui::Button("DriveGauge 100")) {
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().fDriveEnergy = 100.0f;
+	}
+	ImGui::SameLine();
 	if (ImGui::Button("OnDrive")) {
 		CPlayerInfoManager::GetInstance()->Get_PlayerStat().bDriveMode = true;
 	}
 }
 
 void CCanvas_DriveMove::Set_OnDrive(const _float & fDriveFullTime) 
-{	
-	//if (0.999f > m_fDriveGauge)	// 조건! 드라이브 게이지를 다 채워야 한다.
-	//	return;
-			
+{				
 	// 드라이브를 사용할 시간 (Gauge 안 에서 0.05 로 천천히 줄어든다.)
 	m_bOnDrive = true;
 
 	// 그냥 Drive 시간동안 출력하면 된다.
-
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge_Use(fDriveFullTime);
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge_Use(fDriveFullTime);
 }
@@ -115,10 +117,18 @@ void CCanvas_DriveMove::DriveGauge_Tikc()
 
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Set_DriveGauge(m_fDriveGauge);
 	dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_GaugeBack"))->Set_DriveGauge(m_fDriveGauge);
+
+	if (0.999f <= m_fDriveGauge)
+	{
+		dynamic_cast<CCanvas_Drive*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Drive"))->Set_DriveB(true);
+	}
 }
 
 void CCanvas_DriveMove::DriveGaugeFull_Tick()
 {
+	if (true == m_bRightFullDot) return;
+	m_bRightFullDot = true;
+
 	// 드라이브 게이지가 가득 찼을 때 오른쪽 점 전체가 채워지고 일정시간 뒤 다시 원래대로 돌아간다.
 	_bool GaugeFull = dynamic_cast<CDrive_GaugeUI*>(Find_ChildUI(L"Drive_Gauge"))->Get_GaugeFull();
 	Find_ChildUI(L"Dirve_RightDotFull")->SetVisible(GaugeFull);
@@ -135,6 +145,7 @@ void CCanvas_DriveMove::Drive_Tick()
 	if (0.0f == fDriveGauge)	// 드라이브 시간이 끝났다.
 	{
 		m_bOnDrive = false;	// 아래로 내려가면서 객체를들 모두다 끈다.
+		m_bRightFullDot = false;
 		m_fDriveGauge = 0.0f;
 		m_fRightDotCount = 1.0f;
 		m_fShaderRightDot = 0.0f;

@@ -22,6 +22,11 @@ public:
 	virtual void	SaveToJson(Json& json) override;
 	virtual void	LoadFromJson(const Json& json) override;
 
+public:
+	_bool Get_BeSeen() {
+		return m_bMapUI;
+	}
+
 private:
 	void	CloneBar();
 

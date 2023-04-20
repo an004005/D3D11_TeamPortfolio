@@ -37,9 +37,6 @@ HRESULT CCanvas_ItemMove::Initialize(void* pArg)
 	m_vMaxDestination = { -7.0f, -7.0f };
 	CCanvas::UIMove_FSM();
 
-	//m_bInput = true;
-	//Key_Input();
-
 	return S_OK;
 }
 
@@ -58,6 +55,18 @@ void CCanvas_ItemMove::Tick(_double TimeDelta)
 	Key_Input();
 }
 
+void CCanvas_ItemMove::Set_GaugeColor(const _float4 fColor)
+{
+	dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_Color(fColor);
+	dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Color(fColor);
+}
+
+void CCanvas_ItemMove::Set_BackGaugeColor(const _float4 fColor)
+{
+	dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_Color(fColor);
+	dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Color(fColor);
+}
+
 void CCanvas_ItemMove::Key_Input()
 {
 	// 아이템 Light 조절
@@ -65,7 +74,9 @@ void CCanvas_ItemMove::Key_Input()
 		->	Set_IconLight(dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_Light());
 
 	// 아이템 쿨 타임이 아직 돌지 않았다면 사용할 수 없다.
-	if (false == dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse())
+	_bool	bFullGauge = dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Get_ItemUseStatuse();
+	dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->Set_Gauge(bFullGauge);
+	if (false == bFullGauge)
 	{
 		if (true == m_bInputSound)
 		{
@@ -98,27 +109,13 @@ void CCanvas_ItemMove::Key_Input()
 	if (CGameInstance::GetInstance()->KeyDown(DIK_LEFT))
 	{
 		dynamic_cast<CItem_LeftArrowUI*>(Find_ChildUI(L"Item_LeftArrow"))->Set_Input();
-		m_bInput = true;
 
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_RIGHT))
 	{
 		dynamic_cast<CItem_RightArrowUI*>(Find_ChildUI(L"Item_RightArrow"))->Set_Input();
-		m_bInput = true;
 
-	}
-
-	if (m_bInput == true)
-	{
-		m_bInput = false;
-
-		_float4 fColor = dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->ColorIndex(false);
-		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_Gauge"))->Set_Color(fColor);
-		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrow"))->Set_Color(fColor);
-		fColor = dynamic_cast<CCanvas_Item*>(CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_Item"))->ColorIndex(true);
-		dynamic_cast<CItem_GaugeUI*>(Find_ChildUI(L"Item_GaugeBack"))->Set_Color(fColor);
-		dynamic_cast<CItem_PushArrowUI*>(Find_ChildUI(L"Item_PushArrowBack"))->Set_Color(fColor);
 	}
 }
 

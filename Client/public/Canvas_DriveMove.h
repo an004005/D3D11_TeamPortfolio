@@ -41,7 +41,7 @@ private:
 	_float	m_fRightDotCount = { 1.0f };
 	_float m_fShaderRightDot = { 0.0f };
 
-	_double	m_bRender_TimeAcc = { 0.0 };
+	_bool	m_bRightFullDot = { false };
 
 public:
 	static CCanvas_DriveMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

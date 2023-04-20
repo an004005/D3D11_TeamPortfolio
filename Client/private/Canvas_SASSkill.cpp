@@ -63,7 +63,8 @@ void CCanvas_SASSkill::Tick(_double TimeDelta)
 				(*iter).first == L"SASSkill_XInput" ||
 				(*iter).first == L"FullCircle1" ||
 				(*iter).first == L"FullCircle5" ||
-				(*iter).first == L"FullCircle6")
+				(*iter).first == L"FullCircle6" ||
+				(*iter).first == L"FullCircle7")
 				continue;
 
 			iter->second->SetVisible(true);
@@ -118,6 +119,8 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = false;
 		InputData();
+
+		m_bX = false;
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_5) ||
@@ -127,6 +130,8 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = true;
 		InputData();
+
+		m_bX = true;
 	}
 
 	if (CGameInstance::GetInstance()->KeyDown(DIK_X))
@@ -134,9 +139,11 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 		CUI_Manager::GetInstance()->PlaySound("X");
 		m_bChangeX = !m_bChangeX;
 		InputData();
+
+		m_bX = (false == m_bPreX) ? true : false;
 	}
 
-	if (true == m_bChangeXButton)
+	if (true == m_bChangeXButton && m_bX != m_bPreX)
 	{
 		if (0.0 < m_dChangeX_TimcAcc)
 		{
@@ -150,6 +157,8 @@ void CCanvas_SASSkill::InputX_Tick(const _double & dTimeDelta)
 			m_bChangeXButton = false;
 			m_dChangeX_TimcAcc = 0.0;
 			Find_ChildUI(L"SASSkill_XInput")->SetVisible(false);
+		
+			m_bPreX = m_bX;
 		}
 	}
 }

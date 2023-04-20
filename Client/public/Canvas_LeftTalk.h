@@ -34,7 +34,7 @@ private:
 	void	Show_Talk();
 
 private:
-	std::list<TALKINFO>	m_qCurrentTalk;
+	std::list<TALKINFO>	m_pCurrentTalk;
 
 	_bool		m_bRunning = { false };
 	_double	m_dTalk_TimeAcc = { 3.0 };

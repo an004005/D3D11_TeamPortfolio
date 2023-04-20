@@ -86,13 +86,32 @@ void CCanvas_MainTalk::Show_Talk()
 		// 퀘스트 있는 경우
 		if (-1 != m_iQuestNum)
 		{
-			Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
-			CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
-			assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
-			pCanvas_Quest->Add_Quest(m_iQuestNum);
+			if (11 == m_iQuestNum)
+			{
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+			}
+			else if (28 == m_iQuestNum)
+			{
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
+				CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
+			}
+			else
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Quest.json");
+				CCanvas_Quest* pCanvas_Quest = dynamic_cast<CCanvas_Quest*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_Quest", &json));
+				assert(pCanvas_Quest != nullptr && "Failed to Clone : CCanvas_Quest");
+				pCanvas_Quest->Add_Quest(m_iQuestNum);
+			}
 
 			m_iQuestNum = -1;
 		}
+
+
+
 
 		CUI_Manager::GetInstance()->Set_TempOff(false);
 		Find_ChildUI(L"TalkName")->SetVisible(false);
@@ -217,9 +236,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 		tTalkInfo.wsTalk0 = { L"아 그렇군요 좋은 정보 감사드려요. 겜마 선배." };
 		tTalkInfo.wsTalk1 = { L"" };
 
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::HANABI);
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::TSUGUMI);
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::GEMMA);
+		m_iQuestNum = 11;
 	}
 	break;
 
@@ -361,10 +378,7 @@ void CCanvas_MainTalk::Add_Talk(const _int iIndex, const _int iQuest)
 		tTalkInfo.wsTalk0 = { L"???" };
 		tTalkInfo.wsTalk1 = { L"" };
 
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::LUCA);
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::SEEDEN);
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
-		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
+		m_iQuestNum = 28;
 	}
 	break;
 

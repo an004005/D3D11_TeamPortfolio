@@ -77,7 +77,7 @@ void CDrive_GaugeUI::DirveRightDot_Tick(const _double & dTimeDelta)
 	// 원래라면 클래스를 하나 더 만들어야 하지만 몇초 있다가 끄는 기능 밖에 없어서 여기서 구현함다.
 
 	m_dGaugeFull_TimeAcc += dTimeDelta;
-	if (1.5f < m_dGaugeFull_TimeAcc)
+	if (2.0f < m_dGaugeFull_TimeAcc)
 	{
 		m_bGaugeFull = false;
 		m_dGaugeFull_TimeAcc = 0.0;
