@@ -576,7 +576,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tHanabiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+		_uint iOverExp = iAllExp - m_tHanabiStat.iMaxExp;
 
 		++m_tHanabiStat.iLevel;
 		m_tHanabiStat.iMaxExp += 1000;
@@ -593,7 +593,7 @@ void CPlayerInfoManager::Set_Exp(const _uint iExp)
 		m_tTsugumiStat.iExp += iExp;
 	else
 	{
-		_uint iOverExp = iAllExp - m_tPlayerStat.iMaxExp;
+		_uint iOverExp = iAllExp - m_tTsugumiStat.iMaxExp;
 
 		++m_tTsugumiStat.iLevel;
 		m_tTsugumiStat.iMaxExp += 1000;

@@ -42,7 +42,7 @@ HRESULT CEM1100::Initialize(void * pArg)
 		m_iMaxHP = 30000;
 		m_iHP = m_iMaxHP;
 
-		m_iMaxCrushGauge = m_iMaxHP * 10.f;
+		m_iMaxCrushGauge = m_iMaxHP * 5;
 		m_iCrushGauge = m_iMaxCrushGauge;
 
 		iEemeyLevel = 34;
