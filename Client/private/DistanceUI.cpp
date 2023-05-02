@@ -71,7 +71,7 @@ void CDistanceUI::Tick(_double TimeDelta)
 	_vector	vDistance = vPlayerPos - XMVectorSet(m_vArrivalPoint.x, m_vArrivalPoint.y, m_vArrivalPoint.z, m_vArrivalPoint.w);
 	m_fDistance = XMVectorGetX(XMVector3Length(vDistance));
 
-	if (7.0f > m_fDistance)
+	if (10.0f > m_fDistance)
 		CGameObject::SetDelete();
 }
 

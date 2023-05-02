@@ -788,12 +788,18 @@ void CCanvas_Party::ReserveArrow_Tick()
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXUpArrowB"))->Set_Input();
 		m_iFrontPage = wrap(--m_iCount, 0, 3);
+
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 	}
 
 	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Get_Input())
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Set_Input();
 		m_iFrontPage = wrap(++m_iCount, 0, 3);
+
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
+		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 	}
 }
 
