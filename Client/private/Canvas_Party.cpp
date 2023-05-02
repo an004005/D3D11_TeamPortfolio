@@ -341,7 +341,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 2239;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 1515;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 99;
 	tPickInfo.iAttack = 148;
 	tPickInfo.iDefense = 51;
@@ -355,7 +355,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 645;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 826;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 93;
 	tPickInfo.iAttack = 185;
 	tPickInfo.iDefense = 47;
@@ -369,7 +369,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 782;
 	tPickInfo.iBondLevel = 6;
 	tPickInfo.iHP = 1253;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 112;
 	tPickInfo.iAttack = 132;
 	tPickInfo.iDefense = 32;
@@ -383,7 +383,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 958;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 1352;
-	tPickInfo.iMaxHP = 1352;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 97;
 	tPickInfo.iAttack = 153;
 	tPickInfo.iDefense = 76;
@@ -788,18 +788,12 @@ void CCanvas_Party::ReserveArrow_Tick()
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXUpArrowB"))->Set_Input();
 		m_iFrontPage = wrap(--m_iCount, 0, 3);
-
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 	}
 
 	if (true == dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Get_Input())
 	{
 		dynamic_cast<CButtonUI*>(Find_ChildUI(L"Party_XXDwonArrowB"))->Set_Input();
 		m_iFrontPage = wrap(++m_iCount, 0, 3);
-
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX0_ReserveB"))->Set_OnAlpha();
-		dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Party_XX1_ReserveB"))->Set_OnAlpha();
 	}
 }
 
