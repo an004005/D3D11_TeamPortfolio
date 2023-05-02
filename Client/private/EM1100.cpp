@@ -1110,7 +1110,7 @@ void CEM1100::WaterStart_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 1.5f), EAttackType::ATK_HEAVY, EDeBuffType::DEBUFF_WATER);
 	}
 }
 
@@ -1133,7 +1133,7 @@ void CEM1100::WaterLoop_Overlap()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.3f), EAttackType::ATK_END);
+		HitTargets(overlapOut, static_cast<_int>(m_iAtkDamage * 0.3f), EAttackType::ATK_END, EDeBuffType::DEBUFF_WATER);
 	}
 }
 
