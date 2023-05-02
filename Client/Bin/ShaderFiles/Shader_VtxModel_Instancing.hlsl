@@ -489,6 +489,41 @@ PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND(PS_IN In) // 13
 	return Out;
 }
 
+PS_OUT_ALPHABLEND PS_ALL_ALPHABLEND_GUIDELINE(PS_IN In) // 
+{
+	PS_OUT_ALPHABLEND			Out = (PS_OUT_ALPHABLEND)0;
+
+	float2 vUV = TilingAndOffset(In.vTexUV, g_vec2_1, g_Time * g_vec2_0);
+
+	float4 Tex = g_tex_0.Sample(LinearSampler, vUV);
+	
+	if (g_int_0 == 1 && Tex.a < 0.01f)
+		discard;
+
+	float4 Color = g_vec4_0;
+	float4 Blend = Tex * Color * 2.0f;
+	float4 Final = saturate(Blend);
+
+	float flags = SHADER_DEFAULT;
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+
+	if(In.vTexUV.y >= 0.9f)
+	{
+		Out.vDiffuse = g_tex_0.Sample(LinearSampler, vUV);
+		Out.vDiffuse.rgb *= 3.f;
+	}
+	else
+	{
+		Out.vDiffuse.rgb = CalcHDRColor(Final, g_float_0);
+		Out.vDiffuse.a = Tex.a * g_float_1;
+		
+	}
+
+
+	return Out;
+}
+
+
 // 14
 PS_OUT PS_ARM_14(PS_IN In)
 {
@@ -741,5 +776,19 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_BLOOD_ALPHA_15();
+	}
+
+	// 16
+	pass AlphaBlend_GuideLine
+	{
+		SetRasterizerState(RS_NonCulling);
+		SetDepthStencilState(DS_Default, 0);
+		SetBlendState(BS_AlphaBlend, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		VertexShader = compile vs_5_0 VS_MAIN();
+		GeometryShader = NULL;
+		HullShader = NULL;
+		DomainShader = NULL;
+		PixelShader = compile ps_5_0 PS_ALL_ALPHABLEND_GUIDELINE();
 	}
 }
