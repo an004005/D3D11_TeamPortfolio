@@ -157,6 +157,8 @@ private:
 	_float3				m_fForce;
 	CDoOnce m_Once;
 
+	ECOLLIDER_TYPE m_eTargetType = CT_PLAYER_ATTACK;
+
 private:
 	vector<wstring>		m_vecRandomParticle{
 		L"Player_Kinetic_Particles_A",

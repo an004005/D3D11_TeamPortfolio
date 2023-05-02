@@ -630,11 +630,24 @@ void CEM8200::BeginTick()
 	CEnemy::BeginTick();
 
 	m_pKineticModel->SetPlayAnimation("AS_em8200_208_AL_atk_pcon_b3_end_obj");
+
+
 }
 
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	if (auto pUI = CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASInfoLeftMove"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASInfoRightMove"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoRight"))
+		pUI->TempOff(true);
+
+
 	if (m_bBattleStart)
 	{
 		CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
@@ -686,7 +699,6 @@ void CEM8200::Tick(_double TimeDelta)
 		_float fTPStartOut;
 		if (m_TPStart.Tick(TimeDelta, fTPStartOut))
 		{
-
 			for (auto pMtrl : m_pModelCom->GetMaterials())
 			{
 				pMtrl->GetParam().Floats[2] = fTPStartOut;
@@ -695,6 +707,18 @@ void CEM8200::Tick(_double TimeDelta)
 			if (m_pBrainField->IsOpen())
 			{
 				m_pBrainField->SetCableTP(fTPStartOut);
+			}
+		}
+
+		
+
+		if (m_pModelCom->GetMaterials()[0]->GetParam().Floats[1] >= 0.98)
+		{
+			m_fTPChecker -= TimeDelta;
+			if (m_fTPChecker < 0.f)
+			{
+				m_TPEnd.PlayFromStart();
+				m_fTPChecker = 0.2f;
 			}
 		}
 	}
@@ -2192,7 +2216,6 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 
 
 
-			m_pBrainField->OpenBrainField();
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
 
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Start");
@@ -2203,6 +2226,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
+			m_pBrainField->OpenBrainField();
 
 			m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -15.f, 1.f));
 			m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -2388,10 +2412,26 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
 			{
 				CUI_Manager::GetInstance()->Set_TempOff(true);
-				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
-				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+
 				m_pLastItem = nullptr;
 			}
+
+			if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+			{
+				m_iESCCnt++;
+			}
+
+			if (m_iESCCnt >= 2)
+			{
+				fDelay += TimeDelta;
+
+			}
+			if (fDelay > 1.5f && m_ESC.IsNotDo())
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
+				CLastCheckUI* pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+			}
+
 		})
 		.AddTransition("to ending", "Ending")
 			.Predicator([this]
@@ -2408,6 +2448,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			if (m_pBrainField->GetBlackOutRatio() > 0.95f && m_BlackOut.IsNotDo())
 			{
+				m_SoundStore.StopAllLoop();
 				m_SoundStore.PlaySound("EndingCredit");
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
 
@@ -2423,6 +2464,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
 				m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
 				m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
+				m_pKaren_AnimCam->AddEvent("No_Spawn", [this]() {m_pShaderUI->Set_Float2sX(7.0f); });
 			}
 		})
 	;
@@ -2710,7 +2752,8 @@ void CEM8200::Play_HeavyHitAnim()
 void CEM8200::TP_Start()
 {
 	m_TPStart.PlayFromStart();
-	m_SoundStore.PlaySound("karen_fx_tele");	
+	m_SoundStore.PlaySound("karen_fx_tele");
+	m_fTPChecker = 0.2f;
 }
 
 void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType)
