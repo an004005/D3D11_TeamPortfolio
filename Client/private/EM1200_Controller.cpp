@@ -172,7 +172,7 @@ void CEM1200_Controller::Tick_Far(_double TimeDelta)
 void CEM1200_Controller::Tick_Outside(_double TimeDelta)
 {
 	m_eDistance = DIS_OUTSIDE;
-	AddCommand("Wait", 2.f, &CAIController::Wait);
+	AddCommand("Run", 2.f, &CEM1200_Controller::Run_TurnToTarget, EMoveAxis::NORTH, 1.f);
 }
 
 void CEM1200_Controller::Run_TurnToTarget(EMoveAxis eAxis, _float fSpeedRatio)

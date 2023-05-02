@@ -300,6 +300,10 @@ void CEM0110::SetUpFSM()
 			{
 				m_pASM->InputAnimSocketOne("FullBody", "AS_em0100_477_AL_getup02");
 			})
+			.OnExit([this]
+			{
+					m_pASM->ClearSocketAnim("FullBody", 0.f);
+			})
 		.AddTransition("Down to Down_Loop", "Idle")
 			.Predicator([this]
 			{
