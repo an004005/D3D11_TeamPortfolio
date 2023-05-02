@@ -156,7 +156,7 @@ void CEM8200_Controller::Detected_Attack()
 
 			SphereOverlapParams param;
 			param.fVisibleTime = 0.3f;
-			param.iTargetType = CTB_PLAYER | CTB_PSYCHICK_OBJ;
+			param.iTargetType = CTB_PLAYER | CTB_PSYCHICK_OBJ | CTB_PLAYER_ATTACK;
 			param.fRadius = 5.f;
 			param.vPos = m_pCastedOwner->GetTransform()->Get_State(CTransform::STATE_TRANSLATION);
 			param.overlapOut = &overlapOut;
@@ -191,7 +191,7 @@ void CEM8200_Controller::Detected_Attack()
 					{
 						if (pKinetic->GetThrow() == true && pKinetic->IsUseBoss() == false)
 						{
-							_uint iRand = CMathUtils::RandomUInt(3);
+							_uint iRand = CMathUtils::RandomUInt(2);
 
 							if (iRand == 0 && m_DetectedCoolTimeHelper.Use())
 							{
@@ -200,15 +200,15 @@ void CEM8200_Controller::Detected_Attack()
 								AddCommand("Teleport", 0.f, &CAIController::Input, (EHandleInput)iNum);
 							}
 
-							else if (iRand == 1 && m_KineticSet.IsNotDo() && m_DetectedCoolTimeHelper.Use())
+							else if ((iRand == 1 || iRand == 2) && m_KineticSet.IsNotDo() && m_DetectedCoolTimeHelper.Use())
 							{
 								// Capture
 								ClearCommands();
 								m_pCastedOwner->Set_KineticObject(pObj);
 								AddCommand("CaptureKinetic", 0.f, &CAIController::Input, B);
 							}
-							else
-								return;
+							//else
+								//return;
 						}
 					}
 				}
