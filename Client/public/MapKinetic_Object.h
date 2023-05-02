@@ -1,5 +1,6 @@
 #pragma once
 #include "MapObject.h"
+#include "HelperClasses.h"
 
 BEGIN(Engine)
 class CRigidBody;
@@ -147,8 +148,16 @@ private:
 
 	_matrix				m_PreMatrix;
 
+	_float				m_fCollisionCoolTime = 0.f;
+
 private:
 	_float				m_fRefloatTime = 0.f;
+
+	_float3				m_fToque;
+	_float3				m_fForce;
+	CDoOnce m_Once;
+
+	ECOLLIDER_TYPE m_eTargetType = CT_PLAYER_ATTACK;
 
 private:
 	vector<wstring>		m_vecRandomParticle{

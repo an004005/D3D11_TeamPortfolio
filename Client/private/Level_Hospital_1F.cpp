@@ -13,6 +13,7 @@
 
 #include "EM1100.h"
 #include "BronJon.h"
+#include "Item_Manager.h"
 
 #include "Level_Loading_Simple.h"
 #include "Level_FinalStage.h"
@@ -26,6 +27,9 @@ CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceConte
 HRESULT CLevel_Hospital_1F::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+	CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/HOspital/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/HOspital/Item.json");
 
 	m_strLevelName = L"Hospital1F";
 	m_strShadowCamJsonPath = "";

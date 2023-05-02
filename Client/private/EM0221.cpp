@@ -146,7 +146,7 @@ void CEM0221::Explosion()
 
 	if (CGameInstance::GetInstance()->OverlapSphere(param))
 	{
-		dynamic_cast<CEnemy*>(m_pOwner)->HitTargets(overlapOut, 40, EAttackType::ATK_HEAVY);
+		dynamic_cast<CEnemy*>(m_pOwner)->HitTargets(overlapOut, 40, EAttackType::ATK_HEAVY, EDeBuffType::DEBUFF_FIRE);
 	}
 
 	//»ç¿îµå

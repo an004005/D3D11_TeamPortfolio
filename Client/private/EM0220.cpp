@@ -156,7 +156,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Hit_Heavy to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+					return m_bCrushStart || m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 				})
 
 		.AddState("Death")
@@ -173,7 +173,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Down to OnFloorGetup", "OnFloorGetup")
 				.Predicator([this]
 			{
-				return m_pASM->isSocketPassby("FullBody", 0.95f);
+				return m_bCrushStart || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 
 		.AddState("OnFloorGetup")
@@ -185,7 +185,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("OnFloorGetup to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketEmpty("FullBody");
+				return m_bCrushStart || m_bDead || m_pASM->isSocketEmpty("FullBody");
 			})
 
 		.AddState("BrainCrushStart")
@@ -282,7 +282,7 @@ void CEM0220::SetUpFSM()
 				.Predicator([this]
 				{
 				//루프 모션일때는 컨트롤러가 작동하지 않기때문에 여기서 위치를 계산해줘야함
-					return m_bDead || m_pController->Check_TargetDist();
+					return m_bCrushStart || m_bDead || m_pController->Check_TargetDist();
 				})
 		
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -312,13 +312,13 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Guard_Start to Guard_Loop", "Guard_Loop")
 				.Predicator([this]
 				{
-					return m_bDead || (m_Unbeatable &&m_pASM->isSocketPassby("FullBody", 0.95f));
+					return (m_Unbeatable &&m_pASM->isSocketPassby("FullBody", 0.95f));
 				})
 
 			.AddTransition("Guard_Start to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bDead || (!m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END);
+					return m_bCrushStart || m_bDead || (!m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END);
 				})
 
 		// near 에서 멀어지면 일어서는건데 무조건 공격으로 변하기 때문에 이 조건이면 될것같음
@@ -388,7 +388,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Guard_End to Idle", "Idle")
 				.Predicator([this]
 			{
-				return m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
+				return m_bCrushStart || m_bDead || m_pASM->isSocketPassby("FullBody", 0.95f);
 			})
 			
 ///////////////////////////////////////////////////////////////////////////////////////////
