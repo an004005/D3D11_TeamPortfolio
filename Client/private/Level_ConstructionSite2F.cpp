@@ -72,28 +72,28 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
 void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 {
-    if (m_BGMOnce.IsNotDo())
-        m_BGM.PlaySound(m_MainSound);
-
-
-    if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
-    {
-        if (m_bBossBGM == false)
-        {
-            m_BGM.StopAllLoop();
-            m_bBossBGM = true;
-            m_BGM.PlaySound("em0110BGM");
-        }
-    }
-    else
-    {
-        if (m_bBossBGM == true)
-        {
-            m_BGM.StopAllLoop();
-            m_bBossBGM = false;
-            m_BGM.PlaySound(m_MainSound);
-        }
-    }
+    // if (m_BGMOnce.IsNotDo())
+    //     m_BGM.PlaySound(m_MainSound);
+    //
+    //
+    // if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
+    // {
+    //     if (m_bBossBGM == false)
+    //     {
+    //         m_BGM.StopAllLoop();
+    //         m_bBossBGM = true;
+    //         m_BGM.PlaySound("em0110BGM");
+    //     }
+    // }
+    // else
+    // {
+    //     if (m_bBossBGM == true)
+    //     {
+    //         m_BGM.StopAllLoop();
+    //         m_bBossBGM = false;
+    //         m_BGM.PlaySound(m_MainSound);
+    //     }
+    // }
 
     CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 	CLevel_StageDefault::Tick(TimeDelta);
