@@ -225,6 +225,12 @@ private:
 
 	_bool m_bBattleStart = false;
 
+	_uint m_iESCCnt = 0;
+	_float fDelay = 0.f;
+	CDoOnce m_ESC;
+
+	_float m_fTPChecker = 0.f;
+
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }
 

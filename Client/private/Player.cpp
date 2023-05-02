@@ -87,6 +87,7 @@
 #include "EnvironmentEffect.h"
 
 #include "EM8200.h"
+#include "HS_TeleportableWall.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -2419,6 +2420,13 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			for(auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
 			{
 				if (auto pWall = dynamic_cast<CInvisibleWall*>(iter))
+				{
+					pWall->SetVisible(false);
+				}
+			}
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if (auto pWall = dynamic_cast<CHS_TeleportableWall*>(iter))
 				{
 					pWall->SetVisible(false);
 				}

@@ -123,7 +123,7 @@ HRESULT CGameManager::Initialize()
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::ARASHI);
 		CPlayerInfoManager::GetInstance()->Set_SASMember(SASMEET::KYOTO);
 	}
-	else if (LEVEL_NOW == LEVEL_HOSPITAL_1F)
+else if (LEVEL_NOW == LEVEL_HOSPITAL_1F)
 	{
 		// ¸Ê ÀÌ¸§
 		Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Alarm.json");

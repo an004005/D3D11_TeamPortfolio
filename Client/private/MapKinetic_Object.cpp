@@ -73,6 +73,8 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 			{
 				if (auto pMonster = dynamic_cast<CEnemy*>(pGameObject))
 				{
+					if (0.f < m_fCollisionCoolTime) return;
+
 					DAMAGE_PARAM tParam;
 					tParam.eAttackType = EAttackType::ATK_HEAVY;
 					tParam.iDamage = static_cast<_uint>(CPlayerInfoManager::GetInstance()->GetFinalDamage() * 5.f);
@@ -87,6 +89,8 @@ HRESULT CMapKinetic_Object::Initialize(void* pArg)
 					CGameInstance::GetInstance()->SetTimeRatioCurve("HitLack_Heavy");
 
 					ReleaseParticle();
+
+					m_fCollisionCoolTime = 1.f;
 				}
 
 				return;
@@ -252,16 +256,23 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	if (m_eCurModelTag != Tag_End)
 		m_pModelComs[m_eCurModelTag]->Tick(TimeDelta);
 
+	m_fCollisionCoolTime -= g_fTimeDelta;
+
 	OutlineMaker();
 
-	if (m_bThrow)
+	/*if (m_bThrow)
 	{
-		m_pCollider->Set_ColliderType(CT_PLAYER_ATTACK);
+		m_pCollider->Set_ColliderType(m_eTargetType);
+		if (m_Once.IsNotDo())
+		{
+			m_pCollider->AddVelocity(m_fForce);
+			m_pCollider->AddTorque(m_fToque);
+		}
 	}
 	else
 	{
 		m_pCollider->Set_ColliderType(CT_PSYCHICK_OBJ);
-	}
+	}*/
 
 	if (0.f <= m_fRefloatTime)
 	{
@@ -443,6 +454,9 @@ void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 	m_pCollider->Set_Trigger(false);
 	//m_pCollider->UpdateChange();
 
+//	m_fForce = vForce;
+//	m_fToque = vTorque;
+
 	m_pCollider->AddVelocity(vForce);
 	m_pCollider->AddTorque(vTorque);
 }
@@ -500,6 +514,7 @@ void CMapKinetic_Object::Set_Counter()
 void CMapKinetic_Object::Boss_Throw(_float4 vTargetPos)
 {
 	m_bThrow = true;
+//	m_eTargetType = CT_MONSTER_ATTACK;
 
 	Set_Trigger(false);
 

@@ -11,6 +11,8 @@
 #include "JsonStorage.h"
 
 #include "EM0320.h"
+#include "Item_Manager.h"
+#include "PlayerInfoManager.h"
 
 
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -21,6 +23,8 @@ CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D
 HRESULT CLevel_ConstructionSite3F::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+
 
 	m_strLevelName = L"ConstructionSite3F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
