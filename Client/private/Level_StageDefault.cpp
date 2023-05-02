@@ -96,18 +96,18 @@ void CLevel_StageDefault::Tick(_double TimeDelta)
 		}
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F1))
-	{
-		CPlayerInfoManager::GetInstance()->Set_Exp(85);
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F2))
-	{
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += 25;
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F3))
-	{
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP += 25;
-	}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F1))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Set_Exp(85);
+	//}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F2))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += 25;
+	//}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F3))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP += 25;
+	//}
 }
 
 HRESULT CLevel_StageDefault::Render()

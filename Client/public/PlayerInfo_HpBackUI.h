@@ -26,6 +26,9 @@ public:
 public:
 	void	RendomHpImage(const _int & iImageNumber);
 
+	void	Set_CurrentHp(const _float& fHp) {
+		m_fCurrentHp = fHp;
+	}
 	void	Set_PlayerHp(const _float & fHp) {
 		m_fHp = fHp;
 	}
