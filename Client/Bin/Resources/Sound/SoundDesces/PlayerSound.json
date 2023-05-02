@@ -433,17 +433,6 @@
             "MaxDistance" : 20.0
         },
         {
-            "Name": "move_Landing",
-            "SoundFiles": [
-                "Move/move_Landing.wav"
-            ],
-            "2DSound": false,
-            "Volume": 1,
-            "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
-        },
-        {
             "Name": "move_stop",
             "SoundFiles": [
                 "Move/move_stop.wav"
