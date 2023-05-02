@@ -539,4 +539,5 @@ void CCanvas_MainTalk::Free()
 {
 	CCanvas::Free();
 
+	while (!m_qCurrentTalk.empty()) m_qCurrentTalk.pop();
 }
