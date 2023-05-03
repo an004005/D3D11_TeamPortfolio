@@ -301,7 +301,7 @@ void CCanvas_WorldMap::CloneBar()
 
 void CCanvas_WorldMap::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_TAB))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_0/*DIK_TAB*/))
 	{
 		if (false == m_bMapUI)	CUI_Manager::GetInstance()->PlaySound("MainIn");
 		else									CUI_Manager::GetInstance()->PlaySound("MainOut");

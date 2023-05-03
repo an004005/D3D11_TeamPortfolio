@@ -180,7 +180,7 @@ void CCanvas_SASSkill::FullCircle()
 	// 원 들이게 X키의 정보를 넘겨준다.
 	_tchar szText[MAX_PATH] = TEXT("");
 
-	for (_uint i = 1; i < 7; i++)
+	for (_uint i = 1; i <= 7; i++)
 	{
 		wsprintf(szText, TEXT("FullCircle%u"), i);
 		dynamic_cast<CSASSkillFullCircleUI*>(Find_ChildUI(szText))->Set_ChangeX(m_bChangeX);

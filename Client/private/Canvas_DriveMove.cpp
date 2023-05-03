@@ -45,8 +45,6 @@ HRESULT CCanvas_DriveMove::Initialize(void* pArg)
 		iter->second->SetVisible(false);
 	}
 
-
-
 	return S_OK;
 }
 

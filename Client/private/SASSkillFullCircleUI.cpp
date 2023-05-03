@@ -33,7 +33,7 @@ HRESULT CSASSkillFullCircleUI::Initialize(void * pArg)
 	++iCount;
 	m_iObjectNum = iCount;
 
-	if (8 == iCount)
+	if (7 == iCount)
 		iCount = 0;
 
 	m_vOriginSize = { m_fSizeX * m_vScale.x, m_fSizeY * m_vScale.y };
@@ -210,7 +210,7 @@ void CSASSkillFullCircleUI::Object_Tick()
 				m_bVisible = true;
 				if (false == m_bOneGrow)
 				{
-					m_bOneGrow = true;
+ 					m_bOneGrow = true;
 					m_bGrow = true;
 				}
 			}
