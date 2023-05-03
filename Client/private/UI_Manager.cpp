@@ -33,6 +33,9 @@ CUI_Manager::CUI_Manager()
     m_SoundStore.CloneSound("Unable");   // 불가능한 클릭
     m_SoundStore.CloneSound("Upgrade");   // 레벨 업 할 때 + ★
     m_SoundStore.CloneSound("Weapon");   // 장비 장착할 때 + ★
+    m_SoundStore.CloneSound("UI_kine_object_popup");  
+    m_SoundStore.CloneSound("UI_item_achive");  
+    m_SoundStore.CloneSound("UI_fx_debuff");  
 
     
     m_SoundStore.CloneSound("EM_Spawn");   // 몬스터 스폰 사운드

@@ -69,8 +69,8 @@ HRESULT CCanvas_BrainField::Render()
 	_float fPosX = 0.0f;
 	if (10 > fBrain) fPosX = 35.0f;
 	else fPosX = 30.0f;
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(fPosX, 100.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"Sec", vPosition + _float2(58.0f, 103.0f), 0.f, {0.35f, 0.35f}, {1.0f, 0.99f, 0.87f, 1.0f});
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(fPosX, 96.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"Sec", vPosition + _float2(58.0f, 98.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	return S_OK;
 }

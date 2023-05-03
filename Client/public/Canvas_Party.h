@@ -64,7 +64,6 @@ private:
 
 	// SAS
 	array<PICKINFO, 5>	m_arrReserve;	// ¾Õ¸é 0, 1 / µÞ¸é 0, 1
-	//_bool	m_bFrontPage = { false };
 	_int	m_iFrontPage = { 0 };
 	_int	m_iCount = { 0 };
 

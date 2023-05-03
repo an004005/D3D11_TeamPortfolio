@@ -134,7 +134,7 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                     return pair.first == m_strName;
 				});
 
-                CUI_Manager::GetInstance()->PlaySound("MonsterAlert");
+                CUI_Manager::GetInstance()->PlaySound("UI_item_achive");
 
 
             if (iter != vecItemInfo.end())
@@ -156,7 +156,7 @@ void CConsumption_Item::Late_Tick(_double TimeDelta)
                 if (iter != vecItemInfo.end())
                 {
                     CGameManager::GetInstance()->Set_AddlItem(m_AchieveName);
-                    CUI_Manager::GetInstance()->PlaySound("MainIn");
+                    CUI_Manager::GetInstance()->PlaySound("UI_item_achive");
                 }
             }
             // ★ 애니메이션 교체(Get)

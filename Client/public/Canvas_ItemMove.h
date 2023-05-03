@@ -19,15 +19,13 @@ public:
 	virtual void	Tick(_double TimeDelta) override;
 
 public:
-	void	Set_Input() {
-		m_bInput = true;
-	}
+	void	Set_GaugeColor(const _float4 fColor);
+	void	Set_BackGaugeColor(const _float4 fColor);
 
 private:
 	void	Key_Input();
 
 private:
-	_bool	m_bInput = { false };
 	_bool	m_bInputSound = { false };
 
 public:

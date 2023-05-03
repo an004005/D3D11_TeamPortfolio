@@ -40,7 +40,7 @@ HRESULT CSound::Initialize(FMOD_SYSTEM* pSystem, const Json& soundJson, const st
 		mode |= FMOD_3D_LINEARROLLOFF;
 	if (m_bLooping)
 		mode |= FMOD_LOOP_NORMAL;
-
+	 
 	m_pSounds.reserve(soundFileNames.size());
 
 	for (auto soundFileName : soundFileNames)

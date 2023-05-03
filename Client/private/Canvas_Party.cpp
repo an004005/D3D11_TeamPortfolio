@@ -341,7 +341,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 2239;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 1515;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 99;
 	tPickInfo.iAttack = 148;
 	tPickInfo.iDefense = 51;
@@ -355,7 +355,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 645;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 826;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 93;
 	tPickInfo.iAttack = 185;
 	tPickInfo.iDefense = 47;
@@ -369,7 +369,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 782;
 	tPickInfo.iBondLevel = 6;
 	tPickInfo.iHP = 1253;
-	tPickInfo.iMaxHP = m_tPickIngo.iHP;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 112;
 	tPickInfo.iAttack = 132;
 	tPickInfo.iDefense = 32;
@@ -383,7 +383,7 @@ void CCanvas_Party::SASMemberInfo_Initialize()
 	tPickInfo.iRemainingExp = 958;
 	tPickInfo.iBondLevel = 5;
 	tPickInfo.iHP = 1352;
-	tPickInfo.iMaxHP = 1352;
+	tPickInfo.iMaxHP = tPickInfo.iHP;
 	tPickInfo.iSprbrPower = 97;
 	tPickInfo.iAttack = 153;
 	tPickInfo.iDefense = 76;

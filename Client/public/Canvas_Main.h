@@ -31,6 +31,10 @@ public:
 			iter->second->SetVisible(false);
 	}
 
+	_bool Get_BeSeen() {
+		return m_bMainUI;
+	}
+
 private:
 	HRESULT	Add_MainCanvas();
 

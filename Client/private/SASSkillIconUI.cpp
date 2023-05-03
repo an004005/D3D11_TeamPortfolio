@@ -106,7 +106,12 @@ void CSASSkillIconUI::Set_IconType(const ESASType & eESASType, const _bool bUsab
 	if (bUsable)	// 사용 가능 
 	{
 		m_tParams.Ints[0] = 0;
-		m_tParams.Float2s[0] = { fSasType, 1.0f };
+		if(10.0f != fSasType) m_tParams.Float2s[0] = { fSasType, 1.0f };
+		else
+		{
+			m_tParams.Ints[0] = 1;
+			m_tParams.Float2s[0] = { fSasType, 0.0f };
+		}
 	}
 	else			// 사용 불 가능
 	{

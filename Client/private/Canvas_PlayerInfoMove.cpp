@@ -46,7 +46,19 @@ HRESULT CCanvas_PlayerInfoMove::Initialize(void* pArg)
 	Find_ChildUI(L"HillBar")->SetVisible(false);
 
 	Set_PsychokinesisType();
-	
+
+	_uint iHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
+	_uint iMaxHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
+	_float fRatio = _float(iHp) / iMaxHp;
+	m_fPercentageHp = (1.0f < fRatio) ? 1.0f : fRatio;
+
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack0"))->Set_CurrentHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack1"))->Set_CurrentHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack2"))->Set_CurrentHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack3"))->Set_CurrentHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack4"))->Set_CurrentHp(m_fPercentageHp);
+	dynamic_cast<CPlayerInfo_HpBackUI*>(Find_ChildUI(L"PlayerInfo_HpBack5"))->Set_CurrentHp(m_fPercentageHp);
+
 	return S_OK;
 }
 
@@ -54,7 +66,6 @@ void CCanvas_PlayerInfoMove::BeginTick()
 {
 	CCanvas::BeginTick();
 
-	PlayerHp_Tick();
 
 }
 

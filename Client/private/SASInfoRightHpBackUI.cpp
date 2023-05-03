@@ -33,7 +33,7 @@ HRESULT CSASInfoRightHpBackUI::Initialize(void * pArg)
 	m_iObjectNumber = iObjectCount;
 	++iObjectCount;
 
-	if (6 == iObjectCount) iObjectCount = 0;
+	if (3 == iObjectCount) iObjectCount = 0;
 
 	m_fHp = 1.0f;
 	m_fCurrentHp = 1.0f;

@@ -58,7 +58,7 @@ HRESULT CCanvas_SASInfoRight::Render()
 		return E_FAIL;
 
 	_float2 vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SASInfo_Right_BackGround"))->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"하나비 이치조", vPosition + _float2(160.0f, 90.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"하나비 이치조", vPosition + _float2(150.0f, 90.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	_uint iHp = CPlayerInfoManager::GetInstance()->Get_HanabiStat().iHP;
 	_uint iMaxHP = CPlayerInfoManager::GetInstance()->Get_HanabiStat().iMaxHP;
@@ -68,16 +68,16 @@ HRESULT CCanvas_SASInfoRight::Render()
 	if (1000 <= iHp)
 	{
 		wsprintf(szChildTag, TEXT("%u"), iHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(224.0f, 30.0f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(230.0f, 30.0f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/ %u"), iMaxHP);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(275.0f, 30.5f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(281.0f, 30.5f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 	else
 	{
 		wsprintf(szChildTag, TEXT("%u"), iHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(245.0f, 30.0f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(251.0f, 30.0f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/ %u"), iMaxHP);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(285.0f, 30.5f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(291.0f, 30.5f), 0.f, fFontSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 
 	return S_OK;
