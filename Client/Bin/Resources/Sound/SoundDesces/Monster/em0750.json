@@ -10,8 +10,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_3_attack_airdash_up",
@@ -22,8 +22,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_3_move",
@@ -35,8 +35,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_3_provoke",
@@ -47,8 +47,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
        
     ]

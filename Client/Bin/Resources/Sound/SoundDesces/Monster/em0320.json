@@ -8,8 +8,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "boss1_attack_dive_jump_splited",
@@ -50,7 +50,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "boss1_attack_spin",
@@ -60,7 +60,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "boss1_move",
@@ -71,7 +71,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         }
         
      

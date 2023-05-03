@@ -16,8 +16,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "horse_attack_spin",
@@ -25,8 +25,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "horse_fx_death",
@@ -36,8 +36,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "horse_runs_bip",
@@ -50,8 +50,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "horse_walks_bip",
@@ -64,8 +64,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
     ]
 }
