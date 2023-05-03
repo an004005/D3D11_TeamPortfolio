@@ -455,6 +455,7 @@ void CEM0400::SetUpFSM()
 			.OnStart([this]
 			{
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em0400_200_AL_atk_a1");
+				ClearDamagedTarget();
 			})
 			.Tick([this](_double) 
 			{

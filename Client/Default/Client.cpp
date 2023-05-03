@@ -15,8 +15,8 @@ WCHAR		szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트�
 WCHAR		szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 bool			g_bFullScreen = false;
 bool			g_bNeedResizeSwapChain = false;
-unsigned int	g_iWinSizeX = 1600;
-unsigned int	g_iWinSizeY = 900;
+unsigned int	g_iWinSizeX = 1920;
+unsigned int	g_iWinSizeY = 1080;
 _float g_fTimeDelta;
 _float g_fTimeDelta_Add;
 
