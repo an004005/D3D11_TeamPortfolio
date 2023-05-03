@@ -98,9 +98,9 @@ HRESULT CMainApp::Initialize()
 
 	FAILED_CHECK(CItem_Manager::GetInstance()->Initialize())
 
- #ifndef _DEBUG
-	 CGameInstance::GetInstance()->Imgui_OnOff(false);
- #endif
+ //#ifndef _DEBUG
+	// CGameInstance::GetInstance()->Imgui_OnOff(false);
+ //#endif
 
 	return S_OK;
 }

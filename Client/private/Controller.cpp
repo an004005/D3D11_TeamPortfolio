@@ -32,7 +32,7 @@ void CController::Tick(_double TimeDelta)
 
 	if (m_bRejector)
 	{
-		if (pGameInstance->KeyDown(DIK_T))
+		if (pGameInstance->KeyDown(DIK_F5))
 		{
 			m_bRejector = false;
 		}
