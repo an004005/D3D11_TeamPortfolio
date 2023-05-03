@@ -17,6 +17,7 @@
 #include "MonsterHpUI.h"
 #include "MonsterShildUI.h"
 #include "ImguiUtils.h"
+#include "UI_Manager.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -358,6 +359,8 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 
 void CEnemy::CreateSpawnEffect()
 {
+	CUI_Manager::GetInstance()->PlaySound("EM_Spawn");
+
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
 		->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
 
@@ -577,10 +580,13 @@ void CEnemy::HitEffect(DAMAGE_PARAM& tDamageParams)
 		CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_HIT, L"Default_Kinetic_Dead_Effect_00")->Start_AttachPosition(this, GetColliderPosition(), {0.f, 0.1f, 0.f, 0.f});
 	}
 
+	_vector vPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
+	_float4 fPos = vPos;
+
 	if (m_strImpactTag.empty() == false)
-		m_SoundStore.PlaySound(m_strImpactTag, &tDamageParams.vHitPosition);
+		m_SoundStore.PlaySound(m_strImpactTag, &fPos);
 	if (m_strImpactVoiceTag.empty() == false)
-		m_SoundStore.PlaySound(m_strImpactVoiceTag, &tDamageParams.vHitPosition);
+		m_SoundStore.PlaySound(m_strImpactVoiceTag, &fPos);
 }
 
 void CEnemy::CheckDeBuff(EDeBuffType eDeBuff)

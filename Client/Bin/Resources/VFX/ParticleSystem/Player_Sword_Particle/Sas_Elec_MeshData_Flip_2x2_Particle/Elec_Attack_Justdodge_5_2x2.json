@@ -1,1 +1,142 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":1,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":1.0,"EndTime":0.0,"FinishFunc":1,"FromOrigin":false,"GravityPowerMinMax":[-2.0,2.0],"IncreaseMaxSize":2.0,"Life":0.800000011920929,"LifeMinMax":[0.5,0.800000011920929],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ModelCurveProtoTag":"","ModelProtoTag":"../Bin/Resources/Meshes/VFX/Player_Elec_Attack/Elec_Attack_Justdodge_5.static_model","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[-1.0,-1.0,-1.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.7387639880180359,0.6415656805038452,0.14596396684646606,1.0]],"Float4x4s":[],"Floats":[2.0],"Ints":[2,2],"Pass":29,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_002.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.029999999329447746,"Speed":0.009999999776482582,"SpeedMinMax":[0.10000000149011612,0.30000001192092896],"SpeedRand":true,"SphereDetail":false,"SphereRadius":0.30000001192092896,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"TurnAngle":0.0,"TurnAxis":[0.0,0.0,0.0],"UseMeshData":true,"VtxRangeRatioValue":0.0,"VtxRangeTimelineCurve":"","VtxStartRatioValue":0.0,"VtxStartTimelineCurve":"","XDirCurveName":"","YDirCurveName":"","ZDirCurveName":"","bCurveDir":false,"bGravity":false,"bLocal":false,"bMeshCurve":false,"bNonAlpha":false,"bPhysX":false,"bRotate":false,"bSizeDecreaseByLife":true,"bSizeIncreaseByLife":true,"bTurn":false,"bUseMainCurve":false,"pSize":[0.5,0.5]}
+{
+	"MeshBufferProtoTag": "",
+	"ModelCurveProtoTag": "",
+	"Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+	"Shape": 0,
+	"MeshSize": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"bCurveDir": false,
+	"SpeedRand": true,
+	"Duration": 0.3,
+	"ModelProtoTag": "../Bin/Resources/Meshes/VFX/Player_Elec_Attack/Elec_Attack_Justdodge_5.static_model",
+	"RotationToTimeMax": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"EndTime": 0.0,
+	"SphereRadius": 0.30000001192092896,
+	"ObjectTag": "",
+	"FromOrigin": false,
+	"Loop": false,
+	"BurstCnt": 1,
+	"bTurn": false,
+	"pSize": [
+		0.5,
+		0.5
+	],
+	"YDirCurveName": "",
+	"ZDirCurveName": "",
+	"bRotate": false,
+	"bUseMainCurve": false,
+	"UseMeshData": true,
+	"bNonAlpha": false,
+	"TurnAngle": 0.0,
+	"RandDirMax": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"ShaderParams": {
+		"Float4x4s": [],
+		"Float4s": [
+			[
+				0.7387639880180359,
+				0.6415656805038452,
+				0.14596396684646606,
+				1.0
+			]
+		],
+		"Textures": [
+			"..\\Bin\\Resources\\Texture\\VFX\\T_White_01.png\u0000",
+			"..\\Bin\\Resources\\Texture\\VFX\\T_ef_anm_thn_002.png\u0000"
+		],
+		"Float2s": [],
+		"Pass": 29,
+		"Floats": [
+			2.0
+		],
+		"Ints": [
+			2,
+			2
+		]
+	},
+	"bSizeDecreaseByLife": true,
+	"VtxStartRatioValue": 0.0,
+	"VtxRangeRatioValue": 0.0,
+	"RandDirMin": [
+		-1.0,
+		-1.0,
+		-1.0
+	],
+	"GravityPowerMinMax": [
+		-2.0,
+		2.0
+	],
+	"ConeOriginRadius": 1.0,
+	"Life": 0.800000011920929,
+	"LifeMinMax": [
+		0.3,
+		0.5
+	],
+	"bGravity": false,
+	"LifeRand": true,
+	"Speed": 0.009999999776482582,
+	"Transform": {
+		"WorldMatrix": [
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0
+		]
+	},
+	"TurnAxis": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"ScaleVariation": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+	"bSizeIncreaseByLife": true,
+	"bMeshCurve": false,
+	"ConeDirDegree": 30.0,
+	"RotationToTimeMin": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"BilboardType": 1,
+	"XDirCurveName": "",
+	"SpeedMinMax": [
+		0.10000000149011612,
+		0.30000001192092896
+	],
+	"VtxStartTimelineCurve": "",
+	"bLocal": false,
+	"SphereDetail": false,
+	"FinishFunc": 1,
+	"BufferType": 0,
+	"IncreaseMaxSize": 2.0,
+	"bPhysX": false,
+	"SpawnTickTime": 0.029999999329447746,
+	"VtxRangeTimelineCurve": ""
+}
