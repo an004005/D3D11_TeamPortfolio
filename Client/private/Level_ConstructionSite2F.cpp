@@ -20,7 +20,7 @@ CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D
 
 HRESULT CLevel_ConstructionSite2F::Initialize()
 {
-   // m_bPlayerSpawn = false;
+    // m_bPlayerSpawn = false;
 
     m_strLevelName = L"ConstructionSite2F";
     m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite2F_ShadowCam.json"; 
@@ -33,8 +33,8 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
     if (FAILED(__super::Initialize()))
         return E_FAIL;
-    if (FAILED(Ready_Layer_AI(LAYER_AI)))
-        return E_FAIL;
+   if (FAILED(Ready_Layer_AI(LAYER_AI)))
+       return E_FAIL;
 
     // Kinetic Object Batch & Item
     CImgui_Batch::RunBatchFile("../Bin/Resources/Batch/BatchFiles/ConstructionSite2F/Kinetic_Normal_ConstructionSite2F.json");
@@ -72,28 +72,28 @@ HRESULT CLevel_ConstructionSite2F::Initialize()
 
 void CLevel_ConstructionSite2F::Tick(_double TimeDelta)
 {
-    if (m_BGMOnce.IsNotDo())
-        m_BGM.PlaySound(m_MainSound);
-
-
-    if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
-    {
-        if (m_bBossBGM == false)
-        {
-            m_BGM.StopAllLoop();
-            m_bBossBGM = true;
-            m_BGM.PlaySound("em0110BGM");
-        }
-    }
-    else
-    {
-        if (m_bBossBGM == true)
-        {
-            m_BGM.StopAllLoop();
-            m_bBossBGM = false;
-            m_BGM.PlaySound(m_MainSound);
-        }
-    }
+    // if (m_BGMOnce.IsNotDo())
+    //     m_BGM.PlaySound(m_MainSound);
+    //
+    //
+    // if (FindGameObjectInLayer<CEM0110>(L"Layer_Monster"))
+    // {
+    //     if (m_bBossBGM == false)
+    //     {
+    //         m_BGM.StopAllLoop();
+    //         m_bBossBGM = true;
+    //         m_BGM.PlaySound("em0110BGM");
+    //     }
+    // }
+    // else
+    // {
+    //     if (m_bBossBGM == true)
+    //     {
+    //         m_BGM.StopAllLoop();
+    //         m_bBossBGM = false;
+    //         m_BGM.PlaySound(m_MainSound);
+    //     }
+    // }
 
     CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 	CLevel_StageDefault::Tick(TimeDelta);

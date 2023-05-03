@@ -103,35 +103,35 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 void CLevel_Hospital_1F::Tick(_double TimeDelta)
 {
-	if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
-	{
-		CGameInstance::GetInstance()->Open_Loading(
-			LEVEL_FINAL_STAGE,
-			CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
-	}
-
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-
-	if (FindGameObjectInLayer<CEM1100>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em1100BGM");
-		}
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}
+	// if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
+	// {
+	// 	CGameInstance::GetInstance()->Open_Loading(
+	// 		LEVEL_FINAL_STAGE,
+	// 		CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
+	// }
+	//
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
+	//
+	//
+	// if (FindGameObjectInLayer<CEM1100>(L"Layer_Monster"))
+	// {
+	// 	if (m_bBossBGM == false)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = true;
+	// 		m_BGM.PlaySound("em1100BGM");
+	// 	}
+	// }
+	// else
+	// {
+	// 	if (m_bBossBGM == true)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = false;
+	// 		m_BGM.PlaySound(m_MainSound);
+	// 	}
+	// }
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 

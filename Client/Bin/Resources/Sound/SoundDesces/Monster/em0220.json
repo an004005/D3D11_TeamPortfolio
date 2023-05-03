@@ -9,8 +9,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-        "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "wood_attack_spits",
@@ -22,8 +22,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "wood_fx_death",
@@ -33,8 +33,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "wood_move_down",
@@ -44,8 +44,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "wood_move_up",
@@ -55,8 +55,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
       
     ]

@@ -375,11 +375,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 500.0f, 100.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag_NonAlpha"), 500.0f, 300.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 500.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_RMA"), 500.0f, 700.f, 200.f, 200.f));
 
-
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 300.f, 200.f, 200.f));
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_HDR"), 500.0f, 500.f, 200.f, 200.f));
-
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_HDR"), 700.0f, 100.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Portrait"), 700.0f, 300.f, 200.f, 200.f));
 	
 
 #endif
@@ -454,26 +455,27 @@ void CRenderer::Imgui_RenderOtherWindow()
 	ImGui::Checkbox("Visible Targets", &m_bVisibleTargets);
 #endif
 
-	ImGui::Separator();
-	_int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
-	_float fRadius = CSSAOManager::GetInstance()->GetRadius();
-	ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
-	ImGui::InputFloat("Radius(max100)", &fRadius);
-	CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
-	ImGui::Separator();
-
-	ImGui::Checkbox("LightRay", &m_bLightRays);
-	ImGui::InputFloat("SSLRIntendity", &m_fSSLRIntensity);
-	CSSLRManager::GetInstance()->Imgui_Render();
-
-	ImGui::Separator();
+	// ImGui::Separator();
+	// _int iSampleRadius = CSSAOManager::GetInstance()->GetSampleRadius();
+	// _float fRadius = CSSAOManager::GetInstance()->GetRadius();
+	// ImGui::InputInt("SSASSampleRadius(max64)", &iSampleRadius);
+	// ImGui::InputFloat("Radius(max100)", &fRadius);
+	// CSSAOManager::GetInstance()->SetParameters(iSampleRadius, fRadius);
+	// ImGui::Separator();
+	//
+	// ImGui::Checkbox("LightRay", &m_bLightRays);
+	// ImGui::InputFloat("SSLRIntendity", &m_fSSLRIntensity);
+	// CSSLRManager::GetInstance()->Imgui_Render();
+	//
+	// ImGui::Separator();
 
 	ImGui::Checkbox("bFog", &m_bFog);
 	ImGui::ColorEdit4("FogColor", (float*)&m_tFogDesc.vFogColor, ImGuiColorEditFlags_PickerHueWheel);
 	ImGui::ColorEdit4("FogHighlightColor", (float*)&m_tFogDesc.vHighlightColor, ImGuiColorEditFlags_PickerHueWheel);
-	ImGui::InputFloat("StartDepth", &m_tFogDesc.fStartDepth, 0.f, 0.f, "%.6f");
-	ImGui::InputFloat("Density", &m_tFogDesc.fGlobalDensity, 0.f, 0.f, "%.6f");
-	ImGui::InputFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff, 0.f, 0.f, "%.6f");
+	ImGui::DragFloat("StartDepth", &m_tFogDesc.fStartDepth, 1.f, 0.f, 0.f, "%.6f");
+	ImGui::DragFloat("Density", &m_tFogDesc.fGlobalDensity, 0.001f, 0.f, 0.f, "%.6f");
+	ImGui::DragFloat("HeightFalloff", &m_tFogDesc.fHeightFalloff, 0.01f, 0.f, 0.f, "%.6f");
+
 
 	CImguiUtils::FileDialog_FileSelector("Save Fog Data", ".json", "../Bin/Resources/", [this](const string& filePath)
 	{

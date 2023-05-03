@@ -67,28 +67,28 @@ HRESULT CLevel_NaomiRoom::Initialize()
 
 void CLevel_NaomiRoom::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-
-	if (FindGameObjectInLayer<CEM1200>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em1200BGM");
-		}
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
+	//
+	//
+	// if (FindGameObjectInLayer<CEM1200>(L"Layer_Monster"))
+	// {
+	// 	if (m_bBossBGM == false)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = true;
+	// 		m_BGM.PlaySound("em1200BGM");
+	// 	}
+	// }
+	// else
+	// {
+	// 	if (m_bBossBGM == true)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = false;
+	// 		m_BGM.PlaySound(m_MainSound);
+	// 	}
+	// }
 
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);

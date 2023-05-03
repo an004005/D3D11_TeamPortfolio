@@ -86,12 +86,19 @@ public:
 	void	Set_CollisionDuplicate(_bool bDuplicate) { m_bCollisionDuplicate = bDuplicate; }
 
 	_bool	Get_CollisionDuplicate(ECOPYCOLTYPE eType) { return m_vecDuplication[eType]; }
-	void	Set_CollisionDuplicate(_bool bDuplicate, ECOPYCOLTYPE eType = COPYCOL_MAIN) { m_vecDuplication[eType] = bDuplicate; }
+	_float	Get_CollisionDuplicateCool(ECOPYCOLTYPE eType) { return m_vecDuplicationCool[eType]; }
+	void	Set_CollisionDuplicate(_bool bDuplicate, ECOPYCOLTYPE eType = COPYCOL_MAIN) { m_vecDuplication[eType] = bDuplicate; }	//원본
+	void	Set_CollisionDuplicateCool(_float fCool, ECOPYCOLTYPE eType = COPYCOL_MAIN) { m_vecDuplicationCool[eType] = fCool; }	// 내부쿨
 
 protected:
 	_bool			m_bCollisionDuplicate = false;		// true이면 여전히 충돌중인것임
 	vector<_bool>	m_vecDuplication = { false, false, false };
 // ~재충돌 여부
+
+// 충돌 내부쿨, 원인 파악 안되면 이걸로 하기
+protected:
+	vector<_float>	m_vecDuplicationCool = { 0.f, 0.f, 0.f };
+// ~충돌 내부쿨, 원인 파악 안되면 이걸로 하기
 
 protected:
 	_uint	m_iHitTargetCount = 0;

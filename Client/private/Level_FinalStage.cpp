@@ -150,8 +150,8 @@ HRESULT CLevel_FinalStage::Ready_Lights()
 void CLevel_FinalStage::Tick(_double TimeDelta)
 {
 
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
 
 	__super::Tick(TimeDelta);
 }	

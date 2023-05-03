@@ -37,6 +37,9 @@ CUI_Manager::CUI_Manager()
     m_SoundStore.CloneSound("UI_item_achive");  
     m_SoundStore.CloneSound("UI_fx_debuff");  
 
+    
+    m_SoundStore.CloneSound("EM_Spawn");   // 몬스터 스폰 사운드
+
 #ifndef _DEBUG
     CGameUtils::HideCursor();
 #endif
@@ -116,19 +119,19 @@ void CUI_Manager::Clear()
 void CUI_Manager::Tick(_double TimeDelta)
 {
 	
-	 //if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
-	 //{
-	 //	if (m_bMouseActive)
-	 //	{
-	 //		m_bMouseActive = false; // 플레이어 세계
-	 //		CGameUtils::HideCursor();
-	 //	}
-	 //	else
-	 //	{
-	 //		m_bMouseActive = true; // UI 세계
-	 //		CGameUtils::ShowCursor();
-	 //	}
-	 //}
+	 if (CGameInstance::GetInstance()->KeyDown(DIK_T))// 마우스 강제 활성화 비활성화
+	 {
+	 	if (m_bMouseActive)
+	 	{
+	 		m_bMouseActive = false; // 플레이어 세계
+	 		CGameUtils::HideCursor();
+	 	}
+	 	else
+	 	{
+	 		m_bMouseActive = true; // UI 세계
+	 		CGameUtils::ShowCursor();
+	 	}
+	 }
 }
 
 void CUI_Manager::PlaySound(const string& SoundName)

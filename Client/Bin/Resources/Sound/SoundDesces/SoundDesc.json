@@ -461,8 +461,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 40.0,
+            "MaxDistance": 80.0
         },
         {
             "Name": "fx_kinetic_lifting",
@@ -474,8 +474,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 40.0,
+            "MaxDistance": 80.0
         },
         {
             "Name": "fx_kinetic_shot",
@@ -487,8 +487,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 20.0,
+            "MaxDistance": 80.0
         },
         {
             "Name": "attack_kinetic_combo_1_1",
