@@ -104,7 +104,7 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 	*/
 	
 	//일반 모델들의 프로토타입 생성
-	/*CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Default/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -114,11 +114,11 @@ HRESULT CLevel_Maptool::Ready_Prototypes()
 		{
 			FAILED_CHECK(Create_Model(s2ws(fileName), fileName.c_str(), NON_INSTANCE));
 		}
-	});*/
+	});
 
 			
 	//인스턴싱 모델들의 프로토타입 생성						// TutorialMap	FinalBossStage	Subway_Hospital/Subway  Subway_Hospital/Hospital	Common	BrainField
-	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/Subway_Hospital/Subway/",
+	CGameUtils::ListFilesRecursive("../Bin/Resources/Model/StaticModel/MapStaicModels/Instancing/",
 		[this](const string& fileName)
 	{
 		char szFileExt[MAX_PATH]{};
@@ -179,7 +179,7 @@ HRESULT CLevel_Maptool::Ready_Layer_Map(const wstring& pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 																
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Tutorial.json");
+	Json json;// = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Tutorial.json");
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_ConstructionSite2F.json");
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_NaomiRoom.json");				// Map_NaomiRoom
 	// Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/Objects/Map/Map_Hospital_1F.json");			// Map_Hospital_1F

@@ -7,8 +7,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "santa_fx_death",
@@ -16,8 +16,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "santa_hit_voice_1",
@@ -28,8 +28,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "santa_spin",
@@ -37,8 +37,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_santa_throw_splited",
@@ -46,8 +46,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_santa_throw_voice_splited",
@@ -55,8 +55,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 20.0,
+            "MaxDistance" : 60.0
         }
 
     ]

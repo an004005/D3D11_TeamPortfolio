@@ -7,8 +7,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_attack_voice",
@@ -17,8 +17,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_attack_whoosh",
@@ -26,8 +26,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_backspin_step",
@@ -38,8 +38,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_fx_death",
@@ -47,8 +47,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_run",
@@ -59,8 +59,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_sidestep_1_step",
@@ -73,8 +73,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_voice_attack_ready",
@@ -83,8 +83,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 30.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_1_walk",
@@ -93,8 +93,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
     ]
 }

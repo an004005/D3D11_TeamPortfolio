@@ -9,8 +9,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-        "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "voidflower_attack_upper",
@@ -21,8 +21,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
       
     ]
