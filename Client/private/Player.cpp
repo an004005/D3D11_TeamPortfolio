@@ -6345,7 +6345,6 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("BrainField_Swing");
 
 	m_SoundStore.CloneSound("move_doubleJump");
-	//m_SoundStore.CloneSound("move_Landing");
 	m_SoundStore.CloneSound("move_stop");
 
 	m_SoundStore.CloneSound("Special_Train");
@@ -6392,8 +6391,17 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_SoundStore.CloneSound("fx_SAS_trig");
 
+	m_SoundStore.CloneSound("move_landing");
+	//move_landing
+
+	m_SoundStore.CloneSound("move_plyr_fall");
+	m_SoundStore.CloneSound("move_plyr_getup");
+
 	//MonsterUI
 	m_SoundStore.CloneSound("UI_monster_alert");
+
+	m_pModel->Add_EventCaller("move_plyr_fall", [this] {m_SoundStore.PlaySound("move_plyr_fall", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_plyr_getup", [this] {m_SoundStore.PlaySound("move_plyr_getup", m_pTransformCom); });
 
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
@@ -6486,6 +6494,8 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_pModel->Add_EventCaller("fx_kinetic_counter_trig", [this] {m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom); });
 	m_pModel->Add_EventCaller("BrainCrash", [this] {m_SoundStore.PlaySound("BrainCrash", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("move_Landing", [this] {m_SoundStore.PlaySound("move_foot_stop", m_pTransformCom); });
 
 	// 특수오브젝트
 	m_SoundStore.CloneSound("fx_kine_super_truck_example");

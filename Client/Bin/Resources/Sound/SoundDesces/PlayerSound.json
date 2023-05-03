@@ -433,6 +433,39 @@
             "MaxDistance" : 20.0
         },
         {
+            "Name": "move_landing",
+            "SoundFiles": [
+                "Move/move_landing.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "move_plyr_fall",
+            "SoundFiles": [
+                "Move/move_plyr_fall.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
+            "Name": "move_plyr_getup",
+            "SoundFiles": [
+                "Move/move_plyr_getup.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 5.0,
+            "MaxDistance" : 20.0
+        },
+        {
             "Name": "move_stop",
             "SoundFiles": [
                 "Move/move_stop.wav"
