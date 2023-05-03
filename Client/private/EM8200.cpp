@@ -227,6 +227,13 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 	}
 }
 
+_float4 CEM8200::GetKineticTargetPos()
+{
+	_float4 vColliderPos = GetColliderPosition();
+	vColliderPos.y += 0.3f;
+	return vColliderPos;
+}
+
 void CEM8200::Spawn_Portrait(const string& strEventName)
 {
 	static string strPath = "../Bin/Resources/Batch/BatchFiles/";
@@ -287,7 +294,8 @@ void CEM8200::SetUpSound()
 	CEnemy::SetUpSound();
 	
 	m_SoundStore.CloneSound("move_walk");
-	m_SoundStore.CloneSound("move_Landing");
+	m_SoundStore.CloneSound("move_foot_stop");
+
 	m_SoundStore.CloneSound("karen_attack_elecball_ins");
 	m_SoundStore.CloneSound("karen_attack_elecball_shot");
 	m_SoundStore.CloneSound("karen_attack_kick1");
@@ -712,15 +720,15 @@ void CEM8200::Tick(_double TimeDelta)
 
 		
 
-		if (m_pModelCom->GetMaterials()[0]->GetParam().Floats[1] >= 0.98)
-		{
-			m_fTPChecker -= TimeDelta;
-			if (m_fTPChecker < 0.f)
-			{
-				m_TPEnd.PlayFromStart();
-				m_fTPChecker = 0.2f;
-			}
-		}
+		// if (m_pModelCom->GetMaterials()[0]->GetParam().Floats[2] >= 0.98)
+		// {
+		// 	m_fTPChecker -= TimeDelta;
+		// 	if (m_fTPChecker < 0.f)
+		// 	{
+		// 		m_TPEnd.PlayFromStart();
+		// 		m_fTPChecker = 0.5f;
+		// 	}
+		// }
 	}
 
 	{
@@ -990,7 +998,8 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				// m_TPEnd.PlayFromStart();
-
+	
+				m_TPRecover.Reset();
 				m_fGravity = 20.f;
 			})
 		.Tick([this] (_double TimeDelta)
@@ -998,9 +1007,18 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 			if(m_pTarget != nullptr)
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 
-			for (auto pMtrl : m_pModelCom->GetMaterials())
+			// for (auto pMtrl : m_pModelCom->GetMaterials())
+			// {
+			// 	pMtrl->GetParam().Floats[2] = 0.f;
+			// }
+			// m_pKarenMaskEf->GetParams().Floats[1] = 0.f;
+			// if (m_pBrainField->IsOpen())
+			// {
+			// 	m_pBrainField->SetCableTP(0.f);
+			// }
+			if (m_TPRecover.IsNotDo() && m_pModelCom->GetMaterials()[0]->GetParam().Floats[2] >= 0.98)
 			{
-				pMtrl->GetParam().Floats[2] = 0;
+				m_TPEnd.PlayFromStart();
 			}
 		})
 
@@ -1796,7 +1814,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Landing_Start")
 		.OnStart([this]
 			{
-				m_SoundStore.PlaySound("move_Landing");
+				m_SoundStore.PlaySound("move_foot_stop");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_216_AL_atk_air_landing_start");
 			})
 
@@ -2753,7 +2771,7 @@ void CEM8200::TP_Start()
 {
 	m_TPStart.PlayFromStart();
 	m_SoundStore.PlaySound("karen_fx_tele");
-	m_fTPChecker = 0.2f;
+	m_fTPChecker = 0.5f;
 }
 
 void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType)

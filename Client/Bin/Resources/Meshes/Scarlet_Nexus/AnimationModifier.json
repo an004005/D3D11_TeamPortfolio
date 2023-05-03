@@ -609,6 +609,10 @@
             {
                 "EventName": "move_stop",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_foot_stop",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1268,6 +1272,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 14.0
+            },
+            {
+                "EventName": "move_foot_stop",
+                "EventTime": 0.0
             }
         ]
     },
@@ -1781,10 +1789,6 @@
                 "EventTime": 9.0
             },
             {
-                "EventName": "Collision_End",
-                "EventTime": 15.0
-            },
-            {
                 "EventName": "attack_nor_1",
                 "EventTime": 3.0
             },
@@ -1807,6 +1811,14 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 35.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 12.0
             }
         ]
     },
@@ -1879,10 +1891,6 @@
                 "EventTime": 17.0
             },
             {
-                "EventName": "Collision_Start",
-                "EventTime": 17.0
-            },
-            {
                 "EventName": "attack_nor_2",
                 "EventTime": 3.0
             },
@@ -1909,6 +1917,10 @@
             {
                 "EventName": "Collision_End",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "Collision_Start",
+                "EventTime": 17.0
             }
         ]
     },
@@ -2794,14 +2806,6 @@
                 "EventTime": 15.0
             },
             {
-                "EventName": "Collision_Start",
-                "EventTime": 0.0
-            },
-            {
-                "EventName": "Collision_End",
-                "EventTime": 10.0
-            },
-            {
                 "EventName": "attack_nor_dashattack",
                 "EventTime": 0.0
             },
@@ -2839,6 +2843,14 @@
             },
             {
                 "EventName": "attack_elec_dashattack_fix",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "Collision_End",
+                "EventTime": 7.0
+            },
+            {
+                "EventName": "Collision_Start",
                 "EventTime": 0.0
             }
         ]
@@ -3648,6 +3660,10 @@
             {
                 "EventName": "attack_elec_spindown_fix",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_fire_3",
+                "EventTime": 30.0
             }
         ]
     },
@@ -3796,6 +3812,10 @@
             {
                 "EventName": "attack_elec_spin_fix",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_fire_spin",
+                "EventTime": 0.0
             }
         ]
     },
@@ -3851,6 +3871,14 @@
             {
                 "EventName": "Bright_Off",
                 "EventTime": 20.0
+            },
+            {
+                "EventName": "attack_fire_jumpattack_1",
+                "EventTime": 0.0
+            },
+            {
+                "EventName": "attack_elec_jumpattack_1_fix",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5005,6 +5033,10 @@
             {
                 "EventName": "LandingDust",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "move_plyr_fall",
+                "EventTime": 0.0
             }
         ]
     },
@@ -5024,7 +5056,12 @@
         "Duration": 27.0,
         "TickPerSecond": 27.0,
         "bLooping": false,
-        "vecEvent": []
+        "vecEvent": [
+            {
+                "EventName": "move_plyr_getup",
+                "EventTime": 0.0
+            }
+        ]
     },
     "AS_ch0100_444_AL_down_B": {
         "Duration": 180.0,

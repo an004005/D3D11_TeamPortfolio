@@ -38,6 +38,11 @@ void CScarletCharacter::Tick(_double TimeDelta)
 {
 	__super::Tick(TimeDelta);
 	Update_DeBuff(TimeDelta);
+
+	for (auto& iter : m_vecDuplicationCool)
+	{
+		iter -= (_float)TimeDelta;
+	}
 }
 
 void CScarletCharacter::Late_Tick(_double TimeDelta)
@@ -319,12 +324,30 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 				_bool bDamagedTarget = true; // 충돌이 가능한 타겟인가?
 				for (auto Dupliciation = m_DamagedObjectList.begin(); Dupliciation != m_DamagedObjectList.end();)
 				{
+					if (m_DamagedObjectList.empty())
+						break;
+
+					if (Dupliciation == m_DamagedObjectList.end())
+						return false;
+
+					if (false == CGameInstance::GetInstance()->Check_ObjectAlive(*Dupliciation))
+						continue;
+
 					if ((*Dupliciation) == pTarget)
 					{
+						// 원본
 						if (false == (*Dupliciation)->Get_CollisionDuplicate(eCopyType))
 						{
 							Dupliciation = m_DamagedObjectList.erase(Dupliciation);
 						}
+						// 내부쿨
+						//if (/*false == (*Dupliciation)->Get_CollisionDuplicate(eCopyType) || */0.f >= (*Dupliciation)->Get_CollisionDuplicate(eCopyType))
+						//{
+						//	(*Dupliciation)->Set_CollisionDuplicate(false, eCopyType);
+						//	(*Dupliciation)->Set_CollisionDuplicateCool(0.f, eCopyType);
+
+						//	Dupliciation = m_DamagedObjectList.erase(Dupliciation);
+						//}
 						else
 						{
 							Dupliciation++;
@@ -357,6 +380,7 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 					// 플레이어일 경우 타격 이펙트 생성하도록
 					pTarget->TakeDamage(tParam);
 					pTarget->Set_CollisionDuplicate(true, eCopyType);
+					pTarget->Set_CollisionDuplicateCool(0.05f, eCopyType);	// 내부쿨
 
 					IM_LOG(ws2s(pTarget->GetPrototypeTag()).c_str());
 					

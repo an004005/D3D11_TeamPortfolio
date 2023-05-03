@@ -48,7 +48,7 @@ public:
 	void				Set_KineticObject(CGameObject* pObject);
 	void				Kinetic_Combo_AttachLerpObject();	// 염력 물체를 애니메이션 포인트까지 끌고오는 함수
 	void				Kinetic_Combo_KineticAnimation();	// 염력 물체를 궤도에 태우는 함수
-
+	virtual _float4		GetKineticTargetPos() override;
 
 	void				Spawn_Portrait(const string& strEventName);
 
@@ -230,6 +230,7 @@ private:
 	CDoOnce m_ESC;
 
 	_float m_fTPChecker = 0.f;
+	CDoOnce m_TPRecover;
 
 public:
 	void	SetBrainCrashCommand() { m_bBrainCrashCommand = true; }

@@ -7,17 +7,17 @@
             "2DSound" : true,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
         },
         {
             "Name" : "UI_NoDamage",
-            "SoundFiles" : ["UI/UI_tip_popup.wav"],
+            "SoundFiles" : ["FX/fx_plyr_nodamage.wav"],
             "2DSound" : true,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
         },
         {
             "Name" : "Break_Brain",
@@ -36,8 +36,17 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 10.0,
-            "MaxDistance" : 30.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
+        },
+        {
+            "Name" : "EM_Spawn",
+            "SoundFiles" : ["Monsters/fx_monster_spawn.wav"],
+            "2DSound" : true,
+            "Volume" : 1,
+            "Loop" : false,
+            "MinDistance": 20.0,
+            "MaxDistance" : 80.0
         }
     ]
 }
