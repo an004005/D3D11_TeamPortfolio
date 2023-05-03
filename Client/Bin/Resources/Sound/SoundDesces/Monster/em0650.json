@@ -7,8 +7,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_2_attack_shoot",
@@ -16,8 +16,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_2_fx_death",
@@ -25,8 +25,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_2_move",
@@ -36,8 +36,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
     ]
 }

@@ -1,1 +1,113 @@
-{"BilboardType":0,"BufferType":0,"BurstCnt":100,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":1.0,"FromOrigin":true,"GravityPowerMinMax":[0.0,0.0],"IncreaseMaxSize":3.0,"Life":1.0,"LifeMinMax":[1.2999999523162842,1.5],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[2.0,1.0,2.0],"RandDirMin":[-1.0,0.0,-1.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.14849698543548584,0.14848212897777557,0.14848212897777557,1.0]],"Float4x4s":[],"Floats":[],"Ints":[],"Pass":8,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_smoke_kai_001.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.8999999761581421,"Speed":3.0,"SpeedMinMax":[2.0,3.5],"SpeedRand":false,"SphereDetail":true,"SphereRadius":3.0,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"bGravity":false,"bLocal":false,"bNonAlpha":false,"bRotate":false,"bSizeDecreaseByLife":false,"bSizeIncreaseByLife":true,"pSize":[1.0,1.0]}
+{
+    "BilboardType": 0,
+    "BufferType": 0,
+    "BurstCnt": 100,
+    "ConeDirDegree": 30.0,
+    "ConeOriginRadius": 1.0,
+    "Duration": 1.0,
+    "FromOrigin": true,
+    "GravityPowerMinMax": [
+        0.0,
+        0.0
+    ],
+    "IncreaseMaxSize": 3.0,
+    "Life": 1.0,
+    "LifeMinMax": [
+        1.2999999523162842,
+        1.5
+    ],
+    "LifeRand": true,
+    "Loop": false,
+    "MeshBufferProtoTag": "",
+    "MeshSize": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ObjectTag": "",
+    "Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+    "RandDirMax": [
+        2.0,
+        1.0,
+        2.0
+    ],
+    "RandDirMin": [
+        -1.0,
+        0.0,
+        -1.0
+    ],
+    "RotationToTimeMax": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "RotationToTimeMin": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "ScaleVariation": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "ShaderParams": {
+        "Float2s": [],
+        "Float4s": [
+            [
+                0.14849698543548584,
+                0.14848212897777557,
+                0.14848212897777557,
+                1.0
+            ]
+        ],
+        "Float4x4s": [],
+        "Floats": [],
+        "Ints": [],
+        "Pass": 8,
+        "Textures": [
+            "..\\Bin\\Resources\\Texture\\VFX\\T_ef_ev_smoke_kai_001.png\u0000"
+        ]
+    },
+    "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+    "Shape": 0,
+    "SpawnTickTime": 1.0,
+    "Speed": 3.0,
+    "SpeedMinMax": [
+        2.0,
+        3.5
+    ],
+    "SpeedRand": false,
+    "SphereDetail": true,
+    "SphereRadius": 3.0,
+    "Transform": {
+        "WorldMatrix": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    "bGravity": false,
+    "bLocal": false,
+    "bNonAlpha": false,
+    "bRotate": false,
+    "bSizeDecreaseByLife": false,
+    "bSizeIncreaseByLife": true,
+    "pSize": [
+        1.0,
+        1.0
+    ]
+}

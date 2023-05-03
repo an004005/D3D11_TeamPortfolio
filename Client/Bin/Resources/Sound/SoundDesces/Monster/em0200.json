@@ -78,8 +78,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_jumpattack_jump",
@@ -89,8 +89,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_jumpattack_kick",
@@ -100,8 +100,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_sprayattack",
@@ -111,8 +111,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_sprayattack_ready",
@@ -122,8 +122,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "mon_5_step",
@@ -137,8 +137,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_voice_laugh",
@@ -152,8 +152,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         },
         {
             "Name": "mon_5_rush",
@@ -164,8 +164,8 @@
             "2DSound": false,
             "Volume": 1,
             "Loop": false,
-            "MinDistance": 5.0,
-            "MaxDistance": 20.0
+            "MinDistance": 10.0,
+            "MaxDistance" : 60.0
         }
     
     

@@ -8,7 +8,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_shout",
@@ -17,7 +17,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_smsh",
@@ -28,7 +28,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_swing",
@@ -37,7 +37,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 5.0,
-            "MaxDistance" : 20.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_tenta",
@@ -46,7 +46,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_tenta_charging_loop",
@@ -55,7 +55,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_attack_tenta_up",
@@ -64,7 +64,7 @@
             "Volume" : 0.5,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },        
         {
             "Name" : "crawl_fx_death",
@@ -74,7 +74,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_move_groggy",
@@ -84,7 +84,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_move_rush_ground",
@@ -94,7 +94,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         },
         {
             "Name" : "crawl_move_rush_voice",
@@ -104,7 +104,7 @@
             "Volume" : 1,
             "Loop" : false,
             "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MaxDistance" : 60.0
         }
     ]
 }

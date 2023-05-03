@@ -50,6 +50,9 @@ HRESULT CEM0220::Initialize(void * pArg)
 
 		m_eEnemyName = EEnemyName::EM0220;
 		m_bHasCrushGauge = true;
+
+		//ai는 무시하려고
+		m_bBoss = true;
 	}
 
 	FAILED_CHECK(CEnemy::Initialize(pArg));
@@ -139,7 +142,8 @@ void CEM0220::SetUpFSM()
 					m_eCurAttackType != EAttackType::ATK_END; })*/
 
 			.AddTransition("Idle to Down", "Down")
-				.Predicator([this] { return !m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END; })
+				.Predicator([this] { return !m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END
+					&& m_iHitDamage >= 100; })
 			
 			.AddTransition("Idle to Attack_Shot", "Attack_Shot")
 				.Predicator([this] { return m_eInput == CController::C; })
@@ -318,7 +322,7 @@ void CEM0220::SetUpFSM()
 			.AddTransition("Guard_Start to Idle", "Idle")
 				.Predicator([this]
 				{
-					return m_bCrushStart || m_bDead || (!m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END);
+					return m_bCrushStart || m_bDead || (!m_Unbeatable && m_eCurAttackType != EAttackType::ATK_END && m_iHitDamage >= 100);
 				})
 
 		// near 에서 멀어지면 일어서는건데 무조건 공격으로 변하기 때문에 이 조건이면 될것같음
@@ -481,7 +485,6 @@ void CEM0220::CheckCrushGage(DAMAGE_PARAM& tDamageParams)
 
 void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 {
-
 	if (m_Unbeatable == true)
 		tDamageParams.iDamage = 0;
 	else
@@ -492,6 +495,8 @@ void CEM0220::CheckHP(DAMAGE_PARAM & tDamageParams)
 		SetDead();
 		m_iHP = 0;
 	}
+
+	m_iHitDamage = tDamageParams.iDamage;
 }
 
 void CEM0220::SetUp_Lantern()

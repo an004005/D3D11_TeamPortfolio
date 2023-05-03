@@ -119,14 +119,48 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 	ImGui::Separator();
 	ImGui::NewLine();
 
-	if (ImGui::CollapsingHeader("Effect Viewer"))
+	if (ImGui::CollapsingHeader("EFFECT_Viewer"))
 	{
-		if (ImGui::Button("Refresh_Effect Folder"))
+		const char* EffectTypes[EFFECTFOLDER::EFFECT_END] = { "Blood_Effect", "Defualt_Effect", "Elec_Effect",
+															"Fire_Effect", "ENV_Effect", "Monster_Effect", "Sas_Effect" };
+
+		ImGui::Combo("##Effect_Type", &m_iSelectFolder, EffectTypes, IM_ARRAYSIZE(EffectTypes));
+		ImGui::SameLine();
+		if(ImGui::Button("Update_Effect_List"))
 		{
-			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Fire_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
-			LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
-			// LoadEffects("../Bin/Resources/Curve/EffectGroup/NeedToWork/");
+			switch (m_iSelectFolder)
+			{
+				case BLOOD_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Blood_Effect/");
+					break;
+
+				case DEFAULT_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Default_Attack/");
+					break;
+
+				case ELEC_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Elec_Attack/");
+					break;
+
+				case FIRE_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Fire_Attack/");
+					break;
+
+				case ENV_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Envirenment_Effect/");
+					break;
+
+				case MONSTER_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Monster_Effect/");
+					break;
+
+				case SAS_EFFECT:
+					LoadEffects("../Bin/Resources/Curve/EffectGroup/Sas_Effect/");
+					break;
+
+			default:
+					NODEFAULT;
+			}
 		}
 
 		static char szSearchEffect[MAX_PATH] = "";
@@ -146,6 +180,7 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 				}
 
 				const bool bSelected = m_CurEffectName == Pair.first;
+
 				if (bSelected)
 				{
 					ImGui::SetItemDefaultFocus();
@@ -162,6 +197,97 @@ void CImgui_EffectBrowser::Imgui_RenderWindow()
 
 				if (ImGui::Selectable(Pair.first.c_str(), bSelected))
 					m_CurEffectName = Pair.first;
+			}
+			ImGui::EndListBox();
+		}
+	}
+
+	if (ImGui::CollapsingHeader("PARTICLE_Viewer"))
+	{
+		const char* ParticleTypes[EFFECTFOLDER::EFFECT_END] = { "Blood_Particle", "Defualt_Particle", "Elec_Particle",
+															"Fire_Particle", "ENV_Particle", "Monster_Particle", "Sas_Particle" };
+
+		ImGui::Combo("##Particle_Type", &m_iSelectFolder, ParticleTypes, IM_ARRAYSIZE(ParticleTypes));
+		ImGui::SameLine();
+		if (ImGui::Button("Update_Particle_List"))
+		{
+			switch (m_iSelectFolder)
+			{
+			case BLOOD_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Blood_Particle/");
+				break;
+
+			case DEFAULT_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Default_Particle/");
+				break;
+
+			case ELEC_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Elec_Particle/");
+				break;
+
+			case FIRE_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Fire_Particle/");
+				break;
+
+			case ENV_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Envirenment_Particle/");
+				break;
+
+			case MONSTER_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Monster_Particle/");
+				break;
+
+			case SAS_EFFECT:
+				LoadParticles("../Bin/Resources/Curve/ParticleGroup/Sas_Particle/");
+				break;
+
+			default:
+				NODEFAULT;
+			}
+		}
+
+		static char szSearchParticle[MAX_PATH] = "";
+		ImGui::InputText("Particle Search", szSearchParticle, MAX_PATH);
+
+		const string strSearch = szSearchParticle;
+		const _bool bSearch = strSearch.empty() == false;
+
+		if (ImGui::BeginListBox("Particles List"))
+		{
+			for (auto& Pair : m_mapParticleGroup)
+			{
+				if (bSearch)
+				{
+					if (Pair.first.find(strSearch) == string::npos)
+						continue;
+				}
+
+				const bool bSelected = m_CurParticleName == Pair.first;
+
+				if (bSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+
+					// {
+						Json EffectJson = CJsonStorage::GetInstance()->LoadJson_ForWork(Pair.second);
+						if (EffectJson.empty())
+							MSG_BOX("Failed to Add New ParticleGroup");
+						else
+						{
+							dynamic_cast<CParticleGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_Work_ParticleGroup", L"ProtoVFX_ParticleGroup", &EffectJson))->Start_ParticleWork_Play();
+						}
+					// }
+
+
+
+					// Json jsonEffect = CJsonStorage::GetInstance()->LoadJson_ForWork(Pair.second);
+					// dynamic_cast<CEffectGroup*>(CGameInstance::GetInstance()->Clone_GameObject_Get(L"Layer_EffectFolder", L"ProtoVFX_EffectGroup", &jsonEffect))->Start_EffectWork();
+
+					m_CurParticleName = "";
+				}
+
+				if (ImGui::Selectable(Pair.first.c_str(), bSelected))
+					m_CurParticleName = Pair.first;
 			}
 			ImGui::EndListBox();
 		}
@@ -211,6 +337,18 @@ void CImgui_EffectBrowser::LoadEffects(const char* pEffectDir)
 
 		m_mapEffectGroup.emplace(FileName, pEffectPath);
 	});
+}
+
+void CImgui_EffectBrowser::LoadParticles(const char* pParticleDir)
+{
+	m_mapParticleGroup.clear();
+
+	CGameUtils::ListFiles(pParticleDir, [this](const string& pParticlePath)
+		{
+			string FileName = CGameUtils::GetFileName(pParticlePath);
+
+			m_mapParticleGroup.emplace(FileName, pParticlePath);
+		});
 }
 
 CImgui_EffectBrowser* CImgui_EffectBrowser::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

@@ -116,8 +116,8 @@ HRESULT CLevel_PlayerTest::Initialize()
 	if (FAILED(Ready_Layer_UI(PLAYERTEST_LAYER_FRONTUI)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_AI(LAYER_AI)))
-		return E_FAIL;
+	//if (FAILED(Ready_Layer_AI(LAYER_AI)))
+	//	return E_FAIL;
 
 	Ready_Layer_SASPortrait();
 
