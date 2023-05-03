@@ -7,8 +7,8 @@
             "2DSound" : true,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
         },
         {
             "Name" : "UI_NoDamage",
@@ -16,8 +16,8 @@
             "2DSound" : true,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 15.0,
-            "MaxDistance" : 40.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
         },
         {
             "Name" : "Break_Brain",
@@ -36,8 +36,8 @@
             "2DSound" : false,
             "Volume" : 1,
             "Loop" : false,
-            "MinDistance": 10.0,
-            "MaxDistance" : 30.0
+            "MinDistance": 30.0,
+            "MaxDistance" : 70.0
         },
         {
             "Name" : "EM_Spawn",
