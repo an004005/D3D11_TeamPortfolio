@@ -1,1 +1,139 @@
-{"BilboardType":1,"BufferType":0,"BurstCnt":5,"ConeDirDegree":30.0,"ConeOriginRadius":1.0,"Duration":1.0,"EndTime":0.0,"FinishFunc":1,"FromOrigin":false,"GravityPowerMinMax":[-1.0,1.0],"IncreaseMaxSize":1.0,"Life":1.0,"LifeMinMax":[0.5,1.0],"LifeRand":true,"Loop":false,"MeshBufferProtoTag":"","MeshSize":[1.0,1.0,1.0],"ModelCurveProtoTag":"","ModelProtoTag":"../Bin/Resources/Meshes/VFX/Player_Elec_Attack/Elec_Attack_Justdodge_0.static_model","ObjectTag":"","Prototype_GameObject":"ProtoVFX_ParticleSystem\u0000","RandDirMax":[1.0,1.0,1.0],"RandDirMin":[0.0,0.0,0.0],"RotationToTimeMax":[0.0,0.0,0.0],"RotationToTimeMin":[0.0,0.0,0.0],"ScaleVariation":[1.0,1.0,1.0],"ShaderParams":{"Float2s":[],"Float4s":[[0.6827716827392578,0.7126063108444214,0.13868115842342377,1.0]],"Float4x4s":[],"Floats":[4.0],"Ints":[],"Pass":6,"Textures":["..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_017_1.png\u0000","..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_017_1.png\u0000"]},"ShaderProtoTag":"Prototype_Component_Shader_VtxPointInstance_Particle","Shape":0,"SpawnTickTime":0.030000001192092896,"Speed":1.0,"SpeedMinMax":[2.0,3.0],"SpeedRand":true,"SphereDetail":false,"SphereRadius":0.5,"Transform":{"WorldMatrix":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]},"TurnAngle":0.0,"TurnAxis":[0.0,0.0,0.0],"UseMeshData":true,"VtxRangeRatioValue":0.0,"VtxRangeTimelineCurve":"","VtxStartRatioValue":0.0,"VtxStartTimelineCurve":"","XDirCurveName":"","YDirCurveName":"","ZDirCurveName":"","bCurveDir":false,"bGravity":true,"bLocal":false,"bMeshCurve":false,"bNonAlpha":false,"bPhysX":false,"bRotate":false,"bSizeDecreaseByLife":true,"bSizeIncreaseByLife":false,"bTurn":false,"bUseMainCurve":false,"pSize":[0.75,0.75]}
+{
+	"ObjectTag": "",
+	"SphereRadius": 0.5,
+	"RandDirMax": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"BufferType": 0,
+	"LifeRand": true,
+	"XDirCurveName": "",
+	"VtxStartTimelineCurve": "",
+	"ConeDirDegree": 30.0,
+	"ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
+	"Speed": 1.0,
+	"TurnAxis": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"Loop": false,
+	"EndTime": 0.0,
+	"VtxRangeRatioValue": 0.0,
+	"VtxRangeTimelineCurve": "",
+	"VtxStartRatioValue": 0.0,
+	"ZDirCurveName": "",
+	"bUseMainCurve": false,
+	"bSizeDecreaseByLife": true,
+	"Shape": 0,
+	"bTurn": false,
+	"SpeedMinMax": [
+		2.0,
+		3.0
+	],
+	"SpawnTickTime": 0.030000001192092896,
+	"GravityPowerMinMax": [
+		-1.0,
+		1.0
+	],
+	"YDirCurveName": "",
+	"UseMeshData": true,
+	"ShaderParams": {
+		"Ints": [],
+		"Pass": 6,
+		"Float4s": [
+			[
+				0.6827716827392578,
+				0.7126063108444214,
+				0.13868115842342377,
+				1.0
+			]
+		],
+		"Float4x4s": [],
+		"Floats": [
+			4.0
+		],
+		"Float2s": [],
+		"Textures": [
+			"..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_017_1.png\u0000",
+			"..\\Bin\\Resources\\Texture\\VFX\\T_ef_one_lin_017_1.png\u0000"
+		]
+	},
+	"RandDirMin": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"TurnAngle": 0.0,
+	"BurstCnt": 5,
+	"pSize": [
+		0.75,
+		0.75
+	],
+	"bSizeIncreaseByLife": false,
+	"SpeedRand": true,
+	"Prototype_GameObject": "ProtoVFX_ParticleSystem\u0000",
+	"Transform": {
+		"WorldMatrix": [
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0,
+			0.0,
+			0.0,
+			0.0,
+			0.0,
+			1.0
+		]
+	},
+	"bPhysX": false,
+	"ModelProtoTag": "../Bin/Resources/Meshes/VFX/Player_Elec_Attack/Elec_Attack_Justdodge_0.static_model",
+	"MeshBufferProtoTag": "",
+	"bLocal": false,
+	"ModelCurveProtoTag": "",
+	"MeshSize": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"ConeOriginRadius": 1.0,
+	"IncreaseMaxSize": 1.0,
+	"Duration": 0.3,
+	"BilboardType": 1,
+	"RotationToTimeMax": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"FinishFunc": 1,
+	"FromOrigin": false,
+	"bNonAlpha": false,
+	"SphereDetail": false,
+	"bCurveDir": false,
+	"RotationToTimeMin": [
+		0.0,
+		0.0,
+		0.0
+	],
+	"bRotate": false,
+	"LifeMinMax": [
+		0.3,
+		0.5
+	],
+	"Life": 1.0,
+	"ScaleVariation": [
+		1.0,
+		1.0,
+		1.0
+	],
+	"bGravity": true,
+	"bMeshCurve": false
+}
