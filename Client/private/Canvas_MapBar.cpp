@@ -59,7 +59,7 @@ HRESULT CCanvas_MapBar::Render()
 		return E_FAIL;
 
 	_float2 vPosition = Find_ChildUI(L"PickBar")->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", m_wsName.c_str(), vPosition + _float2(25.0f, 8.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", m_wsName.c_str(), vPosition + _float2(20.0f, 8.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	return S_OK;
 }

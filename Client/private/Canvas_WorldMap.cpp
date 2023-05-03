@@ -80,14 +80,14 @@ HRESULT CCanvas_WorldMap::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vSize = { 0.5f, 0.5f };
+	_float2 vSize = { 0.6f, 0.6f };
 	_tchar szText[MAX_PATH] = TEXT("");
 
 	_float2 vPosition = Find_ChildUI(L"Menu")->GetScreenSpaceLeftTop();
 	wsprintf(szText, TEXT("%s에서 탈출한다."), m_wsName.c_str());
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(112.0f, -46.0f), 0.f, vSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szText, vPosition + _float2(50.0f, -50.0f), 0.f, vSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 	vPosition = Find_ChildUI(L"BasicInfo")->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"목적지를 선택해주세요.", vPosition + _float2(183.0f, 39.0f), 0.f, vSize, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"목적지를 선택해주세요.", vPosition + _float2(50.0f, 38.0f), 0.f, vSize, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	return S_OK;
 }
@@ -112,18 +112,20 @@ void CCanvas_WorldMap::CloneBar()
 {
 	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MapBar.json");
 	CCanvas_MapBar* pCanvasMapBar = nullptr;
+	_float	fPosY = 300.0f;
 
 	if (LEVEL_NOW == LEVEL_DOWNTOWN_1)
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -131,19 +133,21 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -151,25 +155,28 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 2층");
-		pCanvasMapBar->Set_PosY(70.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -177,7 +184,7 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -185,19 +192,21 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -205,25 +214,28 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 2층");
-		pCanvasMapBar->Set_PosY(70.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -231,31 +243,35 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 2층");
-		pCanvasMapBar->Set_PosY(70.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"폐지하선로 스오 9호선");
-		pCanvasMapBar->Set_PosY(10.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -263,37 +279,42 @@ void CCanvas_WorldMap::CloneBar()
 	{
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"대로");
-		pCanvasMapBar->Set_PosY(250.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"스오-류신구");
-		pCanvasMapBar->Set_PosY(190.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 3층");
-		pCanvasMapBar->Set_PosY(130.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"키쿠치바 2층");
-		pCanvasMapBar->Set_PosY(70.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"폐지하선로 스오 9호선");
-		pCanvasMapBar->Set_PosY(10.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
+		fPosY -= 70;
 
 		pCanvasMapBar = dynamic_cast<CCanvas_MapBar*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"Canvas_MapBar", &json));
 		pCanvasMapBar->Set_Name(L"구 토벌군병원");
-		pCanvasMapBar->Set_PosY(-50.0f);
+		pCanvasMapBar->Set_PosY(fPosY);
 		pCanvasMapBar->SetVisible(m_bMapUI);
 		vecMapBar.push_back(pCanvasMapBar);
 	}
@@ -301,7 +322,7 @@ void CCanvas_WorldMap::CloneBar()
 
 void CCanvas_WorldMap::KeyInput()
 {
-	if (CGameInstance::GetInstance()->KeyDown(DIK_0/*DIK_TAB*/))
+	if (CGameInstance::GetInstance()->KeyDown(DIK_TAB))
 	{
 		if (false == m_bMapUI)	CUI_Manager::GetInstance()->PlaySound("MainIn");
 		else									CUI_Manager::GetInstance()->PlaySound("MainOut");
