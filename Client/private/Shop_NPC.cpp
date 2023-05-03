@@ -220,7 +220,7 @@ HRESULT CShop_NPC::SetUp_Components(void* pArg)
 }
 
 HRESULT CShop_NPC::SetUp_Event()
-{
+{	
 	return S_OK;
 }
 

@@ -13,6 +13,7 @@
 #include "EM0110.h"
 #include "BronJon.h"
 
+
 CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel_StageDefault(pDevice, pContext)
 {
