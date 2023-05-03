@@ -48,6 +48,22 @@ void CPlayerHotFixer::Tick()
 {
 	if (ImGui::CollapsingHeader("HotFixer"))
 	{
+		static _bool bKeyRecording = false;
+
+		ImGui::Checkbox("KeyRecording", &bKeyRecording);
+
+		m_pPlayer->m_pController->Set_Record(bKeyRecording);
+
+		if (ImGui::Button("KeyPlaying"))
+		{
+			m_pPlayer->m_pController->Set_Play(true);
+		}
+
+		if (ImGui::Button("KeyReset"))
+		{
+			m_pPlayer->m_pController->Reset_Recording();
+		}
+
 		//ImGui::Checkbox("Hanabi", &m_bHanabiActive);
 		//ImGui::Checkbox("Tsugumi", &m_bTsugumiActive);
 		//CPlayerInfoManager::GetInstance()->Hanabi_Active(m_bHanabiActive);

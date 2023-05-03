@@ -112,6 +112,30 @@ protected:
 	void UpdateInputState(_ubyte iDIK, EHandleInput eInput);
 	void UpdateInputState(CInput_Device::MOUSEKEYSTATE eMouse, EHandleInput eInput);
 
+// 키 레코드 임시
+public:
+	void Record_KeyInput(_double TimeDelta);
+	void Play_KeyInput(_double TimeDelta);
+	void Reset_Recording();
+
+	void Set_Record(_bool bRecord) { m_bRecording = bRecord; }
+	void Set_Play(_bool bRecord) { m_bPlaying = true; }
+
+public:
+	_int	m_RecordKeyFrame{ -1 };
+	_int	m_RecordMoveKeyFrame{ -1 };
+	_double m_RecordingTime{ 0.f };
+	_double m_PlayingTime{ 0.f };
+	_bool	m_bRecording{ false };
+	_bool	m_bPlaying{ false };
+	list<pair<_double, array<KEY_STATE, HANDLE_END>>> RecordList;
+	list<pair<_double, _float3>> RecordMoveList;
+
+
+	array<KEY_STATE, HANDLE_END> m_PreInputState{};
+
+// 키 레코드 임시
+
 protected:
 	EControllerType m_eType = EControllerType::CONTROLLER_END;
 

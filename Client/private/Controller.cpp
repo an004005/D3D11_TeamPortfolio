@@ -41,6 +41,7 @@ void CController::Tick(_double TimeDelta)
 		return;
 	}
 
+
 	m_vMouseAxis = _float2::Zero;
 	m_vMoveAxis = _float3::Zero;
 
@@ -79,68 +80,74 @@ void CController::Tick(_double TimeDelta)
 		return;
 	}
 
-	// 움직임
+	if (!m_bPlaying)
 	{
-		if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+		// 움직임
 		{
-			m_vMoveAxis.z += 1.f;
+			if (pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+			{
+				m_vMoveAxis.z += 1.f;
+			}
+			if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+			{
+				m_vMoveAxis.z -= 1.f;
+			}
+			if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+			{
+				m_vMoveAxis.x -= 1.f;
+			}
+			if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+			{
+				m_vMoveAxis.x += 1.f;
+			}
 		}
-		if (pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+
+		// 마우스 움직임
+		if (m_bCursorLock == false)
 		{
-			m_vMoveAxis.z -= 1.f;
+			_long MouseMove = 0;
+			if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_X))
+			{
+				m_vMouseAxis.x += static_cast<_float>(MouseMove);
+			}
+
+			if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_Y))
+			{
+				m_vMouseAxis.y += static_cast<_float>(MouseMove);
+			}
+
+			POINT cursor{ g_iWinSizeX / 2, g_iWinSizeY / 2 };
+			ClientToScreen(g_hWnd, &cursor);
+			SetCursorPos(cursor.x, cursor.y);
 		}
-		if (pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
-		{
-			m_vMoveAxis.x -= 1.f;
-		}
-		if (pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
-		{
-			m_vMoveAxis.x += 1.f;
-		}
+	
+
+		m_PreInputState = m_InputState;
+
+		UpdateInputState(DIK_SPACE, SPACE);
+		UpdateInputState(DIK_LCONTROL, CTRL);
+		UpdateInputState(DIK_LSHIFT, SHIFT);
+		UpdateInputState(DIK_C, C);
+		UpdateInputState(DIK_Q, Q);
+		UpdateInputState(DIK_E, E);
+		UpdateInputState(DIK_X, X);
+		UpdateInputState(DIK_F, F);
+		UpdateInputState(DIK_B, B);
+
+		UpdateInputState(DIK_R, R);
+		UpdateInputState(DIK_G, G);
+
+		UpdateInputState(DIK_M, M);
+
+		UpdateInputState(DIK_1, NUM_1);
+		UpdateInputState(DIK_2, NUM_2);
+		UpdateInputState(DIK_3, NUM_3);
+		UpdateInputState(DIK_4, NUM_4);
+
+		UpdateInputState(CInput_Device::DIM_LB, MOUSE_LB);
+		UpdateInputState(CInput_Device::DIM_RB, MOUSE_RB);
+
 	}
-
-	// 마우스 움직임
-	if (m_bCursorLock == false)
-	{
-		_long MouseMove = 0;
-		if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_X))
-		{
-			m_vMouseAxis.x += static_cast<_float>(MouseMove);
-		}
-
-		if (MouseMove = pGameInstance->Get_DIMouseMove(CInput_Device::DIMS_Y))
-		{
-			m_vMouseAxis.y += static_cast<_float>(MouseMove);
-		}
-
-		POINT cursor{ g_iWinSizeX / 2, g_iWinSizeY / 2 };
-		ClientToScreen(g_hWnd, &cursor);
-		SetCursorPos(cursor.x, cursor.y);
-	}
-
-
-	UpdateInputState(DIK_SPACE, SPACE);
-	UpdateInputState(DIK_LCONTROL, CTRL);
-	UpdateInputState(DIK_LSHIFT, SHIFT);
-	UpdateInputState(DIK_C, C);
-	UpdateInputState(DIK_Q, Q);
-	UpdateInputState(DIK_E, E);
-	UpdateInputState(DIK_X, X);
-	UpdateInputState(DIK_F, F);
-	UpdateInputState(DIK_B, B);
-
-	UpdateInputState(DIK_R, R);
-	UpdateInputState(DIK_G, G);
-
-	UpdateInputState(DIK_M, M);
-
-	UpdateInputState(DIK_1, NUM_1);
-	UpdateInputState(DIK_2, NUM_2);
-	UpdateInputState(DIK_3, NUM_3);
-	UpdateInputState(DIK_4, NUM_4);
-
-	UpdateInputState(CInput_Device::DIM_LB, MOUSE_LB);
-	UpdateInputState(CInput_Device::DIM_RB, MOUSE_RB);
 
 	//
 	// {
@@ -188,6 +195,9 @@ void CController::Tick(_double TimeDelta)
 	// 		m_iInputMask |= MASK_MOUSERB;
 	// }
 
+
+	Record_KeyInput(TimeDelta);
+	Play_KeyInput(TimeDelta);
 }
 
 void CController::Invalidate()
@@ -246,6 +256,86 @@ void CController::UpdateInputState(CInput_Device::MOUSEKEYSTATE eMouse, EHandleI
 		else
 			state = KEY_STATE::NONE;
 	}
+}
+
+void CController::Record_KeyInput(_double TimeDelta)
+{
+	if (m_bRecording)
+	{
+		m_RecordingTime += TimeDelta;
+
+		_bool bSave = false;
+		for (int i = 0; i < HANDLE_END; i++)
+		{
+			if (m_PreInputState[i] != m_InputState[i])
+			{
+				bSave = true;
+				break;
+			}
+		}
+
+		if (!bSave)
+			return;
+
+		RecordList.push_back({ m_RecordingTime, m_InputState });		// 키 입력값 저장
+		RecordMoveList.push_back({ m_RecordingTime, m_vMoveAxis });	// 이동값 저장
+	}
+}
+
+void CController::Play_KeyInput(_double TimeDelta)
+{
+	if (!m_bPlaying)
+		return;
+
+	if (m_RecordingTime < m_PlayingTime)
+	{
+		m_bPlaying = false;
+		m_PlayingTime = 0.f;
+		m_RecordKeyFrame = 0;
+		m_RecordMoveKeyFrame = 0;
+		return;
+	}
+
+	m_PlayingTime += TimeDelta;
+
+	_int iRecordKeyFrame = 0;
+	for (auto& iter : RecordList)
+	{
+		if (iter.first <= m_PlayingTime)
+		{
+			if (m_RecordKeyFrame < iRecordKeyFrame)
+			{
+				m_RecordKeyFrame = iRecordKeyFrame;
+				m_InputState = iter.second;
+				break;
+			}
+		}
+
+		++iRecordKeyFrame;
+	}
+
+	_int iRecordMoveKeyFrame = 0;
+	for (auto& iter : RecordMoveList)
+	{
+		if (iter.first <= m_PlayingTime)
+		{
+			if (m_RecordMoveKeyFrame < iRecordMoveKeyFrame)
+			{
+				m_RecordMoveKeyFrame = iRecordMoveKeyFrame;
+				m_vMoveAxis = iter.second;
+				break;
+			}
+		}
+
+		++iRecordMoveKeyFrame;
+	}
+}
+
+void CController::Reset_Recording()
+{
+	RecordList.clear();
+	RecordMoveList.clear();
+	m_RecordingTime = 0.f;
 }
 
 void CController::Free()
