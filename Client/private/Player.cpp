@@ -6784,7 +6784,7 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 
 		.AddState("DEBUFF_FIRE")
 		.OnStart([&]() {
-			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+			CUI_Manager::GetInstance()->PlaySound("UI_fx_debuff");
 			})
 		.Tick([&](double fTimeDelta) 
 		{
@@ -6813,7 +6813,7 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 
 		.AddState("DEBUFF_WATER")
 		.OnStart([&]() {
-			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+			CUI_Manager::GetInstance()->PlaySound("UI_fx_debuff");
 			})
 		.Tick([&](double fTimeDelta) { })
 		.OnExit([&]() {})
@@ -6828,7 +6828,8 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 
 		.AddState("DEBUFF_OIL")
 		.OnStart([&]() {
-			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+				CUI_Manager::GetInstance()->PlaySound("UI_fx_debuff");
+
 			})
 		.Tick([&](double fTimeDelta) { })
 		.OnExit([&]() {})
@@ -6844,7 +6845,8 @@ HRESULT CPlayer::SetUp_DeBuffStateMachine()
 		.AddState("DEBUFF_ELEC")
 		.OnStart([&]() 
 		{
-			CUI_Manager::GetInstance()->PlaySound("DangerShort");
+				CUI_Manager::GetInstance()->PlaySound("UI_fx_debuff");
+
 				
 			m_bSeperateAnim = false;
 			m_pASM->SetCurState("IDLE");

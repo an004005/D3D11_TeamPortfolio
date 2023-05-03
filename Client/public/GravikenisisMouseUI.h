@@ -22,6 +22,9 @@ private:
 	class CEffectGroup* m_pBanKenisis = { nullptr };
 	class CEffectGroup* m_pAppealCircle = { nullptr };
 
+private:
+	CGameObject*	m_pCurKineticObj = nullptr;
+
 public:
 	static CGravikenisisMouseUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr);

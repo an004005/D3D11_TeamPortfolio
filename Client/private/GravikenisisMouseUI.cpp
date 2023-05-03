@@ -5,6 +5,7 @@
 #include "VFX_Manager.h"
 #include "PlayerInfoManager.h"
 #include "MapKinetic_Object.h"
+#include "UI_Manager.h"
 
 CGravikenisisMouseUI::CGravikenisisMouseUI(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -70,8 +71,14 @@ void CGravikenisisMouseUI::Tick(_double TimeDelta)
 	{
 		m_pBanKenisis->Set_GroupVisible(false);
 		m_pAppealCircle->Set_GroupVisible(false);
-		m_pKenisis->Set_GroupVisible(false);
+		m_pKenisis->Set_GroupVisible(false);		
 		return;
+	}
+
+	if (m_pCurKineticObj != pKineticObject)
+	{
+		m_pCurKineticObj = pKineticObject;
+		CUI_Manager::GetInstance()->PlaySound("UI_kine_object_popup");
 	}
 
 	// 객체 따라 다니기
