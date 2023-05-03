@@ -36,6 +36,15 @@
             "Loop" : true,
             "MinDistance": 15.0,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name" : "EndingCredit",
+            "SoundFiles" : ["EndingCredit.mp3"],
+            "2DSound" : true,
+            "Volume" : 0.15,
+            "Loop" : true,
+            "MinDistance": 15.0,
+            "MaxDistance" : 40.0
         }
     ]
 }

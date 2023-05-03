@@ -655,11 +655,11 @@ void CEM8200_BrainFieldCables::SetUpFSM()
 				for (int i = 0; i < 3; ++i)
 				{
 					m_CableModels[i]->Update_Tick(TimeDelta, m_CableOpenPivot[i]);
-
-					CGameInstance::GetInstance()->LambdaRenderRequest(m_CableOpenPivot[i], [this, i]
-					{
-						m_CableModels[i]->Render_PxModel(m_CableOpenPivot[i]);
-					}, CRenderer::RENDER_NONALPHABLEND_TOON);
+					//
+					// CGameInstance::GetInstance()->LambdaRenderRequest(m_CableOpenPivot[i], [this, i]
+					// {
+					// 	m_CableModels[i]->Render_PxModel(m_CableOpenPivot[i]);
+					// }, CRenderer::RENDER_NONALPHABLEND_TOON);
 				}
 			})
 			.AddTransition("BrainFieldOpen to BrainFieldTrans", "BrainFieldTrans")

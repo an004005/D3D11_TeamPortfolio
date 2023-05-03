@@ -18,6 +18,7 @@
 #include "InvisibleWall.h"
 #include "Imgui_CameraManager.h"
 #include "Imgui_CamAnimEditor.h"
+#include "Item_Manager.h"
 #include "PlayerInfoManager.h"
 #include "SkyBox.h"
 
@@ -29,6 +30,9 @@ CLevel_FinalStage::CLevel_FinalStage(ID3D11Device * pDevice, ID3D11DeviceContext
 HRESULT CLevel_FinalStage::Initialize()
 {
 	 // m_bPlayerSpawn = false;
+
+	CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");
 
 	m_strLevelName = L"FinalStage";
 
