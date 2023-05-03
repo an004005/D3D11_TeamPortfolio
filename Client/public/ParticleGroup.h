@@ -30,6 +30,8 @@ public:
 	void		Delete_Particles();
 public:
 	void		Start_ParticleWork();
+	void		Start_ParticleWork_Play();
+	
 
 	void		Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate = false, _bool trueisRemoveScale = false);
 

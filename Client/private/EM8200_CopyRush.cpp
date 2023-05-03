@@ -29,6 +29,7 @@ HRESULT CEM8200_CopyRush::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom));
 	FAILED_CHECK(__super::Add_Component(LEVEL_NOW, L"Prototype_Model_em8200", L"Model", (CComponent**)&m_pModelCom));
+	m_pModelCom->FindMaterial(L"MI_em8200_HOOD_0")->SetActive(false);
 
 	m_pASM = CEM8200_CopyRushAnimInstance::Create(m_pModelCom, this);
 

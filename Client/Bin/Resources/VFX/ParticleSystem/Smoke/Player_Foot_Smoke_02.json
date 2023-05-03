@@ -13,8 +13,8 @@
     "IncreaseMaxSize": 1.0,
     "Life": 3.0,
     "LifeMinMax": [
-        0.699999988079071,
-        0.800000011920929
+        0.5,
+        0.7
     ],
     "LifeRand": true,
     "Loop": false,
@@ -73,7 +73,7 @@
     },
     "ShaderProtoTag": "Prototype_Component_Shader_VtxPointInstance_Particle",
     "Shape": 1,
-    "SpawnTickTime": 0.9900000095367432,
+    "SpawnTickTime": 1.0,
     "Speed": 1.0,
     "SpeedMinMax": [
         0.6000000238418579,

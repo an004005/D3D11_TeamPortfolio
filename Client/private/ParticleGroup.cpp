@@ -51,8 +51,13 @@ void CParticleGroup::Start_ParticleWork()
 	// m_bGenerate = true;
 }
 
+void CParticleGroup::Start_ParticleWork_Play()
+{
+	m_bGenerate = true;
+}
+
 void CParticleGroup::Start_NoAttachPivot(CGameObject* pOwner, _float4x4 PivotMatrix, _bool trueisUpdate,
-	_bool trueisRemoveScale)
+                                         _bool trueisRemoveScale)
 {
 	if (pOwner == nullptr)
 	{

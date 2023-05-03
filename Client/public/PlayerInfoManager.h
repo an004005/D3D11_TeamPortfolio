@@ -139,6 +139,9 @@ public:
 	HRESULT	Initialize();
 	void	Tick(_double TimeDelta);	// 실시간으로 타겟 정보를 갱신하기 위함
 
+	void Save(const string& path);
+	void Load(const string& path);
+
 public:	// Get
 	PLAYER_STAT&	Get_PlayerStat() { 
 		return m_tPlayerStat;

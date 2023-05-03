@@ -13,6 +13,8 @@
 
 #include "EM1200.h"
 #include "BronJon.h"
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
 
 CLevel_NaomiRoom::CLevel_NaomiRoom(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -22,6 +24,9 @@ CLevel_NaomiRoom::CLevel_NaomiRoom(ID3D11Device * pDevice, ID3D11DeviceContext *
 HRESULT CLevel_NaomiRoom::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+
+
 
 	m_strLevelName = L"NaomiRoom";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/NaomiRoom_ShadowCam.json";
@@ -62,28 +67,28 @@ HRESULT CLevel_NaomiRoom::Initialize()
 
 void CLevel_NaomiRoom::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-
-	if (FindGameObjectInLayer<CEM1200>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em1200BGM");
-		}
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
+	//
+	//
+	// if (FindGameObjectInLayer<CEM1200>(L"Layer_Monster"))
+	// {
+	// 	if (m_bBossBGM == false)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = true;
+	// 		m_BGM.PlaySound("em1200BGM");
+	// 	}
+	// }
+	// else
+	// {
+	// 	if (m_bBossBGM == true)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = false;
+	// 		m_BGM.PlaySound(m_MainSound);
+	// 	}
+	// }
 
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);

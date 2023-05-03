@@ -9,6 +9,8 @@
 #include "ImguiUtils.h"
 #include "Camera_Dynamic.h"
 #include "Material.h"
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
 
 CLoadingModel::CLoadingModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -234,6 +236,10 @@ CLevel_Loading_Simple::CLevel_Loading_Simple(ID3D11Device* pDevice, ID3D11Device
 
 HRESULT CLevel_Loading_Simple::Initialize()
 {
+	CPlayerInfoManager::GetInstance()->Save("../Bin/Resources/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Save("../Bin/Resources/Item.json");
+
+
 	CLoadingLevel::Initialize();
 	static _bool bOnce = true;
 	if (bOnce)

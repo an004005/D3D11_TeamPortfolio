@@ -13,6 +13,7 @@
 
 #include "EM1100.h"
 #include "BronJon.h"
+#include "Item_Manager.h"
 
 #include "Level_Loading_Simple.h"
 #include "Level_FinalStage.h"
@@ -26,6 +27,9 @@ CLevel_Hospital_1F::CLevel_Hospital_1F(ID3D11Device * pDevice, ID3D11DeviceConte
 HRESULT CLevel_Hospital_1F::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+	CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/HOspital/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/HOspital/Item.json");
 
 	m_strLevelName = L"Hospital1F";
 	m_strShadowCamJsonPath = "";
@@ -99,35 +103,35 @@ HRESULT CLevel_Hospital_1F::Initialize()
 
 void CLevel_Hospital_1F::Tick(_double TimeDelta)
 {
-	if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
-	{
-		CGameInstance::GetInstance()->Open_Loading(
-			LEVEL_FINAL_STAGE,
-			CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
-	}
-
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-
-	if (FindGameObjectInLayer<CEM1100>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em1100BGM");
-		}
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}
+	// if (CPlayerInfoManager::GetInstance()->GetTeleportDissolve() >= 3.f)
+	// {
+	// 	CGameInstance::GetInstance()->Open_Loading(
+	// 		LEVEL_FINAL_STAGE,
+	// 		CLevel_Loading_Simple::Create<CLevel_FinalStage>(m_pDevice, m_pContext));
+	// }
+	//
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
+	//
+	//
+	// if (FindGameObjectInLayer<CEM1100>(L"Layer_Monster"))
+	// {
+	// 	if (m_bBossBGM == false)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = true;
+	// 		m_BGM.PlaySound("em1100BGM");
+	// 	}
+	// }
+	// else
+	// {
+	// 	if (m_bBossBGM == true)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = false;
+	// 		m_BGM.PlaySound(m_MainSound);
+	// 	}
+	// }
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 

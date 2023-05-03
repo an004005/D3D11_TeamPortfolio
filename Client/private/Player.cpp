@@ -87,6 +87,7 @@
 #include "EnvironmentEffect.h"
 
 #include "EM8200.h"
+#include "HS_TeleportableWall.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CScarletCharacter(pDevice, pContext)
@@ -644,7 +645,7 @@ void CPlayer::Tick(_double TimeDelta)
 	}
 //	IM_LOG("%d", m_bCanMove);
 	
-	if (CPlayerInfoManager::GetInstance()->Get_Copy())
+	/*if (CPlayerInfoManager::GetInstance()->Get_Copy())
 	{
 		for (auto& iter : m_vecWeapon)
 		{
@@ -698,6 +699,23 @@ void CPlayer::Tick(_double TimeDelta)
 			m_fKineticCombo_Slash = 2.f;
 		}
 
+		m_vecSheath.front()->Tick(TimeDelta);
+	}*/
+	if (CPlayerInfoManager::GetInstance()->Get_Copy())
+	{
+		for (auto& iter : m_vecWeapon)
+		{
+			iter->Tick(TimeDelta);
+		}
+
+		for (auto& iter : m_vecSheath)
+		{
+			iter->Tick(TimeDelta);
+		}
+	}
+	else
+	{
+		m_vecWeapon.front()->Tick(TimeDelta);
 		m_vecSheath.front()->Tick(TimeDelta);
 	}
 
@@ -880,6 +898,55 @@ void CPlayer::AfterPhysX()
 		m_vecSheath.at(0)->Setup_BoneMatrix(m_pModel, matWorld);
 	}
 
+	// 충돌 위치 옮김
+	if (CPlayerInfoManager::GetInstance()->Get_Copy())
+	{
+		for (auto& iter : m_vecWeapon)
+		{
+			CPlayerInfoManager::GetInstance()->Set_PlayerAttackEnable(m_bAttackEnable);
+
+			_bool bCol = false;
+
+			if (iter == m_vecWeapon.at(0))
+			{
+				if (!bCol)
+					bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_MAIN);
+				else
+					Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_MAIN);
+			}
+			else if (iter == m_vecWeapon.at(1))
+			{
+				if (!bCol)
+					bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_LEFT);
+				else
+					Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_LEFT);
+			}
+			else if (iter == m_vecWeapon.at(2))
+			{
+				if (!bCol)
+					bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_RIGHT);
+				else
+					Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(iter)->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_RIGHT);
+			}
+
+			if (bCol)
+			{
+				m_fKineticCombo_Slash = 2.f;
+			}
+		}
+	}
+	else
+	{
+		_bool bCol = Collision_Check_Capsule_Improved(static_cast<CScarletWeapon*>(m_vecWeapon.front())->Get_Trigger(), m_AttackDesc, m_bAttackEnable, ECOLLIDER_TYPE_BIT(ECOLLIDER_TYPE_BIT::CTB_MONSTER | ECOLLIDER_TYPE_BIT::CTB_MONSTER_PART), ECOPYCOLTYPE::COPYCOL_MAIN);
+		CPlayerInfoManager::GetInstance()->Set_PlayerAttackEnable(m_bAttackEnable);
+
+		if (bCol)
+		{
+			m_fKineticCombo_Slash = 2.f;
+		}
+	}
+	// 충돌 위치 옮김
+
 	if (CPlayerInfoManager::GetInstance()->Get_PlayerStat().bBrainField)
 	{
 		for (auto& iter : m_vecWeapon)
@@ -967,11 +1034,10 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_153_AL_dodge_R_start" ||
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_155_AL_dodge_B_start" ||
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_157_AL_dodge_L_start") &&
-		m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.5f &&
 		m_pASM->isSocketExactlyEmpty() &&
 		tDamageParams.eAttackType != EAttackType::ATK_END)
 	{
-		m_fJustDodgeAble = 1.f;
+		m_fJustDodgeAble = 2.f;
 	}
 	else if (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_051_AL_sas_dodge_F_start_Telepo" || 
 		m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_053_AL_sas_dodge_R_start_Telepo" || 
@@ -1001,7 +1067,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		m_SoundStore.PlaySound("UI_NoDamage");
 
-		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
+		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 3.f);
 	}
 	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash || m_bBrainField_Prod)
 	{
@@ -1552,7 +1618,7 @@ void CPlayer::SasMgr()
 
 				SasGearEffect();
 
-				m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
+				m_SoundStore.PlaySound("SAS_trig_whs", m_pTransformCom);
 
 				if (ESASType::SAS_FIRE == InputSas)
 				{
@@ -1603,6 +1669,7 @@ void CPlayer::SasMgr()
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Docking_Finished"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 			m_SoundStore.PlaySound("fx_execute", m_pTransformCom);
+			m_SoundStore.PlaySound("fx_SAS_trig_imp", m_pTransformCom);
 
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 			{
@@ -2354,6 +2421,13 @@ HRESULT CPlayer::SetUp_BrainFieldProductionStateMachine()
 			for(auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
 			{
 				if (auto pWall = dynamic_cast<CInvisibleWall*>(iter))
+				{
+					pWall->SetVisible(false);
+				}
+			}
+			for (auto& iter : CGameInstance::GetInstance()->GetLayer(LEVEL_NOW, LAYER_MAP_DECO)->GetGameObjects())
+			{
+				if (auto pWall = dynamic_cast<CHS_TeleportableWall*>(iter))
 				{
 					pWall->SetVisible(false);
 				}
@@ -3816,7 +3890,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 				m_bHit = false;
 
-				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f);
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.15f, 0.1f);
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Knuckback);
 			})
@@ -3840,7 +3914,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				ZeroMemory(&m_DamageDesc, sizeof(DAMAGE_DESC));
 				m_bHit = false;
 
-				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.2f);
+				CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.15f, 0.1f);
 
 				m_pASM->InputAnimSocket("Hit_AnimSocket", m_Airborne); 
 				Jump();
@@ -3983,7 +4057,7 @@ HRESULT CPlayer::SetUp_HitStateMachine()
 				.Priority(1)
 
 		.AddState("HIT_MIDIUM")
-			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.05f, 0.2f); })
+			.OnStart([&]() { CPlayerInfoManager::GetInstance()->Camera_Random_Shake_Maintain(0.1f, 0.1f); })
 			.AddTransition("HIT_MIDIUM to FRONT", "HIT_MIDIUM_FRONT")
 			.Predicator([&]()->_bool 
 			{
@@ -5329,7 +5403,22 @@ HRESULT CPlayer::SetUp_JustDodgeStateMachine()
 			{
 			})
 			.AddTransition("JUSTDODGE_NONUSE to JUSTDODGE_USABLE", "JUSTDODGE_USABLE")
-			.Predicator([&]()->_bool { return m_fJustDodgeAble > 0.f; })
+			.Predicator([&]()->_bool 
+			{
+					if (nullptr == m_pModel->GetPlayAnimation())
+						return false;
+
+					_bool bAnim = (m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_051_AL_dodge_F_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_055_AL_dodge_B_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_057_AL_dodge_L_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_053_AL_dodge_R_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_151_AL_dodge_F_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_153_AL_dodge_R_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_155_AL_dodge_B_start" ||
+						m_pModel->GetPlayAnimation()->GetName() == "AS_ch0100_157_AL_dodge_L_start");
+
+					return bAnim && m_fJustDodgeAble > 0.f && m_pModel->GetPlayAnimation()->GetPlayRatio() >= 0.5f; 
+				})
 			.Priority(0)
 
 		.AddState("JUSTDODGE_USABLE")
@@ -6257,7 +6346,6 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("BrainField_Swing");
 
 	m_SoundStore.CloneSound("move_doubleJump");
-	m_SoundStore.CloneSound("move_Landing");
 	m_SoundStore.CloneSound("move_stop");
 
 	m_SoundStore.CloneSound("Special_Train");
@@ -6303,9 +6391,20 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("BrainCrash");
 
 	m_SoundStore.CloneSound("fx_SAS_trig");
+	m_SoundStore.CloneSound("SAS_trig_whs");
+	m_SoundStore.CloneSound("fx_SAS_trig_imp");
+
+	m_SoundStore.CloneSound("move_landing");
+	//move_landing
+
+	m_SoundStore.CloneSound("move_plyr_fall");
+	m_SoundStore.CloneSound("move_plyr_getup");
 
 	//MonsterUI
 	m_SoundStore.CloneSound("UI_monster_alert");
+
+	m_pModel->Add_EventCaller("move_plyr_fall", [this] {m_SoundStore.PlaySound("move_plyr_fall", m_pTransformCom); });
+	m_pModel->Add_EventCaller("move_plyr_getup", [this] {m_SoundStore.PlaySound("move_plyr_getup", m_pTransformCom); });
 
 	m_pModel->Add_EventCaller("attack_nor_1", [this] {Event_EffectSound("attack_nor_1"); });
 	m_pModel->Add_EventCaller("attack_nor_2", [this] {Event_EffectSound("attack_nor_2"); });
@@ -6398,6 +6497,8 @@ HRESULT CPlayer::SetUp_Sound()
 
 	m_pModel->Add_EventCaller("fx_kinetic_counter_trig", [this] {m_SoundStore.PlaySound("fx_kinetic_counter_trig", m_pTransformCom); });
 	m_pModel->Add_EventCaller("BrainCrash", [this] {m_SoundStore.PlaySound("BrainCrash", m_pTransformCom); });
+
+	m_pModel->Add_EventCaller("move_Landing", [this] {m_SoundStore.PlaySound("move_foot_stop", m_pTransformCom); });
 
 	// 특수오브젝트
 	m_SoundStore.CloneSound("fx_kine_super_truck_example");
@@ -11865,12 +11966,7 @@ void CPlayer::BehaviorCheck(_double TimeDelta)
 		{
 			m_pASM->ClearAnimSocket("Netual_Saperate_Animation");
 		}
-
-		//IM_LOG(m_pASM->GetCurAnimName().c_str());
 	}
-
-	//if (m_bLeftClick)
-	//	m_fKineticCombo_Slash = 10.f;
 
 	if (m_pASM->GetCurStateName().find("ATTACK_CHARGE_LOOP") == string::npos)
 	{

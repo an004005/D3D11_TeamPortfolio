@@ -227,6 +227,13 @@ void CEM8200::Kinetic_Combo_KineticAnimation()
 	}
 }
 
+_float4 CEM8200::GetKineticTargetPos()
+{
+	_float4 vColliderPos = GetColliderPosition();
+	vColliderPos.y += 0.3f;
+	return vColliderPos;
+}
+
 void CEM8200::Spawn_Portrait(const string& strEventName)
 {
 	static string strPath = "../Bin/Resources/Batch/BatchFiles/";
@@ -287,7 +294,8 @@ void CEM8200::SetUpSound()
 	CEnemy::SetUpSound();
 	
 	m_SoundStore.CloneSound("move_walk");
-	m_SoundStore.CloneSound("move_Landing");
+	m_SoundStore.CloneSound("move_foot_stop");
+
 	m_SoundStore.CloneSound("karen_attack_elecball_ins");
 	m_SoundStore.CloneSound("karen_attack_elecball_shot");
 	m_SoundStore.CloneSound("karen_attack_kick1");
@@ -300,6 +308,7 @@ void CEM8200::SetUpSound()
 	m_SoundStore.CloneSound("karen_fx_tele");
 	m_SoundStore.CloneSound("karen_fx_thunder");
 	m_SoundStore.CloneSound("fx_execute_karen_splited_6");
+	m_SoundStore.CloneSound("EndingCredit");
 
 	m_SoundStore.CloneSound("Photo");
 	
@@ -629,11 +638,24 @@ void CEM8200::BeginTick()
 	CEnemy::BeginTick();
 
 	m_pKineticModel->SetPlayAnimation("AS_em8200_208_AL_atk_pcon_b3_end_obj");
+
+
 }
 
 void CEM8200::Tick(_double TimeDelta)
 {
 	CEnemy::Tick(TimeDelta);
+
+	if (auto pUI = CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASInfoLeftMove"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoLeft"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_SASInfoRightMove"))
+		pUI->TempOff(true);
+	if (auto pUI = CUI_Manager::GetInstance()->Find_Canvas(L"Canvas_SASInfoRight"))
+		pUI->TempOff(true);
+
+
 	if (m_bBattleStart)
 	{
 		CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
@@ -685,7 +707,6 @@ void CEM8200::Tick(_double TimeDelta)
 		_float fTPStartOut;
 		if (m_TPStart.Tick(TimeDelta, fTPStartOut))
 		{
-
 			for (auto pMtrl : m_pModelCom->GetMaterials())
 			{
 				pMtrl->GetParam().Floats[2] = fTPStartOut;
@@ -696,6 +717,18 @@ void CEM8200::Tick(_double TimeDelta)
 				m_pBrainField->SetCableTP(fTPStartOut);
 			}
 		}
+
+		
+
+		// if (m_pModelCom->GetMaterials()[0]->GetParam().Floats[2] >= 0.98)
+		// {
+		// 	m_fTPChecker -= TimeDelta;
+		// 	if (m_fTPChecker < 0.f)
+		// 	{
+		// 		m_TPEnd.PlayFromStart();
+		// 		m_fTPChecker = 0.5f;
+		// 	}
+		// }
 	}
 
 	{
@@ -965,7 +998,8 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 		.OnStart([this]
 			{
 				// m_TPEnd.PlayFromStart();
-
+	
+				m_TPRecover.Reset();
 				m_fGravity = 20.f;
 			})
 		.Tick([this] (_double TimeDelta)
@@ -973,9 +1007,18 @@ void CEM8200::AddState_Idle(CFSMComponentBuilder& Builder)
 			if(m_pTarget != nullptr)
 				m_pTransformCom->LookAt_Smooth(m_pTarget->GetTransform()->Get_State(CTransform::STATE_TRANSLATION), TimeDelta);
 
-			for (auto pMtrl : m_pModelCom->GetMaterials())
+			// for (auto pMtrl : m_pModelCom->GetMaterials())
+			// {
+			// 	pMtrl->GetParam().Floats[2] = 0.f;
+			// }
+			// m_pKarenMaskEf->GetParams().Floats[1] = 0.f;
+			// if (m_pBrainField->IsOpen())
+			// {
+			// 	m_pBrainField->SetCableTP(0.f);
+			// }
+			if (m_TPRecover.IsNotDo() && m_pModelCom->GetMaterials()[0]->GetParam().Floats[2] >= 0.98)
 			{
-				pMtrl->GetParam().Floats[2] = 0;
+				m_TPEnd.PlayFromStart();
 			}
 		})
 
@@ -1771,7 +1814,7 @@ void CEM8200::AddState_Attack_AirElec(CFSMComponentBuilder& Builder)
 	.AddState("Air_Elec_Atk_Landing_Start")
 		.OnStart([this]
 			{
-				m_SoundStore.PlaySound("move_Landing");
+				m_SoundStore.PlaySound("move_foot_stop");
 				m_pASM->AttachAnimSocketOne("FullBody", "AS_em8200_216_AL_atk_air_landing_start");
 			})
 
@@ -2191,7 +2234,6 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 
 
 
-			m_pBrainField->OpenBrainField();
 			m_pASM->InputAnimSocketOne("FullBody", "AS_em8200_BrainField_start");
 
 			auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("Karen_BrainField_Start");
@@ -2202,6 +2244,7 @@ void CEM8200::AddState_BrainField(CFSMComponentBuilder& Builder)
 			m_pCollider->SetFootPosition(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 			m_pController->ClearCommands();
 			m_pController->SetActive(false);
+			m_pBrainField->OpenBrainField();
 
 			m_pTarget->SetForcePos(XMVectorSet(0.f, 0.f, -15.f, 1.f));
 			m_pTarget->GetTransform()->LookAt_NonY(m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION));
@@ -2387,10 +2430,26 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 			if (m_pLastItem != nullptr && CGameInstance::GetInstance()->Check_ObjectAlive(m_pLastItem) == false)
 			{
 				CUI_Manager::GetInstance()->Set_TempOff(true);
-				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
-				CLastCheckUI * pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+
 				m_pLastItem = nullptr;
 			}
+
+			if (CGameInstance::GetInstance()->KeyDown(DIK_ESCAPE))
+			{
+				m_iESCCnt++;
+			}
+
+			if (m_iESCCnt >= 2)
+			{
+				fDelay += TimeDelta;
+
+			}
+			if (fDelay > 1.5f && m_ESC.IsNotDo())
+			{
+				Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/LastCheckUI.json");
+				CLastCheckUI* pLastCheckUI = dynamic_cast<CLastCheckUI*>(CGameInstance::GetInstance()->Clone_GameObject_Get(PLAYERTEST_LAYER_FRONTUI, L"LastCheckUI", &json));
+			}
+
 		})
 		.AddTransition("to ending", "Ending")
 			.Predicator([this]
@@ -2407,6 +2466,8 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 		{
 			if (m_pBrainField->GetBlackOutRatio() > 0.95f && m_BlackOut.IsNotDo())
 			{
+				m_SoundStore.StopAllLoop();
+				m_SoundStore.PlaySound("EndingCredit");
 				auto pCamAnim = CGameInstance::GetInstance()->GetCamAnim("EndingCredit_Portrait");
 
 				m_pKaren_AnimCam->StartCamAnim(pCamAnim,
@@ -2421,6 +2482,7 @@ void CEM8200::AddState_BrainCrush(CFSMComponentBuilder& Builder)
 				m_pKaren_AnimCam->AddEvent("Spawn_Inbok", [this]() {Spawn_Portrait("Spawn_Inbok"); });
 				m_pKaren_AnimCam->AddEvent("Spawn_Sound", [this]() {Spawn_Portrait("Spawn_Sound"); });
 				m_pKaren_AnimCam->AddEvent("Spawn_Team", [this]() {Spawn_Portrait("Spawn_Team"); });
+				m_pKaren_AnimCam->AddEvent("No_Spawn", [this]() {m_pShaderUI->Set_Float2sX(7.0f); });
 			}
 		})
 	;
@@ -2511,8 +2573,8 @@ void CEM8200::AddState_Intro(CFSMComponentBuilder& Builder)
 		.AddTransition("Intro_01 to BattleStart", "BattleStart")
 		.Predicator([this]
 			{
-				//return m_bStoryEnd;
-				 return false;
+				return m_bStoryEnd;
+				// return false;
 			})
 
 		.AddState("BattleStart")
@@ -2608,7 +2670,7 @@ _bool CEM8200::Check_PlayerDetected()
 		_vector vThisPos = m_pTransformCom->Get_State(CTransform::STATE_TRANSLATION);
 		_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vThisPos));
 
-		if (fDistance < 25.5f && m_bStoryModeStart.IsNotDo())
+		if (fDistance < 25.2f && m_bStoryModeStart.IsNotDo())
 		{
 			// Cam Start && Story Start
 			CUI_Manager::GetInstance()->Set_TempOff(true);
@@ -2708,7 +2770,8 @@ void CEM8200::Play_HeavyHitAnim()
 void CEM8200::TP_Start()
 {
 	m_TPStart.PlayFromStart();
-	m_SoundStore.PlaySound("karen_fx_tele");	
+	m_SoundStore.PlaySound("karen_fx_tele");
+	m_fTPChecker = 0.5f;
 }
 
 void CEM8200::Melee_Overlap(const string& pBornName, _uint iDamage, _float fRad, EAttackType eAtkType)

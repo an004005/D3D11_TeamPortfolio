@@ -11,6 +11,8 @@
 #include "JsonStorage.h"
 
 #include "EM0320.h"
+#include "Item_Manager.h"
+#include "PlayerInfoManager.h"
 
 
 CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -21,6 +23,8 @@ CLevel_ConstructionSite3F::CLevel_ConstructionSite3F(ID3D11Device* pDevice, ID3D
 HRESULT CLevel_ConstructionSite3F::Initialize()
 {
 	 //m_bPlayerSpawn = false;
+
+
 
 	m_strLevelName = L"ConstructionSite3F";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite3F_ShadowCam.json";
@@ -67,28 +71,28 @@ HRESULT CLevel_ConstructionSite3F::Initialize()
 
 void CLevel_ConstructionSite3F::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
-
-
-	if (FindGameObjectInLayer<CEM0320>(L"Layer_Monster"))
-	{
-		if (m_bBossBGM == false)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = true;
-			m_BGM.PlaySound("em0320BGM");
-		}	
-	}
-	else
-	{
-		if (m_bBossBGM == true)
-		{
-			m_BGM.StopAllLoop();
-			m_bBossBGM = false;
-			m_BGM.PlaySound(m_MainSound);
-		}
-	}
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
+	//
+	//
+	// if (FindGameObjectInLayer<CEM0320>(L"Layer_Monster"))
+	// {
+	// 	if (m_bBossBGM == false)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = true;
+	// 		m_BGM.PlaySound("em0320BGM");
+	// 	}	
+	// }
+	// else
+	// {
+	// 	if (m_bBossBGM == true)
+	// 	{
+	// 		m_BGM.StopAllLoop();
+	// 		m_bBossBGM = false;
+	// 		m_BGM.PlaySound(m_MainSound);
+	// 	}
+	// }
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 

@@ -41,8 +41,8 @@ HRESULT CLevel_DownTown::Initialize()
 
 void CLevel_DownTown::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
 
 	CLevel_StageDefault::Tick(TimeDelta);
 }
@@ -106,8 +106,8 @@ HRESULT CLevel_DownTown_Second::Initialize()
 
 void CLevel_DownTown_Second::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
 
 	CLevel_StageDefault::Tick(TimeDelta);
 }
@@ -168,8 +168,8 @@ HRESULT CLevel_DownTown_Third::Initialize()
 
 void CLevel_DownTown_Third::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
 
 	CLevel_StageDefault::Tick(TimeDelta);
 }
