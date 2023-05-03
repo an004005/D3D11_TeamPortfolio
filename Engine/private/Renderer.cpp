@@ -375,11 +375,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 
 	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag"), 500.0f, 100.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Flag_NonAlpha"), 500.0f, 300.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 500.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_RMA"), 500.0f, 700.f, 200.f, 200.f));
 
-
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_OutlineFlag"), 500.0f, 300.f, 200.f, 200.f));
-	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_HDR"), 500.0f, 500.f, 200.f, 200.f));
-
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_HDR"), 700.0f, 100.f, 200.f, 200.f));
+	FAILED_CHECK(m_pTarget_Manager->Ready_Debug(TEXT("Target_Portrait"), 700.0f, 300.f, 200.f, 200.f));
 	
 
 #endif

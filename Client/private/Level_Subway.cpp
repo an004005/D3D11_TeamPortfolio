@@ -84,8 +84,8 @@ HRESULT CLevel_Subway::Initialize()
 
 void CLevel_Subway::Tick(_double TimeDelta)
 {
-	if (m_BGMOnce.IsNotDo())
-		m_BGM.PlaySound(m_MainSound);
+	// if (m_BGMOnce.IsNotDo())
+	// 	m_BGM.PlaySound(m_MainSound);
 
 	CMap_KineticBatchPreset::GetInstance()->Tick(TimeDelta);
 
