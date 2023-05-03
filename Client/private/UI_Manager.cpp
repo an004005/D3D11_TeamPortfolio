@@ -34,6 +34,9 @@ CUI_Manager::CUI_Manager()
     m_SoundStore.CloneSound("Upgrade");   // 레벨 업 할 때 + ★
     m_SoundStore.CloneSound("Weapon");   // 장비 장착할 때 + ★
 
+    
+    m_SoundStore.CloneSound("EM_Spawn");   // 몬스터 스폰 사운드
+
 #ifndef _DEBUG
     CGameUtils::HideCursor();
 #endif

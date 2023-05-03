@@ -1067,7 +1067,7 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 		m_SoundStore.PlaySound("UI_NoDamage");
 
-		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 10.f);
+		CPlayerInfoManager::GetInstance()->Change_SasEnergy(CHANGETYPE::CHANGE_DECREASE, ESASType::SAS_HARDBODY, 3.f);
 	}
 	else if (m_bJustDodge_Activate || m_bKineticSpecial_Activate || m_bDriveMode_Activate || m_bBrainCrash || m_bBrainField_Prod)
 	{
@@ -1618,7 +1618,7 @@ void CPlayer::SasMgr()
 
 				SasGearEffect();
 
-				m_SoundStore.PlaySound("fx_SAS_trig", m_pTransformCom);
+				m_SoundStore.PlaySound("SAS_trig_whs", m_pTransformCom);
 
 				if (ESASType::SAS_FIRE == InputSas)
 				{
@@ -1669,6 +1669,7 @@ void CPlayer::SasMgr()
 			_matrix MatParticle = XMMatrixRotationX(XMConvertToRadians(80.f));
 			CVFX_Manager::GetInstance()->GetParticle(PARTICLE::PS_SAS, TEXT("Sas_Docking_Finished"), LAYER_PLAYEREFFECT)->Start_AttachPivot(this, MatParticle, "Sheath", true);
 			m_SoundStore.PlaySound("fx_execute", m_pTransformCom);
+			m_SoundStore.PlaySound("fx_SAS_trig_imp", m_pTransformCom);
 
 			if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty())
 			{
@@ -6390,6 +6391,8 @@ HRESULT CPlayer::SetUp_Sound()
 	m_SoundStore.CloneSound("BrainCrash");
 
 	m_SoundStore.CloneSound("fx_SAS_trig");
+	m_SoundStore.CloneSound("SAS_trig_whs");
+	m_SoundStore.CloneSound("fx_SAS_trig_imp");
 
 	m_SoundStore.CloneSound("move_landing");
 	//move_landing

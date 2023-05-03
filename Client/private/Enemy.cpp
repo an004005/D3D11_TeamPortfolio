@@ -17,6 +17,7 @@
 #include "MonsterHpUI.h"
 #include "MonsterShildUI.h"
 #include "ImguiUtils.h"
+#include "UI_Manager.h"
 
 vector<wstring>			CEnemy::s_vecDefaultBlood{
 	L"Default_Blood_00",
@@ -358,6 +359,8 @@ CRigidBody * CEnemy::GetRigidBody(const string & KeyName)
 
 void CEnemy::CreateSpawnEffect()
 {
+	CUI_Manager::GetInstance()->PlaySound("EM_Spawn");
+
 	CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_MONSTER, L"Enemy_Spawn_A")
 		->Start_NoAttachPivot(this, m_SpawnEffectPivot, false, false);
 

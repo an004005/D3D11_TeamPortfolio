@@ -869,6 +869,30 @@
             "Loop": false,
             "MinDistance": 0.01,
             "MaxDistance" : 40.0
+        },
+        {
+            "Name": "fx_SAS_trig_imp",
+            "SoundFiles": [
+                "FX/SAS_trig_imp.wav",
+                "FX/SAS_trig_imp_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
+        },
+        {
+            "Name": "SAS_trig_whs",
+            "SoundFiles": [
+                "FX/SAS_trig_whs.wav",
+                "FX/SAS_trig_whs_2.wav"
+            ],
+            "2DSound": false,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 0.01,
+            "MaxDistance" : 40.0
         }
     ]
 }
