@@ -295,12 +295,7 @@ PS_OUT PS_MAIN_COLOR_GRADING_LUT_6(PS_IN In)
 	 	gradedCol = g_tex_2.Sample(LinearSampler, lutPos);
 	 	blend = g_float_2;
 	 }
-	 // else if (vFlagsNonAlpha.y == SHADER_POST_OBJECTS)
-	 // {
-	 // 	gradedCol = g_tex_2.Sample(LinearSampler, lutPos);
-	 // 	blend = g_float_2;	
-	 // }
-	 else
+	 else if (vFlagsNonAlpha.z != SHADER_POST_OBJECTS_IGNORE_GRADING)
 	 {
 	 	gradedCol = g_tex_0.Sample(LinearSampler, lutPos);
 	 	blend = g_float_0;	

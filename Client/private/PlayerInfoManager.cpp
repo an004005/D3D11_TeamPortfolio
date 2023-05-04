@@ -170,8 +170,6 @@ void CPlayerInfoManager::Tick(_double TimeDelta)
 	// 공격력 갱신
 	m_tPlayerStat.m_fFinalAttackDamage = (m_tPlayerStat.m_fBaseAttackDamage + m_tPlayerStat.m_fWeaponDamage) * m_tPlayerStat.m_fSasDamageRate;
 
-	m_tPlayerStat.m_fBaseAttackDamage = 170.f;
-
 	if (nullptr == m_pKineticObject) m_pKineticObject = nullptr;
 	else if (false == CGameInstance::GetInstance()->Check_ObjectAlive(m_pKineticObject)) m_pKineticObject = nullptr;
 	else if (true == m_pKineticObject->IsDeleted()) m_pKineticObject = nullptr;

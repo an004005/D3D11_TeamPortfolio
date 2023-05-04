@@ -260,9 +260,9 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 
 	OutlineMaker();
 
-	/*if (m_bThrow)
+	if (m_bThrow)
 	{
-		m_pCollider->Set_ColliderType(m_eTargetType);
+		m_pCollider->Set_ColliderType(CT_PLAYER_ATTACK);
 		if (m_Once.IsNotDo())
 		{
 			m_pCollider->AddVelocity(m_fForce);
@@ -272,7 +272,7 @@ void CMapKinetic_Object::Tick(_double TimeDelta)
 	else
 	{
 		m_pCollider->Set_ColliderType(CT_PSYCHICK_OBJ);
-	}*/
+	}
 
 	if (0.f <= m_fRefloatTime)
 	{
@@ -451,14 +451,24 @@ const wstring& CMapKinetic_Object::Get_ModelTag()
 void CMapKinetic_Object::Add_Physical(_float3 vForce, _float3 vTorque)
 {
 	m_pCollider->Set_Kinetic(false);
+
+
 	m_pCollider->Set_Trigger(false);
-	//m_pCollider->UpdateChange();
+	// m_pCollider->UpdateChange();
 
-//	m_fForce = vForce;
-//	m_fToque = vTorque;
+	if(20.f >= vForce.Length())
+	{
+		m_pCollider->AddVelocity(vForce);
+		m_pCollider->AddTorque(vTorque);
+	}
+	else
+	{
+		m_fForce = vForce;
+		m_fToque = vTorque;
+	}
 
-	m_pCollider->AddVelocity(vForce);
-	m_pCollider->AddTorque(vTorque);
+//	m_pCollider->AddVelocity(vForce);
+//	m_pCollider->AddTorque(vTorque);
 }
 
 void CMapKinetic_Object::Set_Kinetic(_bool bKinetic)

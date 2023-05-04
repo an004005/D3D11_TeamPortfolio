@@ -331,7 +331,10 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 						return false;
 
 					if (false == CGameInstance::GetInstance()->Check_ObjectAlive(*Dupliciation))
+					{
+						++Dupliciation;
 						continue;
+					}
 
 					if ((*Dupliciation) == pTarget)
 					{
@@ -350,13 +353,13 @@ _bool CScarletCharacter::Collision_Check_Capsule_Improved(CRigidBody * AttackTri
 						//}
 						else
 						{
-							Dupliciation++;
+							++Dupliciation;
 							bDamagedTarget = false;
 						}
 					}
 					else
 					{
-						Dupliciation++;
+						++Dupliciation;
 					}
 				}
 				

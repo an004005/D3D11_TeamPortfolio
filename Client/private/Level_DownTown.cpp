@@ -4,6 +4,9 @@
 #include "GameManager.h"
 #include "Imgui_Batch.h"
 
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
+
 /*********************
  * CLevel_DownTown
  **********************/
@@ -141,6 +144,9 @@ CLevel_DownTown_Third::CLevel_DownTown_Third(ID3D11Device* pDevice, ID3D11Device
 HRESULT CLevel_DownTown_Third::Initialize()
 {
 	 // m_bPlayerSpawn = false;
+
+	/*CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");*/
 
 	m_strLevelName = L"DownTown3";
 

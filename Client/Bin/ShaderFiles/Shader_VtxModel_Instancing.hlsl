@@ -339,7 +339,7 @@ PS_OUT_ALPHABLEND PS_RED_LINE_TOWER_6(PS_IN In)
 	Out.vDiffuse.rgb = Out.vDiffuse.rgb * 2.5f;
 	Out.vDiffuse.a = vLineColor.a;
 
-	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, SHADER_POST_OBJECTS_IGNORE_GRADING, 0.f);
 
 	return Out;
 }
@@ -368,7 +368,7 @@ PS_OUT PS_BRAIN_FIELD_FAR_BUILDING_8(PS_IN In)
 	float flags = SHADER_NONE_SHADE;
 
 	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_Far, 0.f, flags);
-	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, SHADER_POST_OBJECTS_IGNORE_GRADING, 0.f);
 
 	return Out;
 }
@@ -382,7 +382,7 @@ PS_OUT_ALPHABLEND PS_BRAIN_FIELD_HOLOGRAM_MONITOR_9(PS_IN In)
 	float4 vColor = lerp(float4(g_vec4_0.rgb, 0.6f), (float4)1.f, saturate(1.f - fFresnel) * 0.5f);
 	Out.vDiffuse = CalcHDRColor(vColor, fFresnel * 2.f);
 
-	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, 0.f, 0.f);
+	Out.vFlag = float4(0.f, SHADER_POST_OBJECTS, SHADER_POST_OBJECTS_IGNORE_GRADING, 0.f);
 
 	return Out;
 }

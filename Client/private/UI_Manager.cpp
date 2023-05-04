@@ -6,9 +6,37 @@
 #include "Canvas_Acquisition.h"
 #include "GameInstance.h"
 
-IMPLEMENT_SINGLETON(CUI_Manager)
+
+CUI_Manager* CUI_Manager::m_pInstance = NULL;				
+CUI_Manager* CUI_Manager::GetInstance(void) {
+    
+        if (NULL == m_pInstance) {
+            
+                m_pInstance = new CUI_Manager;					
+        }													
+            return m_pInstance;									
+}														
+unsigned long CUI_Manager::DestroyInstance(void) {
+                
+                    unsigned long	dwRefCnt = 0;						
+                    if (nullptr != m_pInstance) {
+                        
+                            dwRefCnt = m_pInstance->Release();				
+                            if (0 == dwRefCnt)								
+                                m_pInstance = nullptr;						
+                    }													
+                        return dwRefCnt;									
+            }
 
 CUI_Manager::CUI_Manager()
+{
+#ifndef _DEBUG
+    CGameUtils::HideCursor();
+#endif
+    //   CUI_Manager::GetInstance()->PlaySound("xxX");
+}
+
+void CUI_Manager::CloneSound()
 {
     m_SoundStore.CloneSound("MainClick");      // 메인에서 클릭할 때 +(BrainMap 클릭)
     m_SoundStore.CloneSound("UnableClick");   // 불가능한 클릭 +
@@ -33,17 +61,12 @@ CUI_Manager::CUI_Manager()
     m_SoundStore.CloneSound("Unable");   // 불가능한 클릭
     m_SoundStore.CloneSound("Upgrade");   // 레벨 업 할 때 + ★
     m_SoundStore.CloneSound("Weapon");   // 장비 장착할 때 + ★
-    m_SoundStore.CloneSound("UI_kine_object_popup");  
-    m_SoundStore.CloneSound("UI_item_achive");  
-    m_SoundStore.CloneSound("UI_fx_debuff");  
+    m_SoundStore.CloneSound("UI_kine_object_popup");
+    m_SoundStore.CloneSound("UI_item_achive");
+    m_SoundStore.CloneSound("UI_fx_debuff");
 
-    
+
     m_SoundStore.CloneSound("EM_Spawn");   // 몬스터 스폰 사운드
-
-#ifndef _DEBUG
-    CGameUtils::HideCursor();
-#endif
-    //   CUI_Manager::GetInstance()->PlaySound("xxX");
 }
 
 CCanvas* CUI_Manager::Find_MoveCanvas(const wstring& pCanvasTag)

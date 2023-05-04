@@ -13,6 +13,9 @@
 #include "EM0110.h"
 #include "BronJon.h"
 
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
+
 CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel_StageDefault(pDevice, pContext)
 {
@@ -21,6 +24,9 @@ CLevel_ConstructionSite2F::CLevel_ConstructionSite2F(ID3D11Device* pDevice, ID3D
 HRESULT CLevel_ConstructionSite2F::Initialize()
 {
     // m_bPlayerSpawn = false;
+
+    /*CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+    CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");*/
 
     m_strLevelName = L"ConstructionSite2F";
     m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/ConstructionSite2F_ShadowCam.json"; 

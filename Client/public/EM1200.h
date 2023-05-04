@@ -122,6 +122,9 @@ private:
 
 	_float4x4 m_OriginWorld;
 
+	class CPostVFX_ColorGrading* m_pColorGrading = nullptr;
+	_float m_fDefaultGrading = 0.f;
+
 public:
 	static CEM1200* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;

@@ -19,6 +19,9 @@ public:
 	}
 
 public:
+
+	void CloneSound();
+
 	CCanvas* Find_MoveCanvas(const wstring& pCanvasTag);
 	void Add_MoveCanvas(const wstring& pCanvasTag, CCanvas* pCanvas);
 

@@ -152,10 +152,10 @@ private:
 
 private:
 	_float				m_fRefloatTime = 0.f;
-
+private:
 	_float3				m_fToque;
 	_float3				m_fForce;
-	CDoOnce m_Once;
+	CDoOnce				m_Once;
 
 	ECOLLIDER_TYPE m_eTargetType = CT_PLAYER_ATTACK;
 

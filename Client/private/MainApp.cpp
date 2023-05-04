@@ -93,6 +93,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Start_Level(LEVEL_LOGO)))
 		return E_FAIL;
 
+	CUI_Manager::GetInstance()->CloneSound();
+
 	if (FAILED(CPlayerInfoManager::GetInstance()->Initialize()))
 		return E_FAIL;
 
@@ -572,18 +574,23 @@ CMainApp * CMainApp::Create()
 void CMainApp::Free()
 {
 	CVFX_Manager::GetInstance()->DestroyInstance();
-	CUI_Manager::GetInstance()->DestroyInstance();
-	CPlayerInfoManager::GetInstance()->DestroyInstance();
-	CGameManager::GetInstance()->DestroyInstance();
-	CItem_Manager::GetInstance()->DestroyInstance();
-	CMap_KineticBatchPreset::GetInstance()->DestroyInstance();
+
+	while (CUI_Manager::GetInstance()->DestroyInstance()) {}
+	while (CPlayerInfoManager::GetInstance()->DestroyInstance()) {}
+	while (CGameManager::GetInstance()->DestroyInstance()) {}
+	while (CItem_Manager::GetInstance()->DestroyInstance()) {}
+	while (CMap_KineticBatchPreset::GetInstance()->DestroyInstance()) {}
 
 	m_pGameInstance->Clear_ImguiObjects();
 	m_pGameInstance->Clear();
+
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 
 	CGameInstance::Release_Engine();
+
+	while (CUI_Manager::GetInstance()->DestroyInstance()) {}
+	while (CPlayerInfoManager::GetInstance()->DestroyInstance()) {}
 }

@@ -3348,18 +3348,6 @@
                 "EventTime": 14.0
             },
             {
-                "EventName": "Elec_Attack_Air_1",
-                "EventTime": 15.0
-            },
-            {
-                "EventName": "Elec_Attack_Air_1_Shoot",
-                "EventTime": 15.0
-            },
-            {
-                "EventName": "Elec_Attack_Air_1_Particle",
-                "EventTime": 15.0
-            },
-            {
                 "EventName": "Bright_On",
                 "EventTime": 1.0
             },
@@ -3370,6 +3358,18 @@
             {
                 "EventName": "attack_elec_jumpattack_1_fix",
                 "EventTime": 0.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1_Shoot",
+                "EventTime": 10.0
+            },
+            {
+                "EventName": "Elec_Attack_Air_1_Particle",
+                "EventTime": 10.0
             }
         ]
     },

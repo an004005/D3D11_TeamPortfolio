@@ -14,6 +14,9 @@
 #include "Material.h"
 //#include "EM1200.h"
 
+#include "PlayerInfoManager.h"
+#include "Item_Manager.h"
+
 
 CLevel_Subway::CLevel_Subway(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	:CLevel_StageDefault(pDevice, pContext)
@@ -24,9 +27,13 @@ HRESULT CLevel_Subway::Initialize()
 {
 	//m_bPlayerSpawn = false;
 
+	CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");
+
 	m_strLevelName = L"Subway";
 	m_strShadowCamJsonPath.clear();   
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Subway.json";
+	m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading_Subway.json";
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
 

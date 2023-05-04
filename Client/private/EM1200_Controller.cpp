@@ -31,6 +31,8 @@ HRESULT CEM1200_Controller::Initialize(void * pArg)
 	//far : cable
 	//out : run
 
+	m_dStampCoolTime[MAXTIME] = 23.0;
+
 	return S_OK;
 }
 
@@ -74,11 +76,10 @@ void CEM1200_Controller::Tick_Near_1Phase(_double TimeDelta)
 	switch (m_iNear1PhaseOrder)
 	{
 	case 0:
-	case 1:
 		AddCommand("Shout1", 0.f, &CAIController::Input, NUM_1);
 		AddCommand("Wait", 2.0f, &CAIController::Wait);
 		break;
-	case 2:
+	case 1:
 		AddCommand("Fall", 0.f, &CAIController::Input, F);
 		AddCommand("Wait", 2.0f, &CAIController::Wait);
 		break;
@@ -227,9 +228,9 @@ void CEM1200_Controller::DefineState(_double TimeDelta)
 
 	else
 	{
-		if (m_fTtoM_Distance <= 8.f)
+		if (m_fTtoM_Distance <= 12.f)
 			Tick_Near_2Phase(TimeDelta);
-		else if (m_fTtoM_Distance <= 12.f)
+		else if (m_fTtoM_Distance <= 16.f)
 			Tick_Mid(TimeDelta);
 		else if (m_fTtoM_Distance <= 25.f)
 			Tick_Far(TimeDelta);

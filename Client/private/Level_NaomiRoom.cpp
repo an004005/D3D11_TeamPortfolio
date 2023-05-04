@@ -26,11 +26,13 @@ HRESULT CLevel_NaomiRoom::Initialize()
 	 //m_bPlayerSpawn = false;
 
 
-
+	CPlayerInfoManager::GetInstance()->Load("../Bin/Resources/SaveData/PlayerInfo.json");
+	CItem_Manager::GetInstance()->Load("../Bin/Resources/SaveData/Item.json");
 
 	m_strLevelName = L"NaomiRoom";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/NaomiRoom_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_NaomiRoom.json";
+	m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading_Naomi.json";
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
 

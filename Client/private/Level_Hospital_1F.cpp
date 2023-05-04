@@ -34,6 +34,7 @@ HRESULT CLevel_Hospital_1F::Initialize()
 	m_strLevelName = L"Hospital1F";
 	m_strShadowCamJsonPath = "";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Hospital_1F.json";
+	m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading_Hospital.json";
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
 

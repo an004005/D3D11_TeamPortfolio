@@ -58,6 +58,11 @@ void CPlayerHotFixer::Tick()
 		//	CPlayerInfoManager::GetInstance()->SetTeleportDissolve(0.f);
 		//}
 
+		if (ImGui::Button("DriveCheat"))
+		{
+			CPlayerInfoManager::GetInstance()->Set_DriveEnergy(30.f);
+		}
+
 		if (ImGui::Button("MaskEffect"))
 		{
 			CVFX_Manager::GetInstance()->GetEffect(EFFECT::EF_SAS, L"Sas_DriveMode_Effect")->Start_Attach(m_pPlayer, "Mask", true);

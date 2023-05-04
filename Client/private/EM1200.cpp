@@ -19,6 +19,7 @@
 #include "Camera_Player.h"
 #include "Player.h"
 #include "CamSpot.h"
+#include "PostVFX_ColorGrading.h"
 
 
 CEM1200::CEM1200(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -1064,6 +1065,12 @@ void CEM1200::BeginTick()
 	m_pRendererCom->SetFog(false);
 
 	m_OriginWorld = m_pTransformCom->Get_WorldMatrix();
+
+	if (auto pStartPos = CGameInstance::GetInstance()->Find_OneObjectByType<CPostVFX_ColorGrading>(LEVEL_NOW, PLAYERTEST_LAYER_POSTVFX))
+	{
+		m_pColorGrading = pStartPos;
+		m_fDefaultGrading = m_pColorGrading->GetParam().Floats[2];
+	}
 }
 
 void CEM1200::Tick(_double TimeDelta)
@@ -1365,6 +1372,11 @@ void CEM1200::FogControl(_double TimeDelta)
 					CGameManager::GetInstance()->Set_LeftTalk(89);
 				});
 		}
+
+		if (FogGlobalDensity > 0.f)
+			m_pColorGrading->GetParam().Floats[2] = 0.f;
+		else
+			m_pColorGrading->GetParam().Floats[2] = m_fDefaultGrading;
 	}
 }
 

@@ -223,10 +223,14 @@ void CEM8200_Controller::Detected_Attack()
 
 void CEM8200_Controller::Check_PlayerUseSas()
 {
-	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty() == false && m_Seethrough_CoolTimeHelper.CanUse())
+	
+	if (CPlayerInfoManager::GetInstance()->Get_PlayerSasList().empty() == false && m_Seethrough_CoolTimeHelper.CanUse() && m_pCastedOwner->IsPlayingSocket() == false)
 	{
 		if(m_Seethrough_CoolTimeHelper.Use())
+		{
+			ClearCommands();
 			AddCommand("Seethrough", 0.f, &CEM8200_Controller::Input, L);
+		}
 	}
 }
 

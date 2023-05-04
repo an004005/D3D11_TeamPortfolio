@@ -1180,7 +1180,11 @@ void CPlayer::TakeDamage(DAMAGE_PARAM tDamageParams)
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dead();
+				// øπø‹»Æ¿Œ
+				if (0.f < m_fKineticCharge)
+				{
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dead();
+				}
 			}
 
 			CAnimation* pKineticAnim = nullptr;
@@ -4379,9 +4383,20 @@ m_pKineticComboStateMachine = CFSMComponentBuilder()
 
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_KineticObject())
 			{
-				static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dead();
-				CPlayerInfoManager::GetInstance()->Set_KineticObject(nullptr);
+				/*static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dead();
+				CPlayerInfoManager::GetInstance()->Set_KineticObject(nullptr);*/
+
+
+				// ∫Ø∞Ê¡°
+
+				if (0.f < m_fKineticCharge)
+				{
+					static_cast<CMapKinetic_Object*>(CPlayerInfoManager::GetInstance()->Get_KineticObject())->Set_Dead();
+					CPlayerInfoManager::GetInstance()->Set_KineticObject(nullptr);
+				}
 			}
+
+			m_fKineticCharge = 0.f;
 
 			CPlayerInfoManager::GetInstance()->Set_KineticCharge(0.f);
 
@@ -9605,6 +9620,8 @@ HRESULT CPlayer::SetUp_IronBarsStateMachine()
 		.Tick([&](double fTimeDelta)
 		{
 			// Î™¨Ïä§??Î∞©Ìñ•?ºÎ°ú, ?åÎ†à?¥Ïñ¥ ?ÑÏπò?êÏÑú 8Í∞?Î∞©Ìñ•?ºÎ°ú ?†Ï∞Ω??Î≥¥Í∞Ñ ?ïÎ†¨
+			if (nullptr != m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")) return;
+
 			_float fRatio = m_pASM->GetSocketAnimation("Kinetic_Special_AnimSocket")->GetPlayRatio();
 			
 			if (nullptr != CPlayerInfoManager::GetInstance()->Get_TargetedMonster())

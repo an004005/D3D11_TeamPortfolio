@@ -238,7 +238,8 @@ void CRigidBody::Set_ColliderType(ECOLLIDER_TYPE eType)
 
 	m_eColliderType = eType;
 	CreateActor();
-	UpdateChange();
+	// UpdateChange();
+	Activate(true);
 }
 
 void CRigidBody::SetOriginTransform(const _float4x4& OriginMatrix)
