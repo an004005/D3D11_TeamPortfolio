@@ -273,7 +273,10 @@ HRESULT CLevel_StageDefault::Ready_Layer_Effect(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
+	if (m_strColorGradingPath.empty())
+		m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading.json";
+
+	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson(m_strColorGradingPath);
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
 
 	Json Scifi = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");

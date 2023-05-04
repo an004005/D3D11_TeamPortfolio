@@ -53,6 +53,7 @@ protected:
 	wstring m_strLevelName;
 	string m_strShadowCamJsonPath;
 	string m_strMapJsonPath;
+	string m_strColorGradingPath;
 
 	_bool m_bPlayerSpawn = true;
 

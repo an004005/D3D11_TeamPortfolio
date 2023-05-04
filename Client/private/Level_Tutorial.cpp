@@ -22,6 +22,7 @@ HRESULT CLevel_Tutorial::Initialize()
 	m_strLevelName = L"Tutorial";
 	m_strShadowCamJsonPath = "../Bin/Resources/Objects/ShadowCam/Tutorial_ShadowCam.json";
 	m_strMapJsonPath = "../Bin/Resources/Objects/Map/Map_Tutorial.json";
+	m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading_Tutorial.json";
 
 	m_BGM.CloneSound(m_MainSound); // ±âº» bgm
 
