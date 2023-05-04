@@ -118,8 +118,8 @@ HRESULT CCanvas_BrainMap::Render()
 
 	_tchar szText[MAX_PATH] = TEXT("");
 	_float2 vPosition = { 0.0f, 0.0f };
-	_float2 vFontBigSize = { 0.45f, 0.45f };
-	_float2 vFontSmaillSize = { 0.35f, 0.35f };
+	_float2 vFontBigSize = { 0.55f, 0.55f };
+	_float2 vFontSmaillSize = { 0.45f, 0.45f };
 	_float4 vColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
@@ -136,8 +136,8 @@ HRESULT CCanvas_BrainMap::Render()
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"SkillAcquisition"))->GetScreenSpaceLeftTop();
 		wsprintf(szText, TEXT("<%s>"), m_CurrentBrainInfo.szBrainName);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(130.0f, 150.0f), 0.f, vFontSmaillSize * 1.5f, vColor);
-		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(130.0f, 200.0f), 0.f, vFontSmaillSize * 1.5f, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(130.0f, 150.0f), 0.f, vFontSmaillSize * 1.2f, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", m_szAlarmText, vPosition + _float2(130.0f, 200.0f), 0.f, vFontSmaillSize * 1.2f, vColor);
 
 		vColor = { 0.488f, 0.427f, 0.384f, 1.0f };
 	}
@@ -145,18 +145,18 @@ HRESULT CCanvas_BrainMap::Render()
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"BrainExplanation_Face"))->GetScreenSpaceLeftTop();
 	PLAYER_STAT tStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
 	wsprintf(szText, TEXT("%d"), tStat.m_iHP);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 10.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"체력", vPosition + _float2(120.0f, 10.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(430.0f, 1.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"체력", vPosition + _float2(125.0f, 1.0f), 0.f, vFontSmaillSize, vColor);
 	wsprintf(szText, TEXT("%d"), tStat.iSprbrPower);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 31.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"초뇌능력", vPosition + _float2(120.0f, 31.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(430.0f, 26.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"초뇌능력", vPosition + _float2(125.0f, 26.0f), 0.f, vFontSmaillSize, vColor);
 	_int iAttack = static_cast<_int>(tStat.m_fBaseAttackDamage);
 	wsprintf(szText, TEXT("%d"), iAttack);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"공격력", vPosition + _float2(120.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(430.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"공격력", vPosition + _float2(125.0f, 52.0f), 0.f, vFontSmaillSize, vColor);
 	wsprintf(szText, TEXT("%d"), tStat.iDefense);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(385.0f, 75.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(120.0f, 75.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(430.0f, 78.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"방어력", vPosition + _float2(125.0f, 78.0f), 0.f, vFontSmaillSize, vColor);
 
 	// 마우스 커서 가 올라갔을 때 또는 클릭이 되었을 때 정보가 떠야 한다.
 	if (BRAINTYPE_END ==  m_CurrentBrainInfo.eType)
@@ -164,21 +164,21 @@ HRESULT CCanvas_BrainMap::Render()
 
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"BrainExplanation"))->GetScreenSpaceLeftTop();
 
-	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainName, vPosition + _float2(100.0f, 120.0f), 0.f, { 0.6f, 0.6f }, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[0], vPosition + _float2(100.0f, 510.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[1], vPosition + _float2(100.0f, 540.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[2], vPosition + _float2(100.0f, 570.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[3], vPosition + _float2(100.0f, 600.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainName, vPosition + _float2(100.0f, 70.0f), 0.f, { 0.7f, 0.7f }, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[0], vPosition + _float2(70.0f, 530.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[1], vPosition + _float2(70.0f, 570.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[2], vPosition + _float2(70.0f, 610.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_CurrentBrainInfo.szBrainEx[3], vPosition + _float2(70.0f, 650.0f), 0.f, vFontBigSize, vColor);
 
 	if (true == m_CurrentBrainInfo.bUse)
 	{
-		pGameInstance->Render_Font(L"Pretendard32", L"습득 완료", vPosition + _float2(100.0f, 675.0f), 0.f, vFontBigSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", L"습득 완료", vPosition + _float2(70.0f, 725.0f), 0.f, vFontBigSize, vColor);
 	}
 	else
 	{
 		// 내 현재 BP
 		wsprintf(szText, TEXT("/      %d BP"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(141.0f, 675.0f), 0.f, vFontBigSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(111.0f, 725.0f), 0.f, vFontBigSize, vColor);
 
 		if (false == m_bSkillAcquisition) // 위에 BP가 부족할 때는 무조건 위에서 지정한 색상으로 출력한다.
 		{
@@ -190,7 +190,7 @@ HRESULT CCanvas_BrainMap::Render()
 		}
 
 		wsprintf(szText, TEXT("%d"), m_CurrentBrainInfo.iBP);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(112.0f, 675.0f), 0.f, vFontBigSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(85.0f, 725.0f), 0.f, vFontBigSize, vColor);
 	}
 
 	return S_OK;
