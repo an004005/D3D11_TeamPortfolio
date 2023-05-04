@@ -76,12 +76,13 @@ private:
 
 	//무적상태
 	_bool		m_Unbeatable = false;
-
+	_int			m_iHitDamage = 0;
 
 	CController::EHandleInput	m_eInput = CController::EHandleInput::HANDLE_END;
 
 	//BC
 	_double		m_BCLoopTime = 0.0;
+	
 public:
 	static CEM0220* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg = nullptr) override;
