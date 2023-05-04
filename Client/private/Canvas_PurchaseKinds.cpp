@@ -106,13 +106,13 @@ HRESULT CCanvas_PurchaseKinds::Render()
 	// 오른쪽 상단 아이템 설명
 	_float2 vPosition = Find_ChildUI(L"Shop_ItemInfo")->GetScreenSpaceLeftTop();
 	
-	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].first.c_str(), vPosition + _float2(110.0f, 30.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[0], vPosition + _float2(35.0f, 100.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[1], vPosition + _float2(35.0f, 130.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[2], vPosition + _float2(35.0f, 160.0f), 0.f, vFontBigSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[3], vPosition + _float2(35.0f, 190.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].first.c_str(), vPosition + _float2(60.0f, 10.0f), 0.f, vFontBigSize * 1.2f, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[0], vPosition + _float2(-26.0f, 100.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[1], vPosition + _float2(-26.0f, 130.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[2], vPosition + _float2(-26.0f, 160.0f), 0.f, vFontBigSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_vecItemInfo[m_iItemIndex].second.szItemEx[3], vPosition + _float2(-26.0f, 190.0f), 0.f, vFontBigSize, vColor);
 
-	pGameInstance->Render_Font(L"Pretendard32", L"소지수", vPosition + _float2(460.0f, 55.0f ), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"소지수", vPosition + _float2(530.0f, 50.0f ), 0.f, vFontSmaillSize, vColor);
 
 	_uint iItemCount = m_vecItemInfo[m_iItemIndex].second.iCount;
 	if (iItemCount >= 10)
@@ -120,22 +120,22 @@ HRESULT CCanvas_PurchaseKinds::Render()
 	else
 		vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	wsprintf(szText, TEXT("%u"), iItemCount);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(530.0f, 55.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(606.0f, 50.0f), 0.f, vFontSmaillSize, vColor);
 
 	vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	if (m_vecItemInfo[m_iItemIndex].second.eType == CItem_Manager::MAINITEM::BATTLE)
 		wsprintf(szText, TEXT("/  %d"), 10);
 	else
 		wsprintf(szText, TEXT("/  %d"), 1);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(560.0f, 55.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(630.0f, 50.0f), 0.f, vFontSmaillSize, vColor);
 
 	// 오른쪽 하단 구매 내역
 	vPosition = Find_ChildUI(L"Shop_Payment")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"소지금", vPosition + _float2(20.0f, 11.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"구입 후 소지금", vPosition + _float2(20.0f, 41.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"소지금", vPosition + _float2(-30.0f, 5.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"구입 후 소지금", vPosition + _float2(-30.0f, 41.0f), 0.f, vFontSmaillSize, vColor);
 
 	wsprintf(szText, TEXT("%u"), CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 15.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(390.0f, 5.0f), 0.f, vFontSmaillSize * 1.2f, vColor);
 
 	_int iResult = static_cast<_int>(CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin) - (m_vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount);
 	if (0 >= iResult)
@@ -143,13 +143,13 @@ HRESULT CCanvas_PurchaseKinds::Render()
 	else
 		vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	wsprintf(szText, TEXT("%d"), iResult);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 48.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(390.0f, 41.0f), 0.f, vFontSmaillSize * 1.2f, vColor);
 
 	vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	_uint iItemValueResult = m_vecItemInfo[m_iItemIndex].second.iPrice * m_iItemCount;
 	wsprintf(szText, TEXT("%d"), iItemValueResult);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(350.0f, 82.0f), 0.f, vFontSmaillSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(20.0f, 80.0f), 0.f, vFontSmaillSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(390.0f, 85.0f), 0.f, vFontSmaillSize * 1.2f, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"구입 금액", vPosition + _float2(-30.0f, 85.0f), 0.f, vFontSmaillSize, vColor);
 
 	return S_OK;
 }

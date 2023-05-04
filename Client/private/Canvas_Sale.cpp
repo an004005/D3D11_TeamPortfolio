@@ -68,7 +68,7 @@ HRESULT CCanvas_Sale::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vFontSize = { 0.45f, 0.45f };
+	_float2 vFontSize = { 0.5f, 0.5f };
 	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -85,7 +85,7 @@ HRESULT CCanvas_Sale::Render()
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
 		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
-	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(52.0f, 8.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(50.0f, 8.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->GetScreenSpaceLeftTop();
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Shop_MenuEtc"))->Get_OnAlpha())

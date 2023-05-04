@@ -1,15 +1,302 @@
 {
     "ChildrenUI": [
         {
-            "ChildTag": "Item_List\u0000",
-            "ObjectTag": "Item_List",
+            "ChildTag": "Shop_CurrentCountButton\u0000",
+            "ObjectTag": "Shop_CurrentCountButton",
+            "Pivot": 0,
+            "PositionX": -25.0,
+            "PositionY": 260.0,
+            "Priority": 0,
+            "Prototype_GameObject": "Button_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 4,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\T_White.png\u0000"
+                ]
+            },
+            "SizeX": 45.0,
+            "SizeY": 30.0,
+            "Transform": {
+                "WorldMatrix": [
+                    45.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    30.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -25.0,
+                    260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_CurrentCount\u0000",
+            "ObjectTag": "Shop_CurrentCount",
             "Pivot": 8,
-            "PositionX": 553.0,
-            "PositionY": 341.0,
+            "PositionX": 450.0,
+            "PositionY": 260.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\Shop_CurrentWondow.png\u0000"
+                ]
+            },
+            "SizeX": 753.0,
+            "SizeY": 49.0,
+            "Transform": {
+                "WorldMatrix": [
+                    753.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    49.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -350.0,
+                    260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_CurrentWondowB\u0000",
+            "ObjectTag": "Shop_CurrentWondowB",
+            "Pivot": 8,
+            "PositionX": 450.0,
+            "PositionY": 260.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Main_PickUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.07488926500082016
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\Shop_CurrentWondowB.png\u0000"
+                ]
+            },
+            "SizeX": 753.0,
+            "SizeY": 49.0,
+            "Transform": {
+                "WorldMatrix": [
+                    753.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    49.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    -350.0,
+                    260.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ItemIcon\u0000",
+            "ObjectTag": "Shop_ItemIcon",
+            "Pivot": 4,
+            "PositionX": -641.0,
+            "PositionY": 270.0,
+            "Priority": 2,
+            "Prototype_GameObject": "ItemIconUI\u0000",
+            "ScaleX": 1.5,
+            "ScaleY": 1.5,
+            "ShaderParams": {
+                "Float2s": [
+                    [
+                        1.0,
+                        0.0
+                    ],
+                    [
+                        5.0,
+                        7.0
+                    ]
+                ],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 13,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Front_UI\\160.224.32.32.5.7.png\u0000"
+                ]
+            },
+            "SizeX": 32.0,
+            "SizeY": 32.0,
+            "Transform": {
+                "WorldMatrix": [
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    48.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    159.0,
+                    270.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ItemInfo\u0000",
+            "ObjectTag": "Shop_ItemInfo",
+            "Pivot": 4,
+            "PositionX": -380.0,
+            "PositionY": 200.0,
             "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.2000000476837158,
-            "ScaleY": 1.2000000476837158,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 30,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\Shop_ItemInfo.png\u0000"
+                ]
+            },
+            "SizeX": 660.0,
+            "SizeY": 249.0,
+            "Transform": {
+                "WorldMatrix": [
+                    660.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    249.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    420.0,
+                    200.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_ItemInfoB\u0000",
+            "ObjectTag": "Shop_ItemInfoB",
+            "Pivot": 4,
+            "PositionX": -380.0,
+            "PositionY": 200.0,
+            "Priority": 1,
+            "Prototype_GameObject": "Default_UI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
+            "ShaderParams": {
+                "Float2s": [],
+                "Float4s": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ]
+                ],
+                "Float4x4s": [],
+                "Floats": [],
+                "Ints": [],
+                "Pass": 31,
+                "Textures": [
+                    "..\\Bin\\Resources\\UI\\Shop\\Shop_ItemInfoB.png\u0000"
+                ]
+            },
+            "SizeX": 660.0,
+            "SizeY": 249.0,
+            "Transform": {
+                "WorldMatrix": [
+                    660.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    249.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    420.0,
+                    200.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ChildTag": "Shop_LeftArrow\u0000",
+            "ObjectTag": "Shop_LeftArrow",
+            "Pivot": 0,
+            "PositionX": -60.0,
+            "PositionY": 260.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Item_LeftArrowUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -18,14 +305,14 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Shop\\Shop_List.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Shop\\Arrow_Left.png\u0000"
                 ]
             },
-            "SizeX": 747.0,
-            "SizeY": 20.0,
+            "SizeX": 16.0,
+            "SizeY": 24.0,
             "Transform": {
                 "WorldMatrix": [
-                    896.4000244140625,
+                    16.0,
                     0.0,
                     0.0,
                     0.0,
@@ -37,23 +324,23 @@
                     0.0,
                     1.0,
                     0.0,
-                    -407.0,
-                    341.0,
+                    -60.0,
+                    260.0,
                     0.0,
                     1.0
                 ]
             }
         },
         {
-            "ChildTag": "Left_Q\u0000",
-            "ObjectTag": "Left_Q",
-            "Pivot": 2,
-            "PositionX": -850.0,
-            "PositionY": -141.0,
-            "Priority": 1,
+            "ChildTag": "Shop_Payment\u0000",
+            "ObjectTag": "Shop_Payment",
+            "Pivot": 4,
+            "PositionX": -272.0,
+            "PositionY": -240.0,
+            "Priority": 0,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.2000000476837158,
-            "ScaleY": 1.2000000476837158,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -62,42 +349,42 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Shop\\Left_Q.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Shop\\IItemPayment.png\u0000"
                 ]
             },
-            "SizeX": 58.0,
-            "SizeY": 35.0,
+            "SizeX": 445.0,
+            "SizeY": 118.0,
             "Transform": {
                 "WorldMatrix": [
-                    69.60000610351563,
+                    445.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    42.0,
+                    118.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -850.0,
-                    399.0,
+                    528.0,
+                    -240.0,
                     0.0,
                     1.0
                 ]
             }
         },
         {
-            "ChildTag": "Right_E\u0000",
-            "ObjectTag": "Rihgt_E",
-            "Pivot": 2,
-            "PositionX": -166.0,
-            "PositionY": -144.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.2000000476837158,
-            "ScaleY": 1.2000000476837158,
+            "ChildTag": "Shop_RightArrow\u0000",
+            "ObjectTag": "Shop_RightArrow",
+            "Pivot": 0,
+            "PositionX": 12.0,
+            "PositionY": 260.0,
+            "Priority": 3,
+            "Prototype_GameObject": "Item_RightArrowUI\u0000",
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -106,324 +393,39 @@
                 "Ints": [],
                 "Pass": 0,
                 "Textures": [
-                    "..\\Bin\\Resources\\UI\\Shop\\Right_E.png\u0000"
+                    "..\\Bin\\Resources\\UI\\Shop\\Arrow_Rihgt.png\u0000"
                 ]
             },
-            "SizeX": 57.0,
-            "SizeY": 35.0,
+            "SizeX": 16.0,
+            "SizeY": 24.0,
             "Transform": {
                 "WorldMatrix": [
-                    68.4000015258789,
+                    16.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    42.0,
+                    24.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -166.0,
-                    396.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_KeyInfo\u0000",
-            "ObjectTag": "Shop_KeyInfo",
-            "Pivot": 6,
-            "PositionX": 709.0,
-            "PositionY": 81.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.100000023841858,
-            "ScaleY": 1.100000023841858,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 0,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Shop\\Shop_KeyInfo.png\u0000"
-                ]
-            },
-            "SizeX": 258.0,
-            "SizeY": 28.0,
-            "Transform": {
-                "WorldMatrix": [
-                    283.78582763671875,
-                    -2.8379526138305664,
-                    0.0,
-                    0.0,
-                    0.3079948425292969,
-                    30.7984619140625,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    709.0,
-                    -459.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_MenuAll\u0000",
-            "ObjectTag": "Shop_MenuAll",
-            "Pivot": 2,
-            "PositionX": -709.0,
-            "PositionY": -140.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Main_PickUI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [
-                    [
-                        0.27000001072883606,
-                        0.25,
-                        0.20000000298023224,
-                        0.05122421681880951
-                    ]
-                ],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 31,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Item\\Item_MenuAll.png\u0000"
-                ]
-            },
-            "SizeX": 200.0,
-            "SizeY": 40.0,
-            "Transform": {
-                "WorldMatrix": [
-                    200.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    40.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -709.0,
-                    400.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_MenuBattle\u0000",
-            "ObjectTag": "Shop_MenuBattle",
-            "Pivot": 2,
-            "PositionX": -509.0,
-            "PositionY": -143.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Main_PickUI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [
-                    [
-                        0.27000001072883606,
-                        0.25,
-                        0.20000000298023224,
-                        0.10000000149011612
-                    ]
-                ],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 31,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Item\\Item_MenuBattle.png\u0000"
-                ]
-            },
-            "SizeX": 200.0,
-            "SizeY": 40.0,
-            "Transform": {
-                "WorldMatrix": [
-                    199.989990234375,
-                    -1.9999663829803467,
-                    0.0,
-                    0.0,
-                    0.399993360042572,
-                    39.99800109863281,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -509.0,
-                    397.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_MenuEtc\u0000",
-            "ObjectTag": "Shop_MenuEtc",
-            "Pivot": 2,
-            "PositionX": -305.0,
-            "PositionY": -145.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Main_PickUI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [
-                    [
-                        0.27000001072883606,
-                        0.25,
-                        0.20000000298023224,
-                        0.10000000149011612
-                    ]
-                ],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 31,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Item\\Item_MenuEtc.png\u0000"
-                ]
-            },
-            "SizeX": 200.0,
-            "SizeY": 40.0,
-            "Transform": {
-                "WorldMatrix": [
-                    200.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    40.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -305.0,
-                    395.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_MenuLine0\u0000",
-            "ObjectTag": "Shop_MenuLine0",
-            "Pivot": 2,
-            "PositionX": -609.0,
-            "PositionY": -140.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 30,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Item\\Item_MenuLine.png\u0000"
-                ]
-            },
-            "SizeX": 5.0,
-            "SizeY": 29.0,
-            "Transform": {
-                "WorldMatrix": [
-                    5.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    29.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -609.0,
-                    400.0,
-                    0.0,
-                    1.0
-                ]
-            }
-        },
-        {
-            "ChildTag": "Shop_MenuLine1\u0000",
-            "ObjectTag": "Shop_MenuLine1",
-            "Pivot": 2,
-            "PositionX": -406.0,
-            "PositionY": -143.0,
-            "Priority": 1,
-            "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 1.0,
-            "ScaleY": 1.0,
-            "ShaderParams": {
-                "Float2s": [],
-                "Float4s": [],
-                "Float4x4s": [],
-                "Floats": [],
-                "Ints": [],
-                "Pass": 30,
-                "Textures": [
-                    "..\\Bin\\Resources\\UI\\Main_UI\\Item\\Item_MenuLine.png\u0000"
-                ]
-            },
-            "SizeX": 5.0,
-            "SizeY": 29.0,
-            "Transform": {
-                "WorldMatrix": [
-                    5.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    29.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0,
-                    0.0,
-                    -406.0,
-                    397.0,
+                    12.0,
+                    260.0,
                     0.0,
                     1.0
                 ]
             }
         }
     ],
-    "ObjectTag": "Canvas_Sale",
+    "ObjectTag": "Canvas_SaleKinds",
     "Pivot": 0,
     "PositionX": 0.0,
     "PositionY": 0.0,
     "Priority": 0,
-    "Prototype_GameObject": "Canvas_Sale\u0000",
+    "Prototype_GameObject": "Canvas_SaleKinds\u0000",
     "ScaleX": 0.5,
     "ScaleY": 0.5,
     "ShaderParams": {
@@ -435,8 +437,8 @@
         "Pass": 0,
         "Textures": []
     },
-    "SizeX": 1920.0,
-    "SizeY": 1080.0,
+    "SizeX": 1600.0,
+    "SizeY": 900.0,
     "Transform": {
         "WorldMatrix": [
             0.0,

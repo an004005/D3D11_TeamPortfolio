@@ -30,7 +30,7 @@ HRESULT CMain_BarUI::Initialize(void * pArg)
 
 void CMain_BarUI::Tick(_double TimeDelta)
 {
-	if (false == m_bVisible) return;
+	if (false == m_bVisible) return;	
 	
 	__super::Tick(TimeDelta);
 }

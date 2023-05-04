@@ -69,7 +69,7 @@ HRESULT CCanvas_MainItem::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vFontSize = { 0.45f, 0.45f };
+	_float2 vFontSize = { 0.5f, 0.5f };
 	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -86,7 +86,7 @@ HRESULT CCanvas_MainItem::Render()
 		vColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	else
 		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
-	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(55.0f, 8.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"배틀 아이템", vPosition + _float2(47.0f, 8.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->GetScreenSpaceLeftTop();
 	if (true == dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"Item_MenuWeapon"))->Get_OnAlpha())
@@ -116,7 +116,7 @@ HRESULT CCanvas_MainItem::Render()
 		dynamic_cast<CItemIconUI*>(Find_ChildUI(L"Item_Icon"))->Set_IconIndex(ItemInfo[i].second.vIconIndex);
 
 		vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Item_ItemInfo"))->GetScreenSpaceLeftTop();
-		pGameInstance->Render_Font(L"Pretendard32", ItemInfo[i].first.c_str(), vPosition + _float2(215.0f, 35.0f), 0.f, { 0.6f, 0.6f }, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", ItemInfo[i].first.c_str(), vPosition + _float2(120.0f, 30.0f), 0.f, { 0.6f, 0.6f }, vColor);
 
 		// 아이템 설명
 		pGameInstance->Render_Font(L"Pretendard32", ItemInfo[i].second.szItemEx[0], vPosition + _float2(743.0f, 39.0f), 0.f, vFontSize, vColor);
@@ -126,16 +126,16 @@ HRESULT CCanvas_MainItem::Render()
 
 		// 소지 수
 		_tchar szText[MAX_PATH] = TEXT("");
-		pGameInstance->Render_Font(L"Pretendard32", L"소지 수", vPosition + _float2(560.0f, 77.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", L"소지 수", vPosition + _float2(550.0f, 70.0f), 0.f, vFontSize, vColor);
 		if (ItemInfo[i].second.iCount == ItemInfo[i].second.iMaxCount)
 			vColor = { 1.0f, 0.458f, 0.38f, 1.0f };
 		else
 			vColor = { 1.0f, 0.99f, 0.87f, 1.0f }; 
 		wsprintf(szText, TEXT("%d"), ItemInfo[i].second.iCount);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(632.0f, 77.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(630.0f, 70.0f), 0.f, vFontSize, vColor);
 		vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 		wsprintf(szText, TEXT("/ %d"), ItemInfo[i].second.iMaxCount);
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(662.0f, 77.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(660.0f, 70.0f), 0.f, vFontSize, vColor);
 	}
 
 	return S_OK;

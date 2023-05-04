@@ -58,14 +58,14 @@ HRESULT CCanvas_ItemWindow::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vFontSize = { 0.45f, 0.45f };
+	_float2 vFontSize = { 0.5f, 0.5f };
 	_float4 vColor = { 1.0f, 0.99f, 0.87f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	pair<wstring, CItem_Manager::ITEMINFO> ItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
 
 	// 아이템 이름
 	_float2 vPosition = Find_ChildUI(L"Itme_B")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", ItemInfo.first.c_str(), vPosition + _float2(100.0f, 17.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", ItemInfo.first.c_str(), vPosition + _float2(70.0f, 17.0f), 0.f, vFontSize, vColor);
 
 	// 아이템 개수
 	_float	fMinusPosition;
@@ -83,9 +83,9 @@ HRESULT CCanvas_ItemWindow::Render()
 	_tchar szText[MAX_PATH] = TEXT("");
 	wsprintf(szText, TEXT("%d"), ItemInfo.second.iCount);
 	if(CItem_Manager::MAINITEM::BATTLE == ItemInfo.second.eType)
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f - fMinusPosition, 17.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(617.0f - fMinusPosition, 17.0f), 0.f, vFontSize, vColor);
 	else
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f, 17.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(617.0f, 17.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }

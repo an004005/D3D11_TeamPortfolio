@@ -102,24 +102,25 @@ HRESULT CCanvas_Main::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"브레인 맵", vPosition + _float2(62.0f, 20.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Main_Menu_B"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(140.0f, 41.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(315.0f, 41.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(485.0f, 38.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(660.0f, 35.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(95.0f, 40.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(300.0f, 39.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(500.0f, 37.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"???", vPosition + _float2(705.0f, 35.0f), 0.f, vFontSize, vColor);
 
 	// 하단
+	vFontSize = { 0.6f, 0.6f };
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Main_BasicInfo"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", m_szManuText, vPosition + _float2(170.0f, 38.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_szManuText, vPosition + _float2(50.0f, 35.0f), 0.f, vFontSize, vColor);
 
 	_tchar szText[MAX_PATH] = TEXT("");
 	PLAYER_STAT tPlayerStat = CPlayerInfoManager::GetInstance()->Get_PlayerStat();
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iBP);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1260.0f, 34.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1215.0f, 34.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1330.0f, 32.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"BP", vPosition + _float2(1275.0f, 32.0f), 0.f, vFontSize, vColor);
 
 	wsprintf(szText, TEXT("%d"), tPlayerStat.iCoin);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1420.0f, 36.0f), 0.f, vFontSize, vColor);
-	pGameInstance->Render_Font(L"Pretendard32", L"K", vPosition + _float2(1350.0f, 36.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1520.0f, 35.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"K", vPosition + _float2(1430.0f, 34.0f), 0.f, vFontSize, vColor);
 
 	wsprintf(szText, TEXT("%f"), g_fTimeDelta_Add);
 	_int iHours = static_cast<int>(g_fTimeDelta_Add / 3600); // 시
@@ -127,20 +128,20 @@ HRESULT CCanvas_Main::Render()
 	_int iSeconds = static_cast<int>(g_fTimeDelta_Add - iHours * 3600 - iMinutes * 60); // 초
 
 	if(10 > iHours)
-		wsprintf(szText, TEXT("0%d :"), iHours);
+		wsprintf(szText, TEXT("0%d:"), iHours);
 	else
-		wsprintf(szText, TEXT("%d :"), iHours);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1525.0f, 39.0f), 0.f, vFontSize, vColor);
+		wsprintf(szText, TEXT("%d:"), iHours);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1640.0f, 36.0f), 0.f, vFontSize, vColor);
 	if (10 > iMinutes)
-		wsprintf(szText, TEXT("0%d :"), iMinutes);
+		wsprintf(szText, TEXT("0%d:"), iMinutes);
 	else
-		wsprintf(szText, TEXT("%d :"), iMinutes);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1570.0f, 39.5f), 0.f, vFontSize, vColor);
+		wsprintf(szText, TEXT("%d:"), iMinutes);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1680.0f, 36.5f), 0.f, vFontSize, vColor);
 	if (10 > iSeconds)
 		wsprintf(szText, TEXT("0%d"), iSeconds);
 	else
 		wsprintf(szText, TEXT("%d"), iSeconds);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1610.0f, 40.5f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(1720.0f, 37.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }
