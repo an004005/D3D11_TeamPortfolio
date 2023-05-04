@@ -40,9 +40,10 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 
 	if (false == m_bCooldownTimeStart) return;
 
+	_float fSpeed = 0.2f;
 	if (true == m_fRatioDown)	// 감소 true
 	{
-		m_fRatio -= _float(TimeDelta) * 0.1f;
+		m_fRatio -= _float(TimeDelta) * fSpeed;
 		m_bLight = true;
 
 		if (0.0f > m_fRatio)
@@ -50,7 +51,7 @@ void CItem_GaugeUI::Tick(_double TimeDelta)
 	}
 	else										 // 증가 false
 	{
-		m_fRatio += _float(TimeDelta) * 0.1f;
+		m_fRatio += _float(TimeDelta) * fSpeed;
 		m_bLight = false;
 
 		if (1.0f < m_fRatio)

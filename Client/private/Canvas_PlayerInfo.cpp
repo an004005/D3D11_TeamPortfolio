@@ -55,25 +55,24 @@ HRESULT CCanvas_PlayerInfo::Render()
 		return E_FAIL;
 
 	_float2 vPosition = Find_ChildUI(L"PlayerInfo_GaugeBack")->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(30.0f, 77.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"유이토 스메라기", vPosition + _float2(-20.0f, 77.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	_uint iPlayerHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iHP;
 	_uint iPlayerMaxHp = CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxHP;
 	_tchar szChildTag[MAX_PATH] = TEXT("");
-
 	if (1000 <= iPlayerHp)
 	{
 		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(300.0f, 33.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(315.0f, 33.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(353.0f, 36.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(380.0f, 38.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 	else
 	{
 		wsprintf(szChildTag, TEXT("%u"), iPlayerHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(320.0f, 34.0f), 0.f, { 0.45f, 0.45f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(340.0f, 33.0f), 0.f, { 0.55f, 0.55f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 		wsprintf(szChildTag, TEXT("/%u"), iPlayerMaxHp);
-		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(360.0f, 37.0f), 0.f, { 0.35f, 0.35f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+		CGameInstance::GetInstance()->Render_Font(L"Pretendard32", szChildTag, vPosition + _float2(390.0f, 38.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 	}
 
 	return S_OK;

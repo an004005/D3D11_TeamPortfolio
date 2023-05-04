@@ -22,6 +22,10 @@ public:
 	virtual void	Imgui_RenderProperty() override;
 
 public:
+	void	Set_Gauge(const _bool	bFull) {
+		m_bFullGauge = bFull;
+	}
+
 	void	Set_Input() {
 		m_bInput = true;
 	}
@@ -52,6 +56,8 @@ private:
 	size_t	m_iCurrentIndex = { 0 };
 	_bool	m_bInput = { false };
 	_bool	m_bBattleItmeEmpty = { false };
+
+	_bool	m_bFullGauge = { false };
 
 public:
 	static CCanvas_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

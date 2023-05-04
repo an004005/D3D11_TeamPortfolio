@@ -35,6 +35,10 @@ public:
 		m_bOpenShop = true;
 	}
 
+	_bool Get_BeSeen() {
+		return m_bShopUI;
+	}
+
 private:
 	HRESULT	Add_MainCanvas();
 

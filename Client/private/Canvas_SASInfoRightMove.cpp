@@ -42,6 +42,14 @@ HRESULT CCanvas_SASInfoRightMove::Initialize(void* pArg)
 	for (map<wstring, CUI*>::iterator iter = m_mapChildUIs.begin(); iter != m_mapChildUIs.end(); ++iter)
 		iter->second->SetVisible(false);
 
+	_float fHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iHP);
+	_float fMaxHp = static_cast<_float>(CPlayerInfoManager::GetInstance()->Get_TsugumiStat().iMaxHP);
+	m_fHPRatio = fHp / fMaxHp;
+
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack0"))->Set_CurrentHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack1"))->Set_CurrentHp(m_fHPRatio);
+	dynamic_cast<CSASInfoRightHpBackUI*>(Find_ChildUI(L"SASInfoRight_HpBack2"))->Set_CurrentHp(m_fHPRatio);
+
 	return S_OK;
 }
 

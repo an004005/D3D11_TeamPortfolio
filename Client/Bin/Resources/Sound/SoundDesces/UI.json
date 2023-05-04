@@ -253,6 +253,39 @@
             "Loop": false,
             "MinDistance": 2.0,
             "MaxDistance": 30.0
+        },
+        {
+            "Name": "UI_kine_object_popup",
+            "SoundFiles": [
+                "UI/UI_kine_object_popup.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "UI_item_achive",
+            "SoundFiles": [
+                "UI/UI_item_achive.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
+        },
+        {
+            "Name": "UI_fx_debuff",
+            "SoundFiles": [
+                "UI/UI_fx_debuff.wav"
+            ],
+            "2DSound": true,
+            "Volume": 1,
+            "Loop": false,
+            "MinDistance": 2.0,
+            "MaxDistance": 30.0
         }
     ]
 }

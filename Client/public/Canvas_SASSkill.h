@@ -36,9 +36,9 @@ private:
 	_bool			m_bMember0 = { false };
 	_bool			m_bMember1 = { false };
 
-	//_bool			m_bCtrl = { false };
-	//_bool			m_bAlt = { false };
-	//_bool			m_bKeyInput[2] = { false };			// [0]Ctrl, [1]Alt 이 동시에 눌리지 않도록 하기 위해서
+	// 1234 / 567  -> 이 안에서 바뀔 때는 X가 보이지 않고, 서로의 bool 값이 다른 경우에만 X 를 보이게 한다.
+	_bool			m_bX = { false };						
+	_bool			m_bPreX = { false };				
 
 public:
 	static CCanvas_SASSkill* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

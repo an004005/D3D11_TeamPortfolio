@@ -4,20 +4,20 @@
             "ChildTag": "Item_Gauge\u0000",
             "ObjectTag": "Item_Gauge",
             "Pivot": 7,
-            "PositionX": 179.5,
-            "PositionY": 134.0,
+            "PositionX": 249.5,
+            "PositionY": 149.0,
             "Priority": 2,
             "Prototype_GameObject": "Item_GaugeUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.5912964940071106,
-                        0.9128788113594055,
-                        0.598605215549469,
-                        0.0
+                        0.6000000238418579,
+                        1.0,
+                        0.6000000238418579,
+                        1.0
                     ]
                 ],
                 "Float4x4s": [],
@@ -36,20 +36,20 @@
             "SizeY": 74.0,
             "Transform": {
                 "WorldMatrix": [
-                    64.5999984741211,
+                    76.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    62.900001525878906,
+                    74.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -620.5,
-                    -316.0,
+                    -710.5,
+                    -391.0,
                     0.0,
                     1.0
                 ]
@@ -59,20 +59,20 @@
             "ChildTag": "Item_GaugeBack\u0000",
             "ObjectTag": "Item_GaugeBack",
             "Pivot": 7,
-            "PositionX": 179.5,
-            "PositionY": 134.0,
+            "PositionX": 249.5,
+            "PositionY": 149.0,
             "Priority": 1,
             "Prototype_GameObject": "Item_GaugeUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.511880099773407,
+                        0.5,
                         1.0,
-                        0.3863636255264282,
-                        0.0
+                        0.4000000059604645,
+                        1.0
                     ]
                 ],
                 "Float4x4s": [],
@@ -91,20 +91,20 @@
             "SizeY": 74.0,
             "Transform": {
                 "WorldMatrix": [
-                    64.5999984741211,
+                    76.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    62.900001525878906,
+                    74.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -620.5,
-                    -316.0,
+                    -710.5,
+                    -391.0,
                     0.0,
                     1.0
                 ]
@@ -114,12 +114,12 @@
             "ChildTag": "Item_LeftArrow\u0000",
             "ObjectTag": "Item_LeftArrow",
             "Pivot": 7,
-            "PositionX": 133.0,
-            "PositionY": 134.0,
+            "PositionX": 198.0,
+            "PositionY": 146.0,
             "Priority": 1,
             "Prototype_GameObject": "Item_LeftArrowUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -135,20 +135,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -667.0,
-                    -316.0,
+                    -762.0,
+                    -394.0,
                     0.0,
                     1.0
                 ]
@@ -158,19 +158,19 @@
             "ChildTag": "Item_PushArrow\u0000",
             "ObjectTag": "Item_PushArrow",
             "Pivot": 7,
-            "PositionX": 180.0,
+            "PositionX": 247.0,
             "PositionY": 66.0,
             "Priority": 1,
             "Prototype_GameObject": "Item_PushArrowUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.814393937587738,
+                        0.6000000238418579,
                         1.0,
-                        0.8481404781341553,
+                        0.6000000238418579,
                         1.0
                     ]
                 ],
@@ -190,20 +190,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -620.0,
-                    -384.0,
+                    -713.0,
+                    -474.0,
                     0.0,
                     1.0
                 ]
@@ -213,20 +213,20 @@
             "ChildTag": "Item_PushArrowBack\u0000",
             "ObjectTag": "Item_PushArrowBack",
             "Pivot": 7,
-            "PositionX": 180.0,
+            "PositionX": 247.0,
             "PositionY": 66.0,
             "Priority": 0,
             "Prototype_GameObject": "Item_PushArrowUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
                     [
-                        0.39136460423469543,
-                        0.7992424368858337,
-                        0.3390725553035736,
-                        0.0
+                        0.5,
+                        1.0,
+                        0.4000000059604645,
+                        1.0
                     ]
                 ],
                 "Float4x4s": [],
@@ -242,20 +242,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -620.0,
-                    -384.0,
+                    -713.0,
+                    -474.0,
                     0.0,
                     1.0
                 ]
@@ -265,12 +265,12 @@
             "ChildTag": "Item_RightArrow\u0000",
             "ObjectTag": "Item_RightArrow",
             "Pivot": 7,
-            "PositionX": 226.0,
-            "PositionY": 136.0,
+            "PositionX": 301.0,
+            "PositionY": 151.0,
             "Priority": 1,
             "Prototype_GameObject": "Item_RightArrowUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -286,20 +286,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    -574.0,
-                    -314.0,
+                    -659.0,
+                    -389.0,
                     0.0,
                     1.0
                 ]
@@ -323,8 +323,8 @@
         "Pass": 0,
         "Textures": []
     },
-    "SizeX": 1600.0,
-    "SizeY": 900.0,
+    "SizeX": 1920.0,
+    "SizeY": 1080.0,
     "Transform": {
         "WorldMatrix": [
             0.0,

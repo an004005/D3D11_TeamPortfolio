@@ -87,11 +87,11 @@ HRESULT CCanvas_Shop::Render()
 	pGameInstance->Render_Font(L"Pretendard32", L"구입", vPosition + _float2(80.0f, 19.0f), 0.f, vFontSize, vColor);
 
 	vPosition = dynamic_cast<CMain_PickUI*>(Find_ChildUI(L"ShopButton_Sale"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", L"매각", vPosition + _float2(85.0f, 20.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", L"매각", vPosition + _float2(83.0f, 20.0f), 0.f, vFontSize, vColor);
 
 	// 하단
 	vPosition = dynamic_cast<CDefaultUI*>(Find_ChildUI(L"Shop_BasicInfo"))->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", m_szShopText, vPosition + _float2(170.0f, 38.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", m_szShopText, vPosition + _float2(50.0f, 38.0f), 0.f, vFontSize * 1.1f, vColor);
 
 	return S_OK;
 }

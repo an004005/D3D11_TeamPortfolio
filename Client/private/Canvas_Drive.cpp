@@ -57,7 +57,7 @@ HRESULT CCanvas_Drive::Render()
 		return E_FAIL;
 
 	_float2 vPosition = Find_ChildUI(L"Drive_BackGround")->GetScreenSpaceLeftTop();
-	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(40.0f, 97.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
+	CGameInstance::GetInstance()->Render_Font(L"Pretendard32", L"DRIVE", vPosition + _float2(37.0f, 100.0f), 0.f, { 0.4f, 0.4f }, { 1.0f, 0.99f, 0.87f, 1.0f });
 
 	return S_OK;
 }

@@ -61,14 +61,14 @@ HRESULT CCanvas_ShopListBar::Render()
 	if (FAILED(CUI::Render()))
 		return E_FAIL;
 
-	_float2 vFontSize = { 0.45f, 0.45f };
+	_float2 vFontSize = { 0.5f, 0.5f };
 	_float4 vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	pair<wstring, CItem_Manager::ITEMINFO> tItemInfo = CItem_Manager::GetInstance()->Get_ItmeInfo()[m_iItemInfoIndex];
 
 	// 아이템 이름
 	_float2 vPosition = Find_ChildUI(L"Shop_WondowB")->GetScreenSpaceLeftTop();
-	pGameInstance->Render_Font(L"Pretendard32", tItemInfo.first.c_str(), vPosition + _float2(50.0f, 13.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", tItemInfo.first.c_str(), vPosition + _float2(0.0f, 13.0f), 0.f, vFontSize, vColor);
 
 	// 소지수 (if 빨간색, else 일반색)
 	_float	fMinusPosition;
@@ -86,9 +86,9 @@ HRESULT CCanvas_ShopListBar::Render()
 	_tchar szText[MAX_PATH] = TEXT("");
 	wsprintf(szText, TEXT("%d"), tItemInfo.second.iCount);
 	if (CItem_Manager::MAINITEM::BATTLE == tItemInfo.second.eType)
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(510.0f - fMinusPosition, 13.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(537.0f - fMinusPosition, 13.0f), 0.f, vFontSize, vColor);
 	else
-		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(510.0f, 13.0f), 0.f, vFontSize, vColor);
+		pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(537.0f, 13.0f), 0.f, vFontSize, vColor);
 	
 	vColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// 금액 m_iPrice
@@ -96,11 +96,11 @@ HRESULT CCanvas_ShopListBar::Render()
 		wsprintf(szText, TEXT("%u"), tItemInfo.second.iPrice);
 	else
 		wsprintf(szText, TEXT("%u"), tItemInfo.second.iSellingPrice);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(580.0f, 13.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(620.0f, 13.0f), 0.f, vFontSize, vColor);
 	
 	// 개수
 	wsprintf(szText, TEXT("%u"), m_iNmberPurchases);
-	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(692.0f, 13.0f), 0.f, vFontSize, vColor);
+	pGameInstance->Render_Font(L"Pretendard32", szText, vPosition + _float2(753.0f, 13.0f), 0.f, vFontSize, vColor);
 
 	return S_OK;
 }

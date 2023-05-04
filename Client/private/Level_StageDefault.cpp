@@ -106,18 +106,18 @@ void CLevel_StageDefault::Tick(_double TimeDelta)
 		}
 	}
 
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F1))
-	{
-		CPlayerInfoManager::GetInstance()->Set_Exp(85);
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F2))
-	{
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += 25;
-	}
-	if (CGameInstance::GetInstance()->KeyDown(DIK_F3))
-	{
-		CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP += 25;
-	}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F1))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Set_Exp(85);
+	//}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F2))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iCoin += 25;
+	//}
+	//if (CGameInstance::GetInstance()->KeyDown(DIK_F3))
+	//{
+	//	CPlayerInfoManager::GetInstance()->Get_PlayerStat().iBP += 25;
+	//}
 }
 
 HRESULT CLevel_StageDefault::Render()
@@ -203,8 +203,11 @@ HRESULT CLevel_StageDefault::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
+	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
+	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
+
 	// Frount_UI Canvas_FrontUI 
-	Json json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
+	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_Item.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Item", &json));
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_ItemMove.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_ItemMove", &json));
@@ -240,9 +243,6 @@ HRESULT CLevel_StageDefault::Ready_Layer_UI(const _tchar* pLayerTag)
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_Shop", &json));
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_WorldMap.json");
 	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_WorldMap", &json));
-
-	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/Canvas_MouseCousor.json");
-	FAILED_CHECK(pGameInstance->Clone_GameObject(pLayerTag, L"Canvas_MouseCousor", &json));
 	
 	// UI
 	json = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/UI/UI_PositionData/HPlossUI.json");
@@ -273,7 +273,10 @@ HRESULT CLevel_StageDefault::Ready_Layer_Effect(const _tchar* pLayerTag)
 {
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 
-	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/ColorGrading.json");
+	if (m_strColorGradingPath.empty())
+		m_strColorGradingPath = "../Bin/Resources/VFX/PostVFX/ColorGrading.json";
+
+	Json ColorGrading = CJsonStorage::GetInstance()->FindOrLoadJson(m_strColorGradingPath);
 	pGameInstance->Clone_GameObject(L"Layer_PostVFX", L"Prototype_PostVFX_ColorGrading", &ColorGrading);
 
 	Json Scifi = CJsonStorage::GetInstance()->FindOrLoadJson("../Bin/Resources/VFX/PostVFX/Scifi/Scifi_PostVFX.json");

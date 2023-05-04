@@ -4,12 +4,12 @@
             "ChildTag": "Dirve_RightDot\u0000",
             "ObjectTag": "Dirve_RightDot",
             "Pivot": 6,
-            "PositionX": 246.0,
+            "PositionX": 287.0,
             "PositionY": 78.0,
             "Priority": 1,
             "Prototype_GameObject": "Shader_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
@@ -22,7 +22,7 @@
                 ],
                 "Float4x4s": [],
                 "Floats": [
-                    0.0,
+                    1.0499999523162842,
                     0.07999999821186066
                 ],
                 "Ints": [
@@ -39,20 +39,20 @@
             "SizeY": 60.0,
             "Transform": {
                 "WorldMatrix": [
-                    17.0,
+                    20.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    51.0,
+                    60.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    246.0,
-                    -372.0,
+                    287.0,
+                    -462.0,
                     0.0,
                     1.0
                 ]
@@ -62,12 +62,12 @@
             "ChildTag": "Dirve_RightDotFull\u0000",
             "ObjectTag": "Dirve_RightDotFull",
             "Pivot": 6,
-            "PositionX": 246.0,
+            "PositionX": 287.0,
             "PositionY": 78.0,
             "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -83,20 +83,20 @@
             "SizeY": 60.0,
             "Transform": {
                 "WorldMatrix": [
-                    17.0,
+                    20.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    51.0,
+                    60.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    246.0,
-                    -372.0,
+                    287.0,
+                    -462.0,
                     0.0,
                     1.0
                 ]
@@ -106,12 +106,12 @@
             "ChildTag": "Drive_Gauge\u0000",
             "ObjectTag": "Drive_Gauge",
             "Pivot": 6,
-            "PositionX": 220.60000610351563,
+            "PositionX": 258.0,
             "PositionY": 78.0,
             "Priority": 2,
             "Prototype_GameObject": "Drive_GaugeUI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.800000011920929,
+            "ScaleX": 0.949999988079071,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
@@ -138,20 +138,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    27.200000762939453,
+                    30.399999618530273,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    51.20000076293945,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    220.60000610351563,
-                    -372.0,
+                    258.0,
+                    -462.0,
                     0.0,
                     1.0
                 ]
@@ -161,12 +161,12 @@
             "ChildTag": "Drive_GaugeBack\u0000",
             "ObjectTag": "Drive_GaugeBack",
             "Pivot": 6,
-            "PositionX": 221.0,
+            "PositionX": 258.0,
             "PositionY": 78.0,
             "Priority": 1,
             "Prototype_GameObject": "Drive_GaugeUI\u0000",
-            "ScaleX": 0.800000011920929,
-            "ScaleY": 0.800000011920929,
+            "ScaleX": 0.949999988079071,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [
@@ -193,20 +193,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    25.600000381469727,
+                    30.399999618530273,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    51.20000076293945,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    221.0,
-                    -372.0,
+                    258.0,
+                    -462.0,
                     0.0,
                     1.0
                 ]
@@ -216,12 +216,12 @@
             "ChildTag": "Drive_LeftDot\u0000",
             "ObjectTag": "Dirve_LeftDot",
             "Pivot": 6,
-            "PositionX": 202.3000030517578,
+            "PositionX": 236.3000030517578,
             "PositionY": 78.0,
             "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -242,20 +242,20 @@
             "SizeY": 62.0,
             "Transform": {
                 "WorldMatrix": [
-                    5.950000286102295,
+                    7.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    52.70000076293945,
+                    62.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    202.3000030517578,
-                    -372.0,
+                    236.3000030517578,
+                    -462.0,
                     0.0,
                     1.0
                 ]
@@ -265,12 +265,12 @@
             "ChildTag": "Drive_OnCircle\u0000",
             "ObjectTag": "Drive_OnCircle",
             "Pivot": 6,
-            "PositionX": 270.0,
-            "PositionY": 118.0,
+            "PositionX": 316.0,
+            "PositionY": 125.0,
             "Priority": 1,
             "Prototype_GameObject": "Default_UI\u0000",
-            "ScaleX": 0.8500000238418579,
-            "ScaleY": 0.8500000238418579,
+            "ScaleX": 1.0,
+            "ScaleY": 1.0,
             "ShaderParams": {
                 "Float2s": [],
                 "Float4s": [],
@@ -286,20 +286,20 @@
             "SizeY": 64.0,
             "Transform": {
                 "WorldMatrix": [
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
-                    54.400001525878906,
+                    64.0,
                     0.0,
                     0.0,
                     0.0,
                     0.0,
                     1.0,
                     0.0,
-                    270.0,
-                    -332.0,
+                    316.0,
+                    -415.0,
                     0.0,
                     1.0
                 ]
@@ -323,8 +323,8 @@
         "Pass": 0,
         "Textures": []
     },
-    "SizeX": 1600.0,
-    "SizeY": 900.0,
+    "SizeX": 1920.0,
+    "SizeY": 1080.0,
     "Transform": {
         "WorldMatrix": [
             0.0,
