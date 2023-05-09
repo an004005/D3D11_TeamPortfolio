@@ -49,6 +49,8 @@ public:
 	virtual void	Late_Tick(_double TimeDelta) override;
 	virtual HRESULT Render() override;
 
+	virtual void	Imgui_RenderProperty() override;
+
 public:
 	// 35 : 공중 추가 공격 
 	// 36 : 추가 공격 확장 2

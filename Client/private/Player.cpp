@@ -355,17 +355,17 @@ void CPlayer::Tick(_double TimeDelta)
 	{
 		m_bOnBattle = true;
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
-		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
+		//CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(1);
 	}
 	else if (!m_DetectList.empty())
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(true);
-		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
+		//CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(0);
 	}
 	else
 	{
 		CPlayerInfoManager::GetInstance()->Set_BattleState(false);
-		CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(2);
+		//CPlayerInfoManager::GetInstance()->Set_KineticEnetgyType(2);
 	}
 
 	CPlayerInfoManager::GetInstance()->Tick(TimeDelta);

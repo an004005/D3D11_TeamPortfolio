@@ -42,8 +42,6 @@ void CNoticeNeonUI::BeginTick()
 	Safe_AddRef(m_pNoticeNeonGroup);
 	Assert(m_pNoticeNeonGroup != nullptr);
 	m_pNoticeNeonGroup->Start_Attach(m_pOwner, "Target", true, true);
-
-	
 }
 
 void CNoticeNeonUI::Tick(_double TimeDelta)

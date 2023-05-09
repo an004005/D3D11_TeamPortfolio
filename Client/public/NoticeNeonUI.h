@@ -34,7 +34,7 @@ private:
 	string m_strNoticeNeon = { "" };
 
 	_double	m_dDead_TimeAcc = { 0.0 };
-	_bool	m_dKill = { false };
+	_bool		m_dKill = { false };
 
 public:
 	static CNoticeNeonUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

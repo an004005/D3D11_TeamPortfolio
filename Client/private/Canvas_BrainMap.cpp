@@ -196,6 +196,34 @@ HRESULT CCanvas_BrainMap::Render()
 	return S_OK;
 }
 
+void CCanvas_BrainMap::Imgui_RenderProperty()
+{
+	if (ImGui::Button("Gauge"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy += 50;
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy += 50;
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
+		dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
+	}
+
+	// Set_KineticEnetgyType 아래 사용하려면 이 함수 다 주석 해야한다.
+	if (ImGui::Button("Type0"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType = 0;
+	}
+
+	if (ImGui::Button("Type1"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType = 1;
+	}
+
+	if (ImGui::Button("Type2"))
+	{
+		CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyType = 2;
+	}
+	
+}
+
 void CCanvas_BrainMap::Brain_Intiialize()
 {
 	BRAININFO	tBrainInfo;
@@ -1601,6 +1629,7 @@ void CCanvas_BrainMap::IconPick(const size_t iIndex)
 			// 다 찍는데 206 필요 (새로 찍어야 하는 BP 는 25 필요)
 			if (iIndex == 12 || iIndex == 18) 	// 플레이어 염력 레벨 증가 5, 5
 			{
+				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergy += 50;
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iMaxKineticEnergy += 50;
 				CPlayerInfoManager::GetInstance()->Get_PlayerStat().m_iKineticEnergyLevel += 1;
 				dynamic_cast<CCanvas_PlayerInfoMove*>(CUI_Manager::GetInstance()->Find_MoveCanvas(L"Canvas_PlayerInfoMove"))->Set_PsychokinesisType();
